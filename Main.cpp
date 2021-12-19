@@ -1,6 +1,6 @@
 #ifndef UNICODE
 #define UNICODE
-#endif 
+#endif
 
 #include "framework.h" //includes window.h and others
 #include "Config.h"

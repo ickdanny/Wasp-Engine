@@ -7,6 +7,7 @@ namespace windowwrapper {
     class BaseWindow {
 
     protected:
+        //set in WindowProc //pThis->windowHandle = windowHandle;
         HWND windowHandle;
 
     public:
@@ -36,7 +37,7 @@ namespace windowwrapper {
             }
         }
 
-        BaseWindow() : windowHandle(NULL) { }
+        BaseWindow() : windowHandle{ NULL } { }
 
         bool create(
             HINSTANCE instanceHandle,
