@@ -3,6 +3,7 @@
 #endif 
 
 #include "framework.h" //includes window.h and others
+#include "Constants.h"
 #include "BaseWindow.h"
 #include "MainWindow.h"
 
@@ -10,11 +11,9 @@ void runMessageLoop();
 
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode)
 {
-    const wchar_t className[] = L"WSWP";
-    const wchar_t windowName[] = L"WSWP";
 
     windowwrapper::MainWindow window{};
-    if (!window.create(instanceHandle, className, windowName, WS_OVERLAPPEDWINDOW)) {
+    if (!window.create(instanceHandle, constants::className, constants::windowName, WS_OVERLAPPEDWINDOW)) {
         return 0;
     }
 
