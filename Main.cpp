@@ -3,7 +3,7 @@
 #endif 
 
 #include "framework.h" //includes window.h and others
-#include "Constants.h"
+#include "Config.h"
 #include "BaseWindow.h"
 #include "MainWindow.h"
 
@@ -13,7 +13,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 {
 
     windowwrapper::MainWindow window{};
-    if (!window.create(instanceHandle, constants::className, constants::windowName, WS_OVERLAPPEDWINDOW)) {
+    if (!window.create(instanceHandle, config::className, config::windowName, WS_OVERLAPPEDWINDOW)) {
         return 0;
     }
 
