@@ -1,9 +1,8 @@
-#pragma once
-
 #include "framework.h"
-#include <d2d1.h>
-#pragma comment(lib, "d2d1")
+
 #include "BitmapManager.h"
+
+#pragma once
 
 namespace windowadapter {
     class WindowPainter{

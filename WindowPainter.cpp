@@ -1,3 +1,6 @@
+#include "framework.h"
+
+#include "BitmapManager.h"
 #include "WindowPainter.h"
 #include "ComUtility.h"
 #include "HResultError.h"
@@ -133,6 +136,5 @@ namespace windowadapter {
             InvalidateRect(windowHandle, NULL, FALSE);
         }
     }
-
 
 }

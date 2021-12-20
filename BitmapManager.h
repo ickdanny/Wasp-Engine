@@ -1,8 +1,9 @@
+#pragma once
+
 #include "framework.h"
-#include <wincodec.h>
+
 #include <string>
-#include <d2d1.h>
-#pragma comment(lib, "d2d1")
+
 
 namespace graphics {
 	class BitmapManager {
