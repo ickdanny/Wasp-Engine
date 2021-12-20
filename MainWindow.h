@@ -3,12 +3,12 @@
 #include "BaseWindow.h"
 #include "WindowPainter.h"
 
-namespace windowwrapper {
+namespace windowadapter {
     class MainWindow : public BaseWindow<MainWindow>{
     private:
         WindowPainter windowPainter{};
     public:
-        MainWindow() = default;
+        MainWindow();
 
         LRESULT handleMessage(UINT messageCode, WPARAM wParam, LPARAM lParam) override;
     };

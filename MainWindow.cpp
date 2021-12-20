@@ -1,13 +1,14 @@
 #include "MainWindow.h"
 
-namespace windowwrapper {
+namespace windowadapter {
+
+	MainWindow::MainWindow() = default;
+
 	LRESULT MainWindow::handleMessage(UINT messageCode, WPARAM wParam, LPARAM lParam) {
 		switch (messageCode)
 		{
 			case WM_CREATE:
-				if (FAILED(windowPainter.init())){
-					return -1;  // Fail CreateWindowEx.
-				}
+				windowPainter.init();
 				return 0;
 
 			case WM_PAINT:

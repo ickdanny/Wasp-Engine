@@ -4,6 +4,8 @@
 
 #include "framework.h" //includes window.h and others
 #include "Config.h"
+#include "ComLibraryGuard.h"
+#include "BitmapManager.h"
 #include "BaseWindow.h"
 #include "MainWindow.h"
 
@@ -11,11 +13,17 @@ void runMessageLoop();
 
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode)
 {
+    //init COM
+    comadapter::ComLibraryGuard comLibraryGuard{};
+    comLibraryGuard.init(COINIT_APARTMENTTHREADED);
 
-    windowwrapper::MainWindow window{};
-    if (!window.create(instanceHandle, config::className, config::windowName, WS_OVERLAPPEDWINDOW)) {
-        return 0;
-    }
+    //init WIC graphics
+    graphics::BitmapManager bitmapManager{};
+    bitmapManager.init();
+
+    //init window and Direct2D
+    windowadapter::MainWindow window{};
+    window.create(instanceHandle, config::className, config::windowName, WS_OVERLAPPEDWINDOW);
 
     ShowWindow(window.getWindowHandle(), windowShowMode);
     

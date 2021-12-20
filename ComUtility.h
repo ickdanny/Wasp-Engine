@@ -1,6 +1,6 @@
 #pragma once
 
-namespace comwrapper {
+namespace comadapter {
 
     template <class T> 
     void safeRelease(T** ppT)

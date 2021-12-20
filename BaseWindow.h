@@ -1,8 +1,9 @@
 #pragma once
 
 #include "framework.h" //includes window.h and others
+#include <stdexcept>
 
-namespace windowwrapper {
+namespace windowadapter {
     template<class DERIVED_CLASS>
     class BaseWindow {
 
@@ -39,7 +40,7 @@ namespace windowwrapper {
 
         BaseWindow() : windowHandle{ NULL } { }
 
-        bool create(
+        void create(
             HINSTANCE instanceHandle,
             PCWSTR className,
             PCWSTR windowName,
@@ -53,8 +54,7 @@ namespace windowwrapper {
             HMENU menuHandle = 0
         ) {
             registerWindowClass(instanceHandle, className);
-
-            return createWindow(
+            createWindow(
                 instanceHandle,
                 className,
                 windowName,
@@ -86,8 +86,7 @@ namespace windowwrapper {
             RegisterClass(&wc);
         }
 
-        //returns false if failed
-        bool createWindow(
+        void createWindow(
             HINSTANCE instanceHandle,
             PCWSTR className,
             PCWSTR windowName,
@@ -113,7 +112,9 @@ namespace windowwrapper {
                 this                    // Additional application data
             );
 
-            return windowHandle != NULL;
+            if (!windowHandle) {
+                throw std::runtime_error{ "Error creating window handle" };
+            }
         }
     };
 }

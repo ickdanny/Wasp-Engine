@@ -1,10 +1,26 @@
 #include "WindowPainter.h"
-#include "ComWrapper.h"
+#include "ComUtility.h"
+#include "HResultError.h"
 
-namespace windowwrapper {
+namespace windowadapter {
 
-    HRESULT WindowPainter::init() {
-        return D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &factoryPointer);
+    WindowPainter::WindowPainter()
+        : d2dFactoryPointer{ NULL }, renderTargetPointer{ NULL }, brushPointer{ NULL }{
+    }
+
+    WindowPainter::~WindowPainter() {
+        cleanUp();
+    }
+
+    void WindowPainter::init() {
+        getD2dFactoryPointer();
+        bitmapManager.init();
+    }
+
+    void WindowPainter::cleanUp() {
+        discardGraphicsResources();
+        comadapter::safeRelease(&d2dFactoryPointer);
+        bitmapManager.cleanUp();
     }
 
     void WindowPainter::paint(HWND windowHandle)
@@ -20,6 +36,19 @@ namespace windowwrapper {
             renderTargetPointer->Clear(D2D1::ColorF(D2D1::ColorF::SkyBlue));
             renderTargetPointer->FillEllipse(ellipse, brushPointer);
 
+
+            //image draw test
+            D2D1_SIZE_F rtSize = renderTargetPointer->GetSize();
+
+            // Create a rectangle same size of current window
+            D2D1_RECT_F rectangle = D2D1::RectF(0.0f, 0.0f, rtSize.width, rtSize.height);
+
+            if (bitmapPointer)
+            {
+                renderTargetPointer->DrawBitmap(bitmapPointer, rectangle);
+            }
+            //end image draw test
+
             result = renderTargetPointer->EndDraw();
             if (FAILED(result) || result == D2DERR_RECREATE_TARGET)
             {
@@ -29,6 +58,14 @@ namespace windowwrapper {
         }
     }
 
+    void WindowPainter::getD2dFactoryPointer() {
+        HRESULT result{ D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactoryPointer) };
+        if (FAILED(result)) {
+            throw new HResultError("Error creating Direct2D factory");
+        }
+    }
+
+    //TODO: refactor into void function which throws HResultError 
     HRESULT WindowPainter::createGraphicsResources(HWND windowHandle)
     {
         HRESULT result = S_OK;
@@ -39,11 +76,11 @@ namespace windowwrapper {
 
             D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
 
-            result = factoryPointer->CreateHwndRenderTarget(
+            result = d2dFactoryPointer->CreateHwndRenderTarget(
                 D2D1::RenderTargetProperties(),
                 D2D1::HwndRenderTargetProperties(windowHandle, size),
                 &renderTargetPointer);
-
+            
             if (SUCCEEDED(result))
             {
                 const D2D1_COLOR_F color = D2D1::ColorF(1.0f, 1.0f, 0);
@@ -55,6 +92,12 @@ namespace windowwrapper {
                 }
             }
         }
+
+        //image get test
+        if (!bitmapPointer) {
+            bitmapPointer = bitmapManager.getBitmapPointer(L"test_image.png", renderTargetPointer);
+        }
+
         return result;
     }
 
@@ -72,8 +115,8 @@ namespace windowwrapper {
 
     void WindowPainter::discardGraphicsResources()
     {
-        comwrapper::safeRelease(&renderTargetPointer);
-        comwrapper::safeRelease(&brushPointer);
+        comadapter::safeRelease(&renderTargetPointer);
+        comadapter::safeRelease(&brushPointer);
     }
 
     void WindowPainter::resize(HWND windowHandle)
@@ -91,8 +134,5 @@ namespace windowwrapper {
         }
     }
 
-    void WindowPainter::cleanUp() {
-        discardGraphicsResources();
-        comwrapper::safeRelease(&factoryPointer);
-    }
+
 }
