@@ -23,7 +23,17 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
     //init window and Direct2D
     windowadapter::MainWindow window{};
-    window.create(instanceHandle, config::className, config::windowName, WS_OVERLAPPEDWINDOW | WS_SYSMENU);
+    window.create(
+        instanceHandle,
+        config::className,
+        config::windowName,
+        config::windowStyle,
+        0, //extra window style
+        config::windowX,
+        config::windowY,
+        config::windowWidth,
+        config::windowHeight
+    );
 
     ShowWindow(window.getWindowHandle(), windowShowMode);
     
