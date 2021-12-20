@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdexcept>
 
 class HResultError : public std::runtime_error {

@@ -1,29 +1,17 @@
-#include "framework.h"
+#include "WindowPainter.h"
 
 #include "BitmapManager.h"
-#include "WindowPainter.h"
-#include "ComUtility.h"
 #include "HResultError.h"
 
 namespace windowadapter {
 
     WindowPainter::WindowPainter()
-        : d2dFactoryPointer{ NULL }, renderTargetPointer{ NULL }, brushPointer{ NULL }{
-    }
-
-    WindowPainter::~WindowPainter() {
-        cleanUp();
+        : d2dFactoryPointer{ nullptr }, renderTargetPointer{ nullptr }, brushPointer{ nullptr }{
     }
 
     void WindowPainter::init() {
         getD2dFactoryPointer();
         bitmapManager.init();
-    }
-
-    void WindowPainter::cleanUp() {
-        discardGraphicsResources();
-        comadapter::safeRelease(&d2dFactoryPointer);
-        bitmapManager.cleanUp();
     }
 
     void WindowPainter::paint(HWND windowHandle)
@@ -82,7 +70,8 @@ namespace windowadapter {
             result = d2dFactoryPointer->CreateHwndRenderTarget(
                 D2D1::RenderTargetProperties(),
                 D2D1::HwndRenderTargetProperties(windowHandle, size),
-                &renderTargetPointer);
+                &renderTargetPointer
+            );
             
             if (SUCCEEDED(result))
             {
@@ -118,8 +107,8 @@ namespace windowadapter {
 
     void WindowPainter::discardGraphicsResources()
     {
-        comadapter::safeRelease(&renderTargetPointer);
-        comadapter::safeRelease(&brushPointer);
+        renderTargetPointer = nullptr;
+        brushPointer = nullptr;
     }
 
     void WindowPainter::resize(HWND windowHandle)

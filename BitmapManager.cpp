@@ -1,16 +1,10 @@
-#include "framework.h"
 #include "BitmapManager.h"
-#include "ComUtility.h"
 #include "HResultError.h"
 
 namespace graphics {
 
 	BitmapManager::BitmapManager()
-		: wicFactoryPointer{ NULL } {
-	}
-
-	BitmapManager::~BitmapManager() {
-		cleanUp();
+		: wicFactoryPointer{ nullptr } {
 	}
 
 	void BitmapManager::init() {
@@ -31,18 +25,13 @@ namespace graphics {
 		}
 	}
 
+	CComPtr<ID2D1Bitmap> BitmapManager::getBitmapPointer(const std::wstring& fileName, CComPtr<ID2D1HwndRenderTarget> renderTargetPointer) {
 
-	void BitmapManager::cleanUp() {
-		comadapter::safeRelease(&wicFactoryPointer);
-	}
-
-	//todo: RAII this shit https://docs.microsoft.com/en-us/archive/msdn-magazine/2015/february/windows-with-c-com-smart-pointers-revisited
-	ID2D1Bitmap* BitmapManager::getBitmapPointer(const std::wstring& fileName, ID2D1HwndRenderTarget* renderTargetPointer) {
-		IWICBitmapFrameDecode* framePointer{ getFramePointer(fileName) };
-		IWICFormatConverter* wicFormatConverterPointer{ getWicFormatConverterPointer() };
+		CComPtr<IWICBitmapFrameDecode> framePointer{ getFramePointer(fileName) };
+		CComPtr<IWICFormatConverter> wicFormatConverterPointer{ getWicFormatConverterPointer() };
 		initWicFormatConverter(wicFormatConverterPointer, framePointer);
 
-		ID2D1Bitmap* bitmapPointer{ NULL };
+		CComPtr<ID2D1Bitmap> bitmapPointer{};
 		HRESULT result{ renderTargetPointer->CreateBitmapFromWicBitmap(wicFormatConverterPointer, NULL, &bitmapPointer) };
 		if (FAILED(result)) {
 			throw HResultError{ "Error creating bitmap from WIC bitmap" };
@@ -50,9 +39,9 @@ namespace graphics {
 		return bitmapPointer;
 	}
 
-	IWICFormatConverter* BitmapManager::getWicFormatConverterPointer() {
+	CComPtr<IWICFormatConverter> BitmapManager::getWicFormatConverterPointer() {
 
-		IWICFormatConverter* wicFormatConverterPointer{ NULL };
+		CComPtr<IWICFormatConverter> wicFormatConverterPointer{};
 		HRESULT result{
 			wicFactoryPointer->CreateFormatConverter(&wicFormatConverterPointer)
 		};
@@ -62,12 +51,12 @@ namespace graphics {
 		return wicFormatConverterPointer;
 	}
 
-	IWICBitmapFrameDecode* BitmapManager::getFramePointer(const std::wstring& fileName) {
+	CComPtr<IWICBitmapFrameDecode> BitmapManager::getFramePointer(const std::wstring& fileName) {
 
-		IWICBitmapDecoder* imageDecoderPointer{ getImageDecoderPointer(fileName) };
+		CComPtr<IWICBitmapDecoder> imageDecoderPointer{ getImageDecoderPointer(fileName) };
 
 		// Retrieve the first frame of the image from the decoder
-		IWICBitmapFrameDecode* framePointer{ NULL };
+		CComPtr<IWICBitmapFrameDecode> framePointer{};
 
 		HRESULT result{ imageDecoderPointer->GetFrame(0, &framePointer) };
 		if (FAILED(result)) {
@@ -76,8 +65,8 @@ namespace graphics {
 		return framePointer;
 	}
 
-	IWICBitmapDecoder* BitmapManager::getImageDecoderPointer(const std::wstring& fileName) {
-		IWICBitmapDecoder* imageDecoderPointer{ NULL };
+	CComPtr<IWICBitmapDecoder> BitmapManager::getImageDecoderPointer(const std::wstring& fileName) {
+		CComPtr<IWICBitmapDecoder> imageDecoderPointer{};
 		HRESULT result{ wicFactoryPointer->CreateDecoderFromFilename(
 			fileName.c_str(),                // Image to be decoded
 			NULL,                            // Do not prefer a particular vendor
@@ -91,7 +80,10 @@ namespace graphics {
 		return imageDecoderPointer;
 	}
 
-	void BitmapManager::initWicFormatConverter(IWICFormatConverter* wicFormatConverterPointer, IWICBitmapFrameDecode* framePointer) {
+	void BitmapManager::initWicFormatConverter(
+		CComPtr<IWICFormatConverter> wicFormatConverterPointer, 
+		CComPtr<IWICBitmapFrameDecode> framePointer
+	) {
 		HRESULT result{
 			wicFormatConverterPointer->Initialize(
 				framePointer,                    // Input bitmap to convert

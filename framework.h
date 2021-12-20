@@ -8,6 +8,7 @@ typedef struct IUnknown IUnknown;
 #include <windows.h>
 #include <wincodec.h>
 #include <shobjidl.h>
+#include <atlbase.h>
 #include <d2d1.h>
 #pragma comment(lib, "d2d1")
 

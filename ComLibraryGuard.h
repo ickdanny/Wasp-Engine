@@ -1,3 +1,5 @@
+#pragma once
+
 #include "framework.h"
 #include "HResultError.h"
 
@@ -13,12 +15,12 @@ namespace comadapter {
 			}
 		}
 
-		void cleanUp() {
-			CoUninitialize();
-		}
-
 		~ComLibraryGuard() {
 			cleanUp();
+		}
+
+		void cleanUp() {
+			CoUninitialize();
 		}
 	};
 }

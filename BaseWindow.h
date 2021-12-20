@@ -8,32 +8,28 @@ namespace windowadapter {
     class BaseWindow {
 
     protected:
-        //set in WindowProc //pThis->windowHandle = windowHandle;
+        //set in WindowProc //derivedInstancePointer->windowHandle = windowHandle;
         HWND windowHandle;
 
     public:
-        static LRESULT CALLBACK WindowProc(HWND windowHandle, UINT messageCode, WPARAM wParam, LPARAM lParam)
-        {
-            DERIVED_CLASS* pThis = NULL;
+        static LRESULT CALLBACK WindowProc(HWND windowHandle, UINT messageCode, WPARAM wParam, LPARAM lParam){
+            DERIVED_CLASS* derivedInstancePointer = NULL;
 
-            if (messageCode == WM_NCCREATE)
-            {
-                CREATESTRUCT* pCreate = (CREATESTRUCT*)lParam;
-                pThis = (DERIVED_CLASS*)pCreate->lpCreateParams;
-                SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)pThis);
+            if (messageCode == WM_NCCREATE){
+                CREATESTRUCT* createStructPointer = (CREATESTRUCT*)lParam;
+                derivedInstancePointer = (DERIVED_CLASS*)createStructPointer->lpCreateParams;
+                SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)derivedInstancePointer);
 
-                pThis->windowHandle = windowHandle;
+                derivedInstancePointer->windowHandle = windowHandle;
             }
-            else
-            {
-                pThis = (DERIVED_CLASS*)GetWindowLongPtr(windowHandle, GWLP_USERDATA);
+            else{
+                derivedInstancePointer = (DERIVED_CLASS*)GetWindowLongPtr(windowHandle, GWLP_USERDATA);
             }
-            if (pThis)
-            {
-                return pThis->handleMessage(messageCode, wParam, lParam);
+
+            if (derivedInstancePointer){
+                return derivedInstancePointer->handleMessage(messageCode, wParam, lParam);
             }
-            else
-            {
+            else{
                 return DefWindowProc(windowHandle, messageCode, wParam, lParam);
             }
         }
@@ -77,13 +73,13 @@ namespace windowadapter {
     private:
         void registerWindowClass(HINSTANCE instanceHandle, const wchar_t* className) {
 
-            WNDCLASS wc{ };
+            WNDCLASS windowClass{ };
 
-            wc.lpfnWndProc = DERIVED_CLASS::WindowProc;
-            wc.hInstance = instanceHandle;
-            wc.lpszClassName = className;
+            windowClass.lpfnWndProc = DERIVED_CLASS::WindowProc;
+            windowClass.hInstance = instanceHandle;
+            windowClass.lpszClassName = className;
 
-            RegisterClass(&wc);
+            RegisterClass(&windowClass);
         }
 
         void createWindow(

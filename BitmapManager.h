@@ -1,30 +1,25 @@
 #pragma once
 
 #include "framework.h"
-
 #include <string>
-
 
 namespace graphics {
 	class BitmapManager {
 	private:
-		IWICImagingFactory* wicFactoryPointer{};
+		CComPtr<IWICImagingFactory> wicFactoryPointer{};
 
 	public:
 		BitmapManager();
-		~BitmapManager();
 
 		void init();
-		void cleanUp();
 
-		ID2D1Bitmap* getBitmapPointer(const std::wstring& fileName, ID2D1HwndRenderTarget* renderTargetPointer);
+		CComPtr<ID2D1Bitmap> getBitmapPointer(const std::wstring& fileName, CComPtr<ID2D1HwndRenderTarget> renderTargetPointer);
 
 	private:
 		void initWicFactory();
-		IWICFormatConverter* getWicFormatConverterPointer();
-		IWICBitmapFrameDecode* getFramePointer(const std::wstring& fileName);
-		IWICBitmapDecoder* getImageDecoderPointer(const std::wstring& fileName);
-		void initWicFormatConverter(IWICFormatConverter* wicFormatConverterPointer, IWICBitmapFrameDecode* framePointer);
+		CComPtr<IWICFormatConverter> getWicFormatConverterPointer();
+		CComPtr<IWICBitmapFrameDecode> getFramePointer(const std::wstring& fileName);
+		CComPtr<IWICBitmapDecoder> getImageDecoderPointer(const std::wstring& fileName);
+		void initWicFormatConverter(CComPtr<IWICFormatConverter> wicFormatConverterPointer, CComPtr<IWICBitmapFrameDecode> framePointer);
 	};
-
 }

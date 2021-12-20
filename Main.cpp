@@ -3,6 +3,7 @@
 #endif
 
 #include "framework.h" //includes window.h and others
+
 #include "Config.h"
 #include "ComLibraryGuard.h"
 #include "BitmapManager.h"
@@ -17,11 +18,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     comadapter::ComLibraryGuard comLibraryGuard{};
     comLibraryGuard.init(COINIT_APARTMENTTHREADED);
 
-    //init WIC graphics
-    graphics::BitmapManager bitmapManager{};
-    bitmapManager.init();
-
-    //init window and Direct2D
+    //init window, WIC graphics, and Direct2D
     windowadapter::MainWindow window{};
     window.create(
         instanceHandle,

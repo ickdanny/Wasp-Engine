@@ -20,7 +20,6 @@ namespace windowadapter {
 				return 0;
 		
 			case WM_DESTROY:
-				windowPainter.cleanUp();
 				PostQuitMessage(0);
 				return 0;
 
