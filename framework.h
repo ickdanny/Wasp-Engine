@@ -1,3 +1,4 @@
+//From Subterranean Animism on, the games depend on a newer DirectX 9.0c build not supported on Windows 98.
 #pragma once
 
 typedef struct IUnknown IUnknown;
