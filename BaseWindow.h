@@ -34,7 +34,10 @@ namespace windowadapter {
             }
         }
 
-        BaseWindow() : windowHandle{ NULL } { }
+        BaseWindow() 
+            : windowHandle{ NULL } {
+        }
+        virtual ~BaseWindow() = default;
 
         void create(
             HINSTANCE instanceHandle,

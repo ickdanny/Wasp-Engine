@@ -17,6 +17,7 @@ namespace windowadapter {
 
     public:
         WindowPainter();
+        ~WindowPainter() = default;
 
         void init();
         void paint(HWND windowHandle); // TODO: pass image to draw here
