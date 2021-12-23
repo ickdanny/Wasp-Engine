@@ -13,11 +13,15 @@
 
 void runMessageLoop();
 
+#pragma warning(suppress:C28251)
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode)
 {
     //init COM
     comadapter::ComLibraryGuard comLibraryGuard{};
     comLibraryGuard.init(COINIT_APARTMENTTHREADED);
+
+    //init Resources
+
 
     
     //init window, WIC graphics, and Direct2D
@@ -25,8 +29,10 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     {
         const MONITORINFO primaryMonitorInfo{ windowadapter::getPrimaryMonitorInfo() };
         const RECT& primaryMonitorRect{ primaryMonitorInfo.rcMonitor };
-        const int x{ ((primaryMonitorRect.right - primaryMonitorRect.left) / 2) - (config::windowWidth / 2) };
-        const int y{ ((primaryMonitorRect.bottom - primaryMonitorRect.top) / 2) - (config::windowHeight / 2) };
+        const int xCenter{ (primaryMonitorRect.right - primaryMonitorRect.left) / 2 };
+        const int yCenter{ (primaryMonitorRect.bottom - primaryMonitorRect.top) / 2 };
+        const int x{ xCenter - (config::windowWidth / 2) };
+        const int y{ yCenter - (config::windowHeight / 2) };
 
         window.create(
             instanceHandle,

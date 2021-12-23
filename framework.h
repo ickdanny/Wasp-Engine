@@ -1,10 +1,11 @@
-//From Subterranean Animism on, the games depend on a newer DirectX 9.0c build not supported on Windows 98.
+//From Subterranean Animism on, the games depend on a newer DirectX 9.0c 
+//build not supported on Windows 98.
 #pragma once
 
 typedef struct IUnknown IUnknown;
 
 #include "targetver.h"
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 // Windows Header Files
 #include <windows.h>
 #include <wincodec.h>

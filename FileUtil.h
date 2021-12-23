@@ -1,22 +1,23 @@
 #pragma once
 
 #include <string>
-#include <fstream>
 
-namespace fileutil{
-    constexpr std::string_view DIRECTORY_EXTENSION{ "directory" };
+namespace file{
+    const std::wstring DIRECTORY_EXTENSION{ L"directory" };
 
-    //todo: translate the following
+    std::wstring getFileName(const std::wstring& fileName);
 
-    std::wstring getFilePath(File file);
+    std::wstring getFileExtension(const std::wstring& fileName);
 
-    std::wstring getFileName(File file);
+    void throwIfFileDoesNotExist(const std::wstring& fileName);
 
-    std::wstring getFileExtension(File file);
 
-    public static BufferedImage parseImage(File imageFile); //todo: move from BitmapManager
+    /*
+    * //todo: translate the following; move from BitmapManager
+    public static BufferedImage parseImage(File imageFile); 
 
     public static Properties parseProperties(File propertiesFile);
 
     public static void writeProperties(Properties properties, File propertiesFile);
+    */
 }

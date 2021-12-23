@@ -6,7 +6,9 @@
 namespace windowadapter {
 
     WindowPainter::WindowPainter()
-        : d2dFactoryPointer{ nullptr }, renderTargetPointer{ nullptr }, brushPointer{ nullptr }{
+        : d2dFactoryPointer{ nullptr }
+        , renderTargetPointer{ nullptr }
+        , brushPointer{ nullptr }{
     }
 
     void WindowPainter::init() {
@@ -32,7 +34,9 @@ namespace windowadapter {
             D2D1_SIZE_F rtSize = renderTargetPointer->GetSize();
 
             // Create a rectangle same size of current window
-            D2D1_RECT_F rectangle = D2D1::RectF(0.0f, 0.0f, rtSize.width, rtSize.height);
+            D2D1_RECT_F rectangle = D2D1::RectF(
+                0.0f, 0.0f, rtSize.width, rtSize.height
+            );
 
             if (bitmapPointer)
             {
@@ -50,7 +54,10 @@ namespace windowadapter {
     }
 
     void WindowPainter::getD2dFactoryPointer() {
-        HRESULT result{ D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactoryPointer) };
+        HRESULT result{ D2D1CreateFactory(
+            D2D1_FACTORY_TYPE_SINGLE_THREADED, 
+            &d2dFactoryPointer
+        ) };
         if (FAILED(result)) {
             throw new HResultError("Error creating Direct2D factory");
         }
@@ -76,7 +83,10 @@ namespace windowadapter {
             if (SUCCEEDED(result))
             {
                 const D2D1_COLOR_F color = D2D1::ColorF(1.0f, 1.0f, 0);
-                result = renderTargetPointer->CreateSolidColorBrush(color, &brushPointer);
+                result = renderTargetPointer->CreateSolidColorBrush(
+                    color, 
+                    &brushPointer
+                );
 
                 if (SUCCEEDED(result))
                 {
@@ -87,7 +97,10 @@ namespace windowadapter {
 
         //image get test
         if (!bitmapPointer) {
-            bitmapPointer = bitmapManager.getBitmapPointer(L"test_image.png", renderTargetPointer);
+            bitmapPointer = bitmapManager.getBitmapPointer(
+                L"test_image.png", 
+                renderTargetPointer
+            );
         }
 
         return result;

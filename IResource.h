@@ -2,13 +2,22 @@
 
 #include <string>
 
-//methods necessary for the resource tree
+#include "IResourceStorage.h"
+
+//members necessary for the resource tree
+//unload, reload, remove, write done thru a pointer to the storage
 namespace resource {
     class IResource {
+    protected:
+        std::weak_ptr<IResource> parent{};
+        IResourceStorage* storagePointer; //assume resources don't outlive storages
     public:
-        virtual ~IResource() = default;
-        virtual void unloadData() = 0;
-        virtual void reloadData() = 0;
-        virtual void writeData() = 0;
+        virtual ~IResource() {
+            if (!parent.expired()) {
+                parent.lock()->removeChild(this);
+            }
+        }
+    protected:
+        virtual void removeChild(IResource* child) {}
     };
 }

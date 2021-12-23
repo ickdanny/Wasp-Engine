@@ -21,7 +21,9 @@ namespace windowadapter {
 	MONITORINFO getMonitorInfoFromWindow(HWND windowHandle) {
 		MONITORINFO toRet{};
 		toRet.cbSize = sizeof(toRet);//needed
-		BOOL success{ GetMonitorInfo(getMonitorHandleFromWindow(windowHandle), &toRet) };
+		BOOL success{ 
+			GetMonitorInfo(getMonitorHandleFromWindow(windowHandle), &toRet) 
+		};
 		if (!success) {
 			throw std::runtime_error{ "Error retrieving monitor info" };
 		}

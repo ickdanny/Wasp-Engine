@@ -10,6 +10,10 @@ namespace windowadapter {
     public:
         MainWindow();
 
-        LRESULT handleMessage(UINT messageCode, WPARAM wParam, LPARAM lParam) override;
+        LRESULT handleMessage(
+            UINT messageCode, 
+            WPARAM wParam, 
+            LPARAM lParam
+        ) override;
     };
 }

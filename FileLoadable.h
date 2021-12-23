@@ -2,31 +2,40 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
+#include "Loadable.h"
 #include "IResource.h"
 
 namespace resource {
 
-	using FileTypes = std::vector<std::string>;
-	class ResourceMasterStorage;
+	using FileTypes = std::vector<std::wstring>;
+	class ResourceLoader;
 
 	struct FileOrigin {
-		const std::wstring& fileName{};
+		std::wstring fileName{};
 	};
 
 
-	class FileLoadable {
+	class FileLoadable : virtual public Loadable{
 	private:
-		const FileTypes& fileTypes{};
+		FileTypes fileTypes{};
 	public:
 		FileLoadable(const FileTypes& fileTypes)
 			: fileTypes{fileTypes} {
 		}
 		virtual ~FileLoadable() = default;
 
+		bool isFileLoadable() const override {
+			return true;
+		}
+
 		const FileTypes& getAcceptableFileTypes() const {
 			return fileTypes;
 		}
-		virtual IResource loadFromFile(const FileOrigin& fileOrigin, ResourceMasterStorage& resourceMasterStorage) = 0;
+		virtual std::weak_ptr<IResource> loadFromFile(
+			const FileOrigin& fileOrigin, 
+			const ResourceLoader& resourceMasterStorage
+		) = 0;
 	};
 }

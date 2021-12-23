@@ -12,7 +12,7 @@ namespace windowadapter {
         CComPtr<ID2D1SolidColorBrush> brushPointer{};
         D2D1_ELLIPSE ellipse{};
 
-        graphics::BitmapManager bitmapManager{};
+        graphics::BitmapConstructor bitmapManager{};
         CComPtr<ID2D1Bitmap> bitmapPointer{};
 
     public:

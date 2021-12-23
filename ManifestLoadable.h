@@ -2,32 +2,41 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
+#include "Loadable.h"
 #include "IResource.h"
 
-using ManifestPrefixes = std::vector<std::string>;
-using ManifestArguments = std::vector<std::string>;
+using ManifestPrefixes = std::vector<std::wstring>;
+using ManifestArguments = std::vector<std::wstring>;
 
 namespace resource {
 
-	class ResourceMasterStorage;
+	class ResourceLoader;
 
 	struct ManifestOrigin {
-		const ManifestArguments& manifestArguments{};
+		ManifestArguments manifestArguments{};
 	};
 
-	class ManifestLoadable {
+	class ManifestLoadable : virtual public Loadable{
 	private:
-		const ManifestPrefixes& manifestPrefixes{};
+		ManifestPrefixes manifestPrefixes{};
 	public:
 		ManifestLoadable(const ManifestPrefixes& manifestPrefixes)
 			: manifestPrefixes{ manifestPrefixes } {
 		}
 		virtual ~ManifestLoadable() = default;
 
+		bool isManifestLoadable() const override {
+			return true;
+		}
+
 		const ManifestPrefixes& getAcceptableManifestPrefixes() const {
 			return manifestPrefixes;
 		}
-		virtual IResource loadFrom(const ManifestOrigin& manifestOrigin, ResourceMasterStorage& resourceMasterStorage) = 0;
+		virtual std::weak_ptr<IResource> loadFromManifest(
+			const ManifestOrigin& manifestOrigin,
+			const ResourceLoader& resourceMasterStorage
+		) = 0;
 	};
 }

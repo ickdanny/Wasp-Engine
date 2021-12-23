@@ -6,12 +6,15 @@
 #include <unordered_map>
 
 #include "Resource.h"
+#include "IResourceStorage.h"
+#include "UnsupportedOperationError.h"
 
 namespace resource {
 
     template <typename T>
-    class ResourceStorage {
-        using ResourceMap = std::unordered_map<std::string&, Resource<T>>;
+    class ResourceStorage : public IResourceStorage{
+        using ResourceMap = 
+            std::unordered_map<std::string&, std::shared_ptr<Resource<T>>>;
 
     private:
         ResourceMap resourceMap{};
@@ -20,7 +23,11 @@ namespace resource {
         ResourceStorage() = default;
         virtual ~ResourceStorage() = default;
 
-        virtual std::shared_ptr<T> get(const std::string& id) {
+        void unload(const std::wstring& id) override {
+
+        }
+
+        virtual std::shared_ptr<T> get(const std::wstring& id) {
             auto found{ resourceMap.find(id) };
             if (found != resourceMap.end()) {
                 return found->getDataPointerCopy();
@@ -29,9 +36,11 @@ namespace resource {
                 return std::make_shared(nullptr);
             }
         }
-        virtual void unload(const std::string& id) = 0;
-        virtual void reload(const std::string& id) = 0;
-        virtual void remove(const std::string& id) = 0;
-        virtual void write(const std::string& id) const = 0;
+
+    private:
+        std::shared_ptr<Resource<T>> getResourceOrThrow(const std::wstring& id) {
+
+        }
     };
+
 }

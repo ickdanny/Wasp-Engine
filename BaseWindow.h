@@ -12,22 +12,39 @@ namespace windowadapter {
         HWND windowHandle;
 
     public:
-        static LRESULT CALLBACK WindowProc(HWND windowHandle, UINT messageCode, WPARAM wParam, LPARAM lParam){
+        static LRESULT CALLBACK WindowProc(
+            HWND windowHandle, 
+            UINT messageCode, 
+            WPARAM wParam, 
+            LPARAM lParam
+        ){
             DERIVED_CLASS* derivedInstancePointer = NULL;
 
             if (messageCode == WM_NCCREATE){
                 CREATESTRUCT* createStructPointer = (CREATESTRUCT*)lParam;
-                derivedInstancePointer = (DERIVED_CLASS*)createStructPointer->lpCreateParams;
-                SetWindowLongPtr(windowHandle, GWLP_USERDATA, (LONG_PTR)derivedInstancePointer);
+
+                derivedInstancePointer 
+                    = (DERIVED_CLASS*)createStructPointer->lpCreateParams;
+
+                SetWindowLongPtr(
+                    windowHandle, 
+                    GWLP_USERDATA, 
+                    (LONG_PTR)derivedInstancePointer
+                );
 
                 derivedInstancePointer->windowHandle = windowHandle;
             }
             else{
-                derivedInstancePointer = (DERIVED_CLASS*)GetWindowLongPtr(windowHandle, GWLP_USERDATA);
+                derivedInstancePointer 
+                    = (DERIVED_CLASS*)GetWindowLongPtr(windowHandle, GWLP_USERDATA);
             }
 
             if (derivedInstancePointer){
-                return derivedInstancePointer->handleMessage(messageCode, wParam, lParam);
+                return derivedInstancePointer->handleMessage(
+                    messageCode, 
+                    wParam, 
+                    lParam
+                );
             }
             else{
                 return DefWindowProc(windowHandle, messageCode, wParam, lParam);
@@ -71,7 +88,11 @@ namespace windowadapter {
         HWND getWindowHandle() const { return windowHandle; }
 
     protected:
-        virtual LRESULT handleMessage(UINT messageCode, WPARAM wParam, LPARAM lParam) = 0;
+        virtual LRESULT handleMessage(
+            UINT messageCode, 
+            WPARAM wParam, 
+            LPARAM lParam
+        ) = 0;
 
     private:
         void registerWindowClass(HINSTANCE instanceHandle, const wchar_t* className) {
