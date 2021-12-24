@@ -33,9 +33,9 @@ namespace resource {
 		const FileTypes& getAcceptableFileTypes() const {
 			return fileTypes;
 		}
-		virtual std::weak_ptr<IResource> loadFromFile(
+		virtual IResource* loadFromFile(
 			const FileOrigin& fileOrigin, 
-			const ResourceLoader& resourceMasterStorage
+			const ResourceLoader& resourceLoader
 		) = 0;
 	};
 }

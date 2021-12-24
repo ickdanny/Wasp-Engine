@@ -5,5 +5,7 @@
 #include "FileLoadable.h"
 #include "ManifestLoadable.h"
 namespace resource {
-	using ResourceOriginVariant = std::variant<FileOrigin, ManifestOrigin>;
+	using InternalOrigin = std::monostate;
+	using ResourceOriginVariant 
+		= std::variant<FileOrigin, ManifestOrigin, InternalOrigin>;
 }

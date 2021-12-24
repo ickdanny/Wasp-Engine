@@ -7,8 +7,8 @@ namespace windowadapter {
 	LRESULT MainWindow::handleMessage(UINT messageCode, WPARAM wParam, LPARAM lParam) {
 		switch (messageCode)
 		{
-			case WM_CREATE:
-				windowPainter.init();
+			case WM_CREATE: // gets recieved before main exits window.create
+				windowPainter.init(windowHandle);
 				return 0;
 
 			case WM_PAINT:

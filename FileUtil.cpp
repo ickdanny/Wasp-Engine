@@ -12,10 +12,7 @@ namespace file {
 		std::wstring extension{ PathFindExtensionW(cStringFileName) };
 		if (!extension.empty()) {
 			//remove extension
-			auto indexOfExtension{ toRet.find_last_of(extension) };
-			if (indexOfExtension != std::wstring::npos) {
-				toRet.erase(indexOfExtension, extension.length());
-			}
+			toRet.erase(toRet.size() - extension.size(), extension.length());
 		}
 		return toRet;
 	}

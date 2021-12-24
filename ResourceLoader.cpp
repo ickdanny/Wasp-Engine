@@ -6,23 +6,6 @@
 
 namespace resource {
 
-	template <std::size_t NUM_LOADABLES>
-	ResourceLoader::ResourceLoader(
-		const std::array<Loadable*, NUM_LOADABLES>& loadables
-	) {
-		for (Loadable* loadable : loadables) {
-			if (loadable->isFileLoadable) {
-				FileLoadable* fileLoadable{ asFileLoadable(loadable) };
-				for (auto& fileExtension : fileLoadable->getAcceptableFileTypes()) {
-					insertFileLoadableIntoMap(fileLoadable);
-				}
-			}
-			if (loadable->isManifestLoadable) {
-
-			}
-		}
-	}
-
 	void ResourceLoader::insertFileLoadableIntoMap(
 		const std::wstring& key, 
 		FileLoadable* value
@@ -43,8 +26,7 @@ namespace resource {
 		manifestPrefixMap.insert({ key, value });
 	}
 
-
-	std::weak_ptr<IResource> ResourceLoader::loadFile(
+	IResource* ResourceLoader::loadFile(
 		const FileOrigin& fileOrigin
 	) const{
 		const std::wstring& extension{ 
@@ -53,7 +35,7 @@ namespace resource {
 		return fileExtensionMap.at(extension)->loadFromFile(fileOrigin, *this);
 	}
 
-	std::weak_ptr<IResource> ResourceLoader::loadManifestEntry(
+	IResource* ResourceLoader::loadManifestEntry(
 		const ManifestOrigin& manifestOrigin
 	) const {
 		const std::wstring& prefix{ manifestOrigin.manifestArguments[0] };

@@ -7,24 +7,37 @@
 #include "Config.h"
 #include "WindowUtil.h"
 #include "ComLibraryGuard.h"
-#include "BitmapManager.h"
+#include "BitmapConstructor.h"
 #include "BaseWindow.h"
 #include "MainWindow.h"
+#include "ResourceMasterStorage.h"
 
 void runMessageLoop();
 
-#pragma warning(suppress:C28251)
+#pragma warning(suppress : 28251) //suppress inconsistent annotation warning
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode)
 {
     //init COM
     comadapter::ComLibraryGuard comLibraryGuard{};
     comLibraryGuard.init(COINIT_APARTMENTTHREADED);
 
-    //init Resources
+    //init Resources : WIC graphics
+    std::shared_ptr<graphics::BitmapConstructor> bitmapConstructorPointer{
+        std::make_shared<graphics::BitmapConstructor>()
+    };
+    bitmapConstructorPointer->init();
 
+    gameresource::ResourceMasterStorage resourceMasterStorage{
+        gameresource::WicBitmapStorage{bitmapConstructorPointer},
+        gameresource::D2DBitmapStorage{bitmapConstructorPointer}
+    };
 
-    
-    //init window, WIC graphics, and Direct2D
+    resource::ResourceLoader resourceLoader{
+        std::array<Loadable*, 1>{&resourceMasterStorage.wicBitmapStorage}
+    };
+    resourceLoader.loadFile({ L"test_image.png" });
+
+    //init window and Direct 2D
     windowadapter::MainWindow window{};
     {
         const MONITORINFO primaryMonitorInfo{ windowadapter::getPrimaryMonitorInfo() };
@@ -46,6 +59,20 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             config::windowHeight
         );
     }
+
+    //init D2D Bitmaps
+    resourceMasterStorage.d2dBitmapStorage.setWicBitmapStoragePointer(
+        &resourceMasterStorage.wicBitmapStorage
+    );
+    resourceMasterStorage.d2dBitmapStorage.setRenderTargetPointer(
+        window.getWindowPainter().getRenderTargetPointer()
+    );
+    resourceMasterStorage.d2dBitmapStorage.loadAllWicBitmaps();
+
+    //image draw test
+    window.getWindowPainter().setBitmapPointer(
+        *resourceMasterStorage.d2dBitmapStorage.get(L"test_image")
+    );
 
     ShowWindow(window.getWindowHandle(), windowShowMode);
     

@@ -15,5 +15,9 @@ namespace windowadapter {
             WPARAM wParam, 
             LPARAM lParam
         ) override;
+
+        WindowPainter& getWindowPainter() {
+            return windowPainter;
+        }
     };
 }

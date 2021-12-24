@@ -16,10 +16,27 @@ namespace resource {
 
 	public:
 		template <std::size_t NUM_LOADABLES>
-		ResourceLoader(const std::array<Loadable*, NUM_LOADABLES>& loadables);
+		ResourceLoader(
+			const std::array<Loadable*, NUM_LOADABLES>& loadables
+		) {
+			for (Loadable* loadable : loadables) {
+				if (loadable->isFileLoadable()) {
+					FileLoadable* fileLoadable{ asFileLoadable(loadable) };
+					for (auto& fileExtension : 
+						fileLoadable->getAcceptableFileTypes()) {
+						insertFileLoadableIntoMap(fileExtension, fileLoadable);
+					}
+				}
+				if (loadable->isManifestLoadable()) {
+					//todo: handle manifest loadables
+				}
+			}
+		}
 
-		std::weak_ptr<IResource> loadFile(const FileOrigin& fileOrigin) const;
-		std::weak_ptr<IResource> loadManifestEntry(const ManifestOrigin& manifestOrigin) const;
+		IResource* loadFile(const FileOrigin& fileOrigin) const;
+		IResource* loadManifestEntry(
+			const ManifestOrigin& manifestOrigin
+		) const;
 
 	private:
 		FileLoadable* asFileLoadable(Loadable* loadable) const {

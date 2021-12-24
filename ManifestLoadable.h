@@ -34,9 +34,9 @@ namespace resource {
 		const ManifestPrefixes& getAcceptableManifestPrefixes() const {
 			return manifestPrefixes;
 		}
-		virtual std::weak_ptr<IResource> loadFromManifest(
+		virtual IResource* loadFromManifest(
 			const ManifestOrigin& manifestOrigin,
-			const ResourceLoader& resourceMasterStorage
+			const ResourceLoader& resourceLoader
 		) = 0;
 	};
 }
