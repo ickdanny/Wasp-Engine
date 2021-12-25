@@ -22,20 +22,21 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     comLibraryGuard.init(COINIT_APARTMENTTHREADED);
 
     //init Resources : WIC graphics
-    std::shared_ptr<graphics::BitmapConstructor> bitmapConstructorPointer{
-        std::make_shared<graphics::BitmapConstructor>()
-    };
-    bitmapConstructorPointer->init();
+    graphics::BitmapConstructor bitmapConstructorPointer{};
+    bitmapConstructorPointer.init();
 
     gameresource::ResourceMasterStorage resourceMasterStorage{
-        gameresource::WicBitmapStorage{bitmapConstructorPointer},
-        gameresource::D2DBitmapStorage{bitmapConstructorPointer}
+        gameresource::DirectoryStorage{},
+        gameresource::BitmapStorage{&bitmapConstructorPointer}
     };
 
     resource::ResourceLoader resourceLoader{
-        std::array<Loadable*, 1>{&resourceMasterStorage.wicBitmapStorage}
+        std::array<Loadable*, 2>{
+            &resourceMasterStorage.directoryStorage,
+            &resourceMasterStorage.bitmapStorage
+        }
     };
-    resourceLoader.loadFile({ L"test_image.png" });
+    resourceLoader.loadFile({ L"res" }); //test image in res
 
     //init window and Direct 2D
     windowadapter::MainWindow window{};
@@ -47,6 +48,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         const int x{ xCenter - (config::windowWidth / 2) };
         const int y{ yCenter - (config::windowHeight / 2) };
 
+        //will init d2d
         window.create(
             instanceHandle,
             config::className,
@@ -61,17 +63,13 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     }
 
     //init D2D Bitmaps
-    resourceMasterStorage.d2dBitmapStorage.setWicBitmapStoragePointer(
-        &resourceMasterStorage.wicBitmapStorage
-    );
-    resourceMasterStorage.d2dBitmapStorage.setRenderTargetPointer(
+    resourceMasterStorage.bitmapStorage.setRenderTargetPointerAndLoadD2DBitmaps(
         window.getWindowPainter().getRenderTargetPointer()
     );
-    resourceMasterStorage.d2dBitmapStorage.loadAllWicBitmaps();
 
     //image draw test
     window.getWindowPainter().setBitmapPointer(
-        *resourceMasterStorage.d2dBitmapStorage.get(L"test_image")
+        resourceMasterStorage.bitmapStorage.get(L"test_image")->d2dBitmap
     );
 
     ShowWindow(window.getWindowHandle(), windowShowMode);

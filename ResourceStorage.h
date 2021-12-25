@@ -30,43 +30,13 @@ namespace resource {
         void unload(const std::wstring& id) override {
             auto found{ resourceMap.find(id) };
             if (found != resourceMap.end()) {
-                std::get<1>(*found)->unloadData();
-            }
-        }
+                Resource<T>& resource{
+                    *(std::get<1>(*found))
+                };
 
-        void reload(const std::wstring& id) override {
-            if (resourceLoaderPointer) {
-                auto found{ resourceMap.find(id) };
-                if (found != resourceMap.end()) {
-                    const ResourceOriginVariant origin{ 
-                        std::get<1>(*found)->getOrigin()
-                    };
-                    switch (origin.index()) {
-                        case 0: {
-                            FileOrigin const* fileTest{
-                                std::get_if<FileOrigin>(&origin)
-                            };
-                            if (fileTest) {
-                                resourceLoaderPointer->loadFile(*fileTest);
-                            }
-                            break;
-                        }
-                        case 1: {
-                            ManifestOrigin const* manifestTest{
-                                std::get_if<ManifestOrigin>(&origin)
-                            };
-                            if (manifestTest) {
-                                resourceLoaderPointer->loadManifestEntry(
-                                    *manifestTest
-                                );
-                            }
-                            break;
-                        }
-                    }
+                if (resource.isLoaded()) {
+                    resource.unloadData();
                 }
-            }
-            else {
-                throw std::runtime_error{ "Error trying to reload without loader" };
             }
         }
 

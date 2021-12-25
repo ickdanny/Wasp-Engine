@@ -79,8 +79,8 @@ namespace graphics {
 	}
 
 	CComPtr<ID2D1Bitmap> BitmapConstructor::converWicBitmapToD2D(
-		const CComPtr<IWICFormatConverter>& formatConverterPointer,
-		const CComPtr<ID2D1HwndRenderTarget>& renderTargetPointer
+		const CComPtr<IWICFormatConverter> formatConverterPointer,
+		const CComPtr<ID2D1HwndRenderTarget> renderTargetPointer
 	) {
 		CComPtr<ID2D1Bitmap> bitmapPointer{};
 		HRESULT result{ renderTargetPointer->CreateBitmapFromWicBitmap(
@@ -95,8 +95,8 @@ namespace graphics {
 	}
 
 	void BitmapConstructor::initWicFormatConverter(
-		const CComPtr<IWICFormatConverter>& formatConverterPointer,
-		const CComPtr<IWICBitmapFrameDecode>& framePointer
+		const CComPtr<IWICFormatConverter> formatConverterPointer,
+		const CComPtr<IWICBitmapFrameDecode> framePointer
 	) {
 		HRESULT result{
 			formatConverterPointer->Initialize(

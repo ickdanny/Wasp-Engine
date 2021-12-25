@@ -8,7 +8,7 @@ namespace windowadapter {
     class BaseWindow {
 
     protected:
-        //set in WindowProc //derivedInstancePointer->windowHandle = windowHandle;
+        //set in WindowProc : derivedInstancePointer->windowHandle = windowHandle;
         HWND windowHandle;
 
     public:

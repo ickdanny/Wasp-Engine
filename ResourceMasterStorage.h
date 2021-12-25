@@ -1,11 +1,11 @@
 #pragma once
 
-#include "WicBitmapStorage.h"
-#include "D2DBitmapStorage.h"
+#include "DirectoryStorage.h"
+#include "BitmapStorage.h"
 
 namespace gameresource {
 	struct ResourceMasterStorage {
-		WicBitmapStorage wicBitmapStorage;
-		D2DBitmapStorage d2dBitmapStorage;
+		DirectoryStorage directoryStorage;
+		BitmapStorage bitmapStorage;
 	};
 }
