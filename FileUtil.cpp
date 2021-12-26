@@ -8,7 +8,6 @@
 
 namespace file {
 
-	//todo: remove everything before the slash
 	std::wstring getFileName(const std::wstring& fileName){
 		throwIfFileDoesNotExist(fileName);
 		auto cStringFileName{ fileName.c_str() };
