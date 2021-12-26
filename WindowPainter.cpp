@@ -95,25 +95,13 @@ namespace windowadapter {
 
 	void WindowPainter::makeBufferRenderTargetPointer() {
 
-		float oldDpiX{};
-		float oldDpiY{};
-		renderTargetPointer->GetDpi(&oldDpiX, &oldDpiY);
-
-		D2D1_SIZE_F windowSize = renderTargetPointer->GetSize();
-
-		float newDpiX{ config::windowWidth * oldDpiX / windowSize.width };
-		float newDpiY{ config::windowHeight * oldDpiY / windowSize.height };
-
 		D2D1_SIZE_U size{ D2D1::SizeU(config::windowWidth, config::windowHeight) };
+
 		HRESULT result{ renderTargetPointer->CreateCompatibleRenderTarget(
-			/*D2D1_SIZE_F{
+			D2D1_SIZE_F{
 				static_cast<float>(size.width),
 				static_cast<float>(size.height)
-			},*/
-			//D2D1_SIZE_F{640.0f, 480.0f},
-			//D2D1_SIZE_F{1.0f, 1.0f},
-			D2D1_SIZE_F{newDpiX, newDpiY},
-			size,
+			},
 			&bufferRenderTargetPointer
 		) };
 
@@ -144,7 +132,7 @@ namespace windowadapter {
 
 	void WindowPainter::beginDraw() {
 		bufferRenderTargetPointer->BeginDraw();
-		bufferRenderTargetPointer->Clear(D2D1::ColorF(D2D1::ColorF::SkyBlue));
+		bufferRenderTargetPointer->Clear(D2D1::ColorF(D2D1::ColorF::Magenta));
 	}
 
 	static D2D1::Matrix3x2F makeRotationMatrix(float rotationDegrees, D2D1_POINT_2F center) {

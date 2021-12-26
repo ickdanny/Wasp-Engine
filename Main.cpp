@@ -70,12 +70,12 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     //image draw test
     window.getWindowPainter().beginDraw();
     window.getWindowPainter().drawBitmap(
-        { config::windowWidth/2, config::windowHeight/2 },
+        { 320, 240 },
         { 
             resourceMasterStorage.bitmapStorage.get(L"test_image")->d2dBitmap, 
-            //45.0f, 
-            //.5f, 
-            //.8f 
+            45.0f, 
+            .8f, 
+            .7f 
         }
     );
     window.getWindowPainter().endDraw();

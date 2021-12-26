@@ -9,4 +9,6 @@ namespace config {
 
 	constexpr int windowWidth{ 640 };
 	constexpr int windowHeight{ 480 };
+	//constexpr int windowWidth{ 1800 };
+	//constexpr int windowHeight{ 900 };
 }
