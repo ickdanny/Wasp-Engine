@@ -13,11 +13,11 @@ namespace config {
 	//graphics
 	constexpr int graphicsWidth{ windowWidth / 2 };
 	constexpr int graphicsHeight{ windowHeight / 2 };
-	constexpr int fillColor{ D2D1::ColorF::Magenta };
+	constexpr int fillColor{ D2D1::ColorF::Black };
 	constexpr int textColor{ D2D1::ColorF::White };
-	constexpr wchar_t fontName[]{ L"Verdana" };
-	constexpr float fontSize{ 12.0f };
-	constexpr DWRITE_FONT_WEIGHT fontWeight{ DWRITE_FONT_WEIGHT_BOLD };
+	constexpr wchar_t fontName[]{ L"Courier New" };
+	constexpr float fontSize{ 11.0f };
+	constexpr DWRITE_FONT_WEIGHT fontWeight{ DWRITE_FONT_WEIGHT_THIN };
 	constexpr DWRITE_FONT_STYLE fontStyle{ DWRITE_FONT_STYLE_NORMAL };
 	constexpr DWRITE_FONT_STRETCH fontStretch{ DWRITE_FONT_STRETCH_NORMAL };
 	constexpr DWRITE_TEXT_ALIGNMENT textAlignment{ DWRITE_TEXT_ALIGNMENT_LEADING };

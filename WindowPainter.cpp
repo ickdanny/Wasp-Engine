@@ -103,6 +103,10 @@ namespace windowadapter {
 		if (FAILED(result)) {
 			throw HResultError{ "Error creating buffer render target" };
 		}
+
+		bufferRenderTargetPointer->SetTextAntialiasMode(
+			D2D1_TEXT_ANTIALIAS_MODE_ALIASED
+		);
 	}
 
 	void WindowPainter::makeTextBrushPointer() {
