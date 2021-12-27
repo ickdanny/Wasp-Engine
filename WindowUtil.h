@@ -8,4 +8,7 @@ namespace windowadapter {
 
 	MONITORINFO getMonitorInfoFromWindow(HWND windowHandle);
 	HMONITOR getMonitorHandleFromWindow(HWND windowHandle);
+
+	int getWindowBorderWidthPadding();
+	int getWindowBorderHeightPadding();
 }

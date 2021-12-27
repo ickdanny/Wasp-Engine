@@ -32,4 +32,18 @@ namespace windowadapter {
 	HMONITOR getMonitorHandleFromWindow(HWND windowHandle) {
 		return MonitorFromWindow(windowHandle, MONITOR_DEFAULTTONEAREST);
 	}
+	int getWindowBorderWidthPadding(){
+		return 2 * (
+			GetSystemMetrics(SM_CXBORDER)
+			+ GetSystemMetrics(SM_CXFIXEDFRAME)
+			+ GetSystemMetrics(SM_CXSIZEFRAME)
+		);
+	}
+	int getWindowBorderHeightPadding(){
+		return GetSystemMetrics(SM_CYCAPTION) + (2 * (
+			GetSystemMetrics(SM_CYBORDER)
+			+ GetSystemMetrics(SM_CYFIXEDFRAME)
+			+ GetSystemMetrics(SM_CYSIZEFRAME)
+		));
+	}
 }

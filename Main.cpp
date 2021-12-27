@@ -14,6 +14,10 @@
 
 void runMessageLoop();
 
+using windowadapter::getPrimaryMonitorInfo;
+using windowadapter::getWindowBorderWidthPadding;
+using windowadapter::getWindowBorderHeightPadding;
+
 #pragma warning(suppress : 28251) //suppress inconsistent annotation warning
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode)
 {
@@ -41,12 +45,18 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     //init window and Direct 2D
     windowadapter::MainWindow window{};
     {
-        const MONITORINFO primaryMonitorInfo{ windowadapter::getPrimaryMonitorInfo() };
+        const MONITORINFO primaryMonitorInfo{ getPrimaryMonitorInfo() };
         const RECT& primaryMonitorRect{ primaryMonitorInfo.rcMonitor };
         const int xCenter{ (primaryMonitorRect.right - primaryMonitorRect.left) / 2 };
         const int yCenter{ (primaryMonitorRect.bottom - primaryMonitorRect.top) / 2 };
-        const int x{ xCenter - (config::windowWidth / 2) };
-        const int y{ yCenter - (config::windowHeight / 2) };
+        const int realWindowWidth
+            = config::windowWidth +getWindowBorderWidthPadding();
+        const int realWindowHeight
+            = config::windowHeight +getWindowBorderHeightPadding();
+        const int x{ xCenter - (realWindowWidth / 2) };
+        const int y{ yCenter - (realWindowHeight / 2) };
+
+        int temp{ GetSystemMetrics(SM_CYCAPTION) };
 
         //will init d2d
         window.create(
@@ -57,8 +67,8 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             0, //extra window style
             x,
             y,
-            config::windowWidth,
-            config::windowHeight
+            realWindowWidth,
+            realWindowHeight
         );
     }
 
@@ -69,18 +79,20 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
     //image draw test
     window.getWindowPainter().beginDraw();
-    window.getWindowPainter().drawBitmap(
-        { 320, 240 },
+    window.getWindowPainter().drawSubBitmap(
+        { config::graphicsWidth/2, config::graphicsHeight/2 },
         { 
             resourceMasterStorage.bitmapStorage.get(L"test_image")->d2dBitmap, 
             45.0f, 
             .8f, 
             .7f 
-        }
+        },
+        {100, 100, 600, 400}
     );
     window.getWindowPainter().drawText(
         { 0, 0 },
-        {L"Hello World! Raising say express had chiefly detract demands she. Quiet led own cause three him. Front no party young abode state up. Saved he do fruit woody of to. Met defective are allowance two perceived listening consulted contained. It chicken oh colonel pressed excited suppose to shortly. He improve started no we manners however effects. Prospect"}
+        {L"Hello World! Raising say express had chiefly detract demands she. Quiet led own cause three him. Front no party young abode state up. Saved he do fruit woody of to. Met defective are allowance two perceived listening consulted contained. It chicken oh colonel pressed excited suppose to shortly. He improve started no we manners however effects. Prospect"},
+        { 300.0f, 500.0f }
     );
     window.getWindowPainter().endDraw();
 

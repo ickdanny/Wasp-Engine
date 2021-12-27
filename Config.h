@@ -11,8 +11,10 @@ namespace config {
 	constexpr int windowHeight{ 480 };
 
 	//graphics
-	const D2D1::ColorF fillColor{ D2D1::ColorF::Magenta };
-	const D2D1::ColorF textColor{ D2D1::ColorF::White };
+	constexpr int graphicsWidth{ windowWidth / 2 };
+	constexpr int graphicsHeight{ windowHeight / 2 };
+	constexpr int fillColor{ D2D1::ColorF::Magenta };
+	constexpr int textColor{ D2D1::ColorF::White };
 	constexpr wchar_t fontName[]{ L"Verdana" };
 	constexpr float fontSize{ 12.0f };
 	constexpr DWRITE_FONT_WEIGHT fontWeight{ DWRITE_FONT_WEIGHT_BOLD };

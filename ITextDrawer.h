@@ -10,8 +10,9 @@ namespace graphics {
 	class ITextDrawer : public virtual IDrawer {
 	public:
 		virtual void drawText(
-			geometry::Point2 pos,
-			const std::wstring& text
+			const geometry::Point2 pos,
+			const std::wstring& text,
+			const std::pair<float, float> bounds
 		) = 0;
 	};
 

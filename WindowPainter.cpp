@@ -92,12 +92,10 @@ namespace windowadapter {
 
 	void WindowPainter::makeBufferRenderTargetPointer() {
 
-		D2D1_SIZE_U size{ D2D1::SizeU(config::windowWidth, config::windowHeight) };
-
 		HRESULT result{ renderTargetPointer->CreateCompatibleRenderTarget(
 			D2D1_SIZE_F{
-				static_cast<float>(size.width),
-				static_cast<float>(size.height)
+				static_cast<float>(config::graphicsWidth),
+				static_cast<float>(config::graphicsHeight)
 			},
 			&bufferRenderTargetPointer
 		) };
@@ -109,7 +107,7 @@ namespace windowadapter {
 
 	void WindowPainter::makeTextBrushPointer() {
 		HRESULT result{ bufferRenderTargetPointer->CreateSolidColorBrush(
-			config::textColor,
+			D2D1::ColorF{ config::textColor },
 			&textBrushPointer
 		) };
 	}
@@ -179,7 +177,7 @@ namespace windowadapter {
 
 	void WindowPainter::beginDraw() {
 		bufferRenderTargetPointer->BeginDraw();
-		bufferRenderTargetPointer->Clear(config::fillColor);
+		bufferRenderTargetPointer->Clear(D2D1::ColorF{ config::fillColor });
 	}
 
 	static D2D1::Matrix3x2F makeRotationMatrix(
@@ -201,7 +199,7 @@ namespace windowadapter {
 	}
 
 	void WindowPainter::drawBitmap(
-		const geometry::Point2& center,
+		const geometry::Point2 center,
 		const graphics::BitmapDrawInstruction& bitmapDrawInstruction
 	) {
 		//assume beginDraw has already been called
@@ -299,22 +297,127 @@ namespace windowadapter {
 		}
 	}
 
+	void WindowPainter::drawSubBitmap(
+		const geometry::Point2 center,
+		const graphics::BitmapDrawInstruction& bitmapDrawInstruction,
+		const geometry::Rectangle& sourceRectangle
+	) {
+		//assume beginDraw has already been called
+
+		ID2D1Bitmap& bitmap{ *bitmapDrawInstruction.getBitmap() };
+		D2D1_SIZE_F originalSize = { sourceRectangle.width, sourceRectangle.height };
+
+		//only rotation or both rotation and scale
+		if (bitmapDrawInstruction.requiresRotation()) {
+			D2D1_POINT_2F d2dCenter{ center.x, center.y };
+			D2D1::Matrix3x2F transform = makeRotationMatrix(
+				bitmapDrawInstruction.getRotationDegrees(),
+				d2dCenter
+			);
+			//both rotation and scale
+			if (bitmapDrawInstruction.requiresScale()) {
+				transform = transform * makeScaleMatrix(
+					bitmapDrawInstruction.getScale(),
+					d2dCenter
+				);
+				float scaledWidth{
+					originalSize.width * bitmapDrawInstruction.getScale()
+				};
+				float scaledHeight{
+					originalSize.height * bitmapDrawInstruction.getScale()
+				};
+				const geometry::Point2& upperLeft{
+					center.x - (scaledWidth / 2),
+					center.y - (scaledHeight / 2)
+				};
+				makeTransformSubBitmapDrawCall(
+					bitmap,
+					transform,
+					upperLeft,
+					scaledWidth,
+					scaledHeight,
+					bitmapDrawInstruction.getOpacity(),
+					sourceRectangle
+				);
+			}
+			//only rotation
+			else {
+				const geometry::Point2& upperLeft{
+					center.x - (originalSize.width / 2),
+					center.y - (originalSize.height / 2)
+				};
+				makeTransformSubBitmapDrawCall(
+					bitmap,
+					transform,
+					upperLeft,
+					originalSize.width,
+					originalSize.height,
+					bitmapDrawInstruction.getOpacity(),
+					sourceRectangle
+				);
+			}
+		}
+		//only scale
+		else if (bitmapDrawInstruction.requiresScale()) {
+			D2D1_POINT_2F d2dCenter{ center.x, center.y };
+			D2D1::Matrix3x2F transform = makeScaleMatrix(
+				bitmapDrawInstruction.getScale(),
+				d2dCenter
+			);
+			float scaledWidth{
+					originalSize.width * bitmapDrawInstruction.getScale()
+			};
+			float scaledHeight{
+				originalSize.height * bitmapDrawInstruction.getScale()
+			};
+			const geometry::Point2& upperLeft{
+				center.x - (scaledWidth / 2),
+				center.y - (scaledHeight / 2)
+			};
+			makeTransformSubBitmapDrawCall(
+				bitmap,
+				transform,
+				upperLeft,
+				scaledWidth,
+				scaledHeight,
+				bitmapDrawInstruction.getOpacity(),
+				sourceRectangle
+			);
+		}
+		//normal draw call
+		else {
+			const geometry::Point2& upperLeft{
+				center.x - (originalSize.width / 2),
+				center.y - (originalSize.height / 2)
+			};
+			makeSubBitmapDrawCall(
+				bitmap,
+				upperLeft,
+				originalSize.width,
+				originalSize.height,
+				bitmapDrawInstruction.getOpacity(),
+				sourceRectangle
+			);
+		}
+	}
+
 	void WindowPainter::drawText(
-		geometry::Point2 pos,
-		const std::wstring& text
+		const geometry::Point2 pos,
+		const std::wstring& text,
+		const std::pair<float, float> bounds
 	) {
 		bufferRenderTargetPointer->DrawText(
 			text.c_str(),
 			text.size(),
 			textFormatPointer,
-			D2D1::RectF(0, 0, 500, 400),
+			D2D1::RectF(pos.x, pos.y, pos.x + bounds.first, pos.y + bounds.second),
 			textBrushPointer
 		);
 	}
 
 	inline void WindowPainter::makeBitmapDrawCall(
 		ID2D1Bitmap& bitmap,
-		const geometry::Point2& upperLeft,
+		const geometry::Point2 upperLeft,
 		float scaledWidth,
 		float scaledHeight,
 		float opacity
@@ -334,7 +437,7 @@ namespace windowadapter {
 	inline void WindowPainter::makeTransformBitmapDrawCall(
 		ID2D1Bitmap& bitmap,
 		const D2D1::Matrix3x2F& transform,
-		const geometry::Point2& upperLeft,
+		const geometry::Point2 upperLeft,
 		float scaledWidth,
 		float scaledHeight,
 		float opacity
@@ -344,7 +447,56 @@ namespace windowadapter {
 		bufferRenderTargetPointer->SetTransform(D2D1::Matrix3x2F::Identity());
 	}
 
+	inline void WindowPainter::makeSubBitmapDrawCall(
+		ID2D1Bitmap& bitmap,
+		const geometry::Point2 upperLeft,
+		float scaledWidth,
+		float scaledHeight,
+		float opacity,
+		const geometry::Rectangle& sourceRectangle
+	) {
+		bufferRenderTargetPointer->DrawBitmap(
+			&bitmap,
+			D2D1::RectF(
+				upperLeft.x,
+				upperLeft.y,
+				upperLeft.x + scaledWidth,
+				upperLeft.y + scaledHeight),
+			opacity, 
+			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+			D2D1::RectF(
+				sourceRectangle.x,
+				sourceRectangle.y,
+				sourceRectangle.x + sourceRectangle.width,
+				sourceRectangle.y + sourceRectangle.height
+			)
+		);
+	}
+
+	inline void WindowPainter::makeTransformSubBitmapDrawCall(
+		ID2D1Bitmap& bitmap,
+		const D2D1::Matrix3x2F& transform,
+		const geometry::Point2 upperLeft,
+		float scaledWidth,
+		float scaledHeight,
+		float opacity,
+		const geometry::Rectangle& sourceRectangle
+	) {
+		bufferRenderTargetPointer->SetTransform(transform);
+		makeSubBitmapDrawCall(
+			bitmap, 
+			upperLeft, 
+			scaledWidth, 
+			scaledHeight,
+			opacity,
+			sourceRectangle
+		);
+		bufferRenderTargetPointer->SetTransform(D2D1::Matrix3x2F::Identity());
+	}
+
 	void WindowPainter::endDraw() {
 		bufferRenderTargetPointer->EndDraw();
 	}
+
+
 }
