@@ -78,6 +78,10 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             .7f 
         }
     );
+    window.getWindowPainter().drawText(
+        { 0, 0 },
+        {L"Hello World! Raising say express had chiefly detract demands she. Quiet led own cause three him. Front no party young abode state up. Saved he do fruit woody of to. Met defective are allowance two perceived listening consulted contained. It chicken oh colonel pressed excited suppose to shortly. He improve started no we manners however effects. Prospect"}
+    );
     window.getWindowPainter().endDraw();
 
     ShowWindow(window.getWindowHandle(), windowShowMode);

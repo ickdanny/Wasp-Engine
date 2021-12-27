@@ -7,6 +7,7 @@ namespace graphics {
 	class BitmapDrawInstruction {
 		
 	private:
+		//todo: sub image support
 
 		static constexpr float defaultRotationDegrees{ 0.0f };
 		static constexpr float defaultOpacity{ 1.0f };

@@ -11,13 +11,119 @@ namespace windowadapter {
 	}
 
 	void WindowPainter::init(HWND windowHandle) {
+		getDeviceIndependentResources();
+		getDeviceDependentResources(windowHandle);
+	}
+
+	void WindowPainter::getDeviceIndependentResources() {
 		getD2dFactoryPointer();
-		getGraphicsResources(windowHandle);
+		getTextFormatPointer();
+	}
+
+	void WindowPainter::getD2dFactoryPointer() {
+		HRESULT result{ D2D1CreateFactory(
+			D2D1_FACTORY_TYPE_SINGLE_THREADED,
+			&d2dFactoryPointer
+		) };
+		if (FAILED(result)) {
+			throw new HResultError("Error creating Direct2D factory");
+		}
+	}
+
+	void WindowPainter::getTextFormatPointer() {
+		HRESULT result{ getDirectWriteFactoryPointer()->CreateTextFormat(
+			config::fontName,
+			NULL,
+			config::fontWeight,
+			config::fontStyle,
+			config::fontStretch,
+			config::fontSize,
+			L"", //locale
+			&textFormatPointer
+		) };
+		if (FAILED(result)) {
+			throw new HResultError("Error creating text format");
+		}
+
+		textFormatPointer->SetTextAlignment(config::textAlignment);
+		textFormatPointer->SetParagraphAlignment(config::paragraphAlignment);
+	}
+
+	CComPtr<IDWriteFactory> WindowPainter::getDirectWriteFactoryPointer() {
+		IDWriteFactory* rawPointer{};
+		HRESULT result{DWriteCreateFactory(
+			DWRITE_FACTORY_TYPE_SHARED,
+			__uuidof(rawPointer),
+			reinterpret_cast<IUnknown**>(&rawPointer)
+		) };
+		if (FAILED(result)) {
+			throw HResultError{ "Error failed to get Direct Write Factory" };
+		}
+		CComPtr<IDWriteFactory> toRet{};
+		toRet.Attach(rawPointer);
+		return toRet;
+	}
+
+	void WindowPainter::getDeviceDependentResources(HWND windowHandle)
+	{
+		if (renderTargetPointer == NULL) {
+			getRenderTargetPointer(windowHandle);
+			makeBufferRenderTargetPointer();
+			makeTextBrushPointer();
+		}
+	}
+
+	void WindowPainter::getRenderTargetPointer(HWND windowHandle) {
+		RECT clientRect;
+		GetClientRect(windowHandle, &clientRect);
+
+		D2D1_SIZE_U size = D2D1::SizeU(clientRect.right, clientRect.bottom);
+
+		HRESULT result{ d2dFactoryPointer->CreateHwndRenderTarget(
+			D2D1::RenderTargetProperties(),
+			D2D1::HwndRenderTargetProperties(windowHandle, size),
+			&renderTargetPointer
+		) };
+
+		if (FAILED(result)) {
+			throw new HResultError("Error creating render target");
+		}
+	}
+
+	void WindowPainter::makeBufferRenderTargetPointer() {
+
+		D2D1_SIZE_U size{ D2D1::SizeU(config::windowWidth, config::windowHeight) };
+
+		HRESULT result{ renderTargetPointer->CreateCompatibleRenderTarget(
+			D2D1_SIZE_F{
+				static_cast<float>(size.width),
+				static_cast<float>(size.height)
+			},
+			&bufferRenderTargetPointer
+		) };
+
+		if (FAILED(result)) {
+			throw HResultError{ "Error creating buffer render target" };
+		}
+	}
+
+	void WindowPainter::makeTextBrushPointer() {
+		HRESULT result{ bufferRenderTargetPointer->CreateSolidColorBrush(
+			config::textColor,
+			&textBrushPointer
+		) };
+	}
+
+	void WindowPainter::discardDeviceDependentResources()
+	{
+		renderTargetPointer = nullptr;
+		bufferRenderTargetPointer = nullptr;
+		textBrushPointer = nullptr;
 	}
 
 	void WindowPainter::paint(HWND windowHandle)
 	{
-		getGraphicsResources(windowHandle);
+		getDeviceDependentResources(windowHandle);
 		PAINTSTRUCT paintStruct;
 		BeginPaint(windowHandle, &paintStruct);
 
@@ -43,7 +149,7 @@ namespace windowadapter {
 		HRESULT result = renderTargetPointer->EndDraw();
 		if (FAILED(result) || result == D2DERR_RECREATE_TARGET)
 		{
-			discardGraphicsResources();
+			discardDeviceDependentResources();
 		}
 		EndPaint(windowHandle, &paintStruct);
 	}
@@ -55,65 +161,6 @@ namespace windowadapter {
 			throw HResultError{ "Error retrieving buffer bitmap from pointer" };
 		}
 		return toRet;
-	}
-
-	void WindowPainter::getD2dFactoryPointer() {
-		HRESULT result{ D2D1CreateFactory(
-			D2D1_FACTORY_TYPE_SINGLE_THREADED,
-			&d2dFactoryPointer
-		) };
-		if (FAILED(result)) {
-			throw new HResultError("Error creating Direct2D factory");
-		}
-	}
-
-	void WindowPainter::getGraphicsResources(HWND windowHandle)
-	{
-		if (renderTargetPointer == NULL) {
-			getRenderTargetPointer(windowHandle);
-			makeBufferRenderTargetPointer();
-		}
-	}
-
-	void WindowPainter::getRenderTargetPointer(HWND windowHandle) {
-		RECT clientRect;
-		GetClientRect(windowHandle, &clientRect);
-
-		D2D1_SIZE_U size = D2D1::SizeU(clientRect.right, clientRect.bottom);
-
-		HRESULT result{ d2dFactoryPointer->CreateHwndRenderTarget(
-			D2D1::RenderTargetProperties(),
-			D2D1::HwndRenderTargetProperties(windowHandle, size),
-			&renderTargetPointer
-		) };
-
-		if (FAILED(result)) {
-			throw new HResultError("Error creating render target");
-		}
-	}
-
-
-	void WindowPainter::makeBufferRenderTargetPointer() {
-
-		D2D1_SIZE_U size{ D2D1::SizeU(config::windowWidth, config::windowHeight) };
-
-		HRESULT result{ renderTargetPointer->CreateCompatibleRenderTarget(
-			D2D1_SIZE_F{
-				static_cast<float>(size.width),
-				static_cast<float>(size.height)
-			},
-			&bufferRenderTargetPointer
-		) };
-
-		if (FAILED(result)) {
-			throw HResultError{ "Error creating buffer render target" };
-		}
-	}
-
-	void WindowPainter::discardGraphicsResources()
-	{
-		renderTargetPointer = nullptr;
-		bufferRenderTargetPointer = nullptr;
 	}
 
 	void WindowPainter::resize(HWND windowHandle)
@@ -132,10 +179,13 @@ namespace windowadapter {
 
 	void WindowPainter::beginDraw() {
 		bufferRenderTargetPointer->BeginDraw();
-		bufferRenderTargetPointer->Clear(D2D1::ColorF(D2D1::ColorF::Magenta));
+		bufferRenderTargetPointer->Clear(config::fillColor);
 	}
 
-	static D2D1::Matrix3x2F makeRotationMatrix(float rotationDegrees, D2D1_POINT_2F center) {
+	static D2D1::Matrix3x2F makeRotationMatrix(
+		float rotationDegrees, 
+		D2D1_POINT_2F center
+	) {
 		return D2D1::Matrix3x2F::Rotation(
 			rotationDegrees,
 			center
@@ -247,6 +297,19 @@ namespace windowadapter {
 				bitmapDrawInstruction.getOpacity()
 			);
 		}
+	}
+
+	void WindowPainter::drawText(
+		geometry::Point2 pos,
+		const std::wstring& text
+	) {
+		bufferRenderTargetPointer->DrawText(
+			text.c_str(),
+			text.size(),
+			textFormatPointer,
+			D2D1::RectF(0, 0, 500, 400),
+			textBrushPointer
+		);
 	}
 
 	inline void WindowPainter::makeBitmapDrawCall(

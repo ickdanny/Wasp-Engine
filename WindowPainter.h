@@ -3,14 +3,20 @@
 #include "framework.h"
 
 #include "IBitmapDrawer.h"
+#include "ITextDrawer.h"
 
 namespace windowadapter {
-    class WindowPainter : public graphics::IBitmapDrawer{
+    class WindowPainter 
+        : public graphics::IBitmapDrawer
+        , public graphics::ITextDrawer
+    {
     private:
         CComPtr<ID2D1Factory> d2dFactoryPointer{};
         CComPtr<ID2D1HwndRenderTarget> renderTargetPointer{};
 
         CComPtr<ID2D1BitmapRenderTarget> bufferRenderTargetPointer{};
+        CComPtr<IDWriteTextFormat> textFormatPointer{};
+        CComPtr<ID2D1SolidColorBrush> textBrushPointer{};
 
     public:
         WindowPainter();
@@ -30,6 +36,11 @@ namespace windowadapter {
         void drawBitmap(
             const geometry::Point2& center,
             const graphics::BitmapDrawInstruction& bitmapDrawInstruction
+        ) override;
+
+        void drawText(
+            geometry::Point2 pos,
+            const std::wstring& text
         ) override;
 
         void endDraw() override;
@@ -54,12 +65,16 @@ namespace windowadapter {
 
         CComPtr<ID2D1Bitmap> getBufferBitmap();
 
+        void getDeviceIndependentResources();
         void getD2dFactoryPointer();
+        void getTextFormatPointer();
+        CComPtr<IDWriteFactory> getDirectWriteFactoryPointer();
 
-        void getGraphicsResources(HWND windowHandle);
+        void getDeviceDependentResources(HWND windowHandle);
         void getRenderTargetPointer(HWND windowHandle);
         void makeBufferRenderTargetPointer();
+        void makeTextBrushPointer();
 
-        void discardGraphicsResources();
+        void discardDeviceDependentResources();
     };
 }
