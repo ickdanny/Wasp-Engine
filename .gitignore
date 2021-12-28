@@ -371,3 +371,5 @@ FodyWeavers.xsd
 *.sln
 *.vcxproj
 *.vcxproj.filters
+*.png
+*.mid
