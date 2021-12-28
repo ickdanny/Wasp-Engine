@@ -3,35 +3,37 @@
 #include "Resource.h"
 #include "ResourceStorage.h"
 
-namespace gameresource {
-	using ChildList = std::vector<resource::IResource*>;
+namespace resource {
+	using ChildList = std::vector<ResourceBase*>;
 
 	class ChildListResource
-		: public resource::Resource<std::vector<resource::IResource*>> {
+		: public Resource<std::vector<ResourceBase*>> {
 
 	public:
 		ChildListResource(
 			const std::wstring& id,
-			const resource::ResourceOriginVariant& origin
+			const ResourceOriginVariant& origin
 		)
-			: resource::Resource<ChildList>{ id, origin } {
+			: Resource<ChildList>{ id, origin } {
 		}
 
 		ChildListResource(
 			const std::wstring& id,
-			const resource::ResourceOriginVariant& origin,
+			const ResourceOriginVariant& origin,
 			std::shared_ptr<ChildList> dataPointer
 		)
-			: resource::Resource<ChildList>{
+			: Resource<ChildList>{
 				id, origin, dataPointer
 		} {
 		}
 
+		~ChildListResource() override;
+
 	protected:
-		void removeChild(resource::IResource* child) override;
+		void removeChild(ResourceBase* child) override;
 	};
 
-	class ParentResourceStorage : public resource::ResourceStorage<ChildList>{
+	class ParentResourceStorage : public ResourceStorage<ChildList>{
 
 	public:
 

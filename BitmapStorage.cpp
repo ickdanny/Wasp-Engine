@@ -30,7 +30,8 @@ namespace gameresource {
 							std::get_if<resource::ManifestOrigin>(&origin)
 						};
 						if (manifestTest) {
-							//todo: manifest origin bitmaps
+							resourceMap.erase(found);
+							loadFromManifest(*manifestTest, *resourceLoaderPointer);
 						}
 						break;
 					}
@@ -42,7 +43,7 @@ namespace gameresource {
 		}
 	}
 
-	resource::IResource* BitmapStorage::loadFromFile(
+	resource::ResourceBase* BitmapStorage::loadFromFile(
 		const resource::FileOrigin& fileOrigin,
 		const resource::ResourceLoader& resourceLoader
 	) {
@@ -66,6 +67,43 @@ namespace gameresource {
 			std::make_shared<resource::Resource<WicAndD2DBitmaps>>(
 				id,
 				fileOrigin,
+				std::make_shared<WicAndD2DBitmaps>(
+					WicAndD2DBitmaps{wicBitmap, {d2dBitmap}}
+				)
+			)
+		};
+
+		resourceSharedPointer->setStoragePointer(this);
+
+		resourceMap.insert({ id, resourceSharedPointer });
+		return resourceSharedPointer.get(); //C26816 pointer to memory on stack?
+	}
+
+	resource::ResourceBase* BitmapStorage::loadFromManifest(
+		const resource::ManifestOrigin& manifestOrigin,
+		const resource::ResourceLoader& resourceLoader
+	) {
+		const std::wstring& fileName{ manifestOrigin.manifestArguments[1] };
+		CComPtr<IWICFormatConverter> wicBitmap{
+			bitmapConstructorPointer->getWicFormatConverterPointer(fileName)
+		};
+
+		CComPtr<ID2D1Bitmap> d2dBitmap{};
+		if (renderTargetPointer) {
+			d2dBitmap = bitmapConstructorPointer->converWicBitmapToD2D(
+				wicBitmap, renderTargetPointer
+			);
+		}
+
+		const std::wstring& id{ file::getFileName(fileName) };
+		if (resourceMap.find(id) != resourceMap.end()) {
+			throw std::runtime_error{ "Error loaded pre-existing id" };
+		}
+
+		std::shared_ptr<resource::Resource<WicAndD2DBitmaps>> resourceSharedPointer{
+			std::make_shared<resource::Resource<WicAndD2DBitmaps>>(
+				id,
+				manifestOrigin,
 				std::make_shared<WicAndD2DBitmaps>(
 					WicAndD2DBitmaps{wicBitmap, {d2dBitmap}}
 				)

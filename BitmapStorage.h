@@ -4,8 +4,10 @@
 #include "framework.h"
 
 #include "ResourceStorage.h"
-#include "IResource.h"
+#include "ResourceBase.h"
 #include "BitmapConstructor.h"
+
+#pragma warning(disable : 4250) //inherit via dominance
 
 namespace gameresource {
 
@@ -17,6 +19,7 @@ namespace gameresource {
 	class BitmapStorage
 		: public resource::ResourceStorage<WicAndD2DBitmaps>
 		, public resource::FileLoadable
+		, public resource::ManifestLoadable
 	{
 		using BitmapConstructor = graphics::BitmapConstructor;
 		using ResourceType = resource::Resource<WicAndD2DBitmaps>;
@@ -27,13 +30,19 @@ namespace gameresource {
 	public:
 		BitmapStorage(BitmapConstructor* bitmapConstructorPointer) 
 			: FileLoadable{ {L"png"} }
+			, ManifestLoadable{ {L"image"} }
 			, bitmapConstructorPointer{ bitmapConstructorPointer } {
 		}
 
 		void reload(const std::wstring& id) override;
 
-		resource::IResource* loadFromFile(
+		resource::ResourceBase* loadFromFile(
 			const resource::FileOrigin& fileOrigin,
+			const resource::ResourceLoader& resourceLoader
+		) override;
+
+		resource::ResourceBase* loadFromManifest(
+			const resource::ManifestOrigin& manifestOrigin,
 			const resource::ResourceLoader& resourceLoader
 		) override;
 

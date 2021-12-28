@@ -26,7 +26,7 @@ namespace resource {
 		manifestPrefixMap.insert({ key, value });
 	}
 
-	IResource* ResourceLoader::loadFile(
+	ResourceBase* ResourceLoader::loadFile(
 		const FileOrigin& fileOrigin
 	) const{
 		const std::wstring& extension{ 
@@ -35,7 +35,7 @@ namespace resource {
 		return fileExtensionMap.at(extension)->loadFromFile(fileOrigin, *this);
 	}
 
-	IResource* ResourceLoader::loadManifestEntry(
+	ResourceBase* ResourceLoader::loadManifestEntry(
 		const ManifestOrigin& manifestOrigin
 	) const {
 		const std::wstring& prefix{ manifestOrigin.manifestArguments[0] };

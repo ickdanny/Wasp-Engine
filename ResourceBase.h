@@ -7,29 +7,29 @@
 //members necessary for the resource tree
 //unload, reload, remove, write done thru a pointer to the storage
 namespace resource {
-    class IResource {
+    class ResourceBase {
     protected:
-        IResource* parentPointer{}; //assume parents don't outlive children
+        ResourceBase* parentPointer{}; //assume parents don't outlive children
         IResourceStorage* storagePointer{}; //assume resources don't outlive storages
         std::wstring id{};
         bool loaded{};
 
     public:
-        IResource(const std::wstring& id, bool loaded)
+        ResourceBase(const std::wstring& id, bool loaded)
             : parentPointer{ nullptr }
             , storagePointer{ nullptr }
             , id{ id }
             , loaded{ loaded } {
         }
 
-        virtual ~IResource() {
+        virtual ~ResourceBase() {
             //not all resources have parents
             if (parentPointer) {
                 parentPointer->removeChild(this);
             }
         }
 
-        IResource* getParentPointer() {
+        ResourceBase* getParentPointer() {
             return parentPointer;
         }
 
@@ -37,7 +37,7 @@ namespace resource {
             return storagePointer;
         }
 
-        void setParentPointer(IResource* parentPointer) {
+        void setParentPointer(ResourceBase* parentPointer) {
             this->parentPointer = parentPointer;
         }
 
@@ -54,6 +54,6 @@ namespace resource {
         }
 
     protected:
-        virtual void removeChild(IResource* child) {}
+        virtual void removeChild(ResourceBase* child) {}
     };
 }

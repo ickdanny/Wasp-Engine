@@ -19,8 +19,7 @@ namespace file{
 
 
     /*
-    * //todo: translate the following; move from BitmapManager
-    public static BufferedImage parseImage(File imageFile); 
+    * //todo: ini file?
 
     public static Properties parseProperties(File propertiesFile);
 

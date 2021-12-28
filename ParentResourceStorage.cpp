@@ -1,10 +1,20 @@
 #include "ParentResourceStorage.h"
 
-namespace gameresource {
+namespace resource {
 
-	using ResourceType = resource::Resource<ChildList>;
+	using ResourceType = Resource<ChildList>;
 
-	void ChildListResource::removeChild(resource::IResource* child) {
+	ChildListResource::~ChildListResource() {
+		//erase children first
+		for (auto& childPointer : *dataPointer) {
+			childPointer->setParentPointer(nullptr);
+		}
+		dataPointer->clear();
+
+		//remove self from parent in IResource destructor
+	}
+
+	void ChildListResource::removeChild(ResourceBase* child) {
 		auto found{ std::find(dataPointer->begin(), dataPointer->end(), child) };
 		if (found != dataPointer->end()) {
 			dataPointer->erase(found);
@@ -17,7 +27,7 @@ namespace gameresource {
 	static void unloadChildren(ResourceType& resource) {
 		ChildList& childList{ *resource.getDataPointerCopy() };
 
-		for (resource::IResource* childPointer : childList) {
+		for (ResourceBase* childPointer : childList) {
 			if (childPointer->isLoaded()) {
 				const std::wstring& childID{ childPointer->getID() };
 				childPointer->getStoragePointer()->unload(childID);
@@ -28,7 +38,7 @@ namespace gameresource {
 	void ParentResourceStorage::unload(const std::wstring& id) {
 		auto found{ resourceMap.find(id) };
 		if (found != resourceMap.end()) {
-			resource::Resource<ChildList>& resource{
+			Resource<ChildList>& resource{
 				*(std::get<1>(*found))
 			};
 
@@ -42,7 +52,7 @@ namespace gameresource {
 	static void removeChildren(ResourceType& resource) {
 		ChildList& childList{ *resource.getDataPointerCopy() };
 
-		for (resource::IResource* childPointer : childList) {
+		for (ResourceBase* childPointer : childList) {
 			if (childPointer->isLoaded()) {
 				const std::wstring& childID{ childPointer->getID() };
 				childPointer->getStoragePointer()->remove(childID);
@@ -53,7 +63,7 @@ namespace gameresource {
 	void ParentResourceStorage::remove(const std::wstring& id) {
 		auto found{ resourceMap.find(id) };
 		if (found != resourceMap.end()) {
-			resource::Resource<ChildList>& resource{
+			Resource<ChildList>& resource{
 				*(std::get<1>(*found))
 			};
 

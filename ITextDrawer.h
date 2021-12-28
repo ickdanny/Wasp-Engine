@@ -15,7 +15,4 @@ namespace graphics {
 			const std::pair<float, float> bounds
 		) = 0;
 	};
-
-	//todo: when loading dialogue, split lines into vectors of wstrings
-	//todo: see ImageUtil.textToImage()
 }

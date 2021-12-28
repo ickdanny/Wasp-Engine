@@ -10,6 +10,9 @@ namespace config {
 	constexpr int windowWidth{ 640 };
 	constexpr int windowHeight{ 480 };
 
+	//data
+	constexpr wchar_t mainManifestPath[]{ L"res\\main.mnfst" };
+
 	//graphics
 	constexpr int graphicsWidth{ windowWidth / 2 };
 	constexpr int graphicsHeight{ windowHeight / 2 };

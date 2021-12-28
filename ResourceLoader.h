@@ -23,18 +23,27 @@ namespace resource {
 				if (loadable->isFileLoadable()) {
 					FileLoadable* fileLoadable{ asFileLoadable(loadable) };
 					for (auto& fileExtension : 
-						fileLoadable->getAcceptableFileTypes()) {
+						fileLoadable->getAcceptableFileTypes()) 
+					{
 						insertFileLoadableIntoMap(fileExtension, fileLoadable);
 					}
 				}
 				if (loadable->isManifestLoadable()) {
-					//todo: handle manifest loadables
+					ManifestLoadable* manifestLoadable{ asManifestLoadable(loadable) };
+					for (auto& manifestPrefix :
+						manifestLoadable->getAcceptableManifestPrefixes()) 
+					{
+						insertManifestLoadableIntoMap(
+							manifestPrefix, 
+							manifestLoadable
+						);
+					}
 				}
 			}
 		}
 
-		IResource* loadFile(const FileOrigin& fileOrigin) const;
-		IResource* loadManifestEntry(
+		ResourceBase* loadFile(const FileOrigin& fileOrigin) const;
+		ResourceBase* loadManifestEntry(
 			const ManifestOrigin& manifestOrigin
 		) const;
 

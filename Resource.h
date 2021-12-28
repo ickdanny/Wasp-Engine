@@ -3,12 +3,12 @@
 #include <string>
 #include <memory>
 
-#include "IResource.h"
+#include "ResourceBase.h"
 #include "ResourceOriginVariant.h"
 
 namespace resource {
 	template<typename T>
-	class Resource : public IResource {
+	class Resource : public ResourceBase {
 	protected:
 		ResourceOriginVariant origin{};
 		std::shared_ptr<T> dataPointer{};
@@ -18,7 +18,7 @@ namespace resource {
 			const std::wstring& id,
 			const ResourceOriginVariant& origin
 		)
-			: IResource{ id, false }
+			: ResourceBase{ id, false }
 			, origin{ origin } {
 		}
 
@@ -27,7 +27,7 @@ namespace resource {
 			const ResourceOriginVariant& origin,
 			std::shared_ptr<T> dataPointer
 		)
-			: IResource{ id, true }
+			: ResourceBase{ id, true }
 			, origin{ origin }
 			, dataPointer{ dataPointer } {
 		}

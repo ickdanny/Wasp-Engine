@@ -7,16 +7,16 @@
 
 namespace gameresource {
 
-	class DirectoryStorage
+	class ManifestStorage
 		: public resource::ParentResourceStorage
 		, public resource::FileLoadable
 		, public resource::ManifestLoadable
 	{
 
 	public:
-		DirectoryStorage()
-			: FileLoadable{ {file::directoryExtension} } 
-			, ManifestLoadable{ {L"directory"} } {
+		ManifestStorage()
+			: FileLoadable{ { L"mnfst" } }
+			, ManifestLoadable{ { L"manifest" } } {
 		}
 
 		void reload(const std::wstring& id) override;

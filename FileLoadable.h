@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "Loadable.h"
-#include "IResource.h"
+#include "ResourceBase.h"
 
 namespace resource {
 
@@ -33,7 +33,7 @@ namespace resource {
 		const FileTypes& getAcceptableFileTypes() const {
 			return fileTypes;
 		}
-		virtual IResource* loadFromFile(
+		virtual ResourceBase* loadFromFile(
 			const FileOrigin& fileOrigin, 
 			const ResourceLoader& resourceLoader
 		) = 0;

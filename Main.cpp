@@ -31,16 +31,19 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
     gameresource::ResourceMasterStorage resourceMasterStorage{
         gameresource::DirectoryStorage{},
+        gameresource::ManifestStorage{},
         gameresource::BitmapStorage{&bitmapConstructorPointer}
     };
 
     resource::ResourceLoader resourceLoader{
-        std::array<Loadable*, 2>{
+        std::array<Loadable*, 3>{
             &resourceMasterStorage.directoryStorage,
+            &resourceMasterStorage.manifestStorage,
             &resourceMasterStorage.bitmapStorage
         }
     };
-    resourceLoader.loadFile({ L"res" }); //test image in res
+    //resourceLoader.loadFile({ L"res" }); //test image in res
+    resourceLoader.loadFile({ config::mainManifestPath });
 
     //init window and Direct 2D
     windowadapter::MainWindow window{};

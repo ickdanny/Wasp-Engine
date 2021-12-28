@@ -5,12 +5,12 @@
 #include <memory>
 
 #include "Loadable.h"
-#include "IResource.h"
-
-using ManifestPrefixes = std::vector<std::wstring>;
-using ManifestArguments = std::vector<std::wstring>;
+#include "ResourceBase.h"
 
 namespace resource {
+
+	using ManifestPrefixes = std::vector<std::wstring>;
+	using ManifestArguments = std::vector<std::wstring>;
 
 	class ResourceLoader;
 
@@ -34,7 +34,7 @@ namespace resource {
 		const ManifestPrefixes& getAcceptableManifestPrefixes() const {
 			return manifestPrefixes;
 		}
-		virtual IResource* loadFromManifest(
+		virtual ResourceBase* loadFromManifest(
 			const ManifestOrigin& manifestOrigin,
 			const ResourceLoader& resourceLoader
 		) = 0;
