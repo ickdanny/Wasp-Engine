@@ -85,7 +85,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     window.getWindowPainter().drawSubBitmap(
         { config::graphicsWidth/2, config::graphicsHeight/2 },
         { 
-            resourceMasterStorage.bitmapStorage.get(L"test_image")->d2dBitmap, 
+            resourceMasterStorage.bitmapStorage.get(L"timage")->d2dBitmap, 
             45.0f, 
             .8f, 
             .7f 
