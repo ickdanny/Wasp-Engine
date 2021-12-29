@@ -368,8 +368,5 @@ FodyWeavers.xsd
 #############################################################
 
 #Custom Ignore
-*.sln
-*.vcxproj
-*.vcxproj.filters
 *.png
 *.mid
