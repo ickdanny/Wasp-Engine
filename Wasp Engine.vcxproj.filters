@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Resource">
+      <UniqueIdentifier>{895c08e9-7220-4661-b917-8d1d551dd518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Resource">
+      <UniqueIdentifier>{e470b461-5a48-40de-95f9-df4bda0f8025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\WindowAdapter">
+      <UniqueIdentifier>{d4f585f4-e54f-41b9-bec5-3e9684a726cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\WindowAdapter">
+      <UniqueIdentifier>{d5989d98-d176-4408-a6c6-3085f9dee4f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\File">
+      <UniqueIdentifier>{5b437807-9542-483e-bf14-3c7d7877e74b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\File">
+      <UniqueIdentifier>{943e0a2a-d90c-4fb4-a1d2-4ffd41dfd013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{1447494d-fc9f-4027-bd5c-2969d4ad33d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{9a135c42-f242-4955-b83c-e7d9d6261e82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{22bfe657-f471-4f43-a69e-f4f65df5bf19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{ffaf067b-af24-49aa-a92a-e0ffe0f24a13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Geometry">
+      <UniqueIdentifier>{edead95b-70c7-4a63-9559-0c0cd3fc403f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Resource">
+      <UniqueIdentifier>{d25e73b7-a489-4e36-b8db-9ab1e4971cb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Resource">
+      <UniqueIdentifier>{b8640455-c033-4f33-90e7-64f26d993a3c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceLoader.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Source Files\WindowAdapter</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowPainter.cpp">
+      <Filter>Source Files\WindowAdapter</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowUtil.cpp">
+      <Filter>Source Files\WindowAdapter</Filter>
+    </ClCompile>
+    <ClCompile Include="FileUtil.cpp">
+      <Filter>Source Files\File</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapConstructor.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ParentResourceStorage.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapStorage.cpp">
+      <Filter>Source Files\Game\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectoryStorage.cpp">
+      <Filter>Source Files\Game\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="ManifestStorage.cpp">
+      <Filter>Source Files\Game\Resource</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLoadable.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceBase.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceLoader.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceOriginVariant.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceStorage.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ManifestLoadable.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowPainter.h">
+      <Filter>Header Files\WindowAdapter</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowUtil.h">
+      <Filter>Header Files\WindowAdapter</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.h">
+      <Filter>Header Files\WindowAdapter</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseWindow.h">
+      <Filter>Header Files\WindowAdapter</Filter>
+    </ClInclude>
+    <ClInclude Include="HResultError.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ComLibraryGuard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileUtil.h">
+      <Filter>Header Files\File</Filter>
+    </ClInclude>
+    <ClInclude Include="FileError.h">
+      <Filter>Header Files\File</Filter>
+    </ClInclude>
+    <ClInclude Include="Loadable.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="UnsupportedOperationError.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IResourceStorage.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapDrawInstruction.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapConstructor.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IBitmapDrawer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IDrawer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Point2.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ITextDrawer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ParentResourceStorage.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLoop.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMasterStorage.h">
+      <Filter>Header Files\Game\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ManifestStorage.h">
+      <Filter>Header Files\Game\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectoryStorage.h">
+      <Filter>Header Files\Game\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapStorage.h">
+      <Filter>Header Files\Game\Resource</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
