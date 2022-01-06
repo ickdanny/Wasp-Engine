@@ -2,7 +2,7 @@
 
 #include "FileUtil.h"
 
-namespace gameresource {
+namespace wasp::game::gameresource {
 
 	void BitmapStorage::reload(const std::wstring& id) {
 		if (resourceLoaderPointer) {

@@ -4,7 +4,7 @@
 
 #include "FileLoadable.h"
 #include "ManifestLoadable.h"
-namespace resource {
+namespace wasp::resource {
 	using ResourceOriginVariant 
 		= std::variant<FileOrigin, ManifestOrigin>;
 }

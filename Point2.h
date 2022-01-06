@@ -1,6 +1,6 @@
 #pragma once
 
-namespace geometry {
+namespace wasp::geometry {
 	struct Point2 {
 		float x{};
 		float y{};

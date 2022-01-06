@@ -6,7 +6,7 @@
 #include "IDrawer.h"
 #include "Point2.h"
 
-namespace graphics {
+namespace wasp::graphics {
 	class ITextDrawer : public virtual IDrawer {
 	public:
 		virtual void drawText(

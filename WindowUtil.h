@@ -2,7 +2,7 @@
 
 #include "framework.h"
 
-namespace windowadapter {
+namespace wasp::windowadapter {
 	MONITORINFO getPrimaryMonitorInfo();
 	HMONITOR getPrimaryMonitorHandle();
 

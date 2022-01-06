@@ -5,7 +5,7 @@
 
 #include "ResourceBase.h"
 
-namespace gameresource {
+namespace wasp::game::gameresource {
 
 	void ManifestStorage::reload(const std::wstring& id) {
 		if (resourceLoaderPointer) {

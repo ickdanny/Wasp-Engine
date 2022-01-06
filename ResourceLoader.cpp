@@ -4,7 +4,7 @@
 
 #include "FileUtil.h"
 
-namespace resource {
+namespace wasp::resource {
 
 	void ResourceLoader::insertFileLoadableIntoMap(
 		const std::wstring& key, 

@@ -6,7 +6,7 @@
 
 #include "FileError.h"
 
-namespace file {
+namespace wasp::file {
 
 	std::wstring getFileName(const std::wstring& fileName){
 		throwIfFileDoesNotExist(fileName);

@@ -12,7 +12,7 @@
 #include "ResourceLoader.h"
 #include "UnsupportedOperationError.h"
 
-namespace resource {
+namespace wasp::resource {
 
     template <typename T>
     class ResourceStorage : public IResourceStorage{

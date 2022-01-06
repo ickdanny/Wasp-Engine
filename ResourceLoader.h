@@ -7,7 +7,7 @@
 #include "FileLoadable.h"
 #include "ManifestLoadable.h"
 
-namespace resource {
+namespace wasp::resource {
 
 	class ResourceLoader {
 	private:

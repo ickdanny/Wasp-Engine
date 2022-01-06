@@ -3,7 +3,7 @@
 #include "BaseWindow.h"
 #include "WindowPainter.h"
 
-namespace windowadapter {
+namespace wasp::windowadapter {
     class MainWindow : public BaseWindow<MainWindow>{
     private:
         WindowPainter windowPainter{};

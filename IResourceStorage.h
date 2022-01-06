@@ -4,7 +4,9 @@
 
 #include "UnsupportedOperationError.h"
 
-namespace resource {
+namespace wasp::resource {
+
+    using exception::UnsupportedOperationError;
 
     class IResourceStorage {
     public:

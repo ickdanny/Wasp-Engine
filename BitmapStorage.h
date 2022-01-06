@@ -7,9 +7,9 @@
 #include "ResourceBase.h"
 #include "BitmapConstructor.h"
 
-#pragma warning(disable : 4250) //inherit via dominance
+#pragma warning(disable : 4250) //suppress inherit via dominance
 
-namespace gameresource {
+namespace wasp::game::gameresource {
 
 	struct WicAndD2DBitmaps {
 		CComPtr<IWICFormatConverter> wicBitmap{};

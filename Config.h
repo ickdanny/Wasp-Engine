@@ -2,7 +2,7 @@
 
 #include "framework.h"
 
-namespace config {
+namespace wasp::config {
 	//window
 	constexpr wchar_t className[]{ L"WSWP" };
 	constexpr wchar_t windowName[]{ L"WSWP" };

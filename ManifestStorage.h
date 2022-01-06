@@ -5,7 +5,7 @@
 
 #pragma warning(disable : 4250) //inherit via dominance
 
-namespace gameresource {
+namespace wasp::game::gameresource {
 
 	class ManifestStorage
 		: public resource::ParentResourceStorage

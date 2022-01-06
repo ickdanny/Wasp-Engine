@@ -7,7 +7,7 @@
 #include "Loadable.h"
 #include "ResourceBase.h"
 
-namespace resource {
+namespace wasp::resource {
 
 	using FileTypes = std::vector<std::wstring>;
 	class ResourceLoader;

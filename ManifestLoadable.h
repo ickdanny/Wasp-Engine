@@ -7,7 +7,7 @@
 #include "Loadable.h"
 #include "ResourceBase.h"
 
-namespace resource {
+namespace wasp::resource {
 
 	using ManifestPrefixes = std::vector<std::wstring>;
 	using ManifestArguments = std::vector<std::wstring>;

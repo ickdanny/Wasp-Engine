@@ -2,7 +2,7 @@
 
 #include "ResourceBase.h"
 
-namespace gameresource {
+namespace wasp::game::gameresource {
 
 	void DirectoryStorage::reload(const std::wstring& id){
 		if (resourceLoaderPointer) {

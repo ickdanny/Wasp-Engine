@@ -6,7 +6,7 @@
 #include "ResourceBase.h"
 #include "ResourceOriginVariant.h"
 
-namespace resource {
+namespace wasp::resource {
 	template<typename T>
 	class Resource : public ResourceBase {
 	protected:

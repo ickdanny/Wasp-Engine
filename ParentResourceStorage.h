@@ -3,7 +3,7 @@
 #include "Resource.h"
 #include "ResourceStorage.h"
 
-namespace resource {
+namespace wasp::resource {
 	using ChildList = std::vector<ResourceBase*>;
 
 	class ChildListResource

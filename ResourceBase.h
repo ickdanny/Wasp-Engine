@@ -6,7 +6,7 @@
 
 //members necessary for the resource tree
 //unload, reload, remove, write done thru a pointer to the storage
-namespace resource {
+namespace wasp::resource {
     class ResourceBase {
     protected:
         ResourceBase* parentPointer{}; //assume parents don't outlive children

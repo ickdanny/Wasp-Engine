@@ -1,6 +1,6 @@
 #include "ParentResourceStorage.h"
 
-namespace resource {
+namespace wasp::resource {
 
 	using ResourceType = Resource<ChildList>;
 

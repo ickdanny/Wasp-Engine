@@ -5,7 +5,7 @@
 #include "Point2.h"
 #include "Rectangle.h"
 
-namespace graphics {
+namespace wasp::graphics {
 	class IBitmapDrawer : public virtual IDrawer {
 	public:
 		virtual void drawBitmap(

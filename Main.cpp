@@ -14,6 +14,9 @@
 
 void runMessageLoop();
 
+using namespace wasp;
+using namespace wasp::game;
+
 using windowadapter::getPrimaryMonitorInfo;
 using windowadapter::getWindowBorderWidthPadding;
 using windowadapter::getWindowBorderHeightPadding;
@@ -22,7 +25,7 @@ using windowadapter::getWindowBorderHeightPadding;
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode)
 {
     //init COM
-    comadapter::ComLibraryGuard comLibraryGuard{};
+    win32adaptor::ComLibraryGuard comLibraryGuard{};
     comLibraryGuard.init(COINIT_APARTMENTTHREADED);
 
     //init Resources : WIC graphics
@@ -36,7 +39,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     };
 
     resource::ResourceLoader resourceLoader{
-        std::array<Loadable*, 3>{
+        std::array<resource::Loadable*, 3>{
             &resourceMasterStorage.directoryStorage,
             &resourceMasterStorage.manifestStorage,
             &resourceMasterStorage.bitmapStorage

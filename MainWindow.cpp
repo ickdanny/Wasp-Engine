@@ -1,6 +1,6 @@
 #include "MainWindow.h"
 
-namespace windowadapter {
+namespace wasp::windowadapter {
 
 	MainWindow::MainWindow() = default;
 

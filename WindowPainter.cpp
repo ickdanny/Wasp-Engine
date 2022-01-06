@@ -3,7 +3,9 @@
 #include "Config.h"
 #include "HResultError.h"
 
-namespace windowadapter {
+namespace wasp::windowadapter {
+
+	using win32adaptor::HResultError;
 
 	WindowPainter::WindowPainter()
 		: d2dFactoryPointer{ nullptr }

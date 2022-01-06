@@ -3,7 +3,7 @@
 #include "framework.h"
 #include <string>
 
-namespace graphics {
+namespace wasp::graphics {
 	class BitmapConstructor {
 	private:
 		CComPtr<IWICImagingFactory> wicFactoryPointer{};

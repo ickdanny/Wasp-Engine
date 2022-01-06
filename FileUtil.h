@@ -3,7 +3,7 @@
 #include <string>
 #include <functional>
 
-namespace file{
+namespace wasp::file{
     const std::wstring directoryExtension{ L"directory" };
 
     std::wstring getFileName(const std::wstring& fileName);

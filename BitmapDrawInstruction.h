@@ -3,7 +3,7 @@
 #include "framework.h"
 #include <stdexcept>
 
-namespace graphics {
+namespace wasp::graphics {
 	class BitmapDrawInstruction {
 		
 	private:

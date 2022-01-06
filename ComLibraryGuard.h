@@ -3,7 +3,7 @@
 #include "framework.h"
 #include "HResultError.h"
 
-namespace comadapter {
+namespace wasp::win32adaptor {
 	class ComLibraryGuard {
 	public:
 		ComLibraryGuard() = default;

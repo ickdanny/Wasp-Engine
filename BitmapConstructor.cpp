@@ -1,7 +1,9 @@
 #include "BitmapConstructor.h"
 #include "HResultError.h"
 
-namespace graphics {
+namespace wasp::graphics {
+
+	using win32adaptor::HResultError;
 
 	BitmapConstructor::BitmapConstructor()
 		: wicFactoryPointer{ nullptr } {
