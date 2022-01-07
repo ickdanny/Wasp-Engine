@@ -1,100 +1,92 @@
 #pragma once
 
 #include <functional>
+#include <chrono>
+#include <stdexcept>
 
 namespace wasp::game::gameloop {
 
-    //should this be a template class? normal class? templated function?
-    class GameLoop {
-    private:
-        bool running{};
-        int updatesPerSecond{};
-        int maxUpdatesWithoutFrame{};
-        int millisBetweenUpdates{};
+	using clockType = std::chrono::steady_clock;
+	using timePointType = clockType::time_point;
+	using durationType = clockType::duration;
 
-        std::function<void()> updateFunction{};
-        std::function<void(double)> drawFunction{};
+	//helper function forward declarations
+	inline timePointType getCurrentTime();
+	inline durationType calcTimeSinceLastUpdate(timePointType timeOfLastUpdate);
+	inline double calcDeltaTime(
+		timePointType timeOfLastUpdate,
+		durationType secondsBetweenUpdates
+	);
 
-    public:
-        GameLoop(
-            int updatesPerSecond, 
-            int maxUpdatesWithoutFrame,
-            std::function<void()> updateFunction{}) {
-            fixedTimeBroadcaster = new ConfigurablePushSubject<>(1d);// default dt = 1x
-            interpTimeBroadcaster = new ConfigurablePushSubject<>();
-            this.updatesPerSecond = updatesPerSecond;
-            this.maxUpdatesWithoutFrame = maxUpdatesWithoutFrame;
-            calcMillisBetweenUpdates();
-        }
+	//gameloop
+	template<
+		int updatesPerSecond,
+		int maxUpdatesWithoutFrame,
+		void(*updateFuncion)(),
+		void(*drawFunction)(double)
+	>
+	void run() {
+		durationType timeBetweenUpdates{ 
+			static_cast<__int64>(
+				((1.0 / updatesPerSecond) * clockType::period::den)
+				/ clockType::period::num
+			)
+		};
 
-        private void calcMillisBetweenUpdates() {
-            double millisPerSecond = 1000d;
-            millisBetweenUpdates = (int)(millisPerSecond / updatesPerSecond);
-        }
+		timePointType nextUpdate{ getCurrentTime() };
+		timePointType timeOfLastUpdate{ getCurrentTime() };
+		int updatesWithoutFrame{ 0 };
 
-        @Override
-            protected void threadAction() {
-            long nextUpdateMillis = getCurrentTimeMillis();
-            long timeOfLastUpdate = getCurrentTimeMillis();
-            int updatesWithoutFrame = 0;
+		while (true) {
+			if (updatesWithoutFrame >= maxUpdatesWithoutFrame) {
+				drawFunction(
+					calcDeltaTime(timeOfLastUpdate, timeBetweenUpdates)
+				);
+				updatesWithoutFrame = 0;
+			}
+			if (getCurrentTime() >= nextUpdate) {
+				updateFuncion();
+				nextUpdate += timeBetweenUpdates;
+				timeOfLastUpdate = getCurrentTime();
+			}
+			if (getCurrentTime() < nextUpdate) {
+				//todo: max fps (min time between updates)
+				while (getCurrentTime() < nextUpdate /* && running*/) {
+					drawFunction(
+						calcDeltaTime(timeOfLastUpdate, timeBetweenUpdates)
+					);
+				}
+			}
+			else {
+				++updatesWithoutFrame;
+			}
+		}
+	}
 
-            while (running) {
-                if (updatesWithoutFrame >= maxUpdatesWithoutFrame) {
-                    interpTimeUpdate(calcDeltaTime(timeOfLastUpdate));
-                    updatesWithoutFrame = 0;
-                }
-                if (getCurrentTimeMillis() >= nextUpdateMillis) {
-                    fixedTimeUpdate();
-                    nextUpdateMillis += millisBetweenUpdates;
-                    timeOfLastUpdate = getCurrentTimeMillis();
-                }
-                if (getCurrentTimeMillis() < nextUpdateMillis) {
-                    while (getCurrentTimeMillis() < nextUpdateMillis && running) {
-                        interpTimeUpdate(calcDeltaTime(timeOfLastUpdate));
-                    }
-                }
-                else {
-                    ++updatesWithoutFrame;
-                }
-            }
-        }
+	inline timePointType getCurrentTime() {
+		return std::chrono::steady_clock::now();
+	}
 
-        private long getCurrentTimeMillis() {
-            return System.currentTimeMillis();
-        }
-        private double calcDeltaTime(long timeOfLastUpdate) {
-            double  millisSinceLastUpdate = calcMillisSinceLastUpdate(timeOfLastUpdate);
-            double deltaTime = millisSinceLastUpdate / millisBetweenUpdates;
-            if (deltaTime < 0) {
-                throw new RuntimeException("invalid deltaTime: " + deltaTime);
-            }
-            if (deltaTime > 1) {
-                return 1;
-            }
-            return deltaTime;
-        }
-        private long calcMillisSinceLastUpdate(long timeOfLastUpdate) {
-            return getCurrentTimeMillis() - timeOfLastUpdate;
-        }
+	inline double calcDeltaTime(
+		timePointType timeOfLastUpdate,
+		durationType timeBetweenUpdates
+	) {
+		durationType timeSinceLastUpdate{ calcTimeSinceLastUpdate(timeOfLastUpdate) };
+		double deltaTime{ 
+			static_cast<double>(
+				durationType{timeSinceLastUpdate / timeBetweenUpdates}.count()
+			)
+		};
+		if (deltaTime < 0.0) {
+			throw std::runtime_error{ "Error deltaTime < 0" };
+		}
+		if (deltaTime > 1.0) {
+			return 1.0;
+		}
+		return deltaTime;
+	}
 
-        @Override
-            public void end() {
-            running = false;
-        }
-
-        private void fixedTimeUpdate() {
-            fixedTimeBroadcaster.broadcast();
-        }
-        private void interpTimeUpdate(double deltaTime) {
-            interpTimeBroadcaster.setPushData(deltaTime);
-            interpTimeBroadcaster.broadcast();
-        }
-
-        public ConfigurablePushSubject<Double> getFixedTimeBroadcaster() {
-            return fixedTimeBroadcaster;
-        }
-        public ConfigurablePushSubject<Double> getInterpTimeBroadcaster() {
-            return interpTimeBroadcaster;
-        }
-    }
+	inline durationType calcTimeSinceLastUpdate(timePointType timeOfLastUpdate) {
+		return getCurrentTime() - timeOfLastUpdate;
+	}
 }

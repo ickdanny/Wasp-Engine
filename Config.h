@@ -27,4 +27,8 @@ namespace wasp::config {
 	constexpr DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment{
 		DWRITE_PARAGRAPH_ALIGNMENT_NEAR
 	};
+
+	//game
+	constexpr int updatesPerSecond{ 60 };
+	constexpr int maxUpdatesWithoutFrame{ 5 };
 }

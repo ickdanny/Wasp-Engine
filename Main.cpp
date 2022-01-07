@@ -11,8 +11,7 @@
 #include "BaseWindow.h"
 #include "MainWindow.h"
 #include "ResourceMasterStorage.h"
-
-void runMessageLoop();
+#include "GameLoop.h"
 
 using namespace wasp;
 using namespace wasp::game;
@@ -20,6 +19,9 @@ using namespace wasp::game;
 using windowadapter::getPrimaryMonitorInfo;
 using windowadapter::getWindowBorderWidthPadding;
 using windowadapter::getWindowBorderHeightPadding;
+
+void update();
+void draw(double deltaTime);
 
 #pragma warning(suppress : 28251) //suppress inconsistent annotation warning
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode)
@@ -104,17 +106,25 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
     ShowWindow(window.getWindowHandle(), windowShowMode);
     
-    runMessageLoop();
+    gameloop::run<
+        config::updatesPerSecond, 
+        config::maxUpdatesWithoutFrame,
+        update,
+        draw
+    >();
 
     return 0;
 }
 
-void runMessageLoop() {
-
+void update() {
     MSG msg = { };
-    while (GetMessage(&msg, NULL, 0, 0))
+    while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
+}
+
+void draw(double deltaTime) {
+
 }
