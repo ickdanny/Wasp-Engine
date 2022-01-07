@@ -113,6 +113,8 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         draw 
     };
 
+    window.setQuitGameCallback([&] {gameLoop.stop(); });
+
     gameLoop.run();
 
     //todo: end gameloop callback in window

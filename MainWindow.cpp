@@ -2,8 +2,6 @@
 
 namespace wasp::windowadapter {
 
-	MainWindow::MainWindow() = default;
-
 	LRESULT MainWindow::handleMessage(UINT messageCode, WPARAM wParam, LPARAM lParam) {
 		switch (messageCode)
 		{
@@ -21,6 +19,7 @@ namespace wasp::windowadapter {
 		
 			case WM_DESTROY:
 				PostQuitMessage(0);
+				quitGameCallback();
 				return 0;
 
 			default:

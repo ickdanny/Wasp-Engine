@@ -54,6 +54,7 @@ namespace wasp::windowadapter {
         BaseWindow() 
             : windowHandle{ NULL } {
         }
+
         virtual ~BaseWindow() = default;
 
         void create(
