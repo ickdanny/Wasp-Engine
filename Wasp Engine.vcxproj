@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="DirectoryStorage.cpp" />
     <ClCompile Include="FileUtil.cpp" />
+    <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="ManifestStorage.cpp" />
     <ClCompile Include="ParentResourceStorage.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />

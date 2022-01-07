@@ -3,90 +3,49 @@
 #include <functional>
 #include <chrono>
 #include <stdexcept>
+#include <cstdint>
 
 namespace wasp::game::gameloop {
 
-	using clockType = std::chrono::steady_clock;
-	using timePointType = clockType::time_point;
-	using durationType = clockType::duration;
+	//making this a class because i want to be able to stop it
+	class GameLoop {
+	private:
+		using clockType = std::chrono::steady_clock;
+		using timePointType = clockType::time_point;
+		using durationType = clockType::duration;
 
-	//helper function forward declarations
-	inline timePointType getCurrentTime();
-	inline durationType calcTimeSinceLastUpdate(timePointType timeOfLastUpdate);
-	inline double calcDeltaTime(
-		timePointType timeOfLastUpdate,
-		durationType secondsBetweenUpdates
-	);
+		bool running{};
+		int updatesPerSecond{};
+		int maxUpdatesWithoutFrame{};
+		std::function<void()> updateFunction{};
+		std::function<void(double)> drawFunction{};
 
-	//gameloop
-	template<
-		int updatesPerSecond,
-		int maxUpdatesWithoutFrame,
-		void(*updateFuncion)(),
-		void(*drawFunction)(double)
-	>
-	void run() {
-		durationType timeBetweenUpdates{ 
-			static_cast<__int64>(
-				((1.0 / updatesPerSecond) * clockType::period::den)
-				/ clockType::period::num
-			)
+	public:
+		GameLoop(
+			int updatesPerSecond, 
+			int maxUpdatesWithoutFrame,
+			const std::function<void()>& updateFunction,
+			const std::function<void(double)>& drawFunction
+		)
+			: running{ false }
+			, updatesPerSecond { updatesPerSecond}
+			, maxUpdatesWithoutFrame{ maxUpdatesWithoutFrame }
+			, updateFunction{ updateFunction }
+			, drawFunction{ drawFunction }{
 		};
 
-		timePointType nextUpdate{ getCurrentTime() };
-		timePointType timeOfLastUpdate{ getCurrentTime() };
-		int updatesWithoutFrame{ 0 };
+		void run();
 
-		while (true) {
-			if (updatesWithoutFrame >= maxUpdatesWithoutFrame) {
-				drawFunction(
-					calcDeltaTime(timeOfLastUpdate, timeBetweenUpdates)
-				);
-				updatesWithoutFrame = 0;
-			}
-			if (getCurrentTime() >= nextUpdate) {
-				updateFuncion();
-				nextUpdate += timeBetweenUpdates;
-				timeOfLastUpdate = getCurrentTime();
-			}
-			if (getCurrentTime() < nextUpdate) {
-				//todo: max fps (min time between updates)
-				while (getCurrentTime() < nextUpdate /* && running*/) {
-					drawFunction(
-						calcDeltaTime(timeOfLastUpdate, timeBetweenUpdates)
-					);
-				}
-			}
-			else {
-				++updatesWithoutFrame;
-			}
-		}
-	}
+		void stop();
 
-	inline timePointType getCurrentTime() {
-		return std::chrono::steady_clock::now();
-	}
+	private:
+		static timePointType getCurrentTime();
 
-	inline double calcDeltaTime(
-		timePointType timeOfLastUpdate,
-		durationType timeBetweenUpdates
-	) {
-		durationType timeSinceLastUpdate{ calcTimeSinceLastUpdate(timeOfLastUpdate) };
-		double deltaTime{ 
-			static_cast<double>(
-				durationType{timeSinceLastUpdate / timeBetweenUpdates}.count()
-			)
-		};
-		if (deltaTime < 0.0) {
-			throw std::runtime_error{ "Error deltaTime < 0" };
-		}
-		if (deltaTime > 1.0) {
-			return 1.0;
-		}
-		return deltaTime;
-	}
+		static double calcDeltaTime(
+			timePointType timeOfLastUpdate,
+			durationType timeBetweenUpdates
+		);
 
-	inline durationType calcTimeSinceLastUpdate(timePointType timeOfLastUpdate) {
-		return getCurrentTime() - timeOfLastUpdate;
-	}
+		static durationType calcTimeSinceLastUpdate(timePointType timeOfLastUpdate);
+	};
 }

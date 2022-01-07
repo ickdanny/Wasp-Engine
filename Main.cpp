@@ -105,13 +105,17 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     window.getWindowPainter().endDraw();
 
     ShowWindow(window.getWindowHandle(), windowShowMode);
-    
-    gameloop::run<
-        config::updatesPerSecond, 
+
+    gameloop::GameLoop gameLoop {
+        config::updatesPerSecond,
         config::maxUpdatesWithoutFrame,
         update,
-        draw
-    >();
+        draw 
+    };
+
+    gameLoop.run();
+
+    //todo: end gameloop callback in window
 
     return 0;
 }
