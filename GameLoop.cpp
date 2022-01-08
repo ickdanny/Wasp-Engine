@@ -4,7 +4,7 @@ namespace wasp::game::gameloop {
 
 	void GameLoop::run() {
 		durationType timeBetweenUpdates{
-			static_cast<int64_t>(
+			static_cast<durationType::rep>(
 				((1.0 / updatesPerSecond) * clockType::period::den)
 				/ clockType::period::num
 			)
@@ -16,20 +16,26 @@ namespace wasp::game::gameloop {
 
 		running = true;
 		while (running) {
+			//force draw every few updates
 			if (updatesWithoutFrame >= maxUpdatesWithoutFrame) {
 				drawFunction(
 					calcDeltaTime(timeOfLastUpdate, timeBetweenUpdates)
 				);
 				updatesWithoutFrame = 0;
 			}
+			//update if time
 			if (getCurrentTime() >= nextUpdate) {
 				updateFunction();
 				nextUpdate += timeBetweenUpdates;
+				if (nextUpdate < getCurrentTime()) {
+					nextUpdate = getCurrentTime();
+				}
 				timeOfLastUpdate = getCurrentTime();
 			}
+			//draw frames if possible
 			if (getCurrentTime() < nextUpdate) {
-				//todo: max fps (min time between updates)
-				while (getCurrentTime() < nextUpdate /* && running*/) {
+				//todo: max fps (min time between updates?)
+				while (getCurrentTime() < nextUpdate && running) {
 					drawFunction(
 						calcDeltaTime(timeOfLastUpdate, timeBetweenUpdates)
 					);
