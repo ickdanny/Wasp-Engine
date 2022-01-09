@@ -19,12 +19,6 @@
     <Filter Include="Header Files\Resource">
       <UniqueIdentifier>{e470b461-5a48-40de-95f9-df4bda0f8025}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\WindowAdapter">
-      <UniqueIdentifier>{d4f585f4-e54f-41b9-bec5-3e9684a726cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\WindowAdapter">
-      <UniqueIdentifier>{d5989d98-d176-4408-a6c6-3085f9dee4f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\File">
       <UniqueIdentifier>{5b437807-9542-483e-bf14-3c7d7877e74b}</UniqueIdentifier>
     </Filter>
@@ -52,6 +46,15 @@
     <Filter Include="Header Files\Game\Resource">
       <UniqueIdentifier>{b8640455-c033-4f33-90e7-64f26d993a3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Window">
+      <UniqueIdentifier>{d4f585f4-e54f-41b9-bec5-3e9684a726cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Window">
+      <UniqueIdentifier>{d5989d98-d176-4408-a6c6-3085f9dee4f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{c337cbc2-044e-4f41-bd6c-7b3ab82a8b30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -61,13 +64,13 @@
       <Filter>Source Files\Resource</Filter>
     </ClCompile>
     <ClCompile Include="MainWindow.cpp">
-      <Filter>Source Files\WindowAdapter</Filter>
+      <Filter>Source Files\Window</Filter>
     </ClCompile>
     <ClCompile Include="WindowPainter.cpp">
-      <Filter>Source Files\WindowAdapter</Filter>
+      <Filter>Source Files\Window</Filter>
     </ClCompile>
     <ClCompile Include="WindowUtil.cpp">
-      <Filter>Source Files\WindowAdapter</Filter>
+      <Filter>Source Files\Window</Filter>
     </ClCompile>
     <ClCompile Include="FileUtil.cpp">
       <Filter>Source Files\File</Filter>
@@ -120,16 +123,16 @@
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
     <ClInclude Include="WindowPainter.h">
-      <Filter>Header Files\WindowAdapter</Filter>
+      <Filter>Header Files\Window</Filter>
     </ClInclude>
     <ClInclude Include="WindowUtil.h">
-      <Filter>Header Files\WindowAdapter</Filter>
+      <Filter>Header Files\Window</Filter>
     </ClInclude>
     <ClInclude Include="MainWindow.h">
-      <Filter>Header Files\WindowAdapter</Filter>
+      <Filter>Header Files\Window</Filter>
     </ClInclude>
     <ClInclude Include="BaseWindow.h">
-      <Filter>Header Files\WindowAdapter</Filter>
+      <Filter>Header Files\Window</Filter>
     </ClInclude>
     <ClInclude Include="HResultError.h">
       <Filter>Header Files</Filter>
@@ -193,6 +196,21 @@
     </ClInclude>
     <ClInclude Include="BitmapStorage.h">
       <Filter>Header Files\Game\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="IKeyInputReceiver.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="IKeyInputTable.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyState.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyInputTable.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyValues.h">
+      <Filter>Header Files\Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

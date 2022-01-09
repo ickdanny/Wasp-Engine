@@ -18,7 +18,7 @@ namespace wasp::windowadapter {
 				return 0;
 		
 			case WM_DESTROY:
-				quitGameCallback();
+				destroyCallback();
 				PostQuitMessage(0);
 				return 0;
 

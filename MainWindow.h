@@ -9,7 +9,9 @@ namespace wasp::windowadapter {
     class MainWindow : public BaseWindow<MainWindow>{
     private:
         WindowPainter windowPainter{};
-        std::function<void()> quitGameCallback{};
+        std::function<void()> destroyCallback{};
+        std::function<void(WPARAM wParam, LPARAM lParam)> keyDownCallback{};
+        std::function<void(WPARAM wParam, LPARAM lParam)> keyUpCallback{};
 
     public:
         MainWindow() = default;
@@ -25,7 +27,7 @@ namespace wasp::windowadapter {
         }
 
         void setQuitGameCallback(const std::function<void()>& quitGameCallback) {
-            this->quitGameCallback = quitGameCallback;
+            this->destroyCallback = quitGameCallback;
         }
     };
 }

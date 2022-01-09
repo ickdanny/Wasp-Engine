@@ -157,6 +157,9 @@
     <ClCompile Include="BitmapConstructor.cpp" />
     <ClInclude Include="BitmapConstructor.h" />
     <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="KeyInputTable.h" />
+    <ClInclude Include="KeyValues.h" />
+    <ClInclude Include="KeyState.h" />
     <ClInclude Include="IBitmapDrawer.h" />
     <ClInclude Include="BitmapDrawInstruction.h" />
     <ClInclude Include="Config.h" />
@@ -167,6 +170,8 @@
     <ClInclude Include="DirectoryStorage.h" />
     <ClInclude Include="FileUtil.h" />
     <ClInclude Include="IDrawer.h" />
+    <ClInclude Include="IKeyInputReceiver.h" />
+    <ClInclude Include="IKeyInputTable.h" />
     <ClInclude Include="ResourceBase.h" />
     <ClInclude Include="IResourceStorage.h" />
     <ClInclude Include="ITextDrawer.h" />
