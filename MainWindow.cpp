@@ -1,6 +1,6 @@
 #include "MainWindow.h"
 
-namespace wasp::windowadapter {
+namespace wasp::window {
 
 	LRESULT MainWindow::handleMessage(UINT messageCode, WPARAM wParam, LPARAM lParam) {
 		switch (messageCode)
@@ -15,6 +15,19 @@ namespace wasp::windowadapter {
 
 			case WM_SIZE:
 				windowPainter.resize(windowHandle);
+				return 0;
+				
+			case WM_KEYDOWN:
+				keyDownCallback(wParam, lParam);
+				return 0;
+
+			case WM_KEYUP:
+				keyUpCallback(wParam, lParam);
+				return 0;
+
+			case WM_KILLFOCUS:
+			case WM_ENTERSIZEMOVE:
+				outOfFocusCallback();
 				return 0;
 		
 			case WM_DESTROY:

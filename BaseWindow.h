@@ -3,7 +3,7 @@
 #include "framework.h" //includes window.h and others
 #include <stdexcept>
 
-namespace wasp::windowadapter {
+namespace wasp::window {
     template<class DERIVED_CLASS>
     class BaseWindow {
 

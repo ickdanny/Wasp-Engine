@@ -6,7 +6,7 @@
 #include "IBitmapDrawer.h"
 #include "ITextDrawer.h"
 
-namespace wasp::windowadapter {
+namespace wasp::window {
     class WindowPainter 
         : public graphics::IBitmapDrawer
         , public graphics::ITextDrawer

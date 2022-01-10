@@ -12,14 +12,15 @@
 #include "BaseWindow.h"
 #include "MainWindow.h"
 #include "ResourceMasterStorage.h"
+#include "KeyInputTable.h"
 #include "GameLoop.h"
 
 using namespace wasp;
 using namespace wasp::game;
 
-using windowadapter::getPrimaryMonitorInfo;
-using windowadapter::getWindowBorderWidthPadding;
-using windowadapter::getWindowBorderHeightPadding;
+using window::getPrimaryMonitorInfo;
+using window::getWindowBorderWidthPadding;
+using window::getWindowBorderHeightPadding;
 
 void pumpMessages();
 
@@ -51,7 +52,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     resourceLoader.loadFile({ config::mainManifestPath });
 
     //init window and Direct 2D
-    windowadapter::MainWindow window{};
+    window::MainWindow window{};
     {
         const MONITORINFO primaryMonitorInfo{ getPrimaryMonitorInfo() };
         const RECT& primaryMonitorRect{ primaryMonitorInfo.rcMonitor };
@@ -85,25 +86,15 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         window.getWindowPainter().getRenderTargetPointer()
     );
 
-    //image draw test
-    window.getWindowPainter().beginDraw();
-    window.getWindowPainter().drawSubBitmap(
-        { config::graphicsWidth/2, config::graphicsHeight/2 },
-        { 
-            resourceMasterStorage.bitmapStorage.get(L"timage")->d2dBitmap, 
-            45.0f, 
-            .8f, 
-            .7f 
-        },
-        {100, 100, 600, 400}
-    );
-    window.getWindowPainter().drawText(
-        { 0, 0 },
-        {L"Hello World! Raising say express had chiefly detract demands she. Quiet led own cause three him. Front no party young abode state up. Saved he do fruit woody of to. Met defective are allowance two perceived listening consulted contained. It chicken oh colonel pressed excited suppose to shortly. He improve started no we manners however effects. Prospect"},
-        { 300.0f, 500.0f }
-    );
-    window.getWindowPainter().endDraw();
-    //end image draw test
+    //init input
+    input::KeyInputTable keyInputTable{};
+    window.setKeyDownCallback([&](WPARAM wParam, LPARAM lParam) {
+        keyInputTable.handleKeyDown(wParam, lParam);
+    });
+    window.setKeyUpCallback([&](WPARAM wParam, LPARAM lParam) {
+        keyInputTable.handleKeyUp(wParam, lParam);
+    });
+    window.setOutOfFocusCallback([&] {keyInputTable.allKeysOff(); });
 
     ShowWindow(window.getWindowHandle(), windowShowMode);
 
@@ -115,6 +106,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         //update function
         [&] {
             ++updateCount;
+            keyInputTable.tickOver();
             pumpMessages();
         },
         //draw function
@@ -161,6 +153,11 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
                 { std::to_wstring(1.0/fps) },
                 { 400.0f, 300.0f }
             );
+            window.getWindowPainter().drawText(
+                { 20.0f, 70.0f },
+                { std::to_wstring(static_cast<int>(keyInputTable[input::KeyValues::K_Z])) },
+                { 400.0f, 300.0f }
+            );
             window.getWindowPainter().endDraw();
 
             waitingForVsync = true;
@@ -182,7 +179,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         }
     };
 
-    window.setQuitGameCallback([&] {gameLoop.stop(); });
+    window.setDestroyCallback([&] {gameLoop.stop(); });
 
     gameLoop.run();
 

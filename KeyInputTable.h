@@ -12,27 +12,26 @@ namespace wasp::input {
 		using dataType = std::uint_fast8_t;
 
 		//bitmasks
-		static constexpr dataType thisTurn{ 1 << 0 }; // 0001
-		static constexpr dataType lastTurn{ 1 << 1 }; // 0010
+		static constexpr dataType thisTick{ 1 << 0 };				   // 0001
+		static constexpr dataType lastTick{ 1 << 1 };				   // 0010
+		static constexpr dataType lastTwoTicks{ thisTick | lastTick }; // 0011
 
 		static constexpr int numKeys{ static_cast<int>(KeyValues::numKeys) };
 
-		std::array<KeyState, numKeys> stateArray{};
 		std::array<dataType, numKeys> dataArray{};
 
 	public:
 
 		void handleKeyDown(WPARAM wParam, LPARAM lParam) override;
-
 		void handleKeyUp(WPARAM wParam, LPARAM lParam) override;
-
 		void allKeysOff() override;
 
-		KeyState operator[](KeyValues key) override;
+		const KeyState operator[](KeyValues key) override;
+		const KeyState get(KeyValues key) override;
+		void tickOver() override;
 
-		KeyState get(KeyValues key) override;
+	private:
 
-		void turnOver() override;
-
+		static KeyState getKeyState(dataType data);
 	};
 }

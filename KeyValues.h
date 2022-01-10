@@ -58,9 +58,9 @@ namespace wasp::input {
 		//special
 		K_escape,
 		K_space,
-		K_backQuote,
+		K_backTick,
 		K_minus,
-		K_equals,
+		K_plus,
 		K_backSlash,
 		K_backSpace,
 		K_enter,
@@ -76,6 +76,7 @@ namespace wasp::input {
 		K_control,
 		K_alt,
 
+		undefined,
 		numKeys
 	};
 }

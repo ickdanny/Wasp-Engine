@@ -3,7 +3,7 @@
 #include "Config.h"
 #include "HResultError.h"
 
-namespace wasp::windowadapter {
+namespace wasp::window {
 
 	using win32adaptor::HResultError;
 

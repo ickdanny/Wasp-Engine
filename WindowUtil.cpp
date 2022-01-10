@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace wasp::windowadapter {
+namespace wasp::window {
 	MONITORINFO getPrimaryMonitorInfo()
 	{
 		MONITORINFO toRet{};
