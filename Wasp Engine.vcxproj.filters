@@ -58,6 +58,12 @@
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{c852accd-9d5c-4a01-93aa-5fb9636ad533}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Sound">
+      <UniqueIdentifier>{6d813fc3-c0ea-41b3-87fa-d4f7e57a558d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sound">
+      <UniqueIdentifier>{981475f0-fffa-4107-b95a-ee19132e39f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -98,6 +104,9 @@
     </ClCompile>
     <ClCompile Include="KeyInputTable.cpp">
       <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MidiSequencer.cpp">
+      <Filter>Source Files\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="KeyValues.h">
       <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MidiSequencer.h">
+      <Filter>Header Files\Sound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

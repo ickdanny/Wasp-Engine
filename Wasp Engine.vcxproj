@@ -150,6 +150,7 @@
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="KeyInputTable.cpp" />
     <ClCompile Include="ManifestStorage.cpp" />
+    <ClCompile Include="MidiSequencer.cpp" />
     <ClCompile Include="ParentResourceStorage.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="BitmapStorage.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="IDrawer.h" />
     <ClInclude Include="IKeyInputReceiver.h" />
     <ClInclude Include="IKeyInputTable.h" />
+    <ClInclude Include="MidiSequencer.h" />
     <ClInclude Include="ResourceBase.h" />
     <ClInclude Include="IResourceStorage.h" />
     <ClInclude Include="ITextDrawer.h" />
