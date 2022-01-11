@@ -2,7 +2,12 @@
 #define UNICODE
 #endif
 
-#include <future>
+//todo: midi test
+#include <ios>
+#include <fstream>
+#include "MidiSequence.h"
+
+#include <thread>
 #include "framework.h" //includes window.h and others
 
 #include "Config.h"
@@ -13,6 +18,7 @@
 #include "MainWindow.h"
 #include "ResourceMasterStorage.h"
 #include "KeyInputTable.h"
+#include "MidiSequencer.h"
 #include "GameLoop.h"
 
 using namespace wasp;
@@ -24,9 +30,20 @@ using window::getWindowBorderHeightPadding;
 
 void pumpMessages();
 
+void midiTest() {
+    std::ifstream inStream{ L"res\\example6.mid", std::ios::binary };
+    sound::midi::MidiSequence sequence{};
+    inStream >> sequence;
+}
+
 #pragma warning(suppress : 28251) //suppress inconsistent annotation warning
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode)
 {
+    //todo: test
+    midiTest();
+
+    std::exit(0);
+
     //init COM
     win32adaptor::ComLibraryGuard comLibraryGuard{};
     comLibraryGuard.init(COINIT_APARTMENTTHREADED);
@@ -162,8 +179,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
             waitingForVsync = true;
 
-            #pragma warning(suppress : 4834) //suppress discard return warning
-            std::async(std::launch::async, [&] {
+            std::thread render{ [&] {
                 window.getWindowPainter().paint(window.getWindowHandle());
                 lastDraw = thisDraw;
                 thisDraw = std::chrono::steady_clock::now();
@@ -175,11 +191,18 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
                 fps = (fps * smoothing) + (timeToDraw * (1.0 - smoothing));
                 waitingForVsync = false;
-            } );
+             } };
+            render.detach();
         }
     };
 
     window.setDestroyCallback([&] {gameLoop.stop(); });
+
+    //midi test
+    sound::midi::MidiSequencer midiSequencer{};
+    std::thread soundTest{ [&] {midiSequencer.test(); } };
+    soundTest.detach();
+    //end midi test
 
     gameLoop.run();
 

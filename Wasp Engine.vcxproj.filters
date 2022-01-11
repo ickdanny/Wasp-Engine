@@ -40,12 +40,6 @@
     <Filter Include="Header Files\Geometry">
       <UniqueIdentifier>{edead95b-70c7-4a63-9559-0c0cd3fc403f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game\Resource">
-      <UniqueIdentifier>{d25e73b7-a489-4e36-b8db-9ab1e4971cb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Game\Resource">
-      <UniqueIdentifier>{b8640455-c033-4f33-90e7-64f26d993a3c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Window">
       <UniqueIdentifier>{d4f585f4-e54f-41b9-bec5-3e9684a726cb}</UniqueIdentifier>
     </Filter>
@@ -63,6 +57,15 @@
     </Filter>
     <Filter Include="Source Files\Sound">
       <UniqueIdentifier>{981475f0-fffa-4107-b95a-ee19132e39f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\GameResource">
+      <UniqueIdentifier>{b8640455-c033-4f33-90e7-64f26d993a3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\GameResource">
+      <UniqueIdentifier>{d25e73b7-a489-4e36-b8db-9ab1e4971cb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{9bcfa56f-3e6e-48fd-bd6a-acd465a079a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,13 +94,13 @@
       <Filter>Source Files\Resource</Filter>
     </ClCompile>
     <ClCompile Include="BitmapStorage.cpp">
-      <Filter>Source Files\Game\Resource</Filter>
+      <Filter>Source Files\Game\GameResource</Filter>
     </ClCompile>
     <ClCompile Include="DirectoryStorage.cpp">
-      <Filter>Source Files\Game\Resource</Filter>
+      <Filter>Source Files\Game\GameResource</Filter>
     </ClCompile>
     <ClCompile Include="ManifestStorage.cpp">
-      <Filter>Source Files\Game\Resource</Filter>
+      <Filter>Source Files\Game\GameResource</Filter>
     </ClCompile>
     <ClCompile Include="GameLoop.cpp">
       <Filter>Source Files\Game</Filter>
@@ -106,6 +109,9 @@
       <Filter>Source Files\Input</Filter>
     </ClCompile>
     <ClCompile Include="MidiSequencer.cpp">
+      <Filter>Source Files\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="MidiSequence.cpp">
       <Filter>Source Files\Sound</Filter>
     </ClCompile>
   </ItemGroup>
@@ -201,16 +207,16 @@
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="ResourceMasterStorage.h">
-      <Filter>Header Files\Game\Resource</Filter>
+      <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
     <ClInclude Include="ManifestStorage.h">
-      <Filter>Header Files\Game\Resource</Filter>
+      <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
     <ClInclude Include="DirectoryStorage.h">
-      <Filter>Header Files\Game\Resource</Filter>
+      <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
     <ClInclude Include="BitmapStorage.h">
-      <Filter>Header Files\Game\Resource</Filter>
+      <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
     <ClInclude Include="IKeyInputReceiver.h">
       <Filter>Header Files\Input</Filter>
@@ -229,6 +235,15 @@
     </ClInclude>
     <ClInclude Include="MidiSequencer.h">
       <Filter>Header Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="IMidiSequencer.h">
+      <Filter>Header Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="MidiSequence.h">
+      <Filter>Header Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteSwap.h">
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

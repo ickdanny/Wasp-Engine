@@ -45,7 +45,17 @@ namespace wasp::file {
 		std::function<void(const std::wstring& fileName)> callBackFunction
 	) {
 		const std::filesystem::path path{ directoryName };
-		for (auto const& dir_entry : std::filesystem::directory_iterator{ path }) {
+
+		//try to make iterator
+		std::filesystem::directory_iterator iterator{};
+		try {
+			iterator = std::filesystem::directory_iterator{ path };
+		}
+		catch (...){
+			throw std::runtime_error("Error cannot open directory");
+		}
+
+		for (auto const& dir_entry : iterator) {
 			callBackFunction(dir_entry.path().wstring());
 		}
 	}

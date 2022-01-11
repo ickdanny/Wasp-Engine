@@ -12,6 +12,7 @@ typedef struct IUnknown IUnknown;
 #include <shobjidl.h>
 #include <atlbase.h>
 #include <mmeapi.h>
+#pragma comment(lib, "winmm")
 #include <dwrite.h>
 #pragma comment(lib, "Dwrite")
 #include <d2d1.h>
