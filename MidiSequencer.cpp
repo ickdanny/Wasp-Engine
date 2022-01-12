@@ -6,16 +6,6 @@
 
 namespace wasp::sound::midi {
 
-
-
-/*#pragma pack(push, 1)
-	struct _mid_track {
-		unsigned int	id;	// identifier "MTrk"
-		unsigned int	length;	// track length, big-endian
-	};
-#pragma pack(pop)
-*/
-
 	bool hundredNanosecondSleep(LONGLONG nanoseconds);
 
 	MidiSequencer::MidiSequencer() {
@@ -29,98 +19,32 @@ namespace wasp::sound::midi {
 		midiOutClose(midiOutHandle);
 	}
 
-	/*
-	static unsigned long read_var_long(unsigned char* buf, unsigned int* bytesread)
-	{
-		unsigned long var = 0;
-		unsigned char c;
-		*bytesread = 0;
-		do
-		{
-			c = buf[(*bytesread)++];
-			var = (var << 7) + (c & 0x7f);
-		} while (c & 0x80);
-		return var;
-	}
+	void MidiSequencer::test(const MidiSequence& midiSequence) {
+		int bpm{ 120 }; //default to 120
+		if (midiSequence.header.ticks & (0b1 << 15)) {
+			throw std::runtime_error{ "Error does not support MIDI FPS" };
+		}
+		int tpm{ bpm * midiSequence.header.ticks };
 
-	static unsigned int get_buffer_ex6(unsigned char* buf, unsigned int len, unsigned int** out, unsigned int* outlen)
-	{
-		unsigned char* tmp;
-		unsigned int* streambuf;
-		unsigned int streamlen = 0;
-		unsigned int bytesread;
-		unsigned int buflen = 64;
-		tmp = buf;
-		*out = NULL;
-		*outlen = 0;
-		streambuf = (unsigned int*)malloc(sizeof(unsigned int) * buflen);
-		if (streambuf == NULL)
-			return 0;
-		memset(streambuf, 0, sizeof(unsigned int) * buflen);
-		tmp += sizeof(struct _mid_header);
-		tmp += sizeof(struct _mid_track);
-		while (tmp < buf + len)
-		{
-			unsigned char cmd;
-			unsigned int time = read_var_long(tmp, &bytesread);
-			unsigned int msg = 0;
-			tmp += bytesread;
-			cmd = *tmp++;
-			if ((cmd & 0xf0) != 0xf0) // normal command
-			{
-				msg = ((unsigned long)cmd) |
-					((unsigned long)*tmp++ << 8);
-				if (!((cmd & 0xf0) == 0xc0 || (cmd & 0xf0) == 0xd0))
-					msg |= ((unsigned long)*tmp++ << 16);
-				streambuf[streamlen++] = time;
-				streambuf[streamlen++] = msg;
+		for (size_t index{ 0 }; index < midiSequence.translatedTrack.size(); ++index) {
+			if (midiSequence.translatedTrack[index].deltaTime != 0) {
+				LONGLONG hundredNanosecondSleepDuration{
+					(midiSequence.translatedTrack[index].deltaTime
+					* 600'000'000ll) //convert minutes to units of 100 nanoseconds
+					/ tpm
+				};
+				hundredNanosecondSleep(hundredNanosecondSleepDuration);
 			}
-			else if (cmd == 0xff)
-			{
-				cmd = *tmp++; // cmd should be meta-event (0x2f for end of track)
-				cmd = *tmp++; // cmd should be meta-event length
-				tmp += cmd;
-			}
+			midiOutShortMsg(midiOutHandle, midiSequence.translatedTrack[index].event);
 		}
-		*out = streambuf;
-		*outlen = streamlen;
-		return 0;
-	}
-	*/
-
-	void MidiSequencer::test() {
-		/*unsigned int* streambuf = NULL;
-		unsigned int streamlen = 0;
-		unsigned char* midibuf = NULL;
-		unsigned int midilen = 0;
-		unsigned int err;
-		const unsigned int PPQN_CLOCK = 5;
-		unsigned int i;
-
-		midibuf = load_file((unsigned char*)"example6.mid", &midilen);
-		if (midibuf == NULL)
-		{
-			printf("could not open example6.mid\n");
-			return;
-		}
-		get_buffer_ex6(midibuf, midilen, &streambuf, &streamlen);
-		i = 0;
-		while (i < streamlen)
-		{
-			unsigned int time = streambuf[i++];
-			Sleep(time * PPQN_CLOCK);
-			err = midiOutShortMsg(midiOutHandle, streambuf[i++]);
-			if (err != MMSYSERR_NOERROR)
-				printf("error sending command: %d\n", err);
-		}
-		midiOutClose(midiOutHandle);
-		free(streambuf);
-		free(midibuf);
-		*/
 	}
 
 	//https://gist.github.com/Youka/4153f12cf2e17a77314c
 	bool hundredNanosecondSleep(LONGLONG hundredNanoseconds) {
+
+		if (hundredNanoseconds == 0) {
+			return true;
+		}
 
 		HANDLE timerHandle{ CreateWaitableTimer(NULL, TRUE, NULL) };
 		if (!timerHandle) {
@@ -132,13 +56,13 @@ namespace wasp::sound::midi {
 
 		if (!SetWaitableTimer(timerHandle, &time, 0, NULL, NULL, FALSE)) {
 			CloseHandle(timerHandle);
-			return FALSE;
+			return false;
 		}
 		/* Start & wait for timer */
 		WaitForSingleObject(timerHandle, INFINITE);
 		/* Clean resources */
 		CloseHandle(timerHandle);
 		/* Slept without problems */
-		return TRUE;
+		return true;
 	}
 }

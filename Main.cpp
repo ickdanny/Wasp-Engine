@@ -21,6 +21,10 @@
 #include "MidiSequencer.h"
 #include "GameLoop.h"
 
+#ifdef _DEBUG
+#include "Debug.h"
+#endif
+
 using namespace wasp;
 using namespace wasp::game;
 
@@ -30,19 +34,8 @@ using window::getWindowBorderHeightPadding;
 
 void pumpMessages();
 
-void midiTest() {
-    std::ifstream inStream{ L"res\\example6.mid", std::ios::binary };
-    sound::midi::MidiSequence sequence{};
-    inStream >> sequence;
-}
-
 #pragma warning(suppress : 28251) //suppress inconsistent annotation warning
-int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode)
-{
-    //todo: test
-    midiTest();
-
-    std::exit(0);
+int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode){
 
     //init COM
     win32adaptor::ComLibraryGuard comLibraryGuard{};
@@ -199,8 +192,13 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     window.setDestroyCallback([&] {gameLoop.stop(); });
 
     //midi test
+    std::ifstream inStream{ L"res\\example6.mid", std::ios::binary };
+    sound::midi::MidiSequence sequence{};
+    inStream >> sequence;
+    inStream.close();
+
     sound::midi::MidiSequencer midiSequencer{};
-    std::thread soundTest{ [&] {midiSequencer.test(); } };
+    std::thread soundTest{ [&] {midiSequencer.test(sequence); } };
     soundTest.detach();
     //end midi test
 

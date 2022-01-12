@@ -2,6 +2,8 @@
 
 #include "framework.h"
 
+#include "MidiSequence.h"
+
 namespace wasp::sound::midi {
 	class MidiSequencer { //todo: inherit IMidiSequencer
 	private:
@@ -15,6 +17,6 @@ namespace wasp::sound::midi {
 
 		~MidiSequencer();
 
-		void test();
+		void test(const MidiSequence& midiSequence);
 	};
 }
