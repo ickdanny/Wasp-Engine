@@ -16,7 +16,8 @@ namespace wasp::sound::midi {
 		};
 		#pragma pack(pop)
 
-		std::vector<EventUnit> compiledTrack{};
+		using EventUnitTrack = std::vector<EventUnit>;
+		EventUnitTrack compiledTrack{};
 
 		friend std::istream& operator>>(
 			std::istream& inStream, 

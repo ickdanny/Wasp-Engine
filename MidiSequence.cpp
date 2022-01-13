@@ -56,9 +56,8 @@ namespace wasp::sound::midi {
 			inStream.ignore(header.size - minimumHeaderSize);
 		}
 
-		//todo: we block multi-track here
-		if (header.format != formatSingleTrack) {
-			throw new std::runtime_error{ "for this test only take single track" };
+		if (header.format == formatMultiTrackAsync) {
+			throw new std::runtime_error{ "Error format 2 MIDI file unsuppoted" };
 		}
 
 		return header;
@@ -117,7 +116,7 @@ namespace wasp::sound::midi {
 		return eventUnit;
 	}
 
-	static std::vector<MidiSequence::EventUnit> loadTrack(std::istream& inStream) {
+	static MidiSequence::EventUnitTrack loadTrack(std::istream& inStream) {
 		//read in track header, assuming 1 track
 		MidiTrackHeader trackHeader{ readTrackHeader(inStream) };
 
@@ -181,6 +180,7 @@ namespace wasp::sound::midi {
 					//remove the delta time we set at the start
 					translatedTrack[index] = {};
 					encounteredEndOfTrack = true;
+					//don't advance index
 				}
 
 				//insert everything else
@@ -266,12 +266,25 @@ namespace wasp::sound::midi {
 		return translatedTrack;
 	}
 
+	static MidiSequence::EventUnitTrack compileTracks(
+		std::vector<MidiSequence::EventUnitTrack> individualTracks
+	) {
+
+		//todo:
+	}
+
 	std::istream& operator>>(std::istream& inStream, MidiSequence& midiSequence) {
 		//read in header file
 		MidiFileHeader header{ readFileHeader(inStream) };
 		midiSequence.ticks = header.ticks;
 
-		midiSequence.compiledTrack = loadTrack(inStream);
+		std::vector<MidiSequence::EventUnitTrack> individualTracks(header.tracks);
+
+		for (uint16_t i{ 0 }; i < header.tracks; ++i) {
+			individualTracks[i] = loadTrack(inStream);
+		}
+
+		midiSequence.compiledTrack = compileTracks(individualTracks);
 
 		return inStream;
 	}
