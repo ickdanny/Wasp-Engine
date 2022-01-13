@@ -46,12 +46,12 @@ namespace wasp::sound::midi {
 				hundredNanosecondSleep(hundredNanosecondSleepDuration);
 			}
 			//midi event
-			if (midiSequence.compiledTrack[index].event && statusMask != statusMask) {
+			if ((midiSequence.compiledTrack[index].event & 0xF0) != 0xF0) {
 				outputMidiEvent(midiSequence, index);
 			}
 			//meta event or system exclusive
 			else {
-				uint8_t status{ midiSequence.compiledTrack[index].event && 0xFF };
+				uint8_t status{ midiSequence.compiledTrack[index].event & 0xFF };
 				switch (status) {
 					case metaEvent:
 						handleMetaEvent(
@@ -76,7 +76,7 @@ namespace wasp::sound::midi {
 		auto result{
 			midiOutShortMsg(midiOutHandle, midiSequence.compiledTrack[index++].event)
 		};
-		if (!result) {
+		if (result != MMSYSERR_NOERROR) {
 			throw std::runtime_error{ "Error outputting MIDI short msg" };
 		}
 	}
@@ -88,7 +88,7 @@ namespace wasp::sound::midi {
 		uint32_t& hundredNanosecondsPerTick
 	) {
 		uint8_t metaEventStatus{
-			(midiSequence.compiledTrack[index++].event >> 8) && 0xFF
+			(midiSequence.compiledTrack[index++].event >> 8) & 0xFF
 		};
 		//index now points to the length block
 		uint32_t byteLength{ midiSequence.compiledTrack[index].deltaTime };
@@ -124,9 +124,18 @@ namespace wasp::sound::midi {
 		midiHDR.dwBufferLength = byteLength;
 		midiHDR.dwBytesRecorded = byteLength;
 
-		midiOutPrepareHeader(midiOutHandle, &midiHDR, sizeof(MIDIHDR));
-		midiOutLongMsg(midiOutHandle, &midiHDR, sizeof(MIDIHDR));
-		midiOutUnprepareHeader(midiOutHandle, &midiHDR, sizeof(MIDIHDR));
+		auto result{ midiOutPrepareHeader(midiOutHandle, &midiHDR, sizeof(MIDIHDR)) };
+		if (result != MMSYSERR_NOERROR) {
+			throw std::runtime_error{ "Error preparing sysEx" };
+		}
+		result = midiOutLongMsg(midiOutHandle, &midiHDR, sizeof(MIDIHDR));
+		if (result != MMSYSERR_NOERROR) {
+			throw std::runtime_error{ "Error outputting sysEx" };
+		}
+		result = midiOutUnprepareHeader(midiOutHandle, &midiHDR, sizeof(MIDIHDR));
+		if (result != MMSYSERR_NOERROR) {
+			throw std::runtime_error{ "Error unpreparing sysEx" };
+		}
 
 		index += indexLength;
 		//index now points to 1 past the last data entry
