@@ -17,6 +17,16 @@ namespace wasp::sound::midi {
 
 		~MidiSequencer();
 
-		void test(const MidiSequence& midiSequence);
+		void test(MidiSequence& midiSequence);
+
+	private:
+		void outputMidiEvent(MidiSequence& midiSequence, size_t& index);
+		void handleMetaEvent(
+			MidiSequence& midiSequence, 
+			size_t& index,
+			uint32_t& microsecondsPerBeat,
+			uint32_t& hundredNanosecondsPerTick
+		);
+		void outputSystemExclusiveEvent(MidiSequence midiSequence, size_t& index);
 	};
 }

@@ -37,6 +37,10 @@ void pumpMessages();
 #pragma warning(suppress : 28251) //suppress inconsistent annotation warning
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode){
 
+    #ifdef _DEBUG
+    debug::initConsoleOutput();
+    #endif
+
     //init COM
     win32adaptor::ComLibraryGuard comLibraryGuard{};
     comLibraryGuard.init(COINIT_APARTMENTTHREADED);

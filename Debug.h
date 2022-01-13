@@ -8,34 +8,23 @@
 
 namespace wasp::debug {
 
-	/*
-	void redirect_io_to_console()
+	void initConsoleOutput()
 	{
-		// redirect unbuffered STDOUT to the console
-		intptr_t lStdHandle = (intptr_t)GetStdHandle(STD_OUTPUT_HANDLE);
-		int hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
-		FILE* fp = _fdopen(hConHandle, "w");
-		*stdout = *fp;
-		setvbuf(stdout, NULL, _IONBF, 0);
+		// for some reason console is patrially allocated on GUI window creation, but
+		// isn't well defined to be shown by ShowWindow() or interacted with, 
+		// so, we just make sure that it will be freshly initialized
+		if (!FreeConsole())
+			throw std::runtime_error("error freeing console");
 
-		// redirect unbuffered STDIN to the console
-		lStdHandle = (intptr_t)GetStdHandle(STD_INPUT_HANDLE);
-		hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
-		fp = _fdopen(hConHandle, "r");
-		*stdin = *fp;
-		setvbuf(stdin, NULL, _IONBF, 0);
+		if (!AllocConsole())
+			throw std::runtime_error("error allocating console");
 
-		// redirect unbuffered STDERR to the console
-		lStdHandle = (intptr_t)GetStdHandle(STD_ERROR_HANDLE);
-		hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
-		fp = _fdopen(hConHandle, "w");
-		*stderr = *fp;
-		setvbuf(stderr, NULL, _IONBF, 0);
-
-		// make cout, wcout, cin, wcin, wcerr, cerr, wclog and clog point to console as well
-		std::ios::sync_with_stdio();
+		FILE* fDummy{};
+		freopen_s(&fDummy, "CONIN$", "r", stdin);
+		freopen_s(&fDummy, "CONOUT$", "w", stderr);
+		freopen_s(&fDummy, "CONOUT$", "w", stdout);
 	}
-	*/
+
 }
 
 #endif

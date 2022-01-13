@@ -1,6 +1,7 @@
 #include "MidiSequence.h"
 
 #include "ByteSwap.h"
+#include "MidiConstants.h"
 
 namespace wasp::sound::midi {
 
@@ -8,160 +9,269 @@ namespace wasp::sound::midi {
 	using wasp::utility::byteSwap32;
 	//using wasp::utility::byteSwap64;
 
-	constexpr std::uint32_t requiredHeaderID{ 0x4d546864 };		//"MThd"
-	constexpr std::uint32_t requiredHeaderSize{ 0x00000006 };	//always 6
-
-	enum fileFormat : std::uint16_t {
-		formatSingleTrack =		0x0000,
-		formatMultiTrackSync =	0x0001,
-		formatMultiTrackAsync = 0x0002
-	};
-
-	constexpr std::uint32_t requiredTrackHeaderID{ 0x4d54726b };//"MTrk
-
-	constexpr std::uint8_t commandMask{ 0b1111'0000 };
-
-	//midi command codes, for non-meta events first 4 bits are channel #
-	enum channelVoiceMessages : std::uint8_t {
-		noteOff =				0b1000'0000,
-		noteOn =				0b1001'0000,
-		polyphonicKeyPressure = 0b1010'0000,
-		controlChange =			0b1011'0000,
-		programChange =			0b1100'0000,
-		channelPressure =		0b1101'0000,
-		pitchBendChange =		0b1110'0000,
-		systemExclusive =		0b1111'0000 
-	};
-
-	constexpr std::uint8_t fullMetaEvent{ 0b1111'1111 };
-
-	constexpr std::uint8_t endOfTrack{ 0b0010'1111 };
+	using namespace wasp::sound::midi::constants;
 
 	#pragma pack(push, 1)
-	struct MidiTrackHeader {
-		std::uint32_t id{};		// identifier "MTrk"
-		std::uint32_t length{};	// track length, big-endian
+	struct MidiFileHeader {
+		uint32_t id{};		// identifier "MThd"
+		uint32_t size{};	// always 6 in big-endian format
+		uint16_t format{};	// big-endian format
+		uint16_t tracks{};	// number of tracks, big-endian
+		uint16_t ticks{};	// number of ticks per quarter note, big-endian
 	};
 	#pragma pack(pop)
 
-	uint32_t readDeltaTime(std::istream& inStream)
-	{
-		uint32_t deltaTime{};
-		uint8_t byte{};
+	#pragma pack(push, 1)
+	struct MidiTrackHeader {
+		uint32_t id{};		// identifier "MTrk"
+		uint32_t length{};	// track length, big-endian
+	};
+	#pragma pack(pop)
 
-		//read variable length loop
-		do{
-			inStream.read(reinterpret_cast<char*>(&byte), sizeof(byte));
-			deltaTime = (deltaTime << 7) + (byte & 0b0111'1111);
-		} while (byte & 0b1000'0000);
-
-		//DON'T SWAP ENDIANNESS
-		//deltaTime = byteSwap32(deltaTime);
-
-		return deltaTime;
-	}
-
-	std::istream& operator>>(std::istream& inStream, MidiSequence& midiSequence) {
-		//read in header
+	static MidiFileHeader readFileHeader(std::istream& inStream) {
+		MidiFileHeader header{};
+		//read in file header
 		inStream.read(
-			reinterpret_cast<char*>(&midiSequence),
-			sizeof(MidiSequence::MidiHeader)
+			reinterpret_cast<char*>(&header),
+			sizeof(MidiFileHeader)
 		);
 
-		//swap header endianness
-		midiSequence.header.id = byteSwap32(midiSequence.header.id);
-		midiSequence.header.size = byteSwap32(midiSequence.header.size);
-		midiSequence.header.format = byteSwap16(midiSequence.header.format);
-		midiSequence.header.tracks = byteSwap16(midiSequence.header.tracks);
-		midiSequence.header.ticks = byteSwap16(midiSequence.header.ticks);
+		//swap file header endianness
+		header.id = byteSwap32(header.id);
+		header.size = byteSwap32(header.size);
+		header.format = byteSwap16(header.format);
+		header.tracks = byteSwap16(header.tracks);
+		header.ticks = byteSwap16(header.ticks);
 
-		//check header validity
-		if (midiSequence.header.id != requiredHeaderID
-			|| midiSequence.header.size != requiredHeaderSize) {
-			throw new std::runtime_error{ "Error invalid MIDI file header" };
+		//check file header validity
+		if (header.id != requiredHeaderID) {
+			throw new std::runtime_error{ "Error MIDI file invalid header identifier" };
+		}
+		if (header.size < minimumHeaderSize) {
+			throw new std::runtime_error{ "Error MIDI file header too small" };
 		}
 
-		if (midiSequence.header.format != formatSingleTrack) {
+		//handle the case when the file header is longer than expected
+		if (header.size > minimumHeaderSize) {
+			inStream.ignore(header.size - minimumHeaderSize);
+		}
+
+		//todo: we block multi-track here
+		if (header.format != formatSingleTrack) {
 			throw new std::runtime_error{ "for this test only take single track" };
 		}
 
-		//read in track header, assuming 1 track
-		MidiTrackHeader trackHeader{};
+		return header;
+	}
+
+	static MidiTrackHeader readTrackHeader(std::istream& inStream) {
+		MidiTrackHeader header{};
+		//read in header
 		inStream.read(
-			reinterpret_cast<char*>(&trackHeader),
+			reinterpret_cast<char*>(&header),
 			sizeof(MidiTrackHeader)
 		);
 
 		//swap track header endianness
-		trackHeader.id = byteSwap32(trackHeader.id);
-		trackHeader.length = byteSwap32(trackHeader.length);
+		header.id = byteSwap32(header.id);
+		header.length = byteSwap32(header.length);
 
 		//check track header validity
-		if (trackHeader.id != requiredTrackHeaderID) {
-			throw new std::runtime_error{ "Error invalid MIDI track header" };
+		if (header.id != requiredTrackHeaderID) {
+			throw new std::runtime_error{ "Error MIDI file invalid track identifier" };
 		}
 
+		return header;
+	}
+
+	static uint32_t readVariableLength(std::istream& inStream) {
+		uint32_t toRet{};
+		uint8_t byte{};
+
+		//read variable length loop
+		do {
+			inStream.read(reinterpret_cast<char*>(&byte), sizeof(byte));
+			toRet = (toRet << 7) + (byte & 0b0111'1111);
+		} while (byte & 0b1000'0000);
+
+		//DON'T SWAP ENDIANNESS
+		//toRet = byteSwap32(deltaTime);
+
+		return toRet;
+	}
+
+	template<typename T>
+	static T ceilingIntegerDivide(T x, T y) {
+		return x / y + (x % y != 0);
+	}
+
+	//encoded as byteLength / indexLength
+	static MidiSequence::EventUnit encodeLength(uint32_t byteLength) {
+		MidiSequence::EventUnit eventUnit{};
+		eventUnit.deltaTime = byteLength;
+		uint32_t indexLength{ ceilingIntegerDivide(
+			byteLength,
+			static_cast<uint32_t>(sizeof(MidiSequence::EventUnit))
+		) };
+		eventUnit.event = indexLength;
+		return eventUnit;
+	}
+
+	static std::vector<MidiSequence::EventUnit> loadTrack(std::istream& inStream) {
+		//read in track header, assuming 1 track
+		MidiTrackHeader trackHeader{ readTrackHeader(inStream) };
+
 		//load track
-		auto vectorLength{ trackHeader.length * 2 / sizeof(MidiSequence::MidiEventUnit) };
-		std::vector<MidiSequence::MidiEventUnit> translatedTrack(vectorLength);
-		int index{ 0 };
-		while(true) {
+		size_t vectorLength{ trackHeader.length * 3 / sizeof(MidiSequence::EventUnit) };
+		std::vector<MidiSequence::EventUnit> translatedTrack(vectorLength);
+
+		uint8_t lastStatus{ 0 };
+		uint32_t index{ 0 };
+		bool encounteredEndOfTrack{ false };
+		while (!encounteredEndOfTrack) {
 			//read in delta time
-			translatedTrack[index].deltaTime = readDeltaTime(inStream);
+			translatedTrack[index].deltaTime = readVariableLength(inStream);
 
 			//grab command byte
-			uint8_t command{};
-			inStream.read(reinterpret_cast<char*>(&command), sizeof(command));
-			uint8_t maskedCommand{ static_cast<uint8_t>(command & commandMask) };
+			uint8_t status{};
+			inStream.read(reinterpret_cast<char*>(&status), sizeof(status));
 
-			if (maskedCommand != systemExclusive) // normal command
-			{
+			//handle running status
+			if (status < 0b1000'0000) {
+				status = lastStatus;
+				inStream.seekg(-1, std::ios_base::cur);
+			}
+
+			uint8_t maskedStatus{ static_cast<uint8_t>(status & statusMask) };
+			//handle midi events
+			if (maskedStatus != 0b1111'0000) {
+
 				//read in first byte
 				uint8_t temp{};
 				inStream.read(reinterpret_cast<char*>(&temp), sizeof(temp));
-				translatedTrack[index].event = static_cast<uint64_t>(command) |
-					(static_cast<uint64_t>(temp) << 8);
+				translatedTrack[index].event = static_cast<uint32_t>(status) |
+					(static_cast<uint32_t>(temp) << 8);
 
 				//read second byte if has one
-				if (maskedCommand != programChange && maskedCommand != channelPressure){
+				if (maskedStatus != programChange && maskedStatus != channelPressure) {
 					inStream.read(reinterpret_cast<char*>(&temp), sizeof(temp));
-					translatedTrack[index].event |= (static_cast<uint64_t>(temp) << 16);
+					translatedTrack[index].event |= (static_cast<uint32_t>(temp) << 16);
 				}
 
 				//DON'T SWAP ENDIANNESS
 				//translatedTrack[index].event = byteSwap32(translatedTrack[index].event);
 
+				lastStatus = status;
 				++index;
 			}
-			else if (command == fullMetaEvent)
-			{
-				//read in the meta command
-				inStream.read(reinterpret_cast<char*>(&command), sizeof(command));
+			//handle meta events
+			else if (status == metaEvent) {
+				//read in the meta event
+				uint8_t metaEventStatus{};
+				inStream.read(
+					reinterpret_cast<char*>(&metaEventStatus),
+					sizeof(metaEventStatus)
+				);
 
-				//read in length of meta command
-				uint8_t length{};
-				inStream.read(reinterpret_cast<char*>(&length), sizeof(length));
+				//read in length 
+				uint32_t length = readVariableLength(inStream);
 
-				//todo: ignoring meta events
-				inStream.ignore(length);
-				
-
-				if (command == endOfTrack) {
-					translatedTrack[index].event = endOfTrack;
-					++index; //point to the first non-event
-					break;
-				}
-
-				else {
-					//todo: ignore by remove the deltaTime we set
+				//do not insert end of track events into our translated track
+				if (metaEventStatus == endOfTrack) {
+					//remove the delta time we set at the start
 					translatedTrack[index] = {};
+					encounteredEndOfTrack = true;
 				}
+
+				//insert everything else
+				else {
+					//first block = deltaTime / 00 - 00 - event - FF
+					translatedTrack[index++].event = (metaEventStatus << 8) | status;
+
+					//second block = length / index length
+					translatedTrack[index] = encodeLength(length);
+					uint32_t indexLength{ translatedTrack[index++].event };
+
+					if (length > 0) {
+						//read binary data into our translated track
+						inStream.read(
+							reinterpret_cast<char*>(&translatedTrack[index]),
+							length
+						);
+						//advance index by necessary amount
+						index += indexLength;
+					}
+				}
+				lastStatus = 0;
+			}
+			//handle system exclusive events
+			else if (status == systemExclusiveStart) {
+				//read in length
+				uint32_t length = readVariableLength(inStream);
+
+				//first block = deltaTime / 00 - 00 - 00 - F0
+				translatedTrack[index++].event = status;
+
+				//second block = length / index length
+				//add 1 to length for our inserted F0 byte
+				if (length > 0) {
+					++length;
+				}
+				translatedTrack[index] = encodeLength(length);
+				uint32_t indexLength{ translatedTrack[index++].event };
+
+				if (length > 0) {
+					//insert F0 at beginning of data dump
+					translatedTrack[index].deltaTime = systemExclusiveStart << 24;
+					//read binary data into our translated track
+					inStream.read(
+						reinterpret_cast<char*>(&translatedTrack[index]) + 1,
+						length
+					);
+					//advance index by necessary amount
+					index += indexLength;
+				}
+				lastStatus = 0;
+			}
+			else if (status == systemExclusiveEnd) {
+				//irrelevant whether continuation packet or escape sequence
+
+				//read in length 
+				uint32_t length = readVariableLength(inStream);
+
+				//first block = deltaTime / 00 - 00 - 00 - F7
+				translatedTrack[index].event = status;
+				++index;
+
+				//second block = length / index length
+				translatedTrack[index] = encodeLength(length);
+				uint32_t indexLength{ translatedTrack[index++].event };
+
+				if (length > 0) {
+					//read binary data into our translated track
+					inStream.read(
+						reinterpret_cast<char*>(&translatedTrack[index]),
+						length
+					);
+					//advance index by necessary amount
+					index += indexLength;
+				}
+				lastStatus = 0;
 			}
 		}
+
 		translatedTrack.erase(translatedTrack.begin() += index, translatedTrack.end());
 		translatedTrack.shrink_to_fit();
 
-		midiSequence.translatedTrack = std::move(translatedTrack);
+		return translatedTrack;
+	}
+
+	std::istream& operator>>(std::istream& inStream, MidiSequence& midiSequence) {
+		//read in header file
+		MidiFileHeader header{ readFileHeader(inStream) };
+		midiSequence.ticks = header.ticks;
+
+		midiSequence.compiledTrack = loadTrack(inStream);
 
 		return inStream;
 	}
