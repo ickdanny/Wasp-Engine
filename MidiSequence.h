@@ -24,4 +24,11 @@ namespace wasp::sound::midi {
 			MidiSequence& midiSequence
 		);
 	};
+
+	std::istream& parseLoopedMidiFile(
+		std::istream& inStream,
+		MidiSequence& midiSequence,
+		int64_t loopStart = 0,
+		int64_t loopEnd = -1
+	);
 }

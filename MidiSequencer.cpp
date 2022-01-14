@@ -66,6 +66,7 @@ namespace wasp::sound::midi {
 
 		auto iter{ midiSequence.compiledTrack.begin() };
 		auto endIter{ midiSequence.compiledTrack.end() };
+		auto loopPointIter{ endIter };
 		while (iter != endIter) {
 			//sleep for delta time
 			if ((*iter).deltaTime != 0) {
@@ -82,12 +83,12 @@ namespace wasp::sound::midi {
 					LONGLONG timeLost{
 						timeElapsed - previousHundredNanosecondSleepDuration
 					};
-					std::cout << "lost:" << (timeLost / 10'000'000.0) << "s\n";
 					hundredNanosecondSleepDuration -= timeLost;
 				}
 				hundredNanosecondSleep(hundredNanosecondSleepDuration);
 				previousHundredNanosecondSleepDuration = hundredNanosecondSleepDuration;
 			}
+			std::cout << std::hex << (*iter).event << "\n";
 			//midi event
 			if (((*iter).event & 0xF0) != 0xF0) {
 				outputMidiEvent(midiSequence, iter);
@@ -100,6 +101,7 @@ namespace wasp::sound::midi {
 						handleMetaEvent(
 							midiSequence,
 							iter,
+							loopPointIter,
 							microsecondsPerBeat,
 							hundredNanosecondsPerTick
 						);
@@ -113,6 +115,7 @@ namespace wasp::sound::midi {
 				}
 			}
 		}
+		std::cout << "Track over\n";
 	}
 
 	void MidiSequencer::outputMidiEvent(
@@ -131,6 +134,7 @@ namespace wasp::sound::midi {
 	void MidiSequencer::handleMetaEvent(
 		MidiSequence& midiSequence,
 		MidiSequence::EventUnitTrack::iterator& iter,
+		MidiSequence::EventUnitTrack::iterator& loopPointIter,
 		uint32_t& microsecondsPerBeat,
 		uint32_t& hundredNanosecondsPerTick
 	) {
@@ -143,11 +147,27 @@ namespace wasp::sound::midi {
 		//index now points to the first data entry
 
 		if (metaEventStatus == tempo) {
-			microsecondsPerBeat = byteSwap32(
-				(*iter).deltaTime
-			) >> 8;
-			hundredNanosecondsPerTick =
-				(10 * microsecondsPerBeat) / midiSequence.ticks;
+			//test if this is actually a loop event
+			if ((byteLength == 0) && (indexLength == 0)) {
+				//if this is the loop start, set it
+				if (loopPointIter == midiSequence.compiledTrack.end()) {
+					loopPointIter = iter;
+					std::cout << "Encountered loop start point\n";
+				}
+				//if this is the loop end, bring us back to the loop start
+				else {
+					iter = loopPointIter;
+					outputAllNotesOff();
+					std::cout << "Encountered loop end point\n";
+				}
+			}
+			else {
+				microsecondsPerBeat = byteSwap32(
+					(*iter).deltaTime
+				) >> 8;
+				hundredNanosecondsPerTick =
+					(10 * microsecondsPerBeat) / midiSequence.ticks;
+			}
 		}
 
 		iter += indexLength;

@@ -28,6 +28,7 @@ namespace wasp::sound::midi {
 		void handleMetaEvent(
 			MidiSequence& midiSequence, 
 			MidiSequence::EventUnitTrack::iterator& iter,
+			MidiSequence::EventUnitTrack::iterator& loopPointIter,
 			uint32_t& microsecondsPerBeat,
 			uint32_t& hundredNanosecondsPerTick
 		);
