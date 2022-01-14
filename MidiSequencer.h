@@ -28,5 +28,7 @@ namespace wasp::sound::midi {
 			uint32_t& hundredNanosecondsPerTick
 		);
 		void outputSystemExclusiveEvent(MidiSequence midiSequence, size_t& index);
+
+		void outputAllNotesOff();
 	};
 }

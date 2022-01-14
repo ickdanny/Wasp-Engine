@@ -196,7 +196,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     window.setDestroyCallback([&] {gameLoop.stop(); });
 
     //midi test
-    std::ifstream inStream{ L"res\\example6.mid", std::ios::binary };
+    std::ifstream inStream{ L"res\\immortal smoke.mid", std::ios::binary };
     sound::midi::MidiSequence sequence{};
     inStream >> sequence;
     inStream.close();

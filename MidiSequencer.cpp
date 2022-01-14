@@ -1,5 +1,9 @@
 #include "MidiSequencer.h"
 
+#ifdef _DEBUG
+#include <iostream>
+#endif
+
 #include <stdexcept>
 #include <thread>
 #include <chrono>
@@ -23,7 +27,25 @@ namespace wasp::sound::midi {
 	}
 	
 	MidiSequencer::~MidiSequencer(){
-		midiOutClose(midiOutHandle);
+		try {
+			outputAllNotesOff();
+		}
+		catch (const std::runtime_error& error) {
+			#ifdef _DEBUG
+			std::cerr << error.what();
+			#endif
+		}
+		try {
+			auto result{ midiOutClose(midiOutHandle) };
+			if (result != MMSYSERR_NOERROR) {
+				throw std::runtime_error{ "Error closing MIDI out" };
+			}
+		}
+		catch (const std::runtime_error& error) {
+			#ifdef _DEBUG
+			std::cerr << error.what();
+			#endif
+		}
 	}
 
 	void MidiSequencer::test(MidiSequence& midiSequence) {
@@ -43,6 +65,8 @@ namespace wasp::sound::midi {
 					static_cast<LONGLONG>(midiSequence.compiledTrack[index].deltaTime)
 					* hundredNanosecondsPerTick
 				};
+				std::cout << "sleep for: " 
+					<< hundredNanosecondSleepDuration/10'000'000.0 << "s\n";
 				hundredNanosecondSleep(hundredNanosecondSleepDuration);
 			}
 			//midi event
@@ -98,13 +122,14 @@ namespace wasp::sound::midi {
 		if (metaEventStatus == tempo) {
 			microsecondsPerBeat = byteSwap32(
 				midiSequence.compiledTrack[index].deltaTime
-			);
+			) >> 8;
 			hundredNanosecondsPerTick =
 				(10 * microsecondsPerBeat) / midiSequence.ticks;
 		}
 
 		index += indexLength;
 		//index now points to 1 past the last data entry
+		std::cout << "handled meta event\n";
 	}
 
 	void MidiSequencer::outputSystemExclusiveEvent(
@@ -139,6 +164,18 @@ namespace wasp::sound::midi {
 
 		index += indexLength;
 		//index now points to 1 past the last data entry
+		std::cout << "output sysex\n";
+	}
+
+	void MidiSequencer::outputAllNotesOff() {
+		for (int i{ 0 }; i <= 0b1111; ++i) {
+			auto result{
+				midiOutShortMsg(midiOutHandle, 0x00007BB0 + i)
+			};
+			if (result != MMSYSERR_NOERROR) {
+				throw std::runtime_error{ "Error outputting MIDI short msg all notes off" };
+			}
+		}
 	}
 
 	//https://gist.github.com/Youka/4153f12cf2e17a77314c
