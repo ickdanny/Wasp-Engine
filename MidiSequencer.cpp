@@ -1,8 +1,8 @@
 #include "MidiSequencer.h"
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 #include <iostream>
-#endif
+//#endif
 
 #include <stdexcept>
 #include <thread>
@@ -24,6 +24,7 @@ namespace wasp::sound::midi {
 		if (result != MMSYSERR_NOERROR) {
 			throw std::runtime_error{ "Error opening MIDI Mapper" };
 		}
+		while (!QueryPerformanceFrequency(&performanceFrequency));
 	}
 	
 	MidiSequencer::~MidiSequencer(){
@@ -35,6 +36,7 @@ namespace wasp::sound::midi {
 			std::cerr << error.what();
 			#endif
 		}
+		hundredNanosecondSleep(10'000ll);
 		try {
 			auto result{ midiOutClose(midiOutHandle) };
 			if (result != MMSYSERR_NOERROR) {
@@ -57,37 +59,54 @@ namespace wasp::sound::midi {
 			(10 * microsecondsPerBeat) / midiSequence.ticks 
 		};
 
-		size_t index{ 0 };
-		while(index < midiSequence.compiledTrack.size()) {
+		LARGE_INTEGER prevTimeStamp{};
+		while (!QueryPerformanceCounter(&prevTimeStamp));
+		LARGE_INTEGER currentTimeStamp{};
+		LONGLONG previousHundredNanosecondSleepDuration{ 0 };
+
+		auto iter{ midiSequence.compiledTrack.begin() };
+		auto endIter{ midiSequence.compiledTrack.end() };
+		while (iter != endIter) {
 			//sleep for delta time
-			if (midiSequence.compiledTrack[index].deltaTime != 0) {
+			if ((*iter).deltaTime != 0) {
 				LONGLONG hundredNanosecondSleepDuration{
-					static_cast<LONGLONG>(midiSequence.compiledTrack[index].deltaTime)
+					static_cast<LONGLONG>((*iter).deltaTime)
 					* hundredNanosecondsPerTick
 				};
-				std::cout << "sleep for: " 
-					<< hundredNanosecondSleepDuration/10'000'000.0 << "s\n";
+				if (QueryPerformanceCounter(&currentTimeStamp)) {
+					LONGLONG timeElapsed{ 
+							currentTimeStamp.QuadPart - prevTimeStamp.QuadPart
+					};
+					prevTimeStamp = currentTimeStamp;
+					(timeElapsed *= 10'000'000ll) /= performanceFrequency.QuadPart;
+					LONGLONG timeLost{
+						timeElapsed - previousHundredNanosecondSleepDuration
+					};
+					std::cout << "lost:" << (timeLost / 10'000'000.0) << "s\n";
+					hundredNanosecondSleepDuration -= timeLost;
+				}
 				hundredNanosecondSleep(hundredNanosecondSleepDuration);
+				previousHundredNanosecondSleepDuration = hundredNanosecondSleepDuration;
 			}
 			//midi event
-			if ((midiSequence.compiledTrack[index].event & 0xF0) != 0xF0) {
-				outputMidiEvent(midiSequence, index);
+			if (((*iter).event & 0xF0) != 0xF0) {
+				outputMidiEvent(midiSequence, iter);
 			}
 			//meta event or system exclusive
 			else {
-				uint8_t status{ midiSequence.compiledTrack[index].event & 0xFF };
+				uint8_t status{ (*iter).event & 0xFF };
 				switch (status) {
 					case metaEvent:
 						handleMetaEvent(
 							midiSequence,
-							index,
+							iter,
 							microsecondsPerBeat,
 							hundredNanosecondsPerTick
 						);
 						break;
 					case systemExclusiveStart:
 					case systemExclusiveEnd:
-						outputSystemExclusiveEvent(midiSequence, index);
+						outputSystemExclusiveEvent(midiSequence, iter);
 						break;
 					default:
 						throw std::runtime_error("Error unrecognized MIDI status");
@@ -96,10 +115,14 @@ namespace wasp::sound::midi {
 		}
 	}
 
-	void MidiSequencer::outputMidiEvent(MidiSequence& midiSequence, size_t& index) {
+	void MidiSequencer::outputMidiEvent(
+		MidiSequence& midiSequence, 
+		MidiSequence::EventUnitTrack::iterator& iter
+	) {
 		auto result{
-			midiOutShortMsg(midiOutHandle, midiSequence.compiledTrack[index++].event)
+			midiOutShortMsg(midiOutHandle, (*iter).event)
 		};
+		++iter;
 		if (result != MMSYSERR_NOERROR) {
 			throw std::runtime_error{ "Error outputting MIDI short msg" };
 		}
@@ -107,45 +130,43 @@ namespace wasp::sound::midi {
 
 	void MidiSequencer::handleMetaEvent(
 		MidiSequence& midiSequence,
-		size_t& index,
+		MidiSequence::EventUnitTrack::iterator& iter,
 		uint32_t& microsecondsPerBeat,
 		uint32_t& hundredNanosecondsPerTick
 	) {
-		uint8_t metaEventStatus{
-			(midiSequence.compiledTrack[index++].event >> 8) & 0xFF
-		};
+		uint8_t metaEventStatus{((*iter).event >> 8) & 0xFF};
+		++iter;
 		//index now points to the length block
-		uint32_t byteLength{ midiSequence.compiledTrack[index].deltaTime };
-		uint32_t indexLength{ midiSequence.compiledTrack[index++].event };
+		uint32_t byteLength{ (*iter).deltaTime };
+		uint32_t indexLength{ (*iter).event };
+		++iter;
 		//index now points to the first data entry
 
 		if (metaEventStatus == tempo) {
 			microsecondsPerBeat = byteSwap32(
-				midiSequence.compiledTrack[index].deltaTime
+				(*iter).deltaTime
 			) >> 8;
 			hundredNanosecondsPerTick =
 				(10 * microsecondsPerBeat) / midiSequence.ticks;
 		}
 
-		index += indexLength;
+		iter += indexLength;
 		//index now points to 1 past the last data entry
-		std::cout << "handled meta event\n";
 	}
 
 	void MidiSequencer::outputSystemExclusiveEvent(
 		MidiSequence midiSequence, 
-		size_t& index
+		MidiSequence::EventUnitTrack::iterator& iter
 	) {
-		++index;
+		++iter;
 		//index now points to the length block
-		uint32_t byteLength{ midiSequence.compiledTrack[index].deltaTime };
-		uint32_t indexLength{ midiSequence.compiledTrack[index++].event };
+		uint32_t byteLength{ (*iter).deltaTime };
+		uint32_t indexLength{ (*iter).event };
+		++iter;
 		//index now points to the first data entry
 
 		MIDIHDR midiHDR{};
-		midiHDR.lpData = reinterpret_cast<char*>(
-			&midiSequence.compiledTrack[index]
-		);
+		midiHDR.lpData = reinterpret_cast<char*>(&(*iter));
 		midiHDR.dwBufferLength = byteLength;
 		midiHDR.dwBytesRecorded = byteLength;
 
@@ -162,9 +183,8 @@ namespace wasp::sound::midi {
 			throw std::runtime_error{ "Error unpreparing sysEx" };
 		}
 
-		index += indexLength;
+		iter += indexLength;
 		//index now points to 1 past the last data entry
-		std::cout << "output sysex\n";
 	}
 
 	void MidiSequencer::outputAllNotesOff() {
@@ -181,7 +201,7 @@ namespace wasp::sound::midi {
 	//https://gist.github.com/Youka/4153f12cf2e17a77314c
 	bool hundredNanosecondSleep(LONGLONG hundredNanoseconds) {
 
-		if (hundredNanoseconds == 0) {
+		if (hundredNanoseconds <= 0) {
 			return true;
 		}
 

@@ -21,9 +21,9 @@
 #include "MidiSequencer.h"
 #include "GameLoop.h"
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 #include "Debug.h"
-#endif
+//#endif
 
 using namespace wasp;
 using namespace wasp::game;
@@ -37,9 +37,9 @@ void pumpMessages();
 #pragma warning(suppress : 28251) //suppress inconsistent annotation warning
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode){
 
-    #ifdef _DEBUG
+    //#ifdef _DEBUG
     debug::initConsoleOutput();
-    #endif
+    //#endif
 
     //init COM
     win32adaptor::ComLibraryGuard comLibraryGuard{};
@@ -196,7 +196,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
     window.setDestroyCallback([&] {gameLoop.stop(); });
 
     //midi test
-    std::ifstream inStream{ L"res\\immortal smoke.mid", std::ios::binary };
+    std::ifstream inStream{ L"res\\3_6.mid", std::ios::binary };
     sound::midi::MidiSequence sequence{};
     inStream >> sequence;
     inStream.close();

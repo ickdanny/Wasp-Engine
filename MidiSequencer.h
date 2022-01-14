@@ -8,6 +8,7 @@ namespace wasp::sound::midi {
 	class MidiSequencer { //todo: inherit IMidiSequencer
 	private:
 		HMIDIOUT midiOutHandle{};
+		LARGE_INTEGER performanceFrequency{};
 
 	public:
 		MidiSequencer();
@@ -20,14 +21,20 @@ namespace wasp::sound::midi {
 		void test(MidiSequence& midiSequence);
 
 	private:
-		void outputMidiEvent(MidiSequence& midiSequence, size_t& index);
+		void outputMidiEvent(
+			MidiSequence& midiSequence, 
+			MidiSequence::EventUnitTrack::iterator& iter
+		);
 		void handleMetaEvent(
 			MidiSequence& midiSequence, 
-			size_t& index,
+			MidiSequence::EventUnitTrack::iterator& iter,
 			uint32_t& microsecondsPerBeat,
 			uint32_t& hundredNanosecondsPerTick
 		);
-		void outputSystemExclusiveEvent(MidiSequence midiSequence, size_t& index);
+		void outputSystemExclusiveEvent(
+			MidiSequence midiSequence, 
+			MidiSequence::EventUnitTrack::iterator& iter
+		);
 
 		void outputAllNotesOff();
 	};
