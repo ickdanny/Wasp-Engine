@@ -150,6 +150,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ByteSwap.cpp" />
     <ClCompile Include="DirectoryStorage.cpp" />
     <ClCompile Include="FileUtil.cpp" />
     <ClCompile Include="GameLoop.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="MidiSequence.cpp" />
     <ClCompile Include="MidiSequencer.cpp" />
     <ClCompile Include="ParentResourceStorage.cpp" />
+    <ClCompile Include="PreciseChrono.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="BitmapStorage.cpp" />
     <ClCompile Include="WindowUtil.cpp" />
@@ -184,8 +186,10 @@
     <ClInclude Include="IDrawer.h" />
     <ClInclude Include="IKeyInputReceiver.h" />
     <ClInclude Include="IKeyInputTable.h" />
+    <ClInclude Include="MidiError.h" />
     <ClInclude Include="MidiSequence.h" />
     <ClInclude Include="MidiSequencer.h" />
+    <ClInclude Include="PreciseChrono.h" />
     <ClInclude Include="ResourceBase.h" />
     <ClInclude Include="IResourceStorage.h" />
     <ClInclude Include="ITextDrawer.h" />

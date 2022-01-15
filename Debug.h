@@ -1,9 +1,10 @@
 #pragma once
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
 
 #include "framework.h"
 #include <io.h>
+#include <iostream>
 #include <fcntl.h>
 
 namespace wasp::debug {
@@ -27,4 +28,4 @@ namespace wasp::debug {
 
 }
 
-//#endif
+#endif

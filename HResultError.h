@@ -5,8 +5,24 @@
 namespace wasp::win32adaptor {
 	class HResultError : public std::runtime_error {
 	public:
-		HResultError(char const* const message) noexcept
-			: std::runtime_error{ message }{
+		explicit HResultError(const std::string& what_arg)
+			: std::runtime_error{ what_arg }{
+		}
+
+		explicit HResultError(const char* what_arg)
+			: std::runtime_error{ what_arg }{
+		}
+
+		explicit HResultError(const std::string& what_arg, HRESULT result)
+			: std::runtime_error{ what_arg + ("\nHRESULT: " + result) }{
+		}
+
+		explicit HResultError(const char* what_arg, HRESULT result)
+			: std::runtime_error{ std::string{what_arg} + ("\nHRESULT: " + result) }{
+		}
+
+		explicit HResultError(HRESULT result) 
+			: std::runtime_error{ "HRESULT Error " + result }{
 		}
 	};
 }

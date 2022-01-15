@@ -21,8 +21,15 @@ namespace wasp::sound::midi {
 		void test(MidiSequence& midiSequence);
 
 	private:
+		void openMidiOut();
+		void closeMidiOut();
+
 		void outputMidiEvent(
 			MidiSequence& midiSequence, 
+			MidiSequence::EventUnitTrack::iterator& iter
+		);
+		void outputSystemExclusiveEvent(
+			MidiSequence& midiSequence,
 			MidiSequence::EventUnitTrack::iterator& iter
 		);
 		void handleMetaEvent(
@@ -32,11 +39,13 @@ namespace wasp::sound::midi {
 			uint32_t& microsecondsPerBeat,
 			uint32_t& hundredNanosecondsPerTick
 		);
-		void outputSystemExclusiveEvent(
-			MidiSequence midiSequence, 
-			MidiSequence::EventUnitTrack::iterator& iter
-		);
 
-		void outputAllNotesOff();
+		void outputShortMsg(uint32_t output);
+		
+		void outputShortMsgOnAllChannels(uint32_t output);
+
+		void outputControlChangeOnAllChannels(uint32_t data);
+
+		void outputReset();
 	};
 }

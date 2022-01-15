@@ -10,103 +10,176 @@
 
 #include "MidiConstants.h"
 #include "ByteSwap.h"
+#include "PreciseChrono.h"
+#include "HResultError.h"
+#include "MidiError.h"
 
 namespace wasp::sound::midi {
 
+	constexpr long long destructorWaitTime100ns{ 10'000ll };
+	constexpr uint64_t ratio100nsToSeconds{ 10'000'000ull };
+
 	using wasp::utility::byteSwap32;
+	using wasp::utility::sleep100ns;
 
 	using namespace constants;
 
-	bool hundredNanosecondSleep(LONGLONG nanoseconds);
+	namespace {
+		uint32_t calculateInitialTimePerTick100ns(
+			uint16_t ticks
+		) {
+			//a leading 1 means SMPTE time
+			if (ticks & 0b1000'0000'0000'0000) {
+				uint32_t fps{ smpteFpsDecode(ticks >> 8) };
+				uint8_t subframeResolution{ static_cast<uint8_t>(ticks) };
+				auto subframesPerSecond{ fps * subframeResolution };
+				return ratio100nsToSeconds / subframesPerSecond;
+			}
+			//a leading 0 means ticks per beat
+			else {
+				return (10 * defaultMicrosecondsPerBeat) / ticks;
+			}
+		}
+
+		void queryPerformanceFrequency(LARGE_INTEGER* lpFrequency) {
+			if (!QueryPerformanceFrequency(lpFrequency)) {
+				HRESULT result{ HRESULT_FROM_WIN32(GetLastError()) };
+				throw win32adaptor::HResultError{
+					"Error query performance frequency ", result
+				};
+			}
+		}
+
+		void queryPerformanceCounter(LARGE_INTEGER* lpPerformanceCount) {
+			if (!QueryPerformanceCounter(lpPerformanceCount)) {
+				HRESULT result{ HRESULT_FROM_WIN32(GetLastError()) };
+				throw win32adaptor::HResultError{
+					"Error query performance counter ", result
+				};
+			}
+		}
+	}
 
 	MidiSequencer::MidiSequencer() {
-		auto result{ midiOutOpen(&midiOutHandle, MIDI_MAPPER, 0, 0, CALLBACK_NULL) };
+		openMidiOut();
+		queryPerformanceFrequency(&performanceFrequency);
+	}
+
+	void MidiSequencer::openMidiOut() {
+		auto result{
+			midiOutOpen(&midiOutHandle, MIDI_MAPPER, 0, 0, CALLBACK_NULL)
+		};
 		if (result != MMSYSERR_NOERROR) {
 			throw std::runtime_error{ "Error opening MIDI Mapper" };
 		}
-		while (!QueryPerformanceFrequency(&performanceFrequency));
 	}
 	
 	MidiSequencer::~MidiSequencer(){
+		//try to turn off all notes
 		try {
-			outputAllNotesOff();
+			outputReset();
 		}
-		catch (const std::runtime_error& error) {
+		catch (const std::exception& error) {
 			#ifdef _DEBUG
 			std::cerr << error.what();
 			#endif
 		}
-		hundredNanosecondSleep(10'000ll);
-		try {
-			auto result{ midiOutClose(midiOutHandle) };
-			if (result != MMSYSERR_NOERROR) {
-				throw std::runtime_error{ "Error closing MIDI out" };
-			}
+		catch(...){
+			//swallow error
 		}
-		catch (const std::runtime_error& error) {
+
+		//sleep for a bit for reset to get sent
+		sleep100ns(destructorWaitTime100ns);
+
+		//close midi out
+		try {
+			closeMidiOut();
+		}
+		catch (const std::exception& error) {
 			#ifdef _DEBUG
 			std::cerr << error.what();
 			#endif
+		}
+		catch (...) {
+			//swallow error
+		}
+	}
+
+	void MidiSequencer::closeMidiOut() {
+		auto result{ midiOutClose(midiOutHandle) };
+		if (result != MMSYSERR_NOERROR) {
+			throw std::runtime_error{ "Error closing MIDI out" };
 		}
 	}
 
 	void MidiSequencer::test(MidiSequence& midiSequence) {
+		//timing variables
 		uint32_t microsecondsPerBeat{ defaultMicrosecondsPerBeat };
-		if (midiSequence.ticks & (0b1 << 15)) {
-			throw std::runtime_error{ "Error does not support MIDI FPS" };
-		}
-		uint32_t hundredNanosecondsPerTick{ 
-			(10 * microsecondsPerBeat) / midiSequence.ticks 
+		uint32_t timePerTick100ns{
+			calculateInitialTimePerTick100ns(midiSequence.ticks)
 		};
-
 		LARGE_INTEGER prevTimeStamp{};
-		while (!QueryPerformanceCounter(&prevTimeStamp));
+		queryPerformanceCounter(&prevTimeStamp);
 		LARGE_INTEGER currentTimeStamp{};
-		LONGLONG previousHundredNanosecondSleepDuration{ 0 };
+		LONGLONG previousSleepDuration100ns{ 0 };
 
+		//loop variables
 		auto iter{ midiSequence.compiledTrack.begin() };
 		auto endIter{ midiSequence.compiledTrack.end() };
 		auto loopPointIter{ endIter };
+
+		//helper function for calculating sleep duration
+		auto calculateSleepDuration100ns{ [&]() {
+			//calculate how long we should wait
+			LONGLONG sleepDuration100ns{
+				static_cast<LONGLONG>(iter->deltaTime) * timePerTick100ns
+			};
+
+			//account for the time we spent already
+			queryPerformanceCounter(&currentTimeStamp);
+			LONGLONG timeElapsed{
+					currentTimeStamp.QuadPart - prevTimeStamp.QuadPart
+			};
+			(timeElapsed *= ratio100nsToSeconds) /= performanceFrequency.QuadPart;
+			LONGLONG timeLost{ timeElapsed - previousSleepDuration100ns};
+			sleepDuration100ns -= timeLost;
+
+			prevTimeStamp = currentTimeStamp;
+			return sleepDuration100ns;
+		} };
+
+		//begin playback
 		while (iter != endIter) {
 			//sleep for delta time
-			if ((*iter).deltaTime != 0) {
-				LONGLONG hundredNanosecondSleepDuration{
-					static_cast<LONGLONG>((*iter).deltaTime)
-					* hundredNanosecondsPerTick
+			if (iter->deltaTime != 0) {
+				LONGLONG sleepDuration100ns{
+					calculateSleepDuration100ns()
 				};
-				if (QueryPerformanceCounter(&currentTimeStamp)) {
-					LONGLONG timeElapsed{ 
-							currentTimeStamp.QuadPart - prevTimeStamp.QuadPart
-					};
-					prevTimeStamp = currentTimeStamp;
-					(timeElapsed *= 10'000'000ll) /= performanceFrequency.QuadPart;
-					LONGLONG timeLost{
-						timeElapsed - previousHundredNanosecondSleepDuration
-					};
-					hundredNanosecondSleepDuration -= timeLost;
-				}
-				hundredNanosecondSleep(hundredNanosecondSleepDuration);
-				previousHundredNanosecondSleepDuration = hundredNanosecondSleepDuration;
+				sleep100ns(sleepDuration100ns);
+				previousSleepDuration100ns = sleepDuration100ns;
 			}
-			std::cout << std::hex << (*iter).event << "\n";
+
+			uint8_t status{ static_cast<uint8_t>(iter->event) };
 			//midi event
-			if (((*iter).event & 0xF0) != 0xF0) {
+			if ((status & statusMask) != metaEventOrSystemExclusive) {
 				outputMidiEvent(midiSequence, iter);
 			}
 			//meta event or system exclusive
 			else {
-				uint8_t status{ (*iter).event & 0xFF };
 				switch (status) {
 					case metaEvent:
+						//may change tempo or loop back
 						handleMetaEvent(
 							midiSequence,
 							iter,
 							loopPointIter,
 							microsecondsPerBeat,
-							hundredNanosecondsPerTick
+							timePerTick100ns
 						);
 						break;
 					case systemExclusiveStart:
+					//continuation events and escape sequences start with sysEx end
+					//the data is encoded the same way
 					case systemExclusiveEnd:
 						outputSystemExclusiveEvent(midiSequence, iter);
 						break;
@@ -115,78 +188,37 @@ namespace wasp::sound::midi {
 				}
 			}
 		}
-		std::cout << "Track over\n";
 	}
 
 	void MidiSequencer::outputMidiEvent(
 		MidiSequence& midiSequence, 
 		MidiSequence::EventUnitTrack::iterator& iter
 	) {
-		auto result{
-			midiOutShortMsg(midiOutHandle, (*iter).event)
-		};
-		++iter;
-		if (result != MMSYSERR_NOERROR) {
-			throw std::runtime_error{ "Error outputting MIDI short msg" };
+		try {
+			outputShortMsg(iter->event);
 		}
-	}
-
-	void MidiSequencer::handleMetaEvent(
-		MidiSequence& midiSequence,
-		MidiSequence::EventUnitTrack::iterator& iter,
-		MidiSequence::EventUnitTrack::iterator& loopPointIter,
-		uint32_t& microsecondsPerBeat,
-		uint32_t& hundredNanosecondsPerTick
-	) {
-		uint8_t metaEventStatus{((*iter).event >> 8) & 0xFF};
-		++iter;
-		//index now points to the length block
-		uint32_t byteLength{ (*iter).deltaTime };
-		uint32_t indexLength{ (*iter).event };
-		++iter;
-		//index now points to the first data entry
-
-		if (metaEventStatus == tempo) {
-			//test if this is actually a loop event
-			if ((byteLength == 0) && (indexLength == 0)) {
-				//if this is the loop start, set it
-				if (loopPointIter == midiSequence.compiledTrack.end()) {
-					loopPointIter = iter;
-					std::cout << "Encountered loop start point\n";
-				}
-				//if this is the loop end, bring us back to the loop start
-				else {
-					iter = loopPointIter;
-					outputAllNotesOff();
-					std::cout << "Encountered loop end point\n";
-				}
-			}
-			else {
-				microsecondsPerBeat = byteSwap32(
-					(*iter).deltaTime
-				) >> 8;
-				hundredNanosecondsPerTick =
-					(10 * microsecondsPerBeat) / midiSequence.ticks;
-			}
+		catch (const std::runtime_error& runtimeError) {
+			++iter;
+			throw;
 		}
-
-		iter += indexLength;
-		//index now points to 1 past the last data entry
+		++iter;
 	}
 
 	void MidiSequencer::outputSystemExclusiveEvent(
-		MidiSequence midiSequence, 
+		MidiSequence& midiSequence,
 		MidiSequence::EventUnitTrack::iterator& iter
 	) {
 		++iter;
 		//index now points to the length block
-		uint32_t byteLength{ (*iter).deltaTime };
-		uint32_t indexLength{ (*iter).event };
+
+		uint32_t byteLength{ iter->deltaTime };
+		uint32_t indexLength{ iter->event };
 		++iter;
 		//index now points to the first data entry
 
+		//prepare data to be output from MIDIHDR
 		MIDIHDR midiHDR{};
-		midiHDR.lpData = reinterpret_cast<char*>(&(*iter));
+		midiHDR.lpData = reinterpret_cast<char*>(&(*iter)); //probably UB
 		midiHDR.dwBufferLength = byteLength;
 		midiHDR.dwBytesRecorded = byteLength;
 
@@ -207,41 +239,90 @@ namespace wasp::sound::midi {
 		//index now points to 1 past the last data entry
 	}
 
-	void MidiSequencer::outputAllNotesOff() {
-		for (int i{ 0 }; i <= 0b1111; ++i) {
-			auto result{
-				midiOutShortMsg(midiOutHandle, 0x00007BB0 + i)
-			};
-			if (result != MMSYSERR_NOERROR) {
-				throw std::runtime_error{ "Error outputting MIDI short msg all notes off" };
+	void MidiSequencer::handleMetaEvent(
+		MidiSequence& midiSequence,
+		MidiSequence::EventUnitTrack::iterator& iter,
+		MidiSequence::EventUnitTrack::iterator& loopPointIter,
+		uint32_t& microsecondsPerBeat,
+		uint32_t& hundredNanosecondsPerTick
+	) {
+		//todo: refactor
+		uint8_t metaEventStatus{((*iter).event >> 8) & 0xFF};
+		++iter;
+		//index now points to the length block
+		uint32_t byteLength{ (*iter).deltaTime };
+		uint32_t indexLength{ (*iter).event };
+		++iter;
+		//index now points to the first data entry
+
+		if (metaEventStatus == tempo) {
+			//test if this is actually a loop event
+			if ((byteLength == 0) && (indexLength == 0)) {
+				//if this is the loop start, set it
+				if (loopPointIter == midiSequence.compiledTrack.end()) {
+					loopPointIter = iter;
+				}
+				//if this is the loop end, bring us back to the loop start
+				else {
+					iter = loopPointIter;
+				}
 			}
+			else {
+				microsecondsPerBeat = byteSwap32(
+					(*iter).deltaTime
+				) >> 8;
+				hundredNanosecondsPerTick =
+					(10 * microsecondsPerBeat) / midiSequence.ticks;
+			}
+		}
+
+		iter += indexLength;
+		//index now points to 1 past the last data entry
+	}
+
+	void MidiSequencer::outputShortMsg(uint32_t output) {
+		auto result{
+			midiOutShortMsg(midiOutHandle, output)
+		};
+		if (result != MMSYSERR_NOERROR) {
+			throw std::runtime_error{ "Error outputting MIDI short msg" };
 		}
 	}
 
-	//https://gist.github.com/Youka/4153f12cf2e17a77314c
-	bool hundredNanosecondSleep(LONGLONG hundredNanoseconds) {
-
-		if (hundredNanoseconds <= 0) {
-			return true;
+	void MidiSequencer::outputShortMsgOnAllChannels(uint32_t output) {
+		//make sure the last 4 bits are empty (it's where we put the channel)
+		if (!(output << 28)) {
+			for (int i{ 0 }; i <= 0b1111; ++i) {
+				outputShortMsg(output + i);
+			}
 		}
-
-		HANDLE timerHandle{ CreateWaitableTimer(NULL, TRUE, NULL) };
-		if (!timerHandle) {
-			return false;
+		else {
+			throw std::runtime_error{ "Error MIDI short msg must end in 0b0000" };
 		}
+	}
 
-		LARGE_INTEGER time{};
-		time.QuadPart = -hundredNanoseconds;
+	void MidiSequencer::outputControlChangeOnAllChannels(uint32_t data) {
+		outputShortMsgOnAllChannels(
+			controlChange + (data << 16)
+		);
+	}
 
-		if (!SetWaitableTimer(timerHandle, &time, 0, NULL, NULL, FALSE)) {
-			CloseHandle(timerHandle);
-			return false;
+	void MidiSequencer::outputReset() {
+		outputControlChangeOnAllChannels(allSoundOff);
+		auto result{
+			midiOutReset(midiOutHandle)
+		};
+		if (result == MMSYSERR_INVALHANDLE) {
+			throw std::runtime_error{ "Error invalid MIDI out handle" };
 		}
-		/* Start & wait for timer */
-		WaitForSingleObject(timerHandle, INFINITE);
-		/* Clean resources */
-		CloseHandle(timerHandle);
-		/* Slept without problems */
-		return true;
+		else {
+			throw std::runtime_error{ "Error resetting MIDI out" };
+		}
+		
+		//Terminating a system - exclusive message without sending an 
+		//EOX(end - of - exclusive) byte might cause problems for the receiving device.
+		//The midiOutReset function does not send an EOX byte when it terminates 
+		//a system - exclusive message — applications are responsible for doing this.
+		outputShortMsg(systemExclusiveEnd);
 	}
 }
