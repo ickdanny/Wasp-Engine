@@ -72,199 +72,220 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="_source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceLoader.cpp">
+    <ClCompile Include="_source\Resource\ResourceLoader.cpp">
       <Filter>Source Files\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="MainWindow.cpp">
+    <ClCompile Include="_source\Window\MainWindow.cpp">
       <Filter>Source Files\Window</Filter>
     </ClCompile>
-    <ClCompile Include="WindowPainter.cpp">
+    <ClCompile Include="_source\Window\WindowPainter.cpp">
       <Filter>Source Files\Window</Filter>
     </ClCompile>
-    <ClCompile Include="WindowUtil.cpp">
+    <ClCompile Include="_source\Window\WindowUtil.cpp">
       <Filter>Source Files\Window</Filter>
     </ClCompile>
-    <ClCompile Include="FileUtil.cpp">
+    <ClCompile Include="_source\File\FileUtil.cpp">
       <Filter>Source Files\File</Filter>
     </ClCompile>
-    <ClCompile Include="BitmapConstructor.cpp">
+    <ClCompile Include="_source\Graphics\BitmapConstructor.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ParentResourceStorage.cpp">
+    <ClCompile Include="_source\Resource\ParentResourceStorage.cpp">
       <Filter>Source Files\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="BitmapStorage.cpp">
+    <ClCompile Include="_source\Game\GameResource\BitmapStorage.cpp">
       <Filter>Source Files\Game\GameResource</Filter>
     </ClCompile>
-    <ClCompile Include="DirectoryStorage.cpp">
+    <ClCompile Include="_source\Game\GameResource\DirectoryStorage.cpp">
       <Filter>Source Files\Game\GameResource</Filter>
     </ClCompile>
-    <ClCompile Include="ManifestStorage.cpp">
+    <ClCompile Include="_source\Game\GameResource\ManifestStorage.cpp">
       <Filter>Source Files\Game\GameResource</Filter>
     </ClCompile>
-    <ClCompile Include="GameLoop.cpp">
+    <ClCompile Include="_source\Game\GameLoop.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="KeyInputTable.cpp">
+    <ClCompile Include="_source\Input\KeyInputTable.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="MidiSequencer.cpp">
+    <ClCompile Include="_source\Sound\MidiSequencer.cpp">
       <Filter>Source Files\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="MidiSequence.cpp">
+    <ClCompile Include="_source\Sound\MidiSequence.cpp">
       <Filter>Source Files\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="ByteSwap.cpp">
+    <ClCompile Include="_Source\Utility\ByteUtil.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="PreciseChrono.cpp">
+    <ClCompile Include="_source\Utility\PreciseChrono.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Sound\MidiOut.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Utility\PreciseClock100ns.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="_Header\windowsInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileLoadable.h">
+    <ClInclude Include="_header\Resource\FileLoadable.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceBase.h">
+    <ClInclude Include="_header\Resource\ResourceBase.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
+    <ClInclude Include="_header\Resource\Resource.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceLoader.h">
+    <ClInclude Include="_header\Resource\ResourceLoader.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceOriginVariant.h">
+    <ClInclude Include="_header\Resource\ResourceOriginVariant.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceStorage.h">
+    <ClInclude Include="_header\Resource\ResourceStorage.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="_header\targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ManifestLoadable.h">
+    <ClInclude Include="_header\Resource\ManifestLoadable.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="WindowPainter.h">
+    <ClInclude Include="_header\Window\WindowPainter.h">
       <Filter>Header Files\Window</Filter>
     </ClInclude>
-    <ClInclude Include="WindowUtil.h">
+    <ClInclude Include="_header\Window\WindowUtil.h">
       <Filter>Header Files\Window</Filter>
     </ClInclude>
-    <ClInclude Include="MainWindow.h">
+    <ClInclude Include="_header\Window\MainWindow.h">
       <Filter>Header Files\Window</Filter>
     </ClInclude>
-    <ClInclude Include="BaseWindow.h">
+    <ClInclude Include="_header\Window\BaseWindow.h">
       <Filter>Header Files\Window</Filter>
     </ClInclude>
-    <ClInclude Include="HResultError.h">
+    <ClInclude Include="_header\HResultError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ComLibraryGuard.h">
+    <ClInclude Include="_header\ComLibraryGuard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileUtil.h">
+    <ClInclude Include="_header\File\FileUtil.h">
       <Filter>Header Files\File</Filter>
     </ClInclude>
-    <ClInclude Include="FileError.h">
+    <ClInclude Include="_header\File\FileError.h">
       <Filter>Header Files\File</Filter>
     </ClInclude>
-    <ClInclude Include="Loadable.h">
+    <ClInclude Include="_header\Resource\Loadable.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Config.h">
+    <ClInclude Include="_header\Game\Config.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="UnsupportedOperationError.h">
+    <ClInclude Include="_header\Utility\UnsupportedOperationError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IResourceStorage.h">
+    <ClInclude Include="_header\Resource\IResourceStorage.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="BitmapDrawInstruction.h">
+    <ClInclude Include="_header\Graphics\BitmapDrawInstruction.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="BitmapConstructor.h">
+    <ClInclude Include="_header\Graphics\BitmapConstructor.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="IBitmapDrawer.h">
+    <ClInclude Include="_header\Graphics\IBitmapDrawer.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="IDrawer.h">
+    <ClInclude Include="_header\Graphics\IDrawer.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Point2.h">
+    <ClInclude Include="_header\Geometry\Point2.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="ITextDrawer.h">
+    <ClInclude Include="_header\Graphics\ITextDrawer.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Rectangle.h">
+    <ClInclude Include="_header\Geometry\Rectangle.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="ParentResourceStorage.h">
+    <ClInclude Include="_header\Resource\ParentResourceStorage.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="GameLoop.h">
+    <ClInclude Include="_header\Game\GameLoop.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceMasterStorage.h">
+    <ClInclude Include="_header\Game\GameResource\ResourceMasterStorage.h">
       <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
-    <ClInclude Include="ManifestStorage.h">
+    <ClInclude Include="_header\Game\GameResource\ManifestStorage.h">
       <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
-    <ClInclude Include="DirectoryStorage.h">
+    <ClInclude Include="_header\Game\GameResource\DirectoryStorage.h">
       <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
-    <ClInclude Include="BitmapStorage.h">
+    <ClInclude Include="_header\Game\GameResource\BitmapStorage.h">
       <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
-    <ClInclude Include="IKeyInputReceiver.h">
+    <ClInclude Include="_header\Input\IKeyInputReceiver.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="IKeyInputTable.h">
+    <ClInclude Include="_header\Input\IKeyInputTable.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="KeyState.h">
+    <ClInclude Include="_header\Input\KeyState.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="KeyInputTable.h">
+    <ClInclude Include="_header\Input\KeyInputTable.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="KeyValues.h">
+    <ClInclude Include="_header\Input\KeyValues.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="MidiSequencer.h">
+    <ClInclude Include="_header\Sound\MidiSequencer.h">
       <Filter>Header Files\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="IMidiSequencer.h">
+    <ClInclude Include="_header\Sound\IMidiSequencer.h">
       <Filter>Header Files\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="MidiSequence.h">
+    <ClInclude Include="_header\Sound\MidiSequence.h">
       <Filter>Header Files\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="ByteSwap.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Debug.h">
+    <ClInclude Include="_debug\ConsoleOutput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MidiConstants.h">
+    <ClInclude Include="_header\Sound\MidiConstants.h">
       <Filter>Header Files\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="PreciseChrono.h">
+    <ClInclude Include="_header\Utility\PreciseChrono.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="MidiError.h">
+    <ClInclude Include="_header\Sound\MidiError.h">
       <Filter>Header Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Utility\ByteUtil.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\windowsMMInclude.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\windowsD2DInclude.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\windowsDWriteInclude.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Sound\MidiOut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_debug\Logging.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

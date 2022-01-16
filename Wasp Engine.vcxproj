@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -91,11 +91,14 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
+      <AdditionalIncludeDirectories>$(ProjectDir)_debug;$(ProjectDir)_header</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -109,6 +112,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>$(ProjectDir)_debug;$(ProjectDir)_header</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,72 +154,82 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ByteSwap.cpp" />
-    <ClCompile Include="DirectoryStorage.cpp" />
-    <ClCompile Include="FileUtil.cpp" />
-    <ClCompile Include="GameLoop.cpp" />
-    <ClCompile Include="KeyInputTable.cpp" />
-    <ClCompile Include="ManifestStorage.cpp" />
-    <ClCompile Include="MidiSequence.cpp" />
-    <ClCompile Include="MidiSequencer.cpp" />
-    <ClCompile Include="ParentResourceStorage.cpp" />
-    <ClCompile Include="PreciseChrono.cpp" />
-    <ClCompile Include="ResourceLoader.cpp" />
-    <ClCompile Include="BitmapStorage.cpp" />
-    <ClCompile Include="WindowUtil.cpp" />
-    <ClInclude Include="BaseWindow.h" />
-    <ClCompile Include="BitmapConstructor.cpp" />
-    <ClInclude Include="BitmapConstructor.h" />
-    <ClInclude Include="ByteSwap.h" />
-    <ClInclude Include="MidiConstants.h" />
-    <ClInclude Include="Debug.h" />
-    <ClInclude Include="GameLoop.h" />
-    <ClInclude Include="IMidiSequencer.h" />
-    <ClInclude Include="KeyInputTable.h" />
-    <ClInclude Include="KeyValues.h" />
-    <ClInclude Include="KeyState.h" />
-    <ClInclude Include="IBitmapDrawer.h" />
-    <ClInclude Include="BitmapDrawInstruction.h" />
-    <ClInclude Include="Config.h" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MainWindow.cpp" />
-    <ClInclude Include="FileError.h" />
-    <ClInclude Include="FileLoadable.h" />
-    <ClInclude Include="DirectoryStorage.h" />
-    <ClInclude Include="FileUtil.h" />
-    <ClInclude Include="IDrawer.h" />
-    <ClInclude Include="IKeyInputReceiver.h" />
-    <ClInclude Include="IKeyInputTable.h" />
-    <ClInclude Include="MidiError.h" />
-    <ClInclude Include="MidiSequence.h" />
-    <ClInclude Include="MidiSequencer.h" />
-    <ClInclude Include="PreciseChrono.h" />
-    <ClInclude Include="ResourceBase.h" />
-    <ClInclude Include="IResourceStorage.h" />
-    <ClInclude Include="ITextDrawer.h" />
-    <ClInclude Include="Loadable.h" />
-    <ClInclude Include="ManifestStorage.h" />
-    <ClInclude Include="ParentResourceStorage.h" />
-    <ClInclude Include="Point2.h" />
-    <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="ResourceMasterStorage.h" />
-    <ClInclude Include="ResourceOriginVariant.h" />
-    <ClInclude Include="ResourceStorage.h" />
-    <ClInclude Include="MainWindow.h" />
-    <ClCompile Include="WindowPainter.cpp" />
-    <ClInclude Include="ManifestLoadable.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="ResourceLoader.h" />
-    <ClInclude Include="UnsupportedOperationError.h" />
-    <ClInclude Include="BitmapStorage.h" />
-    <ClInclude Include="WindowUtil.h" />
+    <ClCompile Include="_source\Sound\MidiOut.cpp" />
+    <ClCompile Include="_Source\Utility\ByteUtil.cpp" />
+    <ClCompile Include="_source\Game\GameResource\DirectoryStorage.cpp" />
+    <ClCompile Include="_source\File\FileUtil.cpp" />
+    <ClCompile Include="_source\Game\GameLoop.cpp" />
+    <ClCompile Include="_source\Input\KeyInputTable.cpp" />
+    <ClCompile Include="_source\Game\GameResource\ManifestStorage.cpp" />
+    <ClCompile Include="_source\Sound\MidiSequence.cpp" />
+    <ClCompile Include="_source\Sound\MidiSequencer.cpp" />
+    <ClCompile Include="_source\Resource\ParentResourceStorage.cpp" />
+    <ClCompile Include="_source\Utility\PreciseChrono.cpp" />
+    <ClCompile Include="_source\Resource\ResourceLoader.cpp" />
+    <ClCompile Include="_source\Game\GameResource\BitmapStorage.cpp" />
+    <ClCompile Include="_source\Utility\PreciseClock100ns.cpp" />
+    <ClCompile Include="_source\Window\WindowUtil.cpp" />
+    <ClInclude Include="_debug\Logging.h" />
+    <ClInclude Include="_header\Sound\MidiOut.h" />
+    <ClInclude Include="_header\windowsD2DInclude.h" />
+    <ClInclude Include="_header\windowsDWriteInclude.h" />
+    <ClInclude Include="_header\windowsMMInclude.h" />
+    <ClInclude Include="_header\Window\BaseWindow.h" />
+    <ClCompile Include="_source\Graphics\BitmapConstructor.cpp" />
+    <ClInclude Include="_header\Graphics\BitmapConstructor.h" />
+    <ClInclude Include="_header\Utility\ByteUtil.h" />
+    <ClInclude Include="_header\Sound\MidiConstants.h" />
+    <ClInclude Include="_debug\ConsoleOutput.h" />
+    <ClInclude Include="_header\Game\GameLoop.h" />
+    <ClInclude Include="_header\Sound\IMidiSequencer.h" />
+    <ClInclude Include="_header\Input\KeyInputTable.h" />
+    <ClInclude Include="_header\Input\KeyValues.h" />
+    <ClInclude Include="_header\Input\KeyState.h" />
+    <ClInclude Include="_header\Graphics\IBitmapDrawer.h" />
+    <ClInclude Include="_header\Graphics\BitmapDrawInstruction.h" />
+    <ClInclude Include="_header\Game\Config.h" />
+    <ClCompile Include="_source\Main.cpp" />
+    <ClCompile Include="_source\Window\MainWindow.cpp" />
+    <ClInclude Include="_header\File\FileError.h" />
+    <ClInclude Include="_header\Resource\FileLoadable.h" />
+    <ClInclude Include="_header\Game\GameResource\DirectoryStorage.h" />
+    <ClInclude Include="_header\File\FileUtil.h" />
+    <ClInclude Include="_header\Graphics\IDrawer.h" />
+    <ClInclude Include="_header\Input\IKeyInputReceiver.h" />
+    <ClInclude Include="_header\Input\IKeyInputTable.h" />
+    <ClInclude Include="_header\Sound\MidiError.h" />
+    <ClInclude Include="_header\Sound\MidiSequence.h" />
+    <ClInclude Include="_header\Sound\MidiSequencer.h" />
+    <ClInclude Include="_header\Utility\PreciseChrono.h" />
+    <ClInclude Include="_header\Resource\ResourceBase.h" />
+    <ClInclude Include="_header\Resource\IResourceStorage.h" />
+    <ClInclude Include="_header\Graphics\ITextDrawer.h" />
+    <ClInclude Include="_header\Resource\Loadable.h" />
+    <ClInclude Include="_header\Game\GameResource\ManifestStorage.h" />
+    <ClInclude Include="_header\Resource\ParentResourceStorage.h" />
+    <ClInclude Include="_header\Geometry\Point2.h" />
+    <ClInclude Include="_header\Geometry\Rectangle.h" />
+    <ClInclude Include="_header\Game\GameResource\ResourceMasterStorage.h" />
+    <ClInclude Include="_header\Resource\ResourceOriginVariant.h" />
+    <ClInclude Include="_header\Resource\ResourceStorage.h" />
+    <ClInclude Include="_header\Window\MainWindow.h" />
+    <ClCompile Include="_source\Window\WindowPainter.cpp" />
+    <ClInclude Include="_header\Resource\ManifestLoadable.h" />
+    <ClInclude Include="_header\Resource\Resource.h" />
+    <ClInclude Include="_header\Resource\ResourceLoader.h" />
+    <ClInclude Include="_header\Utility\UnsupportedOperationError.h" />
+    <ClInclude Include="_header\Game\GameResource\BitmapStorage.h" />
+    <ClInclude Include="_header\Window\WindowUtil.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ComLibraryGuard.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="HResultError.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="WindowPainter.h" />
+    <ClInclude Include="_header\ComLibraryGuard.h" />
+    <ClInclude Include="_Header\windowsInclude.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="_header\HResultError.h" />
+    <ClInclude Include="_header\targetver.h" />
+    <ClInclude Include="_header\Window\WindowPainter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
