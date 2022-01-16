@@ -18,7 +18,6 @@
 
 namespace wasp::sound::midi {
 
-	constexpr long long destructorWaitTime100ns{ 10'000ll };
 	constexpr uint64_t ratio100nsToSeconds{ 10'000'000ull };
 
 	using wasp::utility::byteSwap32;
@@ -57,28 +56,29 @@ namespace wasp::sound::midi {
 			midiOut->outputReset();
 		}
 		catch (const std::exception& error) {
+			//swallow error
 			debug::log(error.what());
 		}
 		catch(...){
 			//swallow error
+			debug::log("Exception caught of unknown type in MidiSequencer destructor");
 		}
-
-		//sleep for a bit for reset to get sent
-		sleep100ns(destructorWaitTime100ns);
 	}
 
-
-	//todo: use std::steady_clock for timing (it wraps the performanceCounter)
 	void MidiSequencer::test(MidiSequence& midiSequence) {
+		using ratioTimePointTo100ns = std::ratio<
+			clockType::period::num * ratio100nsToSeconds,
+			clockType::period::den
+		>;
+
 		//timing variables
 		uint32_t microsecondsPerBeat{ defaultMicrosecondsPerBeat };
 		uint32_t timePerTick100ns{
 			calculateInitialTimePerTick100ns(midiSequence.ticks)
 		};
-		LARGE_INTEGER prevTimeStamp{};
-		queryPerformanceCounter(&prevTimeStamp);
-		LARGE_INTEGER currentTimeStamp{};
-		LONGLONG previousSleepDuration100ns{ 0 };
+		timePointType prevTimeStamp{ getCurrentTime() };
+		timePointType currentTimeStamp{};
+		long long previousSleepDuration100ns{ 0 };
 
 		//loop variables
 		auto iter{ midiSequence.compiledTrack.begin() };
@@ -88,17 +88,17 @@ namespace wasp::sound::midi {
 		//helper function for calculating sleep duration
 		auto calculateSleepDuration100ns{ [&]() {
 			//calculate how long we should wait
-			LONGLONG sleepDuration100ns{
-				static_cast<LONGLONG>(iter->deltaTime) * timePerTick100ns
+			long long sleepDuration100ns{
+				static_cast<long long>(iter->deltaTime) * timePerTick100ns
 			};
 
 			//account for the time we spent already
-			queryPerformanceCounter(&currentTimeStamp);
-			LONGLONG timeElapsed{
-					currentTimeStamp.QuadPart - prevTimeStamp.QuadPart
+			currentTimeStamp = getCurrentTime();
+			long long timeElapsed{
+				((currentTimeStamp - prevTimeStamp).count() * ratioTimePointTo100ns::num)
+				/ ratioTimePointTo100ns::den
 			};
-			(timeElapsed *= ratio100nsToSeconds) /= performanceFrequency.QuadPart;
-			LONGLONG timeLost{ timeElapsed - previousSleepDuration100ns};
+			long long timeLost{ timeElapsed - previousSleepDuration100ns};
 			sleepDuration100ns -= timeLost;
 
 			prevTimeStamp = currentTimeStamp;
@@ -194,6 +194,7 @@ namespace wasp::sound::midi {
 		uint32_t& microsecondsPerBeat,
 		uint32_t& timePerTick100ns
 	) {
+		//the status is the second byte (following 0xFF)
 		uint8_t metaEventStatus{ getByte(iter->event, 2) };
 		++iter;
 		//index now points to the length block
@@ -230,5 +231,10 @@ namespace wasp::sound::midi {
 
 		iter += indexLength;
 		//index now points to 1 past the last data entry
+	}
+
+	//static
+	MidiSequencer::timePointType MidiSequencer::getCurrentTime() {
+		return clockType::now();
 	}
 }

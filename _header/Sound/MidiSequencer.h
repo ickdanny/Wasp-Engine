@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include "windowsInclude.h"
 #include "windowsMMInclude.h"
 
@@ -9,6 +10,10 @@
 namespace wasp::sound::midi {
 	class MidiSequencer { //todo: inherit IMidiSequencer
 	private:
+		//on Windows, steady_clock wraps the performance counter
+		using clockType = std::chrono::steady_clock;
+		using timePointType = clockType::time_point;
+
 		MidiOut* midiOut{ nullptr };
 
 	public:
@@ -40,5 +45,7 @@ namespace wasp::sound::midi {
 			uint32_t& microsecondsPerBeat,
 			uint32_t& hundredNanosecondsPerTick
 		);
+
+		static timePointType getCurrentTime();
 	};
 }

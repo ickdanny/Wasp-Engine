@@ -167,7 +167,6 @@
     <ClCompile Include="_source\Utility\PreciseChrono.cpp" />
     <ClCompile Include="_source\Resource\ResourceLoader.cpp" />
     <ClCompile Include="_source\Game\GameResource\BitmapStorage.cpp" />
-    <ClCompile Include="_source\Utility\PreciseClock100ns.cpp" />
     <ClCompile Include="_source\Window\WindowUtil.cpp" />
     <ClInclude Include="_debug\Logging.h" />
     <ClInclude Include="_header\Sound\MidiOut.h" />
