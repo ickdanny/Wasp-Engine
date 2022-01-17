@@ -169,6 +169,7 @@
     <ClCompile Include="_source\Game\GameResource\BitmapStorage.cpp" />
     <ClCompile Include="_source\Window\WindowUtil.cpp" />
     <ClInclude Include="_debug\Logging.h" />
+    <ClInclude Include="_header\Container\ObjectPool.h" />
     <ClInclude Include="_header\Sound\MidiOut.h" />
     <ClInclude Include="_header\windowsD2DInclude.h" />
     <ClInclude Include="_header\windowsDWriteInclude.h" />

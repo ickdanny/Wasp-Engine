@@ -284,5 +284,8 @@
     <ClInclude Include="_debug\Logging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="_header\Container\ObjectPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
