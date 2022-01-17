@@ -5,9 +5,7 @@
 namespace wasp::sound::midi {
 	class IMidiSequencer {
 	public:
+		virtual void start(std::shared_ptr<MidiSequence> midiSequencePointer) = 0;
 		virtual void stop() = 0;
-		virtual void start() = 0;
-		virtual void setSequence(MidiSequence& midiSequence) = 0;
-		virtual bool isRunning() = 0;
 	};
 }

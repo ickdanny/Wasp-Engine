@@ -1,21 +1,38 @@
 #pragma once
 
 #include <chrono>
+#include <mutex>
 #include "windowsInclude.h"
 #include "windowsMMInclude.h"
 
+#include "IMidiSequencer.h"
 #include "MidiSequence.h"
 #include "MidiOut.h"
 
 namespace wasp::sound::midi {
-	class MidiSequencer { //todo: inherit IMidiSequencer
+	//NOT threadsafe
+	class MidiSequencer : public IMidiSequencer{
 	private:
 		//on Windows, steady_clock wraps the performance counter
 		using clockType = std::chrono::steady_clock;
 		using timePointType = clockType::time_point;
 
-		MidiOut* midiOut{ nullptr };
+		using EventUnitTrack = MidiSequence::EventUnitTrack;
 
+		MidiOut* midiOut{};
+
+		//playback fields
+		std::shared_ptr<MidiSequence> midiSequencePointer{};
+		EventUnitTrack::iterator iter{};
+		EventUnitTrack::iterator loopPointIter{};
+		uint32_t microsecondsPerBeat{ defaultMicrosecondsPerBeat };
+		uint32_t timePerTick100ns{};
+
+		//threading fields
+		std::atomic<uint_fast16_t> threadSafetyCounter{};
+		std::mutex outputMutex{};
+		std::atomic<bool> threadWaiting{ false };
+		std::atomic<bool> running{ false };
 	public:
 		MidiSequencer(MidiOut* midiOut)
 			: midiOut{ midiOut } {
@@ -26,25 +43,16 @@ namespace wasp::sound::midi {
 
 		~MidiSequencer();
 
-		void test(MidiSequence& midiSequence);
+		void start(std::shared_ptr<MidiSequence> midiSequencePointer) override;
+		void stop() override;
 
 	private:
+		void playbackThread(std::shared_ptr<MidiSequence> midiSequencePointer);
+		void outputMidiEvent();
+		void outputSystemExclusiveEvent();
+		void handleMetaEvent();
 
-		void outputMidiEvent(
-			MidiSequence& midiSequence, 
-			MidiSequence::EventUnitTrack::iterator& iter
-		);
-		void outputSystemExclusiveEvent(
-			MidiSequence& midiSequence,
-			MidiSequence::EventUnitTrack::iterator& iter
-		);
-		void handleMetaEvent(
-			MidiSequence& midiSequence, 
-			MidiSequence::EventUnitTrack::iterator& iter,
-			MidiSequence::EventUnitTrack::iterator& loopPointIter,
-			uint32_t& microsecondsPerBeat,
-			uint32_t& hundredNanosecondsPerTick
-		);
+		void resetPlaybackFields();
 
 		static timePointType getCurrentTime();
 	};
