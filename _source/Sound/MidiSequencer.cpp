@@ -1,16 +1,11 @@
 #include "Sound\MidiSequencer.h"
 
-//#ifdef _DEBUG
-#include <iostream>
-//#endif
-
 #include <stdexcept>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
 #include <chrono>
 
-#include "Sound\MidiConstants.h"
 #include "Sound\MidiError.h"
 #include "Utility\ByteUtil.h"
 #include "Utility\PreciseChrono.h"
@@ -54,11 +49,9 @@ namespace wasp::sound::midi {
 	}
 
 	MidiSequencer::~MidiSequencer() {
-		stop();
-		//todo: wait for output mutex
-		//try to turn off all notes
+		//try to stop and turn off all notes
 		try {
-			midiOut->outputReset();
+			stop();
 		}
 		catch (const std::exception& error) {
 			//swallow error
@@ -71,9 +64,21 @@ namespace wasp::sound::midi {
 	}
 
 	void MidiSequencer::start(std::shared_ptr<MidiSequence> midiSequencePointer) {
+		stopPlaybackThread();
 		this->midiSequencePointer = midiSequencePointer;
+		running.store(true);
 		playbackThread = std::thread{ [&] {
-			this->playback();
+			try {
+				this->playback();
+			}
+			catch (const std::exception& exception) {
+				debug::log(exception.what());
+				throw;
+			}
+			catch (...) {
+				debug::log("Exception of unknown type caught on midi playback thread");
+				throw;
+			}
 		} };
 	}
 
@@ -82,6 +87,8 @@ namespace wasp::sound::midi {
 			clockType::period::num* ratio100nsToSeconds,
 			clockType::period::den
 		>;
+
+		midiOut->outputReset();
 		
 		//timing variables
 		microsecondsPerBeat = defaultMicrosecondsPerBeat;
@@ -130,24 +137,20 @@ namespace wasp::sound::midi {
 				previousSleepDuration100ns = sleepDuration100ns;
 
 				//check to see if need to exit before sleep
-				if (thisThreadCounter != threadSafetyCounter) {
-					midiOut->outputReset();
-					playbackThreadOutputtingFlag = false;
+				if (!running.load()) {
+					//do not output reset in this case
+					resetPlaybackFields();
 					return;
 				}
-				playbackThreadOutputtingFlag = false;
 
 				sleep100ns(sleepDuration100ns);
 
 				//also check after sleep
-				if (thisThreadCounter != threadSafetyCounter) {
-					if (!running && !threadWaiting) {
-						
-					}
+				if (!running.load()) {
+					//do not output reset in this case
+					resetPlaybackFields();
 					return;
 				}
-
-				playbackThreadOutputtingFlag = true;
 			}
 
 			//handle event
@@ -175,14 +178,10 @@ namespace wasp::sound::midi {
 			}
 		}
 
+		//output reset if we finish naturally
 		midiOut->outputReset();
-
-		if (thisThreadCounter == threadSafetyCounter) {
-			//we finished and there are no threads waiting and no stop sent
-			//therefore we are responsible for signaling we are done running
-			running = false;
-		}
-		playbackThreadOutputtingFlag = false;
+		resetPlaybackFields();
+		running.store(false);
 	}
 
 	void MidiSequencer::stop() {
@@ -264,15 +263,18 @@ namespace wasp::sound::midi {
 	}
 
 	void MidiSequencer::stopPlaybackThread() {
-		if (running) {
-			wakeupSwitch.signal();
-			playbackThread.join();
-			wakeupSwitch.unsignal();
-			running = false;
+		if (running.load()) {
+			running.store(false);
+			if (playbackThread.joinable()) {
+				wakeupSwitch.signal();
+				playbackThread.join();
+				wakeupSwitch.unsignal();
+			}
 		}
 	}
 
 	void MidiSequencer::resetPlaybackFields() {
+		midiSequencePointer = {};
 		iter = {};
 		loopPointIter = {};
 		microsecondsPerBeat = defaultMicrosecondsPerBeat;

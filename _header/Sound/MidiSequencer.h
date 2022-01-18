@@ -5,6 +5,7 @@
 #include "windowsInclude.h"
 #include "windowsMMInclude.h"
 
+#include "MidiConstants.h"
 #include "IMidiSequencer.h"
 #include "MidiSequence.h"
 #include "MidiOut.h"
@@ -32,9 +33,7 @@ namespace wasp::sound::midi {
 		//threading fields
 		std::thread playbackThread{};
 		utility::EventHandle wakeupSwitch{};
-		std::atomic_bool running{ false };		//our flag
-		std::mutex mutex{};
-		std::condition_variable conditionVariable{};
+		std::atomic_bool running{ false };		//our flag, synchronizes our threads
 
 	public:
 		MidiSequencer(MidiOut* midiOut)

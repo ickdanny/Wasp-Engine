@@ -87,11 +87,13 @@ namespace wasp::sound::midi {
 		auto result{
 			midiOutReset(midiOutHandle)
 		};
-		if (result == MMSYSERR_INVALHANDLE) {
-			throw std::runtime_error{ "Error invalid MIDI out handle" };
-		}
-		else {
-			throw std::runtime_error{ "Error resetting MIDI out" };
+		switch (result) {
+			case MMSYSERR_NOERROR:
+				break;
+			case MMSYSERR_INVALHANDLE:
+				throw std::runtime_error{ "Error invalid MIDI out handle" };
+			default:
+				throw std::runtime_error{ "Error resetting MIDI out: " + result };
 		}
 
 		//Terminating a system - exclusive message without sending an 

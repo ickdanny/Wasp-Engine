@@ -2,6 +2,9 @@
 
 #include <stdexcept>
 
+#include "HResultError.h"
+#include "Logging.h"
+
 namespace wasp::utility {
 
 	//not visible outside this translation unit
@@ -55,7 +58,21 @@ namespace wasp::utility {
 	}
 
 	EventHandle::~EventHandle() {
-		CloseHandle(eventHandle);
+		try {
+			if (!CloseHandle(eventHandle)) {
+				throw win32adaptor::HResultError{
+					HRESULT_FROM_WIN32(GetLastError())
+				};
+			}
+		}
+		catch (const std::exception& exception) {
+			debug::log(exception.what());
+			//swallow error
+		}
+		catch (...) {
+			debug::log("Exception caught of unknown type in EventHandle destructor");
+			//swallow error
+		}
 	}
 
 	void EventHandle::signal() {

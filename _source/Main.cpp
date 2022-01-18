@@ -8,6 +8,7 @@
 #include "Sound\MidiSequence.h"
 
 #include <thread>
+#include <chrono>
 #include "windowsInclude.h"
 
 #include "Game\Config.h"
@@ -201,14 +202,13 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
         //midi test
         std::ifstream inStream{ L"res\\immortal smoke.mid", std::ios::binary };
-        sound::midi::MidiSequence sequence{};
-        sound::midi::parseLoopedMidiFile(inStream, sequence, 5000, 10000);
+        auto midiSequencePointer{ std::make_shared<sound::midi::MidiSequence>() };
+        sound::midi::parseLoopedMidiFile(inStream, *midiSequencePointer, 5000, 10000);
         inStream.close();
 
         sound::midi::MidiOut midiOut{};
         sound::midi::MidiSequencer midiSequencer{&midiOut};
-        std::thread soundTest{ [&] {midiSequencer.test(sequence); } };
-        soundTest.detach();
+        midiSequencer.start(midiSequencePointer);
         //end midi test
 
         gameLoop.run();
