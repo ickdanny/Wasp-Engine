@@ -8,6 +8,7 @@
 #include "IMidiSequencer.h"
 #include "MidiSequence.h"
 #include "MidiOut.h"
+#include "Utility/PreciseChrono.h"
 
 namespace wasp::sound::midi {
 	//NOT threadsafe
@@ -29,10 +30,12 @@ namespace wasp::sound::midi {
 		uint32_t timePerTick100ns{};
 
 		//threading fields
-		std::atomic<uint_fast16_t> threadSafetyCounter{};
-		std::mutex outputMutex{};
-		std::atomic<bool> threadWaiting{ false };
-		std::atomic<bool> running{ false };
+		std::thread playbackThread{};
+		utility::EventHandle wakeupSwitch{};
+		std::atomic_bool running{ false };		//our flag
+		std::mutex mutex{};
+		std::condition_variable conditionVariable{};
+
 	public:
 		MidiSequencer(MidiOut* midiOut)
 			: midiOut{ midiOut } {
@@ -47,10 +50,12 @@ namespace wasp::sound::midi {
 		void stop() override;
 
 	private:
-		void playbackThread(std::shared_ptr<MidiSequence> midiSequencePointer);
+		void playback();
 		void outputMidiEvent();
 		void outputSystemExclusiveEvent();
 		void handleMetaEvent();
+
+		void stopPlaybackThread();
 
 		void resetPlaybackFields();
 

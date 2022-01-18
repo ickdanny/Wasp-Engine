@@ -9,6 +9,7 @@
 namespace wasp::container {
 
 	//NOT threadsafe
+	//NOT tested, no clue if this works or not (yet)
 	template <
 		typename T, 
 		typename Allocator = std::allocator<T>

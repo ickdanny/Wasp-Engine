@@ -71,42 +71,18 @@ namespace wasp::sound::midi {
 	}
 
 	void MidiSequencer::start(std::shared_ptr<MidiSequence> midiSequencePointer) {
-		if (threadWaiting) {
-			throw std::runtime_error("Error more than 1 thread waiting in MidiSequencer");
-		}
-
-		threadSafetyCounter++;
-		threadWaiting = true;
-		running = true;
-
-		std::thread thread{ [&] {
-			this->playbackThread(midiSequencePointer);
+		this->midiSequencePointer = midiSequencePointer;
+		playbackThread = std::thread{ [&] {
+			this->playback();
 		} };
-		thread.detach();
 	}
 
-	void MidiSequencer::playbackThread(
-		std::shared_ptr<MidiSequence> midiSequencePointer
-	){
+	void MidiSequencer::playback(){
 		using ratioTimePointTo100ns = std::ratio<
 			clockType::period::num* ratio100nsToSeconds,
 			clockType::period::den
 		>;
-
-		uint_fast16_t thisThreadCounter{ threadSafetyCounter };
-
-		//spin CPU while waiting for current playbackThread to output
-		while (playbackThreadOutputtingFlag);
-		//at this point the other thread will no longer modify data as the
-		//thread safety counter has been modified
-
-		//we now register ourselves as the playbackThread
-		playbackThreadOutputtingFlag = true;
-		threadWaiting = false;
-
-		//swap out our midi sequence
-		this->midiSequencePointer = midiSequencePointer;
-
+		
 		//timing variables
 		microsecondsPerBeat = defaultMicrosecondsPerBeat;
 		timePerTick100ns = calculateInitialTimePerTick100ns(
@@ -210,8 +186,8 @@ namespace wasp::sound::midi {
 	}
 
 	void MidiSequencer::stop() {
-		threadSafetyCounter++;
-		running = false;
+		stopPlaybackThread();
+		midiOut->outputReset();
 	}
 
 	void MidiSequencer::outputMidiEvent() {
@@ -285,6 +261,15 @@ namespace wasp::sound::midi {
 
 		iter += indexLength;
 		//index now points to 1 past the last data entry
+	}
+
+	void MidiSequencer::stopPlaybackThread() {
+		if (running) {
+			wakeupSwitch.signal();
+			playbackThread.join();
+			wakeupSwitch.unsignal();
+			running = false;
+		}
 	}
 
 	void MidiSequencer::resetPlaybackFields() {
