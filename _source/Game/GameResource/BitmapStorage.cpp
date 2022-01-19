@@ -8,11 +8,9 @@ namespace wasp::game::gameresource {
 		if (resourceLoaderPointer) {
 			auto found{ resourceMap.find(id) };
 			if (found != resourceMap.end()) {
-				ResourceType& resource{
-					*(std::get<1>(*found))
-				};
+				auto& [id, resourcePointer] = *found;
 				const resource::ResourceOriginVariant origin{
-					resource.getOrigin()
+					resourcePointer->getOrigin()
 				};
 				switch (origin.index()) {
 					case 0: {
@@ -48,12 +46,12 @@ namespace wasp::game::gameresource {
 		const resource::ResourceLoader& resourceLoader
 	) {
 		CComPtr<IWICFormatConverter> wicBitmap{
-			bitmapConstructorPointer->getWicFormatConverterPointer(fileOrigin.fileName)
+			bitmapConstructor.getWicFormatConverterPointer(fileOrigin.fileName)
 		};
 
 		CComPtr<ID2D1Bitmap> d2dBitmap{};
 		if (renderTargetPointer) {
-			d2dBitmap = bitmapConstructorPointer->converWicBitmapToD2D(
+			d2dBitmap = bitmapConstructor.convertWicBitmapToD2D(
 				wicBitmap, renderTargetPointer
 			);
 		}
@@ -85,12 +83,12 @@ namespace wasp::game::gameresource {
 	) {
 		const std::wstring& fileName{ manifestOrigin.manifestArguments[1] };
 		CComPtr<IWICFormatConverter> wicBitmap{
-			bitmapConstructorPointer->getWicFormatConverterPointer(fileName)
+			bitmapConstructor.getWicFormatConverterPointer(fileName)
 		};
 
 		CComPtr<ID2D1Bitmap> d2dBitmap{};
 		if (renderTargetPointer) {
-			d2dBitmap = bitmapConstructorPointer->converWicBitmapToD2D(
+			d2dBitmap = bitmapConstructor.convertWicBitmapToD2D(
 				wicBitmap, renderTargetPointer
 			);
 		}
@@ -130,13 +128,13 @@ namespace wasp::game::gameresource {
 
 	void BitmapStorage::loadD2DBitmap(ResourceType& resource) {
 		auto& data{ *resource.getDataPointerCopy() }; //C26815 dangling pointer?
-		data.d2dBitmap = bitmapConstructorPointer->converWicBitmapToD2D(
+		data.d2dBitmap = bitmapConstructor.convertWicBitmapToD2D(
 			data.wicBitmap, renderTargetPointer
 		);
 	}
 
 	void BitmapStorage::throwIfCannotConstructD2DBitmaps() {
-		if (!bitmapConstructorPointer|| !renderTargetPointer) {
+		if (!renderTargetPointer) {
 			throw std::runtime_error("Error cannot create D2D Bitmaps");
 		}
 	}

@@ -15,18 +15,17 @@ namespace wasp::graphics {
 	public:
 		BitmapConstructor();
 
-		void init();
-
 		CComPtr<IWICFormatConverter> getWicFormatConverterPointer(
 			const std::wstring& fileName
 		);
 
-		CComPtr<ID2D1Bitmap> converWicBitmapToD2D(
+		CComPtr<ID2D1Bitmap> convertWicBitmapToD2D(
 			const CComPtr<IWICFormatConverter> formatConverterPointer,
 			const CComPtr<ID2D1HwndRenderTarget> renderTargetPointer
 		);
 
 	private:
+		void init();
 		void initWicFactory();
 		CComPtr<IWICBitmapFrameDecode> getWicBitmapFrameDecodePointer(
 			const std::wstring& fileName

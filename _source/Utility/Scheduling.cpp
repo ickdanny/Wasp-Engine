@@ -1,11 +1,13 @@
-#include "Utility\PreciseChrono.h"
+#include "Utility\Scheduling.h"
 
 #include <stdexcept>
 
-#include "HResultError.h"
+#include "Adaptor\HResultError.h"
 #include "Logging.h"
 
 namespace wasp::utility {
+
+	using windowsadaptor::HResultError;
 
 	//not visible outside this translation unit
 	class TimerHandle100ns {
@@ -60,7 +62,7 @@ namespace wasp::utility {
 	EventHandle::~EventHandle() {
 		try {
 			if (!CloseHandle(eventHandle)) {
-				throw win32adaptor::HResultError{
+				throw HResultError{
 					HRESULT_FROM_WIN32(GetLastError())
 				};
 			}

@@ -19,20 +19,8 @@ namespace wasp::sound::midi {
 		using EventUnitTrack = std::vector<EventUnit>;
 		EventUnitTrack compiledTrack{};
 
-		//we encode a loop point as a tempo metaevent followed by the following block
+		//we encode a loop point as a tempo metaevent followed by this block
 		//the literal "0x6C6F6F70" spells out "loop" in ascii
 		static constexpr EventUnit loopEncoding{ 0x6C6F6F70, 0 };
-
-		friend std::istream& operator>>(
-			std::istream& inStream, 
-			MidiSequence& midiSequence
-		);
 	};
-
-	std::istream& parseLoopedMidiFile(
-		std::istream& inStream,
-		MidiSequence& midiSequence,
-		int64_t loopStart = 0,
-		int64_t loopEnd = -1
-	);
 }

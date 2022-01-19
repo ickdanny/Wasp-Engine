@@ -30,12 +30,10 @@ namespace wasp::resource {
         void unload(const std::wstring& id) override {
             auto found{ resourceMap.find(id) };
             if (found != resourceMap.end()) {
-                Resource<T>& resource{
-                    *(std::get<1>(*found))
-                };
+                auto& [id, resourcePointer] = *found;
 
-                if (resource.isLoaded()) {
-                    resource.unloadData();
+                if (resourcePointer->isLoaded()) {
+                    resourcePointer->unloadData();
                 }
             }
         }
@@ -48,7 +46,8 @@ namespace wasp::resource {
         virtual std::shared_ptr<T> get(const std::wstring& id) {
             auto found{ resourceMap.find(id) };
             if (found != resourceMap.end()) {
-                return std::get<1>(*found)->getDataPointerCopy();
+                auto& [id, resourcePointer] = *found;
+                return resourcePointer->getDataPointerCopy();
             }
             else {
                 return nullptr;
@@ -65,7 +64,7 @@ namespace wasp::resource {
             std::for_each(
                 resourceMap.begin(), 
                 resourceMap.end(), 
-                [&](auto pairElement) {
+                [&](auto& pairElement) {
                     callBackFunction(std::get<1>(pairElement));
                 }
             );

@@ -154,23 +154,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="_source\Adaptor\ComLibraryGuard.cpp" />
+    <ClCompile Include="_source\Game\GameResource\MidiSequenceStorage.cpp" />
     <ClCompile Include="_source\Sound\MidiOut.cpp" />
+    <ClCompile Include="_source\Sound\MidiSequenceLoading.cpp" />
     <ClCompile Include="_Source\Utility\ByteUtil.cpp" />
     <ClCompile Include="_source\Game\GameResource\DirectoryStorage.cpp" />
     <ClCompile Include="_source\File\FileUtil.cpp" />
     <ClCompile Include="_source\Game\GameLoop.cpp" />
     <ClCompile Include="_source\Input\KeyInputTable.cpp" />
     <ClCompile Include="_source\Game\GameResource\ManifestStorage.cpp" />
-    <ClCompile Include="_source\Sound\MidiSequence.cpp" />
     <ClCompile Include="_source\Sound\MidiSequencer.cpp" />
     <ClCompile Include="_source\Resource\ParentResourceStorage.cpp" />
-    <ClCompile Include="_source\Utility\PreciseChrono.cpp" />
+    <ClCompile Include="_source\Utility\Scheduling.cpp" />
     <ClCompile Include="_source\Resource\ResourceLoader.cpp" />
     <ClCompile Include="_source\Game\GameResource\BitmapStorage.cpp" />
     <ClCompile Include="_source\Window\WindowUtil.cpp" />
     <ClInclude Include="_debug\Logging.h" />
     <ClInclude Include="_header\Container\ObjectPool.h" />
+    <ClInclude Include="_header\Game\GameResource\MidiSequenceStorage.h" />
     <ClInclude Include="_header\Sound\MidiOut.h" />
+    <ClInclude Include="_header\Sound\MidiSequenceLoading.h" />
+    <ClInclude Include="_header\Utility\Arithmetic.h" />
     <ClInclude Include="_header\windowsD2DInclude.h" />
     <ClInclude Include="_header\windowsDWriteInclude.h" />
     <ClInclude Include="_header\windowsMMInclude.h" />
@@ -200,7 +205,7 @@
     <ClInclude Include="_header\Sound\MidiError.h" />
     <ClInclude Include="_header\Sound\MidiSequence.h" />
     <ClInclude Include="_header\Sound\MidiSequencer.h" />
-    <ClInclude Include="_header\Utility\PreciseChrono.h" />
+    <ClInclude Include="_header\Utility\Scheduling.h" />
     <ClInclude Include="_header\Resource\ResourceBase.h" />
     <ClInclude Include="_header\Resource\IResourceStorage.h" />
     <ClInclude Include="_header\Graphics\ITextDrawer.h" />
@@ -222,12 +227,12 @@
     <ClInclude Include="_header\Window\WindowUtil.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="_header\ComLibraryGuard.h" />
+    <ClInclude Include="_header\Adaptor\ComLibraryGuard.h" />
     <ClInclude Include="_Header\windowsInclude.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="_header\HResultError.h" />
+    <ClInclude Include="_header\Adaptor\HResultError.h" />
     <ClInclude Include="_header\targetver.h" />
     <ClInclude Include="_header\Window\WindowPainter.h" />
   </ItemGroup>

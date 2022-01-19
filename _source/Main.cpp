@@ -20,7 +20,7 @@
 #include "Graphics\BitmapConstructor.h"
 #include "Input\KeyInputTable.h"
 #include "Sound\MidiSequencer.h"
-#include "ComLibraryGuard.h"
+#include "Adaptor\ComLibraryGuard.h"
 
 //debug
 #include "ConsoleOutput.h"
@@ -41,27 +41,19 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         debug::initConsoleOutput();
 
         //init COM
-        win32adaptor::ComLibraryGuard comLibraryGuard{};
-        comLibraryGuard.init(COINIT_APARTMENTTHREADED);
+        windowsadaptor::ComLibraryGuard comLibraryGuard{ COINIT_APARTMENTTHREADED };
 
         //init Resources : WIC graphics
-        graphics::BitmapConstructor bitmapConstructorPointer{};
-        bitmapConstructorPointer.init();
-
-        gameresource::ResourceMasterStorage resourceMasterStorage{
-            gameresource::DirectoryStorage{},
-            gameresource::ManifestStorage{},
-            gameresource::BitmapStorage{&bitmapConstructorPointer}
-        };
+        gameresource::ResourceMasterStorage resourceMasterStorage{};
 
         resource::ResourceLoader resourceLoader{
-            std::array<resource::Loadable*, 3>{
+            std::array<resource::Loadable*, 4>{
                 &resourceMasterStorage.directoryStorage,
-                & resourceMasterStorage.manifestStorage,
-                & resourceMasterStorage.bitmapStorage
+                &resourceMasterStorage.manifestStorage,
+                &resourceMasterStorage.bitmapStorage,
+                &resourceMasterStorage.midiSequenceStorage
             }
         };
-        //resourceLoader.loadFile({ L"res" }); //test image in res
         resourceLoader.loadFile({ config::mainManifestPath });
 
         //init window and Direct 2D
@@ -119,6 +111,8 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
         static int updateCount{ 0 };
 
+        std::thread renderThread{};
+
         gameloop::GameLoop gameLoop{
             config::updatesPerSecond,
             config::maxUpdatesWithoutFrame,
@@ -128,9 +122,10 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
                 keyInputTable.tickOver();
                 pumpMessages();
             },
+            //todo: probably need a renderer class to encapsulate the threading
             //draw function
             [&](double dt) {
-                static bool waitingForVsync{false};
+                static std::atomic_bool rendering{ false };
 
                 static constexpr double smoothing{ 0.9 };
 
@@ -142,9 +137,14 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
                 static double timeToDraw{ 1.0 };
                 static double fps{ 1.0 };
 
-                if (waitingForVsync) {
+                if (rendering.load()) {
                     return;
                 }
+
+                if (renderThread.joinable()) {
+                    renderThread.join();
+                }
+                rendering.store(true);
 
                 window.getWindowPainter().beginDraw();
                 window.getWindowPainter().drawSubBitmap(
@@ -179,9 +179,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
                 );
                 window.getWindowPainter().endDraw();
 
-                waitingForVsync = true;
-
-                std::thread render{ [&] {
+                renderThread = std::thread{ [&] {
                     window.getWindowPainter().paint(window.getWindowHandle());
                     lastDraw = thisDraw;
                     thisDraw = std::chrono::steady_clock::now();
@@ -192,26 +190,26 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
                         / std::chrono::steady_clock::period::den;
 
                     fps = (fps * smoothing) + (timeToDraw * (1.0 - smoothing));
-                    waitingForVsync = false;
-                 } };
-                render.detach();
+                    rendering.store(false);
+                } };
             }
         };
 
         window.setDestroyCallback([&] {gameLoop.stop(); });
 
         //midi test
-        std::ifstream inStream{ L"res\\immortal smoke.mid", std::ios::binary };
-        auto midiSequencePointer{ std::make_shared<sound::midi::MidiSequence>() };
-        sound::midi::parseLoopedMidiFile(inStream, *midiSequencePointer, 5000, 10000);
-        inStream.close();
-
         sound::midi::MidiOut midiOut{};
         sound::midi::MidiSequencer midiSequencer{&midiOut};
-        midiSequencer.start(midiSequencePointer);
+        midiSequencer.start(
+            resourceMasterStorage.midiSequenceStorage.get(L"immortal smoke")
+        );
         //end midi test
 
         gameLoop.run();
+
+        if (renderThread.joinable()) {
+            renderThread.join();
+        }
 
         return 0;
     }

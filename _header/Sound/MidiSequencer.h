@@ -9,7 +9,7 @@
 #include "IMidiSequencer.h"
 #include "MidiSequence.h"
 #include "MidiOut.h"
-#include "Utility/PreciseChrono.h"
+#include "Utility/Scheduling.h"
 
 namespace wasp::sound::midi {
 	//NOT threadsafe

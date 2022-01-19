@@ -8,13 +8,15 @@ namespace wasp::game::gameresource {
 		if (resourceLoaderPointer) {
 			auto found{ resourceMap.find(id) };
 			if (found != resourceMap.end()) {
+				auto& [id, resourcePointer] = *found;
 				const resource::ResourceOriginVariant origin{
-					std::get<1>(*found)->getOrigin()
+					resourcePointer->getOrigin()
 				};
 				switch (origin.index()) {
 					case 0: {
 						resource::FileOrigin const* fileTest{
-							std::get_if<resource::FileOrigin>(&origin) };
+							std::get_if<resource::FileOrigin>(&origin) 
+						};
 						if (fileTest) {
 							remove(id);
 							loadFromFile(*fileTest, *resourceLoaderPointer);

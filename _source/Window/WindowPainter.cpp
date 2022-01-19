@@ -1,11 +1,11 @@
 #include "window\WindowPainter.h"
 
 #include "Game\Config.h"
-#include "HResultError.h"
+#include "adaptor\HResultError.h"
 
 namespace wasp::window {
 
-	using win32adaptor::HResultError;
+	using windowsadaptor::HResultError;
 
 	WindowPainter::WindowPainter()
 		: d2dFactoryPointer{ nullptr }

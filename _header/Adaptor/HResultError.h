@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace wasp::win32adaptor {
+namespace wasp::windowsadaptor {
 	class HResultError : public std::runtime_error {
 	public:
 		explicit HResultError(const std::string& what_arg)

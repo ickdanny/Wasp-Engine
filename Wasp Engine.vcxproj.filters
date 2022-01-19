@@ -114,16 +114,22 @@
     <ClCompile Include="_source\Sound\MidiSequencer.cpp">
       <Filter>Source Files\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Sound\MidiSequence.cpp">
-      <Filter>Source Files\Sound</Filter>
-    </ClCompile>
     <ClCompile Include="_Source\Utility\ByteUtil.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Utility\PreciseChrono.cpp">
+    <ClCompile Include="_source\Utility\Scheduling.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="_source\Sound\MidiOut.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Adaptor\ComLibraryGuard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Sound\MidiSequenceLoading.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\GameResource\MidiSequenceStorage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -167,10 +173,10 @@
     <ClInclude Include="_header\Window\BaseWindow.h">
       <Filter>Header Files\Window</Filter>
     </ClInclude>
-    <ClInclude Include="_header\HResultError.h">
+    <ClInclude Include="_header\Adaptor\HResultError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\ComLibraryGuard.h">
+    <ClInclude Include="_header\Adaptor\ComLibraryGuard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\File\FileUtil.h">
@@ -260,7 +266,7 @@
     <ClInclude Include="_header\Sound\MidiConstants.h">
       <Filter>Header Files\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Utility\PreciseChrono.h">
+    <ClInclude Include="_header\Utility\Scheduling.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="_header\Sound\MidiError.h">
@@ -285,6 +291,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Container\ObjectPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\GameResource\MidiSequenceStorage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Sound\MidiSequenceLoading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Utility\Arithmetic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

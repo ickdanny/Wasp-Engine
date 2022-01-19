@@ -21,17 +21,17 @@ namespace wasp::game::gameresource {
 		, public resource::FileLoadable
 		, public resource::ManifestLoadable
 	{
+	private:
 		using BitmapConstructor = graphics::BitmapConstructor;
 		using ResourceType = resource::Resource<WicAndD2DBitmaps>;
-	private:
-		BitmapConstructor* bitmapConstructorPointer{};
+
+		BitmapConstructor bitmapConstructor{};
 		CComPtr<ID2D1HwndRenderTarget> renderTargetPointer{};
 
 	public:
-		BitmapStorage(BitmapConstructor* bitmapConstructorPointer) 
+		BitmapStorage() 
 			: FileLoadable{ {L"png"} }
-			, ManifestLoadable{ {L"image"} }
-			, bitmapConstructorPointer{ bitmapConstructorPointer } {
+			, ManifestLoadable{ {L"image"} } {
 		}
 
 		void reload(const std::wstring& id) override;

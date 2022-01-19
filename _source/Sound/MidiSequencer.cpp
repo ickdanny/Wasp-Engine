@@ -8,8 +8,7 @@
 
 #include "Sound\MidiError.h"
 #include "Utility\ByteUtil.h"
-#include "Utility\PreciseChrono.h"
-#include "HResultError.h"
+#include "Utility\Scheduling.h"
 
 #include "Logging.h"
 
@@ -73,11 +72,11 @@ namespace wasp::sound::midi {
 			}
 			catch (const std::exception& exception) {
 				debug::log(exception.what());
-				throw;
+				std::exit(1);
 			}
 			catch (...) {
 				debug::log("Exception of unknown type caught on midi playback thread");
-				throw;
+				std::exit(1);
 			}
 		} };
 	}
@@ -173,7 +172,7 @@ namespace wasp::sound::midi {
 						outputSystemExclusiveEvent();
 						break;
 					default:
-						throw std::runtime_error("Error unrecognized MIDI status");
+						throw MidiError("Error unrecognized MIDI status");
 				}
 			}
 		}
@@ -190,14 +189,7 @@ namespace wasp::sound::midi {
 	}
 
 	void MidiSequencer::outputMidiEvent() {
-		try {
-			midiOut->outputShortMsg(iter->event);
-		}
-		catch (const std::runtime_error&) {
-			++iter;
-			throw;
-		}
-		++iter;
+		midiOut->outputShortMsg((iter++)->event);
 	}
 
 	void MidiSequencer::outputSystemExclusiveEvent() {

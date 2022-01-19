@@ -1,12 +1,13 @@
 #include "Graphics\BitmapConstructor.h"
-#include "HResultError.h"
+
+#include "Adaptor\HResultError.h"
 
 namespace wasp::graphics {
 
-	using win32adaptor::HResultError;
+	using windowsadaptor::HResultError;
 
-	BitmapConstructor::BitmapConstructor()
-		: wicFactoryPointer{ nullptr } {
+	BitmapConstructor::BitmapConstructor() {
+		init();
 	}
 
 	void BitmapConstructor::init() {
@@ -80,7 +81,7 @@ namespace wasp::graphics {
 		return bitmapDecoderPointer;
 	}
 
-	CComPtr<ID2D1Bitmap> BitmapConstructor::converWicBitmapToD2D(
+	CComPtr<ID2D1Bitmap> BitmapConstructor::convertWicBitmapToD2D(
 		const CComPtr<IWICFormatConverter> formatConverterPointer,
 		const CComPtr<ID2D1HwndRenderTarget> renderTargetPointer
 	) {
