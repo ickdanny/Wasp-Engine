@@ -156,6 +156,7 @@
   <ItemGroup>
     <ClCompile Include="_source\Adaptor\ComLibraryGuard.cpp" />
     <ClCompile Include="_source\Game\GameResource\MidiSequenceStorage.cpp" />
+    <ClCompile Include="_source\Graphics\Renderer.cpp" />
     <ClCompile Include="_source\Sound\MidiOut.cpp" />
     <ClCompile Include="_source\Sound\MidiSequenceLoading.cpp" />
     <ClCompile Include="_Source\Utility\ByteUtil.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="_debug\Logging.h" />
     <ClInclude Include="_header\Container\ObjectPool.h" />
     <ClInclude Include="_header\Game\GameResource\MidiSequenceStorage.h" />
+    <ClInclude Include="_header\Graphics\Renderer.h" />
     <ClInclude Include="_header\Sound\MidiOut.h" />
     <ClInclude Include="_header\Sound\MidiSequenceLoading.h" />
     <ClInclude Include="_header\Utility\Arithmetic.h" />

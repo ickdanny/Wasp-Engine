@@ -255,13 +255,11 @@ namespace wasp::sound::midi {
 	}
 
 	void MidiSequencer::stopPlaybackThread() {
-		if (running.load()) {
-			running.store(false);
-			if (playbackThread.joinable()) {
-				wakeupSwitch.signal();
-				playbackThread.join();
-				wakeupSwitch.unsignal();
-			}
+		running.store(false);
+		if (playbackThread.joinable()) {
+			wakeupSwitch.signal();
+			playbackThread.join();
+			wakeupSwitch.unsignal();
 		}
 	}
 

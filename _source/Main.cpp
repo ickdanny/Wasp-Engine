@@ -2,11 +2,6 @@
 #define UNICODE
 #endif
 
-//todo: midi test
-#include <ios>
-#include <fstream>
-#include "Sound\MidiSequence.h"
-
 #include <thread>
 #include <chrono>
 #include "windowsInclude.h"
@@ -18,6 +13,7 @@
 #include "Window\BaseWindow.h"
 #include "Window\MainWindow.h"
 #include "Graphics\BitmapConstructor.h"
+#include "Graphics\Renderer.h" //todo: probably should refactor this so renderer doesn't rely on game classes, maybe move wic/d2d bitmap out?
 #include "Input\KeyInputTable.h"
 #include "Sound\MidiSequencer.h"
 #include "Adaptor\ComLibraryGuard.h"
@@ -107,11 +103,11 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             });
         window.setOutOfFocusCallback([&] {keyInputTable.allKeysOff(); });
 
+        graphics::Renderer renderer{&window, &resourceMasterStorage.bitmapStorage};
+
         ShowWindow(window.getWindowHandle(), windowShowMode);
 
         static int updateCount{ 0 };
-
-        std::thread renderThread{};
 
         gameloop::GameLoop gameLoop{
             config::updatesPerSecond,
@@ -122,76 +118,9 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
                 keyInputTable.tickOver();
                 pumpMessages();
             },
-            //todo: probably need a renderer class to encapsulate the threading
             //draw function
             [&](double dt) {
-                static std::atomic_bool rendering{ false };
-
-                static constexpr double smoothing{ 0.9 };
-
-                static int frameCount{ 0 };
-
-                static std::chrono::steady_clock::time_point lastDraw{};
-                static std::chrono::steady_clock::time_point thisDraw{};
-
-                static double timeToDraw{ 1.0 };
-                static double fps{ 1.0 };
-
-                if (rendering.load()) {
-                    return;
-                }
-
-                if (renderThread.joinable()) {
-                    renderThread.join();
-                }
-                rendering.store(true);
-
-                window.getWindowPainter().beginDraw();
-                window.getWindowPainter().drawSubBitmap(
-                    { config::graphicsWidth / 2, config::graphicsHeight / 2 },
-                    {
-                        resourceMasterStorage.bitmapStorage.get(L"timage")->d2dBitmap,
-                        45.0f,
-                        .8f,
-                        .7f
-                    },
-                    { 100, 100, 600, 400 }
-                );
-                window.getWindowPainter().drawText(
-                    { 20.0, 10.0 },
-                    { std::to_wstring(updateCount) },
-                    { 300.0f, 500.0f }
-                );
-                window.getWindowPainter().drawText(
-                    { 20.0, 30.0 },
-                    { std::to_wstring(frameCount++) },
-                    { 300.0f, 500.0f }
-                );
-                window.getWindowPainter().drawText(
-                    { 20.0f, 50.0f },
-                    { std::to_wstring(1.0 / fps) },
-                    { 400.0f, 300.0f }
-                );
-                window.getWindowPainter().drawText(
-                    { 20.0f, 70.0f },
-                    { std::to_wstring(static_cast<int>(keyInputTable[input::KeyValues::K_Z])) },
-                    { 400.0f, 300.0f }
-                );
-                window.getWindowPainter().endDraw();
-
-                renderThread = std::thread{ [&] {
-                    window.getWindowPainter().paint(window.getWindowHandle());
-                    lastDraw = thisDraw;
-                    thisDraw = std::chrono::steady_clock::now();
-
-                    auto duration{ thisDraw - lastDraw };
-                    timeToDraw = duration.count()
-                        * static_cast<double>(std::chrono::steady_clock::period::num)
-                        / std::chrono::steady_clock::period::den;
-
-                    fps = (fps * smoothing) + (timeToDraw * (1.0 - smoothing));
-                    rendering.store(false);
-                } };
+                renderer.render(dt);
             }
         };
 
@@ -206,10 +135,6 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         //end midi test
 
         gameLoop.run();
-
-        if (renderThread.joinable()) {
-            renderThread.join();
-        }
 
         return 0;
     }
