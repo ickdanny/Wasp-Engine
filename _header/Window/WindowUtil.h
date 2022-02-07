@@ -11,4 +11,7 @@ namespace wasp::window {
 
 	int getWindowBorderWidthPadding();
 	int getWindowBorderHeightPadding();
+
+	std::pair<int, int> fitToFullscreen();
+	std::pair<int, int> findCenterPositionWithBorder(const std::pair<int, int> size);
 }

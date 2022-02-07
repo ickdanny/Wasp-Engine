@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <cstdint>
 
-namespace wasp::game::gameloop {
+namespace wasp::game {
 
 	//making this a class because i want to be able to stop it
 	class GameLoop {

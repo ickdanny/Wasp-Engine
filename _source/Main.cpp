@@ -72,14 +72,12 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             const int x{ xCenter - (realWindowWidth / 2) };
             const int y{ yCenter - (realWindowHeight / 2) };
 
-            int temp{ GetSystemMetrics(SM_CYCAPTION) };
-
             //will init d2d
             window.create(
                 instanceHandle,
                 config::className,
                 config::windowName,
-                config::windowStyle,
+                config::windowStyleWindowed,
                 0, //extra window style
                 x,
                 y,
@@ -105,7 +103,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
         graphics::Renderer renderer{&window, &resourceMasterStorage.bitmapStorage};
 
-        ShowWindow(window.getWindowHandle(), windowShowMode);
+        window.show(windowShowMode);
 
         static int updateCount{ 0 };
 

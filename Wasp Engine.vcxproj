@@ -174,6 +174,7 @@
     <ClInclude Include="_debug\Logging.h" />
     <ClInclude Include="_header\Container\ObjectPool.h" />
     <ClInclude Include="_header\Game\GameResource\MidiSequenceStorage.h" />
+    <ClInclude Include="_header\Game\WindowModes.h" />
     <ClInclude Include="_header\Graphics\Renderer.h" />
     <ClInclude Include="_header\Sound\MidiOut.h" />
     <ClInclude Include="_header\Sound\MidiSequenceLoading.h" />
@@ -226,6 +227,7 @@
     <ClInclude Include="_header\Resource\ResourceLoader.h" />
     <ClInclude Include="_header\Utility\UnsupportedOperationError.h" />
     <ClInclude Include="_header\Game\GameResource\BitmapStorage.h" />
+    <ClInclude Include="_header\Window\WindowMode.h" />
     <ClInclude Include="_header\Window\WindowUtil.h" />
   </ItemGroup>
   <ItemGroup>

@@ -4,11 +4,11 @@
 #include "windowsD2DInclude.h"
 #include "windowsDWriteInclude.h"
 
-namespace wasp::config {
+namespace wasp::game::config {
 	//window
 	constexpr wchar_t className[]{ L"WSWP" };
 	constexpr wchar_t windowName[]{ L"WSWP" };
-	constexpr DWORD windowStyle{ WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU };
+	constexpr DWORD windowStyleWindowed{  };
 	constexpr int windowWidth{ 640 };
 	constexpr int windowHeight{ 480 };
 

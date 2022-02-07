@@ -4,24 +4,39 @@
 
 #include "BaseWindow.h"
 #include "WindowPainter.h"
+#include "WindowMode.h"
 
 namespace wasp::window {
     class MainWindow : public BaseWindow<MainWindow>{
     private:
+        std::wstring currentWindowModeName{};
+
         WindowPainter windowPainter{};
+
         std::function<void()> destroyCallback{};
         std::function<void(WPARAM wParam, LPARAM lParam)> keyDownCallback{};
         std::function<void(WPARAM wParam, LPARAM lParam)> keyUpCallback{};
         std::function<void()> outOfFocusCallback{};
 
     public:
-        MainWindow() = default;
+        MainWindow(
+            const WindowMode& initWindowMode,
+            HINSTANCE instanceHandle,
+            PCWSTR className,
+            PCWSTR windowName
+        );
 
         LRESULT handleMessage(
             UINT messageCode, 
             WPARAM wParam, 
             LPARAM lParam
         ) override;
+
+        std::wstring& getCurrentWindowModeName() {
+            return currentWindowModeName;
+        }
+
+        void changeWindowMode(const WindowMode& windowMode);
 
         WindowPainter& getWindowPainter() {
             return windowPainter;

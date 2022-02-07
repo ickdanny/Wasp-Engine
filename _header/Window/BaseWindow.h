@@ -57,6 +57,11 @@ namespace wasp::window {
 
         virtual ~BaseWindow() = default;
 
+        void show(int windowShowMode) {
+            ShowWindow(windowHandle, windowShowMode);
+        }
+
+    protected:
         void create(
             HINSTANCE instanceHandle,
             PCWSTR className,
@@ -86,9 +91,6 @@ namespace wasp::window {
             );
         }
 
-        HWND getWindowHandle() const { return windowHandle; }
-
-    protected:
         virtual LRESULT handleMessage(
             UINT messageCode, 
             WPARAM wParam, 

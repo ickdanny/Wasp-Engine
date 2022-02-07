@@ -2,6 +2,30 @@
 
 namespace wasp::window {
 
+	MainWindow::MainWindow(
+		const WindowMode& initWindowMode,
+		HINSTANCE instanceHandle,
+		PCWSTR className,
+		PCWSTR windowName
+	)
+		: currentWindowModeName{initWindowMode.modeName}
+	{
+		std::pair<int, int> size{ initWindowMode.sizeFunction() };
+		std::pair<int, int> position{ initWindowMode.positionFunction(size) };
+
+		create(
+			instanceHandle,
+			className,
+			windowName,
+			initWindowMode.windowStyle,
+			initWindowMode.windowExtraStyle,
+			position.first,
+			position.second,
+			size.first,
+			size.second
+		);
+	}
+
 	LRESULT MainWindow::handleMessage(UINT messageCode, WPARAM wParam, LPARAM lParam) {
 		switch (messageCode)
 		{
@@ -39,5 +63,24 @@ namespace wasp::window {
 				return DefWindowProc(windowHandle, messageCode, wParam, lParam);
 		}
 		return TRUE;
+	}
+
+	void MainWindow::changeWindowMode(const WindowMode& windowMode) {
+		currentWindowModeName = windowMode.modeName;
+
+		std::pair<int, int> size{ windowMode.sizeFunction() };
+		std::pair<int, int> position{ windowMode.positionFunction(size) };
+
+		SetWindowLong(windowHandle, GWL_STYLE, windowMode.windowStyle);
+		SetWindowLong(windowHandle, GWL_EXSTYLE, windowMode.windowExtraStyle);
+		SetWindowPos(
+			windowHandle,
+			nullptr,
+			position.first,
+			position.second,
+			size.first,
+			size.second,
+			SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED
+		);
 	}
 }

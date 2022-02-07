@@ -46,4 +46,31 @@ namespace wasp::window {
 			+ GetSystemMetrics(SM_CYSIZEFRAME)
 		));
 	}
+
+	std::pair<int, int> fitToFullscreen() {
+		MONITORINFO primaryMonitorInfo{ getPrimaryMonitorInfo() };
+		RECT& primaryMonitorRect{ primaryMonitorInfo.rcMonitor };
+		int width{ primaryMonitorRect.right - primaryMonitorRect.left };
+		int height{ primaryMonitorRect.bottom - primaryMonitorRect.top };
+		return { width, height };
+	}
+
+	std::pair<int, int> findCenterPositionWithBorder(const std::pair<int, int> size) {
+		MONITORINFO primaryMonitorInfo{ getPrimaryMonitorInfo() };
+		RECT& primaryMonitorRect{ primaryMonitorInfo.rcMonitor };
+		int xCenter{
+				(primaryMonitorRect.right - primaryMonitorRect.left) / 2
+		};
+		int yCenter{
+			(primaryMonitorRect.bottom - primaryMonitorRect.top) / 2
+		};
+		int realWindowWidth{
+			size.first + getWindowBorderWidthPadding()
+		};
+		int realWindowHeight{
+			size.second + getWindowBorderHeightPadding()
+		};
+		const int x{ xCenter - (realWindowWidth / 2) };
+		const int y{ yCenter - (realWindowHeight / 2) };
+	}
 }

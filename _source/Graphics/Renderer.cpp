@@ -29,7 +29,7 @@ namespace wasp::graphics {
 			renderThread.join();
 		}
 		rendering.store(true);
-
+		//todo: pass config into constructor, and make getWindowHandle public
 		windowPointer->getWindowPainter().beginDraw();
 		windowPointer->getWindowPainter().drawSubBitmap(
 			{ config::graphicsWidth / 2, config::graphicsHeight / 2 },
