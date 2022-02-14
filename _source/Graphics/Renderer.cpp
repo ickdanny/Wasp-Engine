@@ -29,10 +29,10 @@ namespace wasp::graphics {
 			renderThread.join();
 		}
 		rendering.store(true);
-		//todo: pass config into constructor, and make getWindowHandle public
+		//todo: make getWindowHandle public
 		windowPointer->getWindowPainter().beginDraw();
 		windowPointer->getWindowPainter().drawSubBitmap(
-			{ config::graphicsWidth / 2, config::graphicsHeight / 2 },
+			{ static_cast<float>(graphicsWidth) / 2, static_cast<float>(graphicsHeight) / 2 },
 					{
 						bitmapStoragePointer->get(L"timage")->d2dBitmap,
 						45.0f,

@@ -9,6 +9,7 @@
 #include "Game\Config.h"
 #include "Game\GameLoop.h"
 #include "Game\GameResource\ResourceMasterStorage.h"
+#include "Game\WindowModes.h"
 #include "Window\WindowUtil.h"
 #include "Window\BaseWindow.h"
 #include "Window\MainWindow.h"
@@ -53,7 +54,20 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         resourceLoader.loadFile({ config::mainManifestPath });
 
         //init window and Direct 2D
-        window::MainWindow window{};
+        window::MainWindow window{
+            windowmodes::windowed,
+            instanceHandle,
+            config::className,
+            config::windowName,
+            config::fontName,
+            config::fontSize,
+            config::fontWeight,
+            config::fontStyle,
+            config::fontStretch,
+            config::textAlignment,
+            config::paragraphAlignment
+        };
+        /*
         {
             const MONITORINFO primaryMonitorInfo{ getPrimaryMonitorInfo() };
             const RECT& primaryMonitorRect{ primaryMonitorInfo.rcMonitor };
@@ -85,6 +99,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
                 realWindowHeight
             );
         }
+        */
 
         //init D2D Bitmaps
         resourceMasterStorage.bitmapStorage.setRenderTargetPointerAndLoadD2DBitmaps(
@@ -101,13 +116,18 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             });
         window.setOutOfFocusCallback([&] {keyInputTable.allKeysOff(); });
 
-        graphics::Renderer renderer{&window, &resourceMasterStorage.bitmapStorage};
+        graphics::Renderer renderer{
+            &window, 
+            &resourceMasterStorage.bitmapStorage,
+            config::graphicsWidth,
+            config::graphicsHeight
+        };
 
         window.show(windowShowMode);
 
         static int updateCount{ 0 };
 
-        gameloop::GameLoop gameLoop{
+        GameLoop gameLoop{
             config::updatesPerSecond,
             config::maxUpdatesWithoutFrame,
             //update function

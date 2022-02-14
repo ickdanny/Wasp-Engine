@@ -7,9 +7,27 @@ namespace wasp::window {
 
 	using windowsadaptor::HResultError;
 
-	WindowPainter::WindowPainter()
+	WindowPainter::WindowPainter(
+		int graphicsWidth,
+		int graphicsHeight,
+		wchar_t const* fontName,
+		float fontSize,
+		DWRITE_FONT_WEIGHT fontWeight,
+		DWRITE_FONT_STYLE fontStyle,
+		DWRITE_FONT_STRETCH fontStretch,
+		DWRITE_TEXT_ALIGNMENT textAlignment,
+		DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment
+	)
 		: d2dFactoryPointer{ nullptr }
-		, renderTargetPointer{ nullptr } {
+		, renderTargetPointer{ nullptr }
+		, graphicsWidth{ graphicsWidth }
+		, graphicsHeight{ graphicsHeight }
+		, fontName{ fontName }
+		, fontSize{ fontSize }
+		, fontStyle{ fontStyle }
+		, fontStretch{ fontStretch }
+		, textAlignment{ textAlignment }
+		, paragraphAlignment{ paragraphAlignment } {
 	}
 
 	void WindowPainter::init(HWND windowHandle) {
@@ -34,12 +52,12 @@ namespace wasp::window {
 
 	void WindowPainter::getTextFormatPointer() {
 		HRESULT result{ getDirectWriteFactoryPointer()->CreateTextFormat(
-			config::fontName,
+			fontName,
 			NULL,
-			config::fontWeight,
-			config::fontStyle,
-			config::fontStretch,
-			config::fontSize,
+			fontWeight,
+			fontStyle,
+			fontStretch,
+			fontSize,
 			L"", //locale
 			&textFormatPointer
 		) };
@@ -47,8 +65,8 @@ namespace wasp::window {
 			throw new HResultError("Error creating text format");
 		}
 
-		textFormatPointer->SetTextAlignment(config::textAlignment);
-		textFormatPointer->SetParagraphAlignment(config::paragraphAlignment);
+		textFormatPointer->SetTextAlignment(textAlignment);
+		textFormatPointer->SetParagraphAlignment(paragraphAlignment);
 	}
 
 	CComPtr<IDWriteFactory> WindowPainter::getDirectWriteFactoryPointer() {
@@ -96,8 +114,8 @@ namespace wasp::window {
 
 		HRESULT result{ renderTargetPointer->CreateCompatibleRenderTarget(
 			D2D1_SIZE_F{
-				static_cast<float>(config::graphicsWidth),
-				static_cast<float>(config::graphicsHeight)
+				static_cast<float>(graphicsWidth),
+				static_cast<float>(graphicsHeight)
 			},
 			&bufferRenderTargetPointer
 		) };

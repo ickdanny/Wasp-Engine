@@ -1,6 +1,6 @@
 #include "Game\GameLoop.h"
 
-namespace wasp::game::gameloop {
+namespace wasp::game {
 
 	void GameLoop::run() {
 		durationType timeBetweenUpdates{

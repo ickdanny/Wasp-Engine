@@ -57,6 +57,8 @@ namespace wasp::window {
 
         virtual ~BaseWindow() = default;
 
+        HWND getWindowHandle() const { return windowHandle; }
+
         void show(int windowShowMode) {
             ShowWindow(windowHandle, windowShowMode);
         }

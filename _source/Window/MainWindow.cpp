@@ -6,9 +6,26 @@ namespace wasp::window {
 		const WindowMode& initWindowMode,
 		HINSTANCE instanceHandle,
 		PCWSTR className,
-		PCWSTR windowName
+		PCWSTR windowName,
+		//graphics fields
+		wchar_t* fontName,
+		float fontSize,
+		DWRITE_FONT_WEIGHT fontWeight,
+		DWRITE_FONT_STYLE fontStyle,
+		DWRITE_FONT_STRETCH fontStretch,
+		DWRITE_TEXT_ALIGNMENT textAlignment,
+		DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment
 	)
 		: currentWindowModeName{initWindowMode.modeName}
+		, windowPainter{
+				fontName,
+				fontSize,
+				fontWeight,
+				fontStyle,
+				fontStretch,
+				textAlignment,
+				paragraphAlignment
+		}
 	{
 		std::pair<int, int> size{ initWindowMode.sizeFunction() };
 		std::pair<int, int> position{ initWindowMode.positionFunction(size) };

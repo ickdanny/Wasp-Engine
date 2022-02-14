@@ -11,7 +11,7 @@ namespace wasp::window {
     private:
         std::wstring currentWindowModeName{};
 
-        WindowPainter windowPainter{};
+        WindowPainter windowPainter; //uninitialized!
 
         std::function<void()> destroyCallback{};
         std::function<void(WPARAM wParam, LPARAM lParam)> keyDownCallback{};
@@ -23,7 +23,15 @@ namespace wasp::window {
             const WindowMode& initWindowMode,
             HINSTANCE instanceHandle,
             PCWSTR className,
-            PCWSTR windowName
+            PCWSTR windowName,
+            //graphics fields
+            wchar_t const* fontName,
+            float fontSize,
+            DWRITE_FONT_WEIGHT fontWeight,
+            DWRITE_FONT_STYLE fontStyle,
+            DWRITE_FONT_STRETCH fontStretch,
+            DWRITE_TEXT_ALIGNMENT textAlignment,
+            DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment
         );
 
         LRESULT handleMessage(

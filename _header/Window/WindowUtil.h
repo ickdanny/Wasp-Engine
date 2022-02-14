@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "windowsInclude.h"
 
 namespace wasp::window {

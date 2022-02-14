@@ -18,13 +18,20 @@ namespace wasp::graphics {
 		std::thread renderThread{};
 		std::atomic_bool rendering{ false };
 
+		int graphicsWidth{};
+		int graphicsHeight{};
+
 	public:
 		Renderer(
 			window::MainWindow* windowPointer, 
-			game::gameresource::BitmapStorage* bitmapStoragePointer
+			game::gameresource::BitmapStorage* bitmapStoragePointer,
+			int graphicsWidth,
+			int graphicsHeight
 		)
 			: windowPointer{ windowPointer }
-			, bitmapStoragePointer{ bitmapStoragePointer }{
+			, bitmapStoragePointer{ bitmapStoragePointer }
+			, graphicsWidth{ graphicsWidth }
+			, graphicsHeight{ graphicsHeight } {
 		}
 
 		~Renderer();

@@ -20,8 +20,30 @@ namespace wasp::window {
         CComPtr<IDWriteTextFormat> textFormatPointer{};
         CComPtr<ID2D1SolidColorBrush> textBrushPointer{};
 
+        //todo: text color and fill color? pass a struct instead?
+        int graphicsWidth{};
+        int graphicsHeight{};
+        wchar_t const* fontName{};
+        float fontSize{};
+        DWRITE_FONT_WEIGHT fontWeight{};
+        DWRITE_FONT_STYLE fontStyle{};
+        DWRITE_FONT_STRETCH fontStretch{};
+        DWRITE_TEXT_ALIGNMENT textAlignment{};
+        DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment{};
+
     public:
-        WindowPainter();
+        WindowPainter(
+            int graphicsWidth,
+            int graphicsHeight,
+            wchar_t const* fontName,
+            float fontSize,
+            DWRITE_FONT_WEIGHT fontWeight,
+            DWRITE_FONT_STYLE fontStyle,
+            DWRITE_FONT_STRETCH fontStretch,
+            DWRITE_TEXT_ALIGNMENT textAlignment,
+            DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment
+        );
+
         ~WindowPainter() = default;
 
         void init(HWND windowHandle);
