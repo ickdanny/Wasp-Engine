@@ -23,6 +23,8 @@ namespace wasp::window {
         //todo: text color and fill color? pass a struct instead?
         int graphicsWidth{};
         int graphicsHeight{};
+        int fillColor{};
+        int textColor{};
         wchar_t const* fontName{};
         float fontSize{};
         DWRITE_FONT_WEIGHT fontWeight{};
@@ -35,6 +37,8 @@ namespace wasp::window {
         WindowPainter(
             int graphicsWidth,
             int graphicsHeight,
+            int fillColor,
+            int textColor,
             wchar_t const* fontName,
             float fontSize,
             DWRITE_FONT_WEIGHT fontWeight,

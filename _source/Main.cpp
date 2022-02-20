@@ -55,10 +55,14 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
         //init window and Direct 2D
         window::MainWindow window{
-            windowmodes::windowed,
+            windowmodes::fullscreen,
             instanceHandle,
             config::className,
             config::windowName,
+            config::graphicsWidth,
+            config::graphicsHeight,
+            config::fillColor,
+            config::textColor,
             config::fontName,
             config::fontSize,
             config::fontWeight,

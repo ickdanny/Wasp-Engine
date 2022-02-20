@@ -8,7 +8,11 @@ namespace wasp::window {
 		PCWSTR className,
 		PCWSTR windowName,
 		//graphics fields
-		wchar_t* fontName,
+		int graphicsWidth,
+		int graphicsHeight,
+		int fillColor,
+		int textColor,
+		wchar_t const* fontName,
 		float fontSize,
 		DWRITE_FONT_WEIGHT fontWeight,
 		DWRITE_FONT_STYLE fontStyle,
@@ -18,6 +22,10 @@ namespace wasp::window {
 	)
 		: currentWindowModeName{initWindowMode.modeName}
 		, windowPainter{
+				graphicsWidth,
+				graphicsHeight,
+				fillColor,
+				textColor,
 				fontName,
 				fontSize,
 				fontWeight,

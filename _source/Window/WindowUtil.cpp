@@ -72,5 +72,12 @@ namespace wasp::window {
 		};
 		const int x{ xCenter - (realWindowWidth / 2) };
 		const int y{ yCenter - (realWindowHeight / 2) };
+		return { x, y };
+	}
+
+	std::pair<int, int> findFullscreenPosition(const std::pair<int, int> size) {
+		MONITORINFO primaryMonitorInfo{ getPrimaryMonitorInfo() };
+		RECT& primaryMonitorRect{ primaryMonitorInfo.rcMonitor };
+		return { primaryMonitorRect.left, primaryMonitorRect.top };
 	}
 }

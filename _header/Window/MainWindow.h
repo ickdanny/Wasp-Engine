@@ -25,6 +25,10 @@ namespace wasp::window {
             PCWSTR className,
             PCWSTR windowName,
             //graphics fields
+            int graphicsWidth,
+            int graphicsHeight,
+            int fillColor,
+            int textColor,
             wchar_t const* fontName,
             float fontSize,
             DWRITE_FONT_WEIGHT fontWeight,

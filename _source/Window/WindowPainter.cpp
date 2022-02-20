@@ -10,6 +10,8 @@ namespace wasp::window {
 	WindowPainter::WindowPainter(
 		int graphicsWidth,
 		int graphicsHeight,
+		int fillColor,
+		int textColor,
 		wchar_t const* fontName,
 		float fontSize,
 		DWRITE_FONT_WEIGHT fontWeight,
@@ -22,8 +24,11 @@ namespace wasp::window {
 		, renderTargetPointer{ nullptr }
 		, graphicsWidth{ graphicsWidth }
 		, graphicsHeight{ graphicsHeight }
+		, fillColor{ fillColor }
+		, textColor{ textColor }
 		, fontName{ fontName }
 		, fontSize{ fontSize }
+		, fontWeight{ fontWeight }
 		, fontStyle{ fontStyle }
 		, fontStretch{ fontStretch }
 		, textAlignment{ textAlignment }
@@ -131,7 +136,7 @@ namespace wasp::window {
 
 	void WindowPainter::makeTextBrushPointer() {
 		HRESULT result{ bufferRenderTargetPointer->CreateSolidColorBrush(
-			D2D1::ColorF{ config::textColor },
+			D2D1::ColorF{ static_cast<uint32_t>(textColor) },
 			&textBrushPointer
 		) };
 	}
@@ -201,7 +206,7 @@ namespace wasp::window {
 
 	void WindowPainter::beginDraw() {
 		bufferRenderTargetPointer->BeginDraw();
-		bufferRenderTargetPointer->Clear(D2D1::ColorF{ config::fillColor });
+		bufferRenderTargetPointer->Clear(D2D1::ColorF{ static_cast<uint32_t>(fillColor) });
 	}
 
 	static D2D1::Matrix3x2F makeRotationMatrix(
