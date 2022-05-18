@@ -9,7 +9,7 @@ namespace wasp::graphics {
 		}
 	}
 
-	void Renderer::render(double dt) {
+	void Renderer::render(double dt, std::mutex* updateDrawMutexPointer) {
 
 		static constexpr double smoothing{ 0.9 };
 
@@ -28,17 +28,22 @@ namespace wasp::graphics {
 		if (renderThread.joinable()) {
 			renderThread.join();
 		}
+
+		const std::lock_guard updateDrawLock{ *updateDrawMutexPointer };
+
 		rendering.store(true);
-		//todo: make getWindowHandle public
 		windowPointer->getWindowPainter().beginDraw();
 		windowPointer->getWindowPainter().drawSubBitmap(
-			{ static_cast<float>(graphicsWidth) / 2, static_cast<float>(graphicsHeight) / 2 },
-					{
-						bitmapStoragePointer->get(L"timage")->d2dBitmap,
-						45.0f,
-						.8f,
-						.7f
-					},
+			{ 
+				static_cast<float>(graphicsWidth) / 2.0f, 
+				static_cast<float>(graphicsHeight) / 2.0f 
+			},
+			{
+				bitmapStoragePointer->get(L"timage")->d2dBitmap,
+				45.0f,
+				.8f,
+				.7f
+			},
 			{ 100, 100, 600, 400 }
 		);
 		windowPointer->getWindowPainter().drawText(
@@ -53,7 +58,9 @@ namespace wasp::graphics {
 		);
 		windowPointer->getWindowPainter().endDraw();
 
-		renderThread = std::thread{ [&] {
+		renderThread = std::thread{ [&, updateDrawMutexPointer] {
+			const std::lock_guard updateDrawLock{ *updateDrawMutexPointer };
+
 			windowPointer->getWindowPainter().paint(windowPointer->getWindowHandle());
 			lastDraw = thisDraw;
 			thisDraw = std::chrono::steady_clock::now();

@@ -91,7 +91,7 @@ namespace wasp::window {
 
 	void WindowPainter::getDeviceDependentResources(HWND windowHandle)
 	{
-		if (renderTargetPointer == NULL) {
+		if (renderTargetPointer == nullptr) {
 			getRenderTargetPointer(windowHandle);
 			makeBufferRenderTargetPointer();
 			makeTextBrushPointer();
@@ -192,8 +192,7 @@ namespace wasp::window {
 
 	void WindowPainter::resize(HWND windowHandle)
 	{
-		if (renderTargetPointer != NULL)
-		{
+		if (renderTargetPointer != NULL){
 			RECT rectangle;
 			GetClientRect(windowHandle, &rectangle);
 
@@ -201,6 +200,9 @@ namespace wasp::window {
 
 			renderTargetPointer->Resize(size);
 			InvalidateRect(windowHandle, NULL, FALSE); //what in the fuck
+		}
+		else {
+			throw new std::exception{ "render target pointer is null in resize" };
 		}
 	}
 

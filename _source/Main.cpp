@@ -55,7 +55,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
         //init window and Direct 2D
         window::MainWindow window{
-            windowmodes::fullscreen,
+            windowmodes::windowed,
             instanceHandle,
             config::className,
             config::windowName,
@@ -71,39 +71,6 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             config::textAlignment,
             config::paragraphAlignment
         };
-        /*
-        {
-            const MONITORINFO primaryMonitorInfo{ getPrimaryMonitorInfo() };
-            const RECT& primaryMonitorRect{ primaryMonitorInfo.rcMonitor };
-            const int xCenter{ 
-                (primaryMonitorRect.right - primaryMonitorRect.left) / 2 
-            };
-            const int yCenter{ 
-                (primaryMonitorRect.bottom - primaryMonitorRect.top) / 2 
-            };
-            const int realWindowWidth{ 
-                config::windowWidth + getWindowBorderWidthPadding() 
-            };
-            const int realWindowHeight{
-                config::windowHeight + getWindowBorderHeightPadding() 
-            };
-            const int x{ xCenter - (realWindowWidth / 2) };
-            const int y{ yCenter - (realWindowHeight / 2) };
-
-            //will init d2d
-            window.create(
-                instanceHandle,
-                config::className,
-                config::windowName,
-                config::windowStyleWindowed,
-                0, //extra window style
-                x,
-                y,
-                realWindowWidth,
-                realWindowHeight
-            );
-        }
-        */
 
         //init D2D Bitmaps
         resourceMasterStorage.bitmapStorage.setRenderTargetPointerAndLoadD2DBitmaps(
@@ -131,18 +98,32 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
         static int updateCount{ 0 };
 
+        std::mutex updateDrawMutex{};
+
         GameLoop gameLoop{
             config::updatesPerSecond,
             config::maxUpdatesWithoutFrame,
             //update function
             [&] {
+                const std::lock_guard updateDrawLock{updateDrawMutex};
                 ++updateCount;
                 keyInputTable.tickOver();
                 pumpMessages();
+
+                //fullscreen test
+                if (updateCount == 200) {
+                    debug::log("fullscreened");
+                    window.changeWindowMode(windowmodes::fullscreen);
+                }
+                if (updateCount == 300) {
+                    debug::log("windowed");
+                    window.changeWindowMode(windowmodes::windowed);
+                }
+                //end fullscreen test
             },
             //draw function
             [&](double dt) {
-                renderer.render(dt);
+                renderer.render(dt, &updateDrawMutex);
             }
         };
 

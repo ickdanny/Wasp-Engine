@@ -10,7 +10,7 @@ namespace wasp::game::windowmodes {
 
 	extern const window::WindowMode windowed{
 		L"WINDOWED",
-		WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU,
+		WS_MINIMIZEBOX | WS_SYSMENU | WS_CAPTION,
 		0,
 		[]() -> std::pair<int, int> {
 			return {config::windowWidth, config::windowHeight};

@@ -8,7 +8,7 @@ namespace wasp::debug {
 
 	inline void log(const std::string& message) {
 		#ifdef _DEBUG
-		std::cerr << message;
+		std::cerr << message << '\n';
 		#endif
 	}
 }

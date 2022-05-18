@@ -1,5 +1,7 @@
 #include "Window\MainWindow.h"
 
+#include "Logging.h"
+
 namespace wasp::window {
 
 	MainWindow::MainWindow(
@@ -84,28 +86,35 @@ namespace wasp::window {
 				PostQuitMessage(0);
 				return 0;
 
+			case WM_CANCELMODE:
+				debug::log("disabled window");
+				return 0;
+
 			default:
+				debug::log("can't handle messageCode " + std::to_string(messageCode));
 				return DefWindowProc(windowHandle, messageCode, wParam, lParam);
 		}
 		return TRUE;
 	}
 
 	void MainWindow::changeWindowMode(const WindowMode& windowMode) {
-		currentWindowModeName = windowMode.modeName;
+		//if (currentWindowModeName != windowMode.modeName) {
+			currentWindowModeName = windowMode.modeName;
 
-		std::pair<int, int> size{ windowMode.sizeFunction() };
-		std::pair<int, int> position{ windowMode.positionFunction(size) };
+			std::pair<int, int> size{ windowMode.sizeFunction() };
+			std::pair<int, int> position{ windowMode.positionFunction(size) };
 
-		SetWindowLong(windowHandle, GWL_STYLE, windowMode.windowStyle);
-		SetWindowLong(windowHandle, GWL_EXSTYLE, windowMode.windowExtraStyle);
-		SetWindowPos(
-			windowHandle,
-			nullptr,
-			position.first,
-			position.second,
-			size.first,
-			size.second,
-			SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED
-		);
-	}
+			SetWindowLong(windowHandle, GWL_STYLE, windowMode.windowStyle);
+			SetWindowLong(windowHandle, GWL_EXSTYLE, windowMode.windowExtraStyle);
+			SetWindowPos(
+				windowHandle,
+				nullptr,
+				position.first,
+				position.second,
+				size.first,
+				size.second,
+				SWP_NOZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW | SWP_FRAMECHANGED
+			);
+		}
+	//}
 }
