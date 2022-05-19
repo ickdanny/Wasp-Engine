@@ -9,7 +9,7 @@ namespace wasp::graphics {
 		}
 	}
 
-	void Renderer::render(double dt, std::mutex* updateDrawMutexPointer) {
+	void Renderer::render(double dt) {
 
 		static constexpr double smoothing{ 0.9 };
 
@@ -28,8 +28,6 @@ namespace wasp::graphics {
 		if (renderThread.joinable()) {
 			renderThread.join();
 		}
-
-		const std::lock_guard updateDrawLock{ *updateDrawMutexPointer };
 
 		rendering.store(true);
 		windowPointer->getWindowPainter().beginDraw();
@@ -58,9 +56,7 @@ namespace wasp::graphics {
 		);
 		windowPointer->getWindowPainter().endDraw();
 
-		renderThread = std::thread{ [&, updateDrawMutexPointer] {
-			const std::lock_guard updateDrawLock{ *updateDrawMutexPointer };
-
+		renderThread = std::thread{ [&] {
 			windowPointer->getWindowPainter().paint(windowPointer->getWindowHandle());
 			lastDraw = thisDraw;
 			thisDraw = std::chrono::steady_clock::now();

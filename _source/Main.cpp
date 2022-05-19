@@ -98,14 +98,11 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
         static int updateCount{ 0 };
 
-        std::mutex updateDrawMutex{};
-
         GameLoop gameLoop{
             config::updatesPerSecond,
             config::maxUpdatesWithoutFrame,
             //update function
             [&] {
-                const std::lock_guard updateDrawLock{updateDrawMutex};
                 ++updateCount;
                 keyInputTable.tickOver();
                 pumpMessages();
@@ -123,7 +120,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             },
             //draw function
             [&](double dt) {
-                renderer.render(dt, &updateDrawMutex);
+                renderer.render(dt);
             }
         };
 

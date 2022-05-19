@@ -2,7 +2,6 @@
 
 #include <thread>
 #include <atomic>
-#include <mutex>
 
 #include "Window/MainWindow.h"
 #include "Game/Config.h"
@@ -37,6 +36,6 @@ namespace wasp::graphics {
 
 		~Renderer();
 
-		void render(double dt, std::mutex* updateDrawMutex);
+		void render(double dt);
 	};
 }
