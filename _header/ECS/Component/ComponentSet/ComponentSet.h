@@ -3,8 +3,6 @@
 #include <initializer_list>
 #include <vector>
 
-#include "ECS\Component\ComponentType.h"
-
 namespace wasp::ecs::component {
     //todo: scene id exists above archetype/group
     //forward declaration of Archetype to handle circular dependency
@@ -12,11 +10,11 @@ namespace wasp::ecs::component {
 
     class ComponentSet {
     public:
-        bool containsComponent(const int typeIndex);
-        bool doesNotContainComponent(const int typeIndex) {
+        bool containsComponent(const int typeIndex) const;
+        bool doesNotContainComponent(const int typeIndex) const {
             return !containsComponent(typeIndex);
         }
-        bool containsAllComponents(const std::initializer_list<const int>& typeIndices) {
+        bool containsAllComponents(const std::initializer_list<const int>& typeIndices) const {
             for (const int typeIndex : typeIndices) {
                 if (doesNotContainComponent(typeIndex)) {
                     return false;
@@ -24,7 +22,7 @@ namespace wasp::ecs::component {
             }
             return true;
         }
-        bool containsAnyComponent(const std::initializer_list<const int>& typeIndices) {
+        bool containsAnyComponent(const std::initializer_list<const int>& typeIndices) const {
             for (const int typeIndex : typeIndices) {
                 if (containsComponent(typeIndex)) {
                     return true;
@@ -33,11 +31,11 @@ namespace wasp::ecs::component {
             return false;
         }
         
-        bool isContainedIn(const ComponentSet& other);
-        int getNumComponents();
-        std::vector<int> getPresentTypeIndices();
+        bool isContainedIn(const ComponentSet& other) const;
+        int getNumComponents() const;
+        const std::vector<int>& getPresentTypeIndices() const;
 
         void associateArchetype(const Archetype* archetype);
-        Archetype* getAssociatedArchetype();
+        Archetype* getAssociatedArchetype() const;
     };
 }

@@ -14,9 +14,17 @@ namespace wasp::container {
 
 	namespace {
 		constexpr int invalidIndex{ -2 };
+		constexpr float sparseIndexGrowRatio{ 1.5f };
 	}
 
-	class IntLookupTableBase {};
+	class IntLookupTableBase {
+	public:
+		virtual ~IntLookupTableBase() = default;
+		virtual int size() const = 0;
+		virtual bool contains(int sparseIndex) const = 0;
+		virtual bool remove(int sparseIndex) = 0;
+		virtual void clear() = 0;
+	};
 
 	template <typename T>
 	class IntLookupTable : public IntLookupTableBase{
@@ -31,6 +39,10 @@ namespace wasp::container {
 
 	public:
 
+		IntLookupTable()
+			: IntLookupTable(0, 0) {
+		}
+
 		IntLookupTable(const int initialMaxIndex, const int initialCapacity)
 			: sparseIndices(initialMaxIndex)
 			, denseValues(initialCapacity)
@@ -41,6 +53,8 @@ namespace wasp::container {
 			clearDenseIndexToSparseIndex();
 		}
 
+		~IntLookupTable() = default;
+
 		int size() const {
 			return currentSize;
 		}
@@ -49,11 +63,15 @@ namespace wasp::container {
 			if (isInvalidSparseIndex(sparseIndex)) {
 				return false;
 			}
-			return isValidDenseIndex(sparseIndices[sparseIndex])
+			return isValidDenseIndex(sparseIndices[sparseIndex]);
 		}
 
 		//returns true if an element was replaced, false otherwise
 		bool set(int sparseIndex, T value) {
+			if (isInvalidSparseIndex(sparseIndex)) {
+				growSparseIndices(sparseIndex);
+			}
+
 			int denseIndex = sparseIndices[sparseIndex];
 			if (isValidDenseIndex(denseIndex)) {
 				denseValues[denseIndex] = value;
@@ -65,13 +83,25 @@ namespace wasp::container {
 			}
 		}
 
+		T& get(int sparseIndex) {
+			throwIfInvalidSparseIndex(sparseIndex);
+			int denseIndex{ sparseIndices[sparseIndex] };
+
+			throwIfInvalidDenseIndex(denseIndex);
+			return denseValues[denseIndex];
+		}
+
+		const T& get(int sparseIndex) const {
+			return get(sparseIndex);
+		}
+
 		//returns true if an element was removed, false otherwise
 		bool remove(int sparseIndex) {
 			//case 1: there is no such element -> return false
-			if (isInvalidSparseIndex) {
+			if (isInvalidSparseIndex(sparseIndex)) {
 				return false;
 			}
-			int denseIndex = sparseIndices[i];
+			int denseIndex{ sparseIndices[sparseIndex] };
 			if (isInvalidDenseIndex(denseIndex)) {
 				return false;
 			}
@@ -85,7 +115,7 @@ namespace wasp::container {
 			}
 			//otherwise, we just removed the last element
 			else {
-				removeElementAtCurrentSize(currentSize);
+				removeElementAtCurrentSize();
 			}
 			return true;
 		}
@@ -96,6 +126,8 @@ namespace wasp::container {
 			clearDenseIndexToSparseIndex();
 			currentSize = 0;
 		}
+
+		class Iterator;
 
 		Iterator begin() {
 			return Iterator{ 0 };
@@ -108,14 +140,14 @@ namespace wasp::container {
 		class Iterator {
 		public:
 			using iterator_category = std::forward_iterator_tag;
-			using difference_type = std::vector::iterator::difference_type;
+			using difference_type = typename std::vector<T>::iterator::difference_type;
 			using value_type = T;
 			using pointer = T*;
 			using reference = T&;
 
 		private:
 			//fields
-			std::vector::iterator valueIterator{};
+			typename std::vector<T>::iterator valueIterator{};
 			int currentDenseIndex{};
 
 		public:
@@ -125,10 +157,10 @@ namespace wasp::container {
 			}
 
 			int getPreviousSparseIndex() {
-				int previousDenseIndex = currentDenseIndex - 1;
+				int previousDenseIndex{ currentDenseIndex - 1 };
 				throwIfInvalidDenseIndex(previousDenseIndex);
 
-				int previousSparseIndex = denseIndexToSparseIndex[previousDenseIndex];
+				int previousSparseIndex{ denseIndexToSparseIndex[previousDenseIndex] };
 				throwIfInvalidSparseIndex(previousSparseIndex);
 
 				return previousSparseIndex;
@@ -136,10 +168,10 @@ namespace wasp::container {
 
 			//operators
 			reference operator*() const { 
-				return valueIterator*; 
+				return *valueIterator; 
 			}
 			pointer operator->() { 
-				return valueIterator->; 
+				return valueIterator;
 			}
 
 			//prefix increment
@@ -151,7 +183,7 @@ namespace wasp::container {
 
 			//postfix increment
 			Iterator operator++(int) { 
-				Iterator temp = *this; 
+				Iterator temp{ *this };
 				++(*this); 
 				return temp; 
 			}
@@ -183,17 +215,26 @@ namespace wasp::container {
 			);
 		}
 
-		//index checker functions
-		bool isValidSparseIndex(int sparseIndex) {
-			return sparseIndex >= 0 && sparseIndex < sparseIndices.size();
+		void growSparseIndices(int largestSparseIndex) {
+			int newSize{ largestSparseIndex + 1 };
+			newSize = static_cast<int>(newSize * sparseIndexGrowRatio);
+			unsigned int growBy{ static_cast<unsigned int>(newSize) - sparseIndices.size() };
+			sparseIndices.insert(sparseIndices.end(), growBy, invalidIndex);
 		}
-		bool isInvalidSparseIndex(int sparseIndex) {
+
+		//index checker functions
+		bool isValidSparseIndex(int sparseIndex) const {
+			return (sparseIndex >= 0) 
+				&& (static_cast<std::vector<int>::size_type>(sparseIndex) < sparseIndices.size());
+		}
+		bool isInvalidSparseIndex(int sparseIndex) const {
 			return !isValidSparseIndex(sparseIndex);
 		}
-		bool isValidDenseIndex(int denseIndex) {
-			return denseIndex >= 0 && denseIndex < denseValues.size();
+		bool isValidDenseIndex(int denseIndex) const {
+			return (denseIndex >= 0) 
+				&& (static_cast<std::vector<T>::size_type>(denseIndex) < denseValues.size());
 		}
-		bool isInvalidDenseIndex(int denseIndex) {
+		bool isInvalidDenseIndex(int denseIndex) const {
 			return !isValidDenseIndex(denseIndex);
 		}
 
@@ -203,7 +244,7 @@ namespace wasp::container {
 
 			invalidateSparseIndex(denseIndexToSparseIndex[currentSize]);
 			invalidateDenseIndexToSparseIndex(currentSize);
-			removeDenseValueAtCurrentSize(currentSize);
+			removeDenseValueAtCurrentSize();
 		}
 		void invalidateSparseIndex(int sparseIndex) {
 			throwIfInvalidSparseIndex(sparseIndex);
@@ -226,12 +267,12 @@ namespace wasp::container {
 			//B = element at current size (last element)
 			
 			//move the value of B to A
-			denseValues[denseIndex] = denseValues[currentSize];
+			denseValues[denseIndex] = std::move(denseValues[currentSize]);
 			//erase old B
 			removeDenseValueAtCurrentSize();
 
-			int sparseIndexA = denseIndexToSparseIndex[denseIndex];
-			int sparseIndexB = denseIndexToSparseIndex[currentSize];
+			int sparseIndexA{ denseIndexToSparseIndex[denseIndex] };
+			int sparseIndexB{ denseIndexToSparseIndex[currentSize] };
 
 			//make the sparse index entry for B point to the new position at A
 			if (isValidSparseIndex(sparseIndexB)) {
@@ -250,20 +291,36 @@ namespace wasp::container {
 
 		void appendToBack(int sparseIndex, T value) {
 			sparseIndices[sparseIndex] = currentSize;
-			denseValues[currentSize] = value;
-			denseIndexToSparseIndex[currentSize] = sparseIndex;
+			if (static_cast<std::vector<T>::size_type>(currentSize) < denseValues.size()) {
+				denseValues[currentSize] = value;
+			}
+			else {
+				denseValues.push_back(value);
+			}
+			if (static_cast<std::vector<int>::size_type>(currentSize) 
+				< denseIndexToSparseIndex.size()) 
+			{
+				denseIndexToSparseIndex[currentSize] = sparseIndex;
+			}
+			else {
+				denseIndexToSparseIndex.push_back(sparseIndex);
+			}
 			++currentSize;
 		}
 
 		//throw functions
-		void throwIfInvalidSparseIndex(int sparseIndex) {
+		void throwIfInvalidSparseIndex(int sparseIndex) const {
 			if (isInvalidSparseIndex(sparseIndex)) {
-				throw std::exception("Invalid sparse index: " + std::to_string(sparseIndex));
+				throw std::runtime_error{ 
+					"Invalid sparse index: " + std::to_string(sparseIndex) 
+				};
 			}
 		}
-		void throwIfInvalidDenseIndex(int denseIndex) {
+		void throwIfInvalidDenseIndex(int denseIndex) const {
 			if (isInvalidDenseIndex(denseIndex)) {
-				throw std::exception("Invalid dense index: " + std::to_string(denseIndex));
+				throw std::runtime_error{ 
+					"Invalid dense index: " + std::to_string(denseIndex) 
+				};
 			}
 		}
 	};

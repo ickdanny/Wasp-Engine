@@ -10,7 +10,7 @@ namespace wasp::ecs::component {
 		using ComponentIterator = container::IntLookupTable<T>::Iterator;
 
 		template <typename T>
-		ComponentIterator<T> getComponentIterator(const ComponentType<T>& type) {
+		ComponentIterator<T> getComponentIterator() {
 			//todo:
 		}
 	};

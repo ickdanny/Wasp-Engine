@@ -23,6 +23,8 @@
 #include "ConsoleOutput.h"
 #include "Logging.h"
 
+#include "ECS/Component/ComponentStorage/Archetype.h"
+
 using namespace wasp;
 using namespace wasp::game;
 
@@ -169,4 +171,8 @@ void pumpMessages() {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
+}
+
+void dummyFunc(ecs::component::Archetype& archetype) {
+    archetype.setComponent<int>(12, 13);
 }

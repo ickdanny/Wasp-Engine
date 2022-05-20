@@ -314,9 +314,6 @@
     <ClInclude Include="_header\Game\WindowModes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\ECS\Component\ComponentType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="_header\ECS\Component\ComponentSet\ComponentSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -330,6 +327,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Container\IntLookupTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\Component\TypeIndexRetriever.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\Component\ComponentStorage\MultiComponentIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
