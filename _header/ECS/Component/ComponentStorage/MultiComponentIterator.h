@@ -6,6 +6,7 @@
 
 namespace wasp::ecs::component {
 
+	//does not actually qualify as an iterator
 	template <typename... Ts>
 	class MultiComponentIterator {
 	private:
@@ -13,15 +14,11 @@ namespace wasp::ecs::component {
 		template<typename T>
 		using innerIteratorType = container::IntLookupTable<T>::Iterator;
 	public:
-		using iterator_category = std::forward_iterator_tag;
-		using difference_type = typename std::vector<T>::iterator::difference_type;
-		using value_type = std::tuple<Ts>;
-		using pointer = value_type*;
-		using reference = value_type&;
+		using returnType = std::tuple<Ts&&>;
 
 	private:
 		//fields
-		std::tuple<innerIteratorType<Ts>> innerIteratorTuple{};
+		std::tuple<innerIteratorType<Ts>...> innerIteratorTuple{};
 
 	public:
 		MultiComponentIterator(std::tuple<innerIteratorType<Ts>> innerIteratorTuple)
@@ -32,20 +29,23 @@ namespace wasp::ecs::component {
 			return std::get<0>(innerIteratorTuple).getPreviousSparseIndex();
 		}
 
-		//operators
-		reference operator*() const {
-			//todo: how do i make a tuple
-			return *valueIterator;
-		}
-		pointer operator->() {
-			return valueIterator;
+		returnType operator*() const {
+			return std::apply(
+				[&](auto& ...x) {
+					std::forward_as_tuple((*x, ...)), 
+					innerIteratorTuple
+				}
+			)
 		}
 
 		//prefix increment
 		MultiComponentIterator& operator++() {
-			//todo: how do i increment every inner iterator?
-			++valueIterator;
-			++currentDenseIndex;
+			std::apply(
+				[&](auto& ...x) {
+					(++x, ...);
+				}, 
+				innerIteratorTuple
+			);
 			return *this;
 		}
 
