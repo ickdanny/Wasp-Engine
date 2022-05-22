@@ -2,6 +2,7 @@
 
 #include "Game\Config.h"
 #include "adaptor\HResultError.h"
+#include "Logging.h"
 
 namespace wasp::window {
 
@@ -141,8 +142,7 @@ namespace wasp::window {
 		) };
 	}
 
-	void WindowPainter::discardDeviceDependentResources()
-	{
+	void WindowPainter::discardDeviceDependentResources() {
 		renderTargetPointer = nullptr;
 		bufferRenderTargetPointer = nullptr;
 		textBrushPointer = nullptr;
@@ -174,8 +174,12 @@ namespace wasp::window {
 		}
 
 		HRESULT result = renderTargetPointer->EndDraw();
-		if (FAILED(result) || result == D2DERR_RECREATE_TARGET)
-		{
+		if (FAILED(result) || result == D2DERR_RECREATE_TARGET){
+			debug::log("failed EndDraw(), discarding device resources");
+			discardDeviceDependentResources();
+		}
+		if (result == D2DERR_RECREATE_TARGET) {
+			debug::log("EndDraw() caused D2DERR_RECREATE_TARGET, discarding device resources");
 			discardDeviceDependentResources();
 		}
 		EndPaint(windowHandle, &paintStruct);

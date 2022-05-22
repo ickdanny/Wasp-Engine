@@ -146,6 +146,11 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         #pragma warning(suppress : 4297)  //if debug, we throw exceptions in main
         throw;
     }
+    catch (std::string& str) {
+        debug::log(str);
+        #pragma warning(suppress : 4297)  //if debug, we throw exceptions in main
+        throw;
+    }
     catch (...) {
         debug::log("Exception caught in main of unknown type\n");
         #pragma warning(suppress : 4297)  //if debug, we throw exceptions in main
@@ -175,4 +180,5 @@ void pumpMessages() {
 
 void dummyFunc(ecs::component::Archetype& archetype) {
     archetype.setComponent<int>(12, 13);
+    archetype.begin<int, double, float>();
 }

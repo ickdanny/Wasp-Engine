@@ -1,17 +1,23 @@
 #pragma once
 
 #include "Container/IntLookupTable.h"
-#include "ECS/Component/ComponentType.h"
+#include "ECS/Component/ComponentStorage/MultiComponentIterator.h"
 
 namespace wasp::ecs::component {
 	class Group {
+    private:
+        //fields
+        const ComponentSet* componentKeyPointer{};
 	public:
-		template<typename T>
-		using ComponentIterator = container::IntLookupTable<T>::Iterator;
 
-		template <typename T>
-		ComponentIterator<T> getComponentIterator() {
-			//todo:
-		}
+        template <typename... Ts>
+        MultiComponentIterator<Ts...> begin() {
+            //todo: combine archetypes
+        }
+
+        template <typename... Ts>
+        MultiComponentIterator<Ts...> end() {
+            //todo: combine archetypes
+        }
 	};
 }

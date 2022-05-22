@@ -130,14 +130,15 @@ namespace wasp::container {
 		class Iterator;
 
 		Iterator begin() {
-			return Iterator{ 0 };
+			return Iterator{ *this, 0 };
 		}
 
 		Iterator end() {
-			return Iterator{ currentSize };
+			return Iterator{ *this, currentSize };
 		}
 
 		class Iterator {
+			friend class IntLookupTable;
 		public:
 			using iterator_category = std::forward_iterator_tag;
 			using difference_type = typename std::vector<T>::iterator::difference_type;
@@ -150,11 +151,12 @@ namespace wasp::container {
 			typename std::vector<T>::iterator valueIterator{};
 			int currentDenseIndex{};
 
-		public:
-			Iterator(int denseIndex)
-				: valueIterator{ denseValues.begin() + denseIndex }
+			Iterator(IntLookupTable& intLookupTable, int denseIndex)
+				: valueIterator{ intLookupTable.denseValues.begin() + denseIndex }
 				, currentDenseIndex{ denseIndex } {
 			}
+
+		public:
 
 			int getPreviousSparseIndex() {
 				int previousDenseIndex{ currentDenseIndex - 1 };

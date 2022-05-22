@@ -12,16 +12,16 @@ namespace wasp::ecs::component {
 	private:
 		//typedefs
 		template<typename T>
-		using innerIteratorType = container::IntLookupTable<T>::Iterator;
+		using innerIteratorType = typename container::IntLookupTable<T>::Iterator;
 	public:
-		using returnType = std::tuple<Ts&&>;
+		using returnType = std::tuple<Ts&&...>;
 
 	private:
 		//fields
 		std::tuple<innerIteratorType<Ts>...> innerIteratorTuple{};
 
 	public:
-		MultiComponentIterator(std::tuple<innerIteratorType<Ts>> innerIteratorTuple)
+		MultiComponentIterator(std::tuple<innerIteratorType<Ts>...> innerIteratorTuple)
 			: innerIteratorTuple{ innerIteratorTuple } {
 		}
 
@@ -32,10 +32,10 @@ namespace wasp::ecs::component {
 		returnType operator*() const {
 			return std::apply(
 				[&](auto& ...x) {
-					std::forward_as_tuple((*x, ...)), 
-					innerIteratorTuple
-				}
-			)
+					return std::forward_as_tuple((*x, ...));
+				},
+				innerIteratorTuple
+			);
 		}
 
 		//prefix increment

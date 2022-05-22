@@ -5,7 +5,8 @@
 #include <functional>
 
 #include "ECS/Component/ComponentSet/ComponentSet.h"
-#include "ECS/Component/TypeIndexRetriever.h"
+#include "ECS/Component/ComponentIndexer.h"
+#include "MultiComponentIterator.h"
 #include "Container/IntLookupTable.h"
 
 namespace wasp::ecs::component {
@@ -35,7 +36,7 @@ namespace wasp::ecs::component {
             , initEntityCapacity{ initEntityCapacity }
             , initComponentCapacity{ initComponentCapacity }
             , componentStorages(
-                TypeIndexRetriever::maxIndex(), 
+                ComponentIndexer::getMaxIndex(), 
                 componentKeyPointer->getPresentTypeIndices().size()
             ){
         }
@@ -46,10 +47,15 @@ namespace wasp::ecs::component {
         }
 
         template <typename T>
+        const T& getComponent(const int entityID) const {
+            return getComponentStorage<T>().get(entityID);
+        }
+
+        template <typename T>
         bool setComponent(const int entityID, const T& component) {
             //this bit of code causes the compiler to generate a 
             static bool dummyToInstantiateMoveComponent{ moveComponentVTable.set(
-                TypeIndexRetriever::retrieveIndex<T>(),
+                ComponentIndexRetriever::retrieveIndex<T>(),
                 [&](const int entityID, Archetype& newArchetype) {
                     moveComponent<T>(entityID, newArchetype);
                 }
@@ -79,12 +85,28 @@ namespace wasp::ecs::component {
             return wasAnyComponentRemoved;
         }
 
-        const ComponentSet* getComponentKey() const;
+        template <typename... Ts>
+        MultiComponentIterator<Ts...> begin() {
+            return MultiComponentIterator<Ts...>{
+                std::tuple{ getComponentStorage<Ts>().begin()... }
+            };
+        }
+
+        template <typename... Ts>
+        MultiComponentIterator<Ts...> end() {
+            return MultiComponentIterator<Ts...>{
+                std::tuple{ getComponentStorage<Ts>().end()... }
+            };
+        }
+
+        const ComponentSet* getComponentKey() const {
+            return componentKeyPointer;
+        }
 
     private:
         template <typename T>
         IntLookupTable<T>& getComponentStorage() {
-            int typeIndex{ TypeIndexRetriever::retrieveIndex<T>() };
+            int typeIndex{ ComponentIndexRetriever::retrieveIndex<T>() };
             IntLookupTableBase& base{ *componentStorages.get(typeIndex) };
             return static_cast<IntLookupTable<T>&>(base);
         }
@@ -93,8 +115,6 @@ namespace wasp::ecs::component {
         void moveComponent(const int entityID, Archetype& newArchetype) {
             newArchetype.setComponent(entityID, getComponentStorage<T>().get(entityID));
         }
-
-        //TODO: component iterating with tuples?
     };
 
     container::IntLookupTable<std::function<void(const int, Archetype&)>> 

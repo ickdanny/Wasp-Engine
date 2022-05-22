@@ -329,7 +329,7 @@
     <ClInclude Include="_header\Container\IntLookupTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\ECS\Component\TypeIndexRetriever.h">
+    <ClInclude Include="_header\ECS\Component\ComponentIndexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\ECS\Component\ComponentStorage\MultiComponentIterator.h">
