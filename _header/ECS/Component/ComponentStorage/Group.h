@@ -12,7 +12,7 @@ namespace wasp::ecs::component {
 
         template <typename... Ts>
         MultiComponentIterator<Ts...> begin() {
-            //todo: combine archetypes
+            //todo: combine archetypes, group iterator?
         }
 
         template <typename... Ts>

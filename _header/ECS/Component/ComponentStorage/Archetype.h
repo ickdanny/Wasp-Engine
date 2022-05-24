@@ -14,8 +14,8 @@ namespace wasp::ecs::component {
     class Archetype {
     private:
         //typedefs
-        template <typename T>
-        using IntLookupTable = container::IntLookupTable<T>;
+        template <typename K>
+        using IntLookupTable = container::IntLookupTable<K>;
         using IntLookupTableBase = container::IntLookupTableBase;
 
         //fields
@@ -41,27 +41,27 @@ namespace wasp::ecs::component {
             ){
         }
 
-        template <typename T>
-        T& getComponent(const int entityID) {
-            return getComponentStorage<T>().get(entityID);
+        template <typename K>
+        K& getComponent(const int entityID) {
+            return getComponentStorage<K>().get(entityID);
         }
 
-        template <typename T>
-        const T& getComponent(const int entityID) const {
-            return getComponentStorage<T>().get(entityID);
+        template <typename K>
+        const K& getComponent(const int entityID) const {
+            return getComponentStorage<K>().get(entityID);
         }
 
-        template <typename T>
-        bool setComponent(const int entityID, const T& component) {
+        template <typename K>
+        bool setComponent(const int entityID, const K& component) {
             //this bit of code causes the compiler to generate a 
             static bool dummyToInstantiateMoveComponent{ moveComponentVTable.set(
-                ComponentIndexRetriever::retrieveIndex<T>(),
+                ComponentIndexRetriever::retrieveIndex<K>(),
                 [&](const int entityID, Archetype& newArchetype) {
-                    moveComponent<T>(entityID, newArchetype);
+                    moveComponent<K>(entityID, newArchetype);
                 }
             ) };
 
-            return getComponentStorage<T>().set(entityID, component);
+            return getComponentStorage<K>().set(entityID, component);
         }
         
         void moveEntity(const int entityID, Archetype& newArchetype) {
@@ -104,16 +104,16 @@ namespace wasp::ecs::component {
         }
 
     private:
-        template <typename T>
-        IntLookupTable<T>& getComponentStorage() {
-            int typeIndex{ ComponentIndexRetriever::retrieveIndex<T>() };
+        template <typename K>
+        IntLookupTable<K>& getComponentStorage() {
+            int typeIndex{ ComponentIndexRetriever::retrieveIndex<K>() };
             IntLookupTableBase& base{ *componentStorages.get(typeIndex) };
-            return static_cast<IntLookupTable<T>&>(base);
+            return static_cast<IntLookupTable<K>&>(base);
         }
 
-        template <typename T>
+        template <typename K>
         void moveComponent(const int entityID, Archetype& newArchetype) {
-            newArchetype.setComponent(entityID, getComponentStorage<T>().get(entityID));
+            newArchetype.setComponent(entityID, getComponentStorage<K>().get(entityID));
         }
     };
 

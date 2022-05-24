@@ -7,12 +7,15 @@
 #include "ECS/Component/ComponentStorage/Archetype.h"
 #include "ECS/Component/ComponentIndexer.h"
 
+
+
 namespace wasp::ecs::component {
-    //todo: scene id exists above archetype/group
-    
+
     namespace {
         constexpr std::size_t bitsetSize{ 96 };
     }
+
+    //todo: scene id exists above archetype/group
 
     //forward declaration of Archetype to handle circular dependency
     class Archetype;
@@ -24,22 +27,21 @@ namespace wasp::ecs::component {
         //fields
         Bitset bitset{};
         int numComponents{};
-        std::vector<int> presentTypeIndices{};
+        mutable std::vector<int> presentTypeIndices{};
 
-        const Archetype* archetypePointer{};
-
-    public:
+        mutable const Archetype* archetypePointer{};
 
         //constructs an empty component set
-        ComponentSet() 
-            : numComponents{ 0 } {
+        ComponentSet()
+            : numComponents{ 0 } 
+        {
             testBitsetOutOfBounds();
         }
-        
+
         //constructs a component set based on the provided component types
         template <typename... Ts>
-        ComponentSet() 
-            : numComponents{ sizeof...(Ts) } 
+        ComponentSet()
+            : numComponents{ sizeof...(Ts) }
         {
             testBitsetOutOfBounds();
             bitset[ComponentIndexer::getIndex<Ts>()] = true...;
@@ -50,8 +52,12 @@ namespace wasp::ecs::component {
         ComponentSet(const ComponentSet& toCopy)
             : bitset{ toCopy.bitset }
             , numComponents{ toCopy.numComponents }
-            , presentTypeIndices{ toCopy.presentTypeIndices } {
+            , presentTypeIndices{ toCopy.presentTypeIndices } 
+        {
+            testBitsetOutOfBounds();
         }
+
+    public:
 
         template <typename T>
         bool containsComponent() const {
@@ -78,22 +84,26 @@ namespace wasp::ecs::component {
             }
             return false;
         }
-        
+
         bool isContainedIn(const ComponentSet& other) const {
-            Bitset temp{bitset};    //copy our bitset into our temp
+            Bitset temp{ bitset };    //copy our bitset into our temp
             temp &= other.bitset;   //our temp is now A&B
-            return bitset == temp;  
+            return bitset == temp;
         }
 
         int getNumComponents() const {
             return numComponents;
         }
         const std::vector<int>& getPresentTypeIndices() const {
+            //assuming the empty ComponentSet will not get called very much
+            if (presentTypeIndices.empty()) {
+                makePresentTypeIndices();
+            }
             return presentTypeIndices;
         }
 
-        void associateArchetype(const Archetype* archetypePointer) {
-            this->archetypePointer = archetypePointer ;
+        void associateArchetype(const Archetype* archetypePointer) const {
+            this->archetypePointer = archetypePointer;
         }
         const Archetype* getAssociatedArchetype() const {
             return archetypePointer;
@@ -102,23 +112,107 @@ namespace wasp::ecs::component {
     private:
 
         template <typename T>
-        ComponentSet& addComponent() {
+        ComponentSet addComponent() const {
             const int index{ ComponentIndexer::getIndex<T>() };
             //if we need to add a component
             if (!bitset[index]) {
                 ComponentSet toRet{ *this };
-                toRet.bitSet.set(index);
-                toRet.presentTypeIndices.push_back(index);
+                toRet.bitset.set(index);
+                toRet.numComponents = numComponents + 1;
                 return toRet;
             }
             //otherwise return ourselves
-            return this;
+            return *this;
         }
 
-        //todo: other mutators
+        template <typename T>
+        ComponentSet removeComponent() const {
+            const int index{ ComponentIndexer::getIndex<T>() };
+            //if we need to remove a component
+            if (bitset[index]) {
+                ComponentSet toRet{};
+                toRet.bitset = bitset;
+                toRet.bitset.reset(index);
+                //type indices gets lazy initialized
+                return toRet;
+            }
+            //otherwise return ourselves
+            return *this;
+        }
 
-        void testBitsetOutOfBounds() {
+        template <typename... Ts>
+        ComponentSet addComponents() const {
+            if (sizeof...(Ts) <= 0) {
+                throw std::runtime_error{ "zero type parameters!" };
+            }
+            std::vector<int> indicesToAdd{};
+            indicesToAdd.push_back(ComponentIndexer.getIndex<Ts>)...;
+            ComponentSet toRet{ *this };
+            for (int index : indicesToAdd) {
+                if (!bitset[index]) {
+                    toRet.bitset.set(index);
+                    ++(toRet.numComponents);
+                }
+            }
+            return toRet;
+        }
+
+        template <typename... Ts>
+        ComponentSet removeComponents() const {
+            if (sizeof...(Ts) <= 0) {
+                throw std::runtime_error{ "zero type parameters!" };
+            }
+            std::vector<int> indicesToRemove{};
+            indicesToRemove.push_back(ComponentIndexer.getIndex<Ts>)...;
+            ComponentSet toRet{};
+            toRet.bitset = bitset;
+            for (int index : indicesToRemove) {
+                if (bitset[index]) {
+                    toRet.bitset.reset(index);
+                }
+            }
+            //type indices gets lazy initialized
+            return toRet;
+        }
+
+        void makePresentTypeIndices() const {
+            presentTypeIndices = std::vector<int>{};
+            for (int i = 0; i < bitsetSize; ++i) {
+                if (bitset[i]) {
+                    presentTypeIndices.push_back(i);
+                }
+            }
+        }
+
+        void testBitsetOutOfBounds() const {
             bitset.test(ComponentIndexer::getMaxIndex());
+        }
+
+    //operators
+    public:
+        friend bool operator==(const ComponentSet& a, const ComponentSet& b) {
+            return a.bitset == b.bitset;
+        }
+
+        friend bool operator!= (const ComponentSet& a, const ComponentSet& b) {
+            return a.bitset != b.bitset;
+        }
+
+        friend std::hash<ComponentSet>;
+        friend class ComponentSetFactory;
+    };
+}
+
+//specialization for hash
+namespace std {
+    template <> 
+    class hash<wasp::ecs::component::ComponentSet> {
+    private:
+        using ComponentSet = wasp::ecs::component::ComponentSet;
+
+    public:
+        size_t operator()(const ComponentSet& componentSet) const {
+            return hash<ComponentSet::Bitset>()(componentSet.bitset);
         }
     };
 }

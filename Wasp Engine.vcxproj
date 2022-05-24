@@ -175,6 +175,7 @@
     <ClInclude Include="_header\Container\IntLookupTable.h" />
     <ClInclude Include="_header\Container\ObjectPool.h" />
     <ClInclude Include="_header\ECS\Component\ComponentSet\ComponentSet.h" />
+    <ClInclude Include="_header\ECS\Component\ComponentSet\ComponentSetFactory.h" />
     <ClInclude Include="_header\ECS\Component\ComponentStorage\Group.h" />
     <ClInclude Include="_header\ECS\Component\ComponentStorage\GroupProvider.h" />
     <ClInclude Include="_header\ECS\Component\ComponentStorage\Archetype.h" />

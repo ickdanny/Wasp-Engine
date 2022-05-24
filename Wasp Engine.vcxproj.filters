@@ -335,5 +335,8 @@
     <ClInclude Include="_header\ECS\Component\ComponentStorage\MultiComponentIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="_header\ECS\Component\ComponentSet\ComponentSetFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
