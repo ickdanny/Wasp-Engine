@@ -8,28 +8,28 @@ namespace wasp::ecs::component {
 
 	//does not actually qualify as an iterator
 	template <typename... Ts>
-	class MultiComponentIterator {
+	class ArchetypeIterator {
 	private:
 		//typedefs
 		template<typename T>
-		using innerIteratorType = typename container::IntLookupTable<T>::Iterator;
+		using InnerIteratorType = typename container::IntLookupTable<T>::Iterator;
 	public:
-		using returnType = std::tuple<Ts&&...>;
+		using ReturnType = std::tuple<Ts&&...>;
 
 	private:
 		//fields
-		std::tuple<innerIteratorType<Ts>...> innerIteratorTuple{};
+		std::tuple<InnerIteratorType<Ts>...> innerIteratorTuple{};
 
 	public:
-		MultiComponentIterator(std::tuple<innerIteratorType<Ts>...> innerIteratorTuple)
+		ArchetypeIterator(std::tuple<InnerIteratorType<Ts>...> innerIteratorTuple)
 			: innerIteratorTuple{ innerIteratorTuple } {
 		}
 
-		int getPreviousEntityID() {
-			return std::get<0>(innerIteratorTuple).getPreviousSparseIndex();
+		int getEntityID() {
+			return std::get<0>(innerIteratorTuple).getCurrentSparseIndex();
 		}
 
-		returnType operator*() const {
+		ReturnType operator*() const {
 			return std::apply(
 				[&](auto& ...x) {
 					return std::forward_as_tuple((*x, ...));
@@ -39,7 +39,7 @@ namespace wasp::ecs::component {
 		}
 
 		//prefix increment
-		MultiComponentIterator& operator++() {
+		ArchetypeIterator& operator++() {
 			std::apply(
 				[&](auto& ...x) {
 					(++x, ...);
@@ -50,23 +50,23 @@ namespace wasp::ecs::component {
 		}
 
 		//postfix increment
-		MultiComponentIterator operator++(int) {
-			MultiComponentIterator temp{ *this };
+		ArchetypeIterator operator++(int) {
+			ArchetypeIterator temp{ *this };
 			++(*this);
 			return temp;
 		}
 
 		friend bool operator== (
-			const MultiComponentIterator& a, 
-			const MultiComponentIterator& b
+			const ArchetypeIterator& a, 
+			const ArchetypeIterator& b
 		) {
 			return a.innerIteratorTuple == b.innerIteratorTuple;
-		};
+		}
 		friend bool operator!= (
-			const MultiComponentIterator& a, 
-			const MultiComponentIterator& b
+			const ArchetypeIterator& a, 
+			const ArchetypeIterator& b
 		) {
 			return a.innerIteratorTuple != b.innerIteratorTuple;
-		};
+		}
 	};
 }

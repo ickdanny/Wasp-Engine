@@ -4,10 +4,8 @@
 #include <vector>
 #include <bitset>
 
-#include "ECS/Component/ComponentStorage/Archetype.h"
-#include "ECS/Component/ComponentIndexer.h"
-
-
+#include "Archetype.h"
+#include "ComponentIndexer.h"
 
 namespace wasp::ecs::component {
 
@@ -22,6 +20,7 @@ namespace wasp::ecs::component {
 
     class ComponentSet {
     private:
+        //typedefs
         using Bitset = std::bitset<bitsetSize>;
 
         //fields
@@ -29,7 +28,7 @@ namespace wasp::ecs::component {
         int numComponents{};
         mutable std::vector<int> presentTypeIndices{};
 
-        mutable const Archetype* archetypePointer{};
+        mutable std::weak_ptr<Archetype> archetypeWeakPointer{};
 
         //constructs an empty component set
         ComponentSet()
@@ -48,7 +47,29 @@ namespace wasp::ecs::component {
             presentTypeIndices.push_back(ComponentIndexer::getIndex<Ts>())...;
         }
 
-        //copy constructor does NOT copy the archetypePointer
+        //constructs a component set based on the provided type index
+        ComponentSet(int typeIndex) 
+            : numComponents{ 1 } 
+        {
+            testBitsetOutOfBounds();
+            bitset.test(typeIndex);
+            bitset[typeIndex] = true;
+            presentTypeIndices.push_back(typeIndex);
+        }
+
+        //constructs a component set based on the provided type indices
+        ComponentSet(const std::vector<int>& typeIndices)
+            : numComponents{ typeIndices.size() }
+        {
+            testBitsetOutOfBounds();
+            for (int typeIndex : typeIndices) {
+                bitset.test(typeIndex);
+                bitset[typeIndex] = true;
+            }
+            presentTypeIndices = typeIndices;
+        }
+
+        //copy constructor does NOT copy the archetypeWeakPointer
         ComponentSet(const ComponentSet& toCopy)
             : bitset{ toCopy.bitset }
             , numComponents{ toCopy.numComponents }
@@ -102,15 +123,18 @@ namespace wasp::ecs::component {
             return presentTypeIndices;
         }
 
-        void associateArchetype(const Archetype* archetypePointer) const {
-            this->archetypePointer = archetypePointer;
+        //archetype stuff
+        void associateArchetype(
+            const std::weak_ptr<Archetype> archetypeWeakPointer
+        ) const {
+            this->archetypeWeakPointer = archetypeWeakPointer;
         }
-        const Archetype* getAssociatedArchetype() const {
-            return archetypePointer;
+        std::weak_ptr<Archetype> getAssociatedArchetypeWeakPointer() const {
+            return archetypeWeakPointer;
         }
 
     private:
-
+        //modifiers
         template <typename T>
         ComponentSet addComponent() const {
             const int index{ ComponentIndexer::getIndex<T>() };
@@ -175,6 +199,7 @@ namespace wasp::ecs::component {
             return toRet;
         }
 
+        //helper functions
         void makePresentTypeIndices() const {
             presentTypeIndices = std::vector<int>{};
             for (int i = 0; i < bitsetSize; ++i) {

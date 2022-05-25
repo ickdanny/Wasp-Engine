@@ -158,14 +158,13 @@ namespace wasp::container {
 
 		public:
 
-			int getPreviousSparseIndex() {
-				int previousDenseIndex{ currentDenseIndex - 1 };
-				throwIfInvalidDenseIndex(previousDenseIndex);
+			int getCurrentSparseIndex() {
+				throwIfInvalidDenseIndex(currentDenseIndex);
 
-				int previousSparseIndex{ denseIndexToSparseIndex[previousDenseIndex] };
-				throwIfInvalidSparseIndex(previousSparseIndex);
+				int sparseIndex{ denseIndexToSparseIndex[currentDenseIndex] };
+				throwIfInvalidSparseIndex(sparseIndex);
 
-				return previousSparseIndex;
+				return sparseIndex;
 			}
 
 			//operators

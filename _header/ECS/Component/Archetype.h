@@ -4,9 +4,9 @@
 #include <memory>
 #include <functional>
 
-#include "ECS/Component/ComponentSet/ComponentSet.h"
-#include "ECS/Component/ComponentIndexer.h"
-#include "MultiComponentIterator.h"
+#include "ComponentSet.h"
+#include "ComponentIndexer.h"
+#include "ArchetypeIterator.h"
 #include "Container/IntLookupTable.h"
 
 namespace wasp::ecs::component {
@@ -14,21 +14,21 @@ namespace wasp::ecs::component {
     class Archetype {
     private:
         //typedefs
-        template <typename K>
-        using IntLookupTable = container::IntLookupTable<K>;
+        template <typename T>
+        using IntLookupTable = container::IntLookupTable<T>;
         using IntLookupTableBase = container::IntLookupTableBase;
 
         //fields
-        const ComponentSet* componentKeyPointer{};
+        const ComponentSet const* componentKeyPointer{};
         const int initEntityCapacity{};
         const int initComponentCapacity{};
         IntLookupTable<std::unique_ptr<IntLookupTableBase>> componentStorages;
 
-        static IntLookupTable<std::function<void(const int, Archetype&)>> moveComponentVTable;
+        static IntLookupTable<std::function<void(const int, Archetype&)>> 
+            moveComponentVTable;
 
-    public:
         Archetype(
-            const ComponentSet* componentKeyPointer,
+            const ComponentSet const* componentKeyPointer,
             int initEntityCapacity,
             int initComponentCapacity
         ) 
@@ -38,46 +38,57 @@ namespace wasp::ecs::component {
             , componentStorages(
                 ComponentIndexer::getMaxIndex(), 
                 componentKeyPointer->getPresentTypeIndices().size()
-            ){
+            ) {
         }
 
-        template <typename K>
-        K& getComponent(const int entityID) {
-            return getComponentStorage<K>().get(entityID);
+    public:
+        template <typename T>
+        T& getComponent(const int entityID) {
+            return getComponentStorage<T>().get(entityID);
         }
 
-        template <typename K>
-        const K& getComponent(const int entityID) const {
-            return getComponentStorage<K>().get(entityID);
+        template <typename T>
+        const T& getComponent(const int entityID) const {
+            return getComponentStorage<T>().get(entityID);
         }
 
-        template <typename K>
-        bool setComponent(const int entityID, const K& component) {
+        template <typename T>
+        bool setComponent(const int entityID, const T& component) {
             //this bit of code causes the compiler to generate a 
-            static bool dummyToInstantiateMoveComponent{ moveComponentVTable.set(
-                ComponentIndexRetriever::retrieveIndex<K>(),
-                [&](const int entityID, Archetype& newArchetype) {
-                    moveComponent<K>(entityID, newArchetype);
-                }
-            ) };
+            static bool dummyToInstantiateMoveComponent{ 
+                moveComponentVTable.set(
+                    ComponentIndexer::retrieveIndex<T>(),
+                    [&](const int entityID, Archetype& newArchetype) {
+                        moveComponent<T>(entityID, newArchetype);
+                    }
+                ) 
+            };
 
-            return getComponentStorage<K>().set(entityID, component);
+            return getComponentStorage<T>().set(entityID, component);
         }
         
         void moveEntity(const int entityID, Archetype& newArchetype) {
-            for (int i : newArchetype.getComponentKey()->getPresentTypeIndices()) {
-                std::unique_ptr<IntLookupTableBase>& storagePointer = componentStorages.get(i);
+            for (int i : 
+                newArchetype.getComponentKeyPointer()->getPresentTypeIndices()
+            ) {
+                std::unique_ptr<IntLookupTableBase>& storagePointer = 
+                    componentStorages.get(i);
+
                 if (storagePointer != nullptr) {
+                    //components present in this archetype but not present in
+                    //the new archetype will be removed
                     moveComponentVTable.get(i)(entityID, newArchetype);
+                    storagePointer->remove(entityID);
                 }
             }
-            removeEntity(entityID);
         }
 
         bool removeEntity(const int entityID) {
             bool wasAnyComponentRemoved{ false };
             for (int i : componentKeyPointer->getPresentTypeIndices()) {
-                std::unique_ptr<IntLookupTableBase>& storagePointer = componentStorages.get(i);
+                std::unique_ptr<IntLookupTableBase>& storagePointer = 
+                    componentStorages.get(i);
+
                 if (storagePointer != nullptr && storagePointer->remove(entityID)) {
                     wasAnyComponentRemoved = true;
                 }
@@ -86,35 +97,42 @@ namespace wasp::ecs::component {
         }
 
         template <typename... Ts>
-        MultiComponentIterator<Ts...> begin() {
+        ArchetypeIterator<Ts...> begin() {
             return MultiComponentIterator<Ts...>{
                 std::tuple{ getComponentStorage<Ts>().begin()... }
             };
         }
 
         template <typename... Ts>
-        MultiComponentIterator<Ts...> end() {
+        ArchetypeIterator<Ts...> end() {
             return MultiComponentIterator<Ts...>{
                 std::tuple{ getComponentStorage<Ts>().end()... }
             };
         }
 
-        const ComponentSet* getComponentKey() const {
+        const ComponentSet* getComponentKeyPointer() const {
             return componentKeyPointer;
         }
 
     private:
-        template <typename K>
-        IntLookupTable<K>& getComponentStorage() {
+        template <typename T>
+        IntLookupTable<T>& getComponentStorage() {
             int typeIndex{ ComponentIndexRetriever::retrieveIndex<K>() };
             IntLookupTableBase& base{ *componentStorages.get(typeIndex) };
-            return static_cast<IntLookupTable<K>&>(base);
+            return static_cast<IntLookupTable<T>&>(base);
         }
 
-        template <typename K>
+        template <typename T>
         void moveComponent(const int entityID, Archetype& newArchetype) {
-            newArchetype.setComponent(entityID, getComponentStorage<K>().get(entityID));
+            if (newArchetype.getComponentKeyPointer()->containsComponent<T>()) {
+                newArchetype.setComponent(
+                    entityID,
+                    getComponentStorage<T>().get(entityID)
+                );
+            }
         }
+
+        friend class ArchetypeFactory;
     };
 
     container::IntLookupTable<std::function<void(const int, Archetype&)>> 

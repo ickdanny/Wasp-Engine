@@ -16,13 +16,21 @@ namespace wasp::ecs::component {
         ComponentSetFactory() = default;
 
         //component set creation
+        
+        //returns the empty component set
         const ComponentSet& makeSet() {
             return getCanonicalSetAndBroadcastIfNew(ComponentSet{});
         }
 
+        //returns a component set representing the specified types
         template <typename... Ts>
         const ComponentSet& makeSet() {
             return getCanonicalSetAndBroadcastIfNew(ComponentSet<Ts...>{});
+        }
+
+        //returns a component set with the specified type index
+        const ComponentSet& makeSet(int typeIndex) {
+            return getCanonicalSetAndBroadcastIfNew(ComponentSet{ typeIndex });
         }
 
         template <typename T>

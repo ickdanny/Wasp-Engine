@@ -314,16 +314,16 @@
     <ClInclude Include="_header\Game\WindowModes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\ECS\Component\ComponentSet\ComponentSet.h">
+    <ClInclude Include="_header\ECS\Component\ComponentSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\ECS\Component\ComponentStorage\Archetype.h">
+    <ClInclude Include="_header\ECS\Component\Archetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\ECS\Component\ComponentStorage\GroupProvider.h">
+    <ClInclude Include="_header\ECS\Component\GroupFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\ECS\Component\ComponentStorage\Group.h">
+    <ClInclude Include="_header\ECS\Component\Group.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Container\IntLookupTable.h">
@@ -332,10 +332,34 @@
     <ClInclude Include="_header\ECS\Component\ComponentIndexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\ECS\Component\ComponentStorage\MultiComponentIterator.h">
+    <ClInclude Include="_header\ECS\Component\ArchetypeIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\ECS\Component\ComponentSet\ComponentSetFactory.h">
+    <ClInclude Include="_header\ECS\Component\ComponentSetFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\Component\GroupIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\Component\ArchetypeFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\Component\ComponentStorage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\CriticalOrders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\Entity\EntityHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\Entity\EntityMetadata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\Entity\FreeEntityIDStorage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\Entity\EntityMetadataStorage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
