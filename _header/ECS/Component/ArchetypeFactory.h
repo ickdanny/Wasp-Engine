@@ -46,7 +46,9 @@ namespace wasp::ecs::component {
                 &componentSet, initEntityCapacity, initComponentCapacity
             ));
             componentSet.associateArchetype(archetypePointers.back());
-            newArchetypeCallback(archetypePointers.back());
+            if (newArchetypeCallback) {
+                newArchetypeCallback(archetypePointers.back());
+            }
         }
     };
 }

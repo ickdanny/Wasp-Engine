@@ -5,22 +5,15 @@ namespace wasp::ecs::component {
 
     class ComponentIndexer{
     private:
-        static int indexCounter;
+        static std::size_t indexCounter;
 
     public:
         template <typename T>
-        static int getIndex() {
-            static int typeIndex = indexCounter++;
+        static std::size_t getIndex() {
+            static std::size_t typeIndex = indexCounter++;
             return typeIndex;
-        }
-
-        static int getNumComponents() {
-            return indexCounter;
-        }
-        static int getMaxIndex() {
-            indexCounter - 1;
         }
     };
 
-    int ComponentIndexer::indexCounter{ 0 };
+    std::size_t ComponentIndexer::indexCounter{ 0 };
 }

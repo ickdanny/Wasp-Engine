@@ -25,11 +25,13 @@ namespace wasp::ecs::component {
         //returns a component set representing the specified types
         template <typename... Ts>
         const ComponentSet& makeSet() {
-            return getCanonicalSetAndBroadcastIfNew(ComponentSet<Ts...>{});
+            return getCanonicalSetAndBroadcastIfNew(
+                ComponentSet::makeComponentSetFromVariadicTemplate<Ts...>()
+            );
         }
 
         //returns a component set with the specified type index
-        const ComponentSet& makeSet(int typeIndex) {
+        const ComponentSet& makeSet(std::size_t typeIndex) {
             return getCanonicalSetAndBroadcastIfNew(ComponentSet{ typeIndex });
         }
 

@@ -14,8 +14,8 @@ namespace wasp::ecs {
 
     public:
         //fields
-        const EntityHandle entityHandle{};
-        const T component; //not initialized!
+        EntityHandle entityHandle{};
+        T component; //not initialized!
 
         AddComponentOrder(EntityHandle entityHandle, const T& component)
             : entityHandle{ entityHandle }
@@ -31,8 +31,8 @@ namespace wasp::ecs {
 
     public:
         //fields
-        const EntityHandle entityHandle{};
-        const T component; //not initialized!
+        EntityHandle entityHandle{};
+        T component; //not initialized!
 
         SetComponentOrder(EntityHandle entityHandle, const T& component)
             : entityHandle{ entityHandle }
@@ -47,9 +47,9 @@ namespace wasp::ecs {
         using EntityHandle = entity::EntityHandle;
 
     public:
-        const EntityHandle entityHandle{};
+        EntityHandle entityHandle{};
 
-        public RemoveComponentOrder(EntityHandle entityHandle)
+        RemoveComponentOrder(EntityHandle entityHandle)
             : entityHandle{ entityHandle } {
         }
     };
@@ -57,8 +57,8 @@ namespace wasp::ecs {
     template <typename... Ts>
     struct AddEntityOrder {
         //fields
-        const std::tuple<Ts...> components{};
-        const std::string name{};
+        std::tuple<Ts...> components{};
+        std::string name{};
 
         AddEntityOrder(std::tuple<Ts...> components)
             : components{ components } {
@@ -76,7 +76,7 @@ namespace wasp::ecs {
         using EntityHandle = entity::EntityHandle;
 
     public:
-        const EntityHandle entityHandle{};
+        EntityHandle entityHandle{};
 
         RemoveEntityOrder(EntityHandle entityHandle)
             : entityHandle{ entityHandle } {

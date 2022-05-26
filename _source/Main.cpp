@@ -23,7 +23,7 @@
 #include "ConsoleOutput.h"
 #include "Logging.h"
 
-#include "ECS/Component/ComponentStorage/Archetype.h"
+#include "ECS/DataStorage.h"
 
 using namespace wasp;
 using namespace wasp::game;
@@ -34,10 +34,14 @@ using window::getWindowBorderHeightPadding;
 
 void pumpMessages();
 
+void dummyFunc();
+
 #pragma warning(suppress : 28251) //suppress inconsistent annotation warning
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode){
     try {
         debug::initConsoleOutput();
+
+        dummyFunc();
 
         //init COM
         windowsadaptor::ComLibraryGuard comLibraryGuard{ COINIT_APARTMENTTHREADED };
@@ -178,7 +182,38 @@ void pumpMessages() {
     }
 }
 
-void dummyFunc(ecs::component::Archetype& archetype) {
-    archetype.setComponent<int>(12, 13);
-    archetype.begin<int, double, float>();
+void dummyFunc() {
+    using namespace ecs;
+    using namespace ecs::component;
+    using namespace ecs::entity;
+
+    DataStorage dataStorage{ 100, 100 };
+    Group* group{ dataStorage.makeGroup<int, float, double>() };
+    
+    EntityHandle handle{
+        dataStorage.makeHandle(
+            dataStorage.addEntity(
+                AddEntityOrder{ std::tuple<int, float>(-14, 2.0f) }
+            )
+        )
+    };
+
+    debug::log(static_cast<std::string>(handle));
+
+    bool success{
+        dataStorage.addComponent(
+            AddComponentOrder{handle, 3.0}
+        )
+    };
+
+    debug::log(std::to_string(success));
+
+    auto groupIterator{ group->groupIterator<float, double>() };
+    if (groupIterator.isValid()) {
+        auto [f, d] = *groupIterator;
+        debug::log(std::to_string(f));
+        debug::log(std::to_string(d));
+    }
+
+    debug::log(std::to_string(dataStorage.getComponent<int>(handle)));
 }

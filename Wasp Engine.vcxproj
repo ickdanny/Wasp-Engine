@@ -185,7 +185,9 @@
     <ClInclude Include="_header\ECS\Component\ArchetypeIterator.h" />
     <ClInclude Include="_header\ECS\Component\ComponentIndexer.h" />
     <ClInclude Include="_header\ECS\CriticalOrders.h" />
+    <ClInclude Include="_header\ECS\DataStorage.h" />
     <ClInclude Include="_header\ECS\Entity\EntityHandle.h" />
+    <ClInclude Include="_header\ECS\Entity\EntityID.h" />
     <ClInclude Include="_header\ECS\Entity\EntityMetadata.h" />
     <ClInclude Include="_header\ECS\Entity\EntityMetadataStorage.h" />
     <ClInclude Include="_header\ECS\Entity\FreeEntityIDStorage.h" />

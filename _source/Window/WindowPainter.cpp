@@ -175,8 +175,8 @@ namespace wasp::window {
 
 		HRESULT result = renderTargetPointer->EndDraw();
 		if (FAILED(result)){
-			debug::log("failed EndDraw(), discarding device resources");
-			discardDeviceDependentResources();
+			debug::log("failed EndDraw(), doing nothing");
+			//discardDeviceDependentResources();
 		}
 		if (result == D2DERR_RECREATE_TARGET) {
 			debug::log("EndDraw() caused D2DERR_RECREATE_TARGET, discarding device resources");

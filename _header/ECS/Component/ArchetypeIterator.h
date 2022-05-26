@@ -6,6 +6,16 @@
 
 namespace wasp::ecs::component {
 
+	namespace {
+		//helper function for dereferencing iterator tuple
+		template <typename... Ts>
+		std::tuple<Ts&...> unpackTuple(
+			typename container::IntLookupTable<Ts>::Iterator&... iterators
+		) {
+			return std::forward_as_tuple((*iterators)...);
+		}
+	}
+
 	//does not actually qualify as an iterator
 	template <typename... Ts>
 	class ArchetypeIterator {
@@ -14,7 +24,7 @@ namespace wasp::ecs::component {
 		template<typename T>
 		using InnerIteratorType = typename container::IntLookupTable<T>::Iterator;
 	public:
-		using ReturnType = std::tuple<Ts&&...>;
+		using ReturnType = std::tuple<Ts&...>;
 
 	private:
 		//fields
@@ -29,11 +39,9 @@ namespace wasp::ecs::component {
 			return std::get<0>(innerIteratorTuple).getCurrentSparseIndex();
 		}
 
-		ReturnType operator*() const {
+		ReturnType operator*() {
 			return std::apply(
-				[&](auto& ...x) {
-					return std::forward_as_tuple((*x, ...));
-				},
+				unpackTuple<Ts...>,
 				innerIteratorTuple
 			);
 		}

@@ -11,17 +11,19 @@ namespace wasp::ecs::component {
 	private:
 		//typedefs
 		using InnerIteratorType = ArchetypeIterator<Ts...>;
+		using InnerIteratorVectorType = 
+			std::vector<std::pair<InnerIteratorType, InnerIteratorType>>;
 	public:
-		using ReturnType = InnerIteratorType::ReturnType;
+		using ReturnType = typename InnerIteratorType::ReturnType;
 
 	private:
 		//fields
-		int currentIteratorPairIndex{};
+		std::size_t currentIteratorPairIndex{};
 		//held in pairs of current/end iterators
-		std::vector<std::pair<InnerIteratorType>> innerIterators;
+		InnerIteratorVectorType innerIterators;
 
 	public:
-		GroupIterator(std::vector<std::pair<InnerIteratorType>> innerIterators)
+		GroupIterator(InnerIteratorVectorType innerIterators)
 			: currentIteratorPairIndex{ 0 }
 			, innerIterators { innerIterators } {
 		}
@@ -30,8 +32,8 @@ namespace wasp::ecs::component {
 			return getCurrentIterator().getEntityID();
 		}
 
-		ReturnType operator*() const {
-			return *getCurrentIterator()
+		ReturnType operator*() {
+			return *getCurrentIterator();
 		}
 
 		bool isValid() {

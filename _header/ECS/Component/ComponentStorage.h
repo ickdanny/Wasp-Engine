@@ -2,12 +2,15 @@
 
 #include "GroupFactory.h"
 #include "ECS/CriticalOrders.h"
+#include "ECS/Entity/EntityID.h"
 
 namespace wasp::ecs::component {
     class ComponentStorage {
     private:
+        //typedefs
+        using EntityID = entity::EntityID;
+
         //fields
-        //todo: should componentSetFactory be held in the next level up? (VOSG)
         ComponentSetFactory componentSetFactory{};
         ArchetypeFactory archetypeFactory;  //not initialized!
         GroupFactory groupFactory;          //not initialized!
@@ -23,28 +26,30 @@ namespace wasp::ecs::component {
             , groupFactory{ componentSetFactory, archetypeFactory } {
         }
 
-        const Group* createGroup(const ComponentSet& componentKey) {
-            return groupFactory.createGroup(componentKey);
+        template <typename... Ts>
+        Group* makeGroup() {
+            return groupFactory.makeGroup(componentSetFactory.makeSet<Ts...>());
         }
 
         template <typename T>
-        T& getComponent(int entityID, const ComponentSet& componentSet) {
+        T& getComponent(EntityID entityID, const ComponentSet& componentSet) {
             return componentSet.getAssociatedArchetypeWeakPointer().lock()
                 ->getComponent<T>(entityID);
         }
 
+        //returns a pointer to the new component set if successful, nullptr otherwise
         template <typename T>
-        void addComponent(
-            const AddComponentOrder<T>& addComponentOrder,
-            const ComponentSet& oldComponentSet,
-            const ComponentSet& newComponentSet
+        const ComponentSet* addComponent(
+            AddComponentOrder<T>& addComponentOrder,
+            const ComponentSet& oldComponentSet
         ) {
-            if (oldSet == newSet) {
-                throw std::runtime_error{
-                    "trying to add component entity "
-                    + addComponentOrder.entityHandle 
-                    + " already has!"
-                };
+
+            const ComponentSet& newComponentSet{ 
+                componentSetFactory.addComponent<T>(oldComponentSet) 
+            };
+
+            if (oldComponentSet == newComponentSet) {
+                return nullptr;
             }
 
             auto oldArchetypePointer{
@@ -58,18 +63,24 @@ namespace wasp::ecs::component {
                 addComponentOrder.entityHandle.entityID,
                 *newArchetypePointer
             );
-            newArchetypePointer->setComponent(
+            newArchetypePointer->setComponent<T>(
                 addComponentOrder.entityHandle.entityID,
                 addComponentOrder.component
             );
+
+            return &newComponentSet;
         }
 
+        //returns a pointer to the new component set
         template <typename T>
-        void setComponent(
+        const ComponentSet* setComponent(
             const SetComponentOrder<T>& setComponentOrder,
-            const ComponentSet& oldComponentSet,
-            const ComponentSet& newComponentSet
+            const ComponentSet& oldComponentSet
         ) {
+            const ComponentSet& newComponentSet{
+                componentSetFactory.addComponent<T>()
+            };
+
             auto newArchetypePointer{
                 newComponentSet.getAssociatedArchetypeWeakPointer().lock()
             };
@@ -88,14 +99,20 @@ namespace wasp::ecs::component {
                 setComponentOrder.entityHandle.entityID,
                 setComponentOrder.component
             );
+
+            return &newComponentSet;
         }
 
+        //returns a pointer to the new component set
         template <typename T>
-        void removeComponent(
+        const ComponentSet* removeComponent(
             const RemoveComponentOrder<T>& removeComponentOrder,
-            const ComponentSet& oldComponentSet,
-            const ComponentSet& newComponentSet
+            const ComponentSet& oldComponentSet
         ) {
+            const ComponentSet& newComponentSet{
+                componentSetFactory.addComponent<T>()
+            };
+
             if (oldComponentSet != newComponentSet) {
                 auto oldArchetypePointer{
                     oldComponentSet.getAssociatedArchetypeWeakPointer().lock()
@@ -105,27 +122,32 @@ namespace wasp::ecs::component {
                 };
                 //moving cuts off hanging components
                 oldArchetypePointer->moveEntity(
-                    addComponentOrder.entityHandle.entityID,
+                    removeComponentOrder.entityHandle.entityID,
                     *newArchetypePointer
                 );
             }
+
+            return &newComponentSet;
         }
 
+        //returns a pointer to the component set
         template <typename... Ts>
-        void addEntity(
-            const AddEntityOrder<Ts...>& addEntityOrder,
-            const int entityID,
-            const ComponentSet& componentSet
+        const ComponentSet* addEntity(
+            AddEntityOrder<Ts...>& addEntityOrder,
+            const EntityID entityID
         ) {
+            const ComponentSet& componentSet{ componentSetFactory.makeSet<Ts...>() };
             auto archetypePointer{
                 componentSet.getAssociatedArchetypeWeakPointer().lock()
             };
             std::apply(
                 [&](auto& ...x) {
-                    addComponentForEntity(entityID, x, archetypePointer)...;
+                    (addComponentForEntity(entityID, x, archetypePointer), ...);
                 },
                 addEntityOrder.components
             );
+
+            return &componentSet;
         }
 
         void removeEntity(
@@ -142,8 +164,8 @@ namespace wasp::ecs::component {
         //helper for addEntity
         template <typename T>
         void addComponentForEntity(
-            int entityID,
-            const T& component,
+            EntityID entityID,
+            T& component,
             std::shared_ptr<Archetype>& archetypePointer
         ) {
             archetypePointer->setComponent(entityID, component);

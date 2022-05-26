@@ -5,7 +5,7 @@
 
 namespace wasp::ecs::entity {
     struct EntityHandle {
-        const int entityID{};
+        const EntityID entityID{};
         const int generation{};
 
         friend bool operator==(const EntityHandle& a, const EntityHandle& b) {

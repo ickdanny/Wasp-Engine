@@ -362,5 +362,11 @@
     <ClInclude Include="_header\ECS\Entity\EntityMetadataStorage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="_header\ECS\DataStorage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\ECS\Entity\EntityID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

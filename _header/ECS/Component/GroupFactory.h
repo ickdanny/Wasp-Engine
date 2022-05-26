@@ -28,13 +28,13 @@ namespace wasp::ecs::component {
             );
         }
 
-        const Group* createGroup(const ComponentSet& componentKey) {
+        Group* makeGroup(const ComponentSet& componentKey) {
             auto found{ keyToGroupMap.find(componentKey) };
             if (found == keyToGroupMap.end()) {
                 keyToGroupMap.emplace(componentKey, &componentKey);
                 Group* newGroupPointer{ &keyToGroupMap[componentKey] };
                 if (!zeroGroupPointer->addNewGroup(newGroupPointer)) {
-                    throw std::runtime_error{ "error in createGroup" };
+                    throw std::runtime_error{ "error in makeGroup" };
                 }
                 return newGroupPointer;
             }
@@ -46,10 +46,10 @@ namespace wasp::ecs::component {
             ComponentSetFactory& componentSetFactory
         ) {
             for (
-                int typeIndex = 0;
-                typeIndex <= ComponentIndexer::getMaxIndex();
+                std::size_t typeIndex = 0;
+                typeIndex < maxComponents;
                 ++typeIndex
-                ) {
+            ) {
                 const auto& singleSet = componentSetFactory.makeSet(typeIndex);
                 keyToGroupMap.emplace(singleSet, &singleSet);
                 if (!zeroGroupPointer->addNewGroup(&keyToGroupMap[singleSet])) {

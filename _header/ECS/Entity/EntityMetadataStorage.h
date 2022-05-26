@@ -16,48 +16,50 @@ namespace wasp::ecs::entity {
         FreeEntityIDStorage freeEntityIDStorage;    //uninitialized!
 
     public:
+        //Constructs an EntityMetadataStorage with the specified number of
+        //default initialized entity metadatas
         EntityMetadataStorage(int initCapacity)
             : freeEntityIDStorage{ initCapacity }
         {
             entityMetadataList.resize(initCapacity);
         }
 
-        int createEntity() {
+        EntityID createEntity() {
             return freeEntityIDStorage.retrieveID();
         }
 
-        void reclaimEntity(int entityID) {
+        void reclaimEntity(EntityID entityID) {
             entityMetadataList[entityID].newGeneration();
             freeEntityIDStorage.reclaimID(entityID);
         }
 
-        bool isAlive(int entityID) const {
+        bool isAlive(EntityID entityID) const {
             return freeEntityIDStorage.isIDUsed(entityID);
         }
 
-        bool isDead(int entityID) const {
+        bool isDead(EntityID entityID) const {
             return !isAlive(entityID);
         }
 
         bool isAlive(EntityHandle entityHandle) const {
             //check if this entity ID is alive and the generation matches
             return isAlive(entityHandle.entityID)
-                && getMetadata(entityHandle.entityID).getGeneration() 
-                == entityHandle.generation;
+                && (getMetadata(entityHandle.entityID).getGeneration() 
+                == entityHandle.generation);
         }
 
         bool isDead(EntityHandle entityHandle) const {
             return !isAlive(entityHandle);
         }
 
-        EntityMetadata getMetadata(int entityID) {
+        EntityMetadata& getMetadata(EntityID entityID) {
             if (entityID >= entityMetadataList.size()) {
                 entityMetadataList.resize(entityID + 1);
             }
             return entityMetadataList[entityID];
         }
 
-        const EntityMetadata getMetadata(int entityID) const {
+        const EntityMetadata getMetadata(EntityID entityID) const {
             if (entityID >= entityMetadataList.size()) {
                 entityMetadataList.resize(entityID + 1);
             }

@@ -19,21 +19,21 @@ namespace wasp::ecs::entity {
         
         //an element at index n is true if that entity ID is in use, false otherwise
         std::vector<bool> entityIDSet{};
-        int currentLiveEntities{};
-        int currentPos{};
+        std::vector<bool>::size_type currentLiveEntities{};
+        std::vector<bool>::size_type currentPos{};
 
     public:
         FreeEntityIDStorage(int initCapacity)
-            : currentLiveEntities{ 0 }
+            : entityIDSet(initCapacity, false)
+            , currentLiveEntities{ 0 }
             , currentPos{ 0 }
         {
             if (initCapacity <= 1) {
                 throw std::runtime_error{ "init capacity too small!" };
             }
-            entityIDSet.resize(initCapacity, false);
         }
 
-        bool isIDUsed(int entityID) const {
+        bool isIDUsed(EntityID entityID) const {
             if (entityID >= entityIDSet.size()) {
                 return false;
             }
@@ -64,7 +64,7 @@ namespace wasp::ecs::entity {
             return currentPos++;
         }
 
-        void reclaimID(int entityID) {
+        void reclaimID(EntityID entityID) {
             //if this entity is currently in use
             if (auto ref{ entityIDSet[entityID] }) {
                 //kill that entity

@@ -4,14 +4,11 @@
 #include <vector>
 #include <bitset>
 
-#include "Archetype.h"
 #include "ComponentIndexer.h"
 
 namespace wasp::ecs::component {
 
-    namespace {
-        constexpr std::size_t bitsetSize{ 96 };
-    }
+    constexpr std::size_t maxComponents{ 96 };
 
     //todo: scene id exists above archetype/group
 
@@ -21,48 +18,61 @@ namespace wasp::ecs::component {
     class ComponentSet {
     private:
         //typedefs
-        using Bitset = std::bitset<bitsetSize>;
+        using Bitset = std::bitset<maxComponents>;
 
         //fields
         Bitset bitset{};
-        int numComponents{};
-        mutable std::vector<int> presentTypeIndices{};
+        std::size_t numComponents{};
+        mutable std::vector<std::size_t> presentTypeIndices{};
 
         mutable std::weak_ptr<Archetype> archetypeWeakPointer{};
 
+    public:
         //constructs an empty component set
         ComponentSet()
-            : numComponents{ 0 } 
-        {
-            testBitsetOutOfBounds();
+            : numComponents{ 0 } {
         }
 
-        //constructs a component set based on the provided component types
+        //factory method for constructing a component set based on the 
+        //provided component types
         template <typename... Ts>
-        ComponentSet()
-            : numComponents{ sizeof...(Ts) }
-        {
-            testBitsetOutOfBounds();
-            bitset[ComponentIndexer::getIndex<Ts>()] = true...;
-            presentTypeIndices.push_back(ComponentIndexer::getIndex<Ts>())...;
+        static ComponentSet makeComponentSetFromVariadicTemplate() {
+            std::size_t numComponents{ sizeof... (Ts) };
+            Bitset bitset{};
+            std::vector<std::size_t> presentTypeIndices{};
+            (bitset.set(ComponentIndexer::getIndex<Ts>()), ...);
+            (presentTypeIndices.push_back(ComponentIndexer::getIndex<Ts>()), ...);
+
+            return ComponentSet{ bitset, numComponents, presentTypeIndices };
+        }
+
+        //helper constructor for the factory method
+        ComponentSet(
+            const Bitset& bitset, 
+            std::size_t numComponents,
+            std::vector<std::size_t> presentTypeIndices
+        )
+            : bitset{ bitset }
+            , numComponents{ numComponents }
+            , presentTypeIndices{ presentTypeIndices } {
         }
 
         //constructs a component set based on the provided type index
-        ComponentSet(int typeIndex) 
+        ComponentSet(std::size_t typeIndex)
             : numComponents{ 1 } 
         {
-            testBitsetOutOfBounds();
+            #pragma warning(suppress : 4834) //suppress discarding return; it throws
             bitset.test(typeIndex);
             bitset[typeIndex] = true;
             presentTypeIndices.push_back(typeIndex);
         }
 
         //constructs a component set based on the provided type indices
-        ComponentSet(const std::vector<int>& typeIndices)
+        ComponentSet(const std::vector<std::size_t>& typeIndices)
             : numComponents{ typeIndices.size() }
         {
-            testBitsetOutOfBounds();
-            for (int typeIndex : typeIndices) {
+            for (std::size_t typeIndex : typeIndices) {
+                #pragma warning(suppress : 4834) //suppress discarding return
                 bitset.test(typeIndex);
                 bitset[typeIndex] = true;
             }
@@ -73,16 +83,12 @@ namespace wasp::ecs::component {
         ComponentSet(const ComponentSet& toCopy)
             : bitset{ toCopy.bitset }
             , numComponents{ toCopy.numComponents }
-            , presentTypeIndices{ toCopy.presentTypeIndices } 
-        {
-            testBitsetOutOfBounds();
+            , presentTypeIndices{ toCopy.presentTypeIndices } {
         }
-
-    public:
 
         template <typename T>
         bool containsComponent() const {
-            return bitSet[ComponentIndexer::getIndex<T>()];
+            return bitset[ComponentIndexer::getIndex<T>()];
         }
 
         template <typename T>
@@ -92,7 +98,7 @@ namespace wasp::ecs::component {
 
         template <typename... Ts>
         bool containsAllComponents() const {
-            if (doesNotContainComponent<Ts>()...) {
+            if ((doesNotContainComponent<Ts>() || ...)) {
                 return false;
             }
             return true;
@@ -100,7 +106,7 @@ namespace wasp::ecs::component {
 
         template <typename... Ts>
         bool containsAnyComponent() const {
-            if (containsComponent<Ts>()...) {
+            if ((containsComponent<Ts>() || ...)) {
                 return true;
             }
             return false;
@@ -115,7 +121,7 @@ namespace wasp::ecs::component {
         int getNumComponents() const {
             return numComponents;
         }
-        const std::vector<int>& getPresentTypeIndices() const {
+        const std::vector<std::size_t>& getPresentTypeIndices() const {
             //assuming the empty ComponentSet will not get called very much
             if (presentTypeIndices.empty()) {
                 makePresentTypeIndices();
@@ -137,7 +143,7 @@ namespace wasp::ecs::component {
         //modifiers
         template <typename T>
         ComponentSet addComponent() const {
-            const int index{ ComponentIndexer::getIndex<T>() };
+            const std::size_t index{ ComponentIndexer::getIndex<T>() };
             //if we need to add a component
             if (!bitset[index]) {
                 ComponentSet toRet{ *this };
@@ -169,8 +175,8 @@ namespace wasp::ecs::component {
             if (sizeof...(Ts) <= 0) {
                 throw std::runtime_error{ "zero type parameters!" };
             }
-            std::vector<int> indicesToAdd{};
-            indicesToAdd.push_back(ComponentIndexer.getIndex<Ts>)...;
+            std::vector<std::size_t> indicesToAdd{};
+            (indicesToAdd.push_back(ComponentIndexer.getIndex<Ts>), ...);
             ComponentSet toRet{ *this };
             for (int index : indicesToAdd) {
                 if (!bitset[index]) {
@@ -186,8 +192,8 @@ namespace wasp::ecs::component {
             if (sizeof...(Ts) <= 0) {
                 throw std::runtime_error{ "zero type parameters!" };
             }
-            std::vector<int> indicesToRemove{};
-            indicesToRemove.push_back(ComponentIndexer.getIndex<Ts>)...;
+            std::vector<std::size_t> indicesToRemove{};
+            (indicesToRemove.push_back(ComponentIndexer.getIndex<Ts>), ...);
             ComponentSet toRet{};
             toRet.bitset = bitset;
             for (int index : indicesToRemove) {
@@ -201,16 +207,12 @@ namespace wasp::ecs::component {
 
         //helper functions
         void makePresentTypeIndices() const {
-            presentTypeIndices = std::vector<int>{};
-            for (int i = 0; i < bitsetSize; ++i) {
+            presentTypeIndices = std::vector<std::size_t>{};
+            for (int i = 0; i < maxComponents; ++i) {
                 if (bitset[i]) {
                     presentTypeIndices.push_back(i);
                 }
             }
-        }
-
-        void testBitsetOutOfBounds() const {
-            bitset.test(ComponentIndexer::getMaxIndex());
         }
 
     //operators

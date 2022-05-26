@@ -9,6 +9,7 @@
 
 //encapsulates the threading
 //todo: probably need to call the systemChain... whenever that will be lol
+//perhaps refactor as RenderThreader and have a render callback function
 namespace wasp::graphics {
 	class Renderer {
 	private:

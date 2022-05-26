@@ -45,21 +45,22 @@ namespace wasp::container {
 
 		IntLookupTable(const int initialMaxIndex, const int initialCapacity)
 			: sparseIndices(initialMaxIndex)
-			, denseValues(initialCapacity)
+			, denseValues{}
 			, denseIndexToSparseIndex(initialCapacity)
 			, currentSize{ 0 } 
 		{
+			denseValues.reserve(initialCapacity);
 			clearSparseIndices();
 			clearDenseIndexToSparseIndex();
 		}
 
 		~IntLookupTable() = default;
 
-		int size() const {
+		int size() const override {
 			return currentSize;
 		}
 
-		bool contains(int sparseIndex) const {
+		bool contains(int sparseIndex) const override {
 			if (isInvalidSparseIndex(sparseIndex)) {
 				return false;
 			}
@@ -67,18 +68,36 @@ namespace wasp::container {
 		}
 
 		//returns true if an element was replaced, false otherwise
-		bool set(int sparseIndex, T value) {
+		bool set(int sparseIndex, const T& value) {
 			if (isInvalidSparseIndex(sparseIndex)) {
 				growSparseIndices(sparseIndex);
 			}
 
 			int denseIndex = sparseIndices[sparseIndex];
 			if (isValidDenseIndex(denseIndex)) {
-				denseValues[denseIndex] = value;
+				denseValues[denseIndex] = std::move(value);
 				return true;
 			}
 			else {
-				appendToBack(sparseIndex, value);
+				appendToBack(sparseIndex, std::move(value));
+				return false;
+			}
+		}
+
+		//returns true if an element was replaced, false otherwise
+		template<typename... Ts>
+		bool emplace(int sparseIndex, Ts&&... args) {
+			if (isInvalidSparseIndex(sparseIndex)) {
+				growSparseIndices(sparseIndex);
+			}
+
+			int denseIndex = sparseIndices[sparseIndex];
+			if (isValidDenseIndex(denseIndex)) {
+				denseValues.emplace(denseValues.begin() + denseIndex, args...);
+				return true;
+			}
+			else {
+				emplaceBack(sparseIndex, args...);
 				return false;
 			}
 		}
@@ -96,7 +115,7 @@ namespace wasp::container {
 		}
 
 		//returns true if an element was removed, false otherwise
-		bool remove(int sparseIndex) {
+		bool remove(int sparseIndex) override {
 			//case 1: there is no such element -> return false
 			if (isInvalidSparseIndex(sparseIndex)) {
 				return false;
@@ -120,7 +139,7 @@ namespace wasp::container {
 			return true;
 		}
 
-		void clear() {
+		void clear() override {
 			clearSparseIndices();
 			clearDenseValues();
 			clearDenseIndexToSparseIndex();
@@ -173,6 +192,10 @@ namespace wasp::container {
 			}
 			pointer operator->() { 
 				return valueIterator;
+			}
+
+			reference getReference() {
+				return *valueIterator;
 			}
 
 			//prefix increment
@@ -256,7 +279,9 @@ namespace wasp::container {
 		}
 		void removeDenseValueAtCurrentSize() {
 			if (currentSize != denseValues.size() - 1) {
-				throw std::exception("Trying to erase element that isn't the last!");
+				throw std::runtime_error{
+					"Trying to erase element that isn't the last!" 
+				};
 			}
 			//vector.erase will move all subsequent elements
 			//therefore we only allow for erasing the final element
@@ -290,16 +315,42 @@ namespace wasp::container {
 			invalidateDenseIndexToSparseIndex(currentSize);
 		}
 
-		void appendToBack(int sparseIndex, T value) {
+		void appendToBack(int sparseIndex, const T& value) {
 			sparseIndices[sparseIndex] = currentSize;
-			if (static_cast<std::vector<T>::size_type>(currentSize) < denseValues.size()) {
-				denseValues[currentSize] = value;
+			if (static_cast<std::vector<T>::size_type>(currentSize) 
+				< denseValues.size()) 
+			{
+				denseValues[currentSize] = std::move(value);
 			}
 			else {
-				denseValues.push_back(value);
+				denseValues.push_back(std::move(value));
 			}
+
 			if (static_cast<std::vector<int>::size_type>(currentSize) 
 				< denseIndexToSparseIndex.size()) 
+			{
+				denseIndexToSparseIndex[currentSize] = sparseIndex;
+			}
+			else {
+				denseIndexToSparseIndex.push_back(sparseIndex);
+			}
+			++currentSize;
+		}
+
+		template <typename... Ts>
+		void emplaceBack(int sparseIndex, Ts&&... args) {
+			sparseIndices[sparseIndex] = currentSize;
+			if (static_cast<std::vector<T>::size_type>(currentSize)
+				< denseValues.size())
+			{
+				denseValues.emplace(denseValues.begin() + currentSize, args...);
+			}
+			else {
+				denseValues.emplace_back(args...);
+			}
+
+			if (static_cast<std::vector<int>::size_type>(currentSize)
+				< denseIndexToSparseIndex.size())
 			{
 				denseIndexToSparseIndex[currentSize] = sparseIndex;
 			}
