@@ -368,5 +368,29 @@
     <ClInclude Include="_header\ECS\Entity\EntityID.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="_header\Scene\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Channel\Topic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Utility\Void.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Channel\Channel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Scene\SceneStorage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Scene\SceneList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\SystemChains.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Scenes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

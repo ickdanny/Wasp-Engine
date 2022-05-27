@@ -172,6 +172,8 @@
     <ClCompile Include="_source\Game\GameResource\BitmapStorage.cpp" />
     <ClCompile Include="_source\Window\WindowUtil.cpp" />
     <ClInclude Include="_debug\Logging.h" />
+    <ClInclude Include="_header\Channel\Channel.h" />
+    <ClInclude Include="_header\Channel\Topic.h" />
     <ClInclude Include="_header\Container\IntLookupTable.h" />
     <ClInclude Include="_header\Container\ObjectPool.h" />
     <ClInclude Include="_header\ECS\Component\ComponentSet.h" />
@@ -192,11 +194,17 @@
     <ClInclude Include="_header\ECS\Entity\EntityMetadataStorage.h" />
     <ClInclude Include="_header\ECS\Entity\FreeEntityIDStorage.h" />
     <ClInclude Include="_header\Game\GameResource\MidiSequenceStorage.h" />
+    <ClInclude Include="_header\Game\Scenes.h" />
+    <ClInclude Include="_header\Game\SystemChains.h" />
+    <ClInclude Include="_header\Scene\Scene.h" />
     <ClInclude Include="_header\Game\WindowModes.h" />
     <ClInclude Include="_header\Graphics\Renderer.h" />
+    <ClInclude Include="_header\Scene\SceneList.h" />
+    <ClInclude Include="_header\Scene\SceneStorage.h" />
     <ClInclude Include="_header\Sound\MidiOut.h" />
     <ClInclude Include="_header\Sound\MidiSequenceLoading.h" />
     <ClInclude Include="_header\Utility\Arithmetic.h" />
+    <ClInclude Include="_header\Utility\Void.h" />
     <ClInclude Include="_header\windowsD2DInclude.h" />
     <ClInclude Include="_header\windowsDWriteInclude.h" />
     <ClInclude Include="_header\windowsMMInclude.h" />

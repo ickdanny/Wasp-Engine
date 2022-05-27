@@ -16,7 +16,10 @@ namespace wasp::ecs::component {
         GroupFactory groupFactory;          //not initialized!
 
     public:
-        ComponentStorage(int initEntityCapacity, int initComponentCapacity) 
+        ComponentStorage(
+            std::size_t initEntityCapacity, 
+            std::size_t initComponentCapacity
+        )
             : componentSetFactory{}
             , archetypeFactory{
                 initEntityCapacity,

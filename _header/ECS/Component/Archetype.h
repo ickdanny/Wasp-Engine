@@ -24,7 +24,8 @@ namespace wasp::ecs::component {
         const ComponentSet* const componentKeyPointer{};
         const int initEntityCapacity{};
         const int initComponentCapacity{};
-        //using unique_ptr for nullptr
+        //using unique_ptr to point to base class
+        //todo: can probably just use a normal array or something
         IntLookupTable<std::unique_ptr<IntLookupTableBase>> componentStorages;
 
         static IntLookupTable<std::function<void(const EntityID, Archetype&)>>

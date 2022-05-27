@@ -24,7 +24,7 @@ namespace wasp::ecs {
 
         //constructs a DataStorage with the specified initial entity capacity
         //and initial component capacity
-        DataStorage(int initEntityCapacity, int initComponentCapacity) 
+        DataStorage(std::size_t initEntityCapacity, std::size_t initComponentCapacity)
             : entityMetadataStorage{ initEntityCapacity }
             , componentStorage{ initEntityCapacity, initComponentCapacity } {
         }

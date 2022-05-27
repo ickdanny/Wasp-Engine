@@ -23,7 +23,7 @@ namespace wasp::ecs::entity {
         std::vector<bool>::size_type currentPos{};
 
     public:
-        FreeEntityIDStorage(int initCapacity)
+        FreeEntityIDStorage(std::size_t initCapacity)
             : entityIDSet(initCapacity, false)
             , currentLiveEntities{ 0 }
             , currentPos{ 0 }

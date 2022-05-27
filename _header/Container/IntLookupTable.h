@@ -17,6 +17,7 @@ namespace wasp::container {
 		constexpr float sparseIndexGrowRatio{ 1.5f };
 	}
 
+	//a non-templated base class so that we can store pointers
 	class IntLookupTableBase {
 	public:
 		virtual ~IntLookupTableBase() = default;

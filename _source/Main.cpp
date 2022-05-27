@@ -24,6 +24,7 @@
 #include "Logging.h"
 
 #include "ECS/DataStorage.h"
+#include "Game/Scenes.h"
 
 using namespace wasp;
 using namespace wasp::game;
@@ -216,4 +217,7 @@ void dummyFunc() {
     }
 
     debug::log(std::to_string(dataStorage.getComponent<int>(handle)));
+
+    using namespace scenes;
+    makeSceneList();
 }
