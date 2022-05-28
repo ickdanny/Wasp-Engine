@@ -29,6 +29,7 @@ namespace wasp::graphics {
 			renderThread.join();
 		}
 
+		//todo: render test
 		rendering.store(true);
 		windowPointer->getWindowPainter().beginDraw();
 		windowPointer->getWindowPainter().drawSubBitmap(
@@ -38,6 +39,7 @@ namespace wasp::graphics {
 			},
 			{
 				bitmapStoragePointer->get(L"timage")->d2dBitmap,
+				{100, 100},
 				45.0f,
 				.8f,
 				.7f

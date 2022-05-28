@@ -17,21 +17,13 @@ namespace wasp::ecs::component {
 
     public:
         ComponentStorage(
-            std::size_t initEntityCapacity, 
+            std::size_t initEntityCapacity,
             std::size_t initComponentCapacity
-        )
-            : componentSetFactory{}
-            , archetypeFactory{
-                initEntityCapacity,
-                initComponentCapacity,
-                componentSetFactory
-            }
-            , groupFactory{ componentSetFactory, archetypeFactory } {
-        }
+        );
 
         template <typename... Ts>
-        Group* makeGroup() {
-            return groupFactory.makeGroup(componentSetFactory.makeSet<Ts...>());
+        Group* getGroup() {
+            return groupFactory.getGroup(componentSetFactory.makeSet<Ts...>());
         }
 
         template <typename T>
@@ -156,12 +148,7 @@ namespace wasp::ecs::component {
         void removeEntity(
             const RemoveEntityOrder& removeEntityOrder,
             const ComponentSet& componentSet
-        ) {
-            auto archetypePointer{
-                componentSet.getAssociatedArchetypeWeakPointer().lock()
-            };
-            archetypePointer->removeEntity(removeEntityOrder.entityHandle.entityID);
-        }
+        );
 
     private:
         //helper for addEntity

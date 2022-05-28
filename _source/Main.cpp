@@ -8,7 +8,7 @@
 
 #include "Game\Config.h"
 #include "Game\GameLoop.h"
-#include "Game\GameResource\ResourceMasterStorage.h"
+#include "Game\Resources\ResourceMasterStorage.h"
 #include "Game\WindowModes.h"
 #include "Window\WindowUtil.h"
 #include "Window\BaseWindow.h"
@@ -25,6 +25,7 @@
 
 #include "ECS/DataStorage.h"
 #include "Game/Scenes.h"
+#include "Game/Components.h"
 
 using namespace wasp;
 using namespace wasp::game;
@@ -48,7 +49,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         windowsadaptor::ComLibraryGuard comLibraryGuard{ COINIT_APARTMENTTHREADED };
 
         //init Resources : WIC graphics
-        gameresource::ResourceMasterStorage resourceMasterStorage{};
+        resources::ResourceMasterStorage resourceMasterStorage{};
 
         resource::ResourceLoader resourceLoader{
             std::array<resource::Loadable*, 4>{
@@ -86,13 +87,19 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
         //init input
         input::KeyInputTable keyInputTable{};
-        window.setKeyDownCallback([&](WPARAM wParam, LPARAM lParam) {
-            keyInputTable.handleKeyDown(wParam, lParam);
-            });
-        window.setKeyUpCallback([&](WPARAM wParam, LPARAM lParam) {
-            keyInputTable.handleKeyUp(wParam, lParam);
-            });
-        window.setOutOfFocusCallback([&] {keyInputTable.allKeysOff(); });
+        window.setKeyDownCallback(
+            [&](WPARAM wParam, LPARAM lParam) {
+                keyInputTable.handleKeyDown(wParam, lParam);
+            }
+        );
+        window.setKeyUpCallback(
+            [&](WPARAM wParam, LPARAM lParam) {
+                keyInputTable.handleKeyUp(wParam, lParam);
+            }
+        );
+        window.setOutOfFocusCallback(
+            [&] {keyInputTable.allKeysOff(); }
+        );
 
         graphics::Renderer renderer{
             &window, 
@@ -192,10 +199,8 @@ void dummyFunc() {
     Group* group{ dataStorage.makeGroup<int, float, double>() };
     
     EntityHandle handle{
-        dataStorage.makeHandle(
-            dataStorage.addEntity(
-                AddEntityOrder{ std::tuple<int, float>(-14, 2.0f) }
-            )
+        dataStorage.addEntity(
+            AddEntityOrder{ std::tuple<int, float>(-14, 2.0f) }
         )
     };
 
@@ -218,6 +223,5 @@ void dummyFunc() {
 
     debug::log(std::to_string(dataStorage.getComponent<int>(handle)));
 
-    using namespace scenes;
-    makeSceneList();
+    auto sceneList{ std::move(makeSceneList()) };
 }

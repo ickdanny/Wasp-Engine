@@ -10,7 +10,6 @@
 #include "Resource.h"
 #include "IResourceStorage.h"
 #include "ResourceLoader.h"
-#include "Utility\UnsupportedOperationError.h"
 
 namespace wasp::resource {
 

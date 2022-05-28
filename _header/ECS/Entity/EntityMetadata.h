@@ -3,8 +3,6 @@
 #include "ECS/Component/ComponentSet.h"
 
 namespace wasp::ecs::entity {
-
-    //todo: tagging system? :thinking:
     class EntityMetadata {
     private:
         //typedefs

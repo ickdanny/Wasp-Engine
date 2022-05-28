@@ -3,6 +3,8 @@
 #include <vector>
 #include <stdexcept>
 
+#include "EntityID.h"
+
 namespace wasp::ecs::entity {
 
     namespace {
@@ -23,68 +25,15 @@ namespace wasp::ecs::entity {
         std::vector<bool>::size_type currentPos{};
 
     public:
-        FreeEntityIDStorage(std::size_t initCapacity)
-            : entityIDSet(initCapacity, false)
-            , currentLiveEntities{ 0 }
-            , currentPos{ 0 }
-        {
-            if (initCapacity <= 1) {
-                throw std::runtime_error{ "init capacity too small!" };
-            }
-        }
+        FreeEntityIDStorage(std::size_t initCapacity);
 
-        bool isIDUsed(EntityID entityID) const {
-            if (entityID >= entityIDSet.size()) {
-                return false;
-            }
-            return entityIDSet[entityID];
-        }
+        bool isIDUsed(EntityID entityID) const;
 
-        int retrieveID() {
-            if (currentPos >= entityIDSet.size()) {
-                currentPos = 0;
-            }
-            //find a dead entity ID
-            while (entityIDSet[currentPos]) {
-                ++currentPos;
-                if (currentPos >= entityIDSet.size()) {
-                    currentPos = 0;
-                }
-            }
-            //set that entity ID to alive
-            entityIDSet[currentPos] = true;
+        std::size_t retrieveID();
 
-            //update our live entity count
-            ++currentLiveEntities;
-
-            //resize
-            resizeIfNecessary();
-
-            //return our entity ID, and step currentPos for efficiency
-            return currentPos++;
-        }
-
-        void reclaimID(EntityID entityID) {
-            //if this entity is currently in use
-            if (auto ref{ entityIDSet[entityID] }) {
-                //kill that entity
-                ref = false;
-            }
-            //otherwise something went wrong
-            else {
-                throw std::runtime_error{ "error in reclaimID" };
-            }
-        }
+        void reclaimID(EntityID entityID);
 
     private:
-        void resizeIfNecessary() {
-            float usageCapacity{
-                static_cast<float>(currentLiveEntities) / entityIDSet.size()
-            };
-            if (usageCapacity > usageCapacityLimit) {
-                int newSize{ static_cast<int>(entityIDSet.size() * resizeRatio) };
-                entityIDSet.resize(newSize, false);
-            }
-        }
+        void resizeIfNecessary();
     };
 }

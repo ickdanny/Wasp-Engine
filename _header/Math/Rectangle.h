@@ -1,6 +1,6 @@
 #pragma once
 
-namespace wasp::geometry {
+namespace wasp::math {
 	struct Rectangle {
 		float x{};
 		float y{};

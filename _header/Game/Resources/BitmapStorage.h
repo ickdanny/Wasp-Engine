@@ -9,7 +9,7 @@
 
 #pragma warning(disable : 4250) //suppress inherit via dominance
 
-namespace wasp::game::gameresource {
+namespace wasp::game::resources {
 
 	struct WicAndD2DBitmaps {
 		CComPtr<IWICFormatConverter> wicBitmap{};

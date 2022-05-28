@@ -22,50 +22,13 @@ namespace wasp::ecs::component {
             throw std::runtime_error{ "should never be called; group ctor" };
         }
 
-        Group(const ComponentSet* const componentKeyPointer)
-            : componentKeyPointer{ componentKeyPointer } 
-        {
-            receiveNewArchetype(
-                componentKeyPointer->getAssociatedArchetypeWeakPointer().lock()
-            );
-        }
+        //constructs a group representing all entities having the components
+        //represented by the specified component key
+        Group(const ComponentSet* const componentKeyPointer);
 
-        void receiveNewArchetype(std::shared_ptr<Archetype> archetypePointer) {
-            if (componentSetFitsIntoGroup(
-                archetypePointer->getComponentKeyPointer()
-            )) {
-                archetypePointers.push_back(archetypePointer);
-                for (Group* childPointer : childGroupPointers) {
-                    childPointer->receiveNewArchetype(archetypePointer);
-                }
-            }
-        }
+        void receiveNewArchetype(std::shared_ptr<Archetype> archetypePointer);
 
-        bool addNewGroup(Group* groupPointer) {
-            if (groupPointer == this) {
-                throw std::runtime_error{
-                    "Tried to add group to itself!"
-                };
-            }
-            auto otherComponentKeyPointer{ groupPointer->getComponentKeyPointer() };
-            if (otherComponentKeyPointer == componentKeyPointer) {
-                throw new std::runtime_error{ 
-                    "Tried to add a group with the same key!" 
-                };
-            }
-
-            if (componentSetFitsIntoGroup(otherComponentKeyPointer)) {
-                for (Group* childPointer : childGroupPointers) {
-                    if (childPointer->addNewGroup(groupPointer)) {
-                        return true;
-                    }
-                }
-                //if fits this group but no children, add as a direct child
-                addChildGroup(groupPointer);
-                return true;
-            }
-            return false;
-        }
+        bool addNewGroup(Group* groupPointer);
 
         const ComponentSet* getComponentKeyPointer() const {
             return componentKeyPointer;
@@ -76,6 +39,7 @@ namespace wasp::ecs::component {
         //namely treating certain components as markers
         template <typename... Ts>
         GroupIterator<Ts...> groupIterator() {
+            throwIfInvalidTypes<Ts...>();
             std::vector<std::pair<ArchetypeIterator<Ts...>, ArchetypeIterator<Ts...>>> 
                 archetypeIterators{};
             for (std::shared_ptr<Archetype>& archetypePointer : archetypePointers) {
@@ -90,22 +54,15 @@ namespace wasp::ecs::component {
         }
 
     private:
-        void addChildGroup(Group* childGroupPointer) {
-            childGroupPointers.push_back(childGroupPointer);
-            for (std::shared_ptr<Archetype> archetypePointer : archetypePointers) {
-                childGroupPointer->receiveNewArchetype(archetypePointer);
-            }
-        }
+        void addChildGroup(Group* childGroupPointer);
 
         bool componentSetFitsIntoGroup(
             const ComponentSet* const componentSetPointer
-        ) const {
-            return componentKeyPointer->isContainedIn(*componentSetPointer);
-        }
+        ) const;
 
         template <typename... Ts>
         void throwIfInvalidTypes() {
-            if (!componentKeyPointer->containsAllComponents<Ts...>) {
+            if (!componentKeyPointer->containsAllComponents<Ts...>()) {
                 throw std::runtime_error{ "Group doesn't contain component!" };
             }
         }

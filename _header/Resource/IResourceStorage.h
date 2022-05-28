@@ -1,12 +1,9 @@
 #pragma once
 
 #include <string>
-
-#include "Utility\UnsupportedOperationError.h"
+#include <stdexcept>
 
 namespace wasp::resource {
-
-    using exception::UnsupportedOperationError;
 
     class IResourceStorage {
     public:
@@ -17,7 +14,7 @@ namespace wasp::resource {
         virtual void remove(const std::wstring& id) = 0;
         virtual void reload(const std::wstring& id) = 0;
         virtual void write(const std::wstring& id) const {
-            throw UnsupportedOperationError{ "Error resource write unsupported" };
+            throw std::runtime_error{ "Error resource write unsupported" };
         };
     };
 }

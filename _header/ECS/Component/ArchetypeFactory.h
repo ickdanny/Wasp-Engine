@@ -22,33 +22,17 @@ namespace wasp::ecs::component {
             std::size_t initEntityCapacity,
             std::size_t initComponentCapacity,
             ComponentSetFactory& componentSetFactory
-        )
-            : initEntityCapacity{ initEntityCapacity }
-            , initComponentCapacity{ initComponentCapacity }
-        {
-            componentSetFactory.setNewComponentSetCallback(
-                [&](const ComponentSet& componentSet) {
-                    makeArchetype(componentSet);
-                }
-            );
-        }
+        );
 
         //setting callbacks
         void setNewArchetypeCallback(
-            const std::function<void(std::shared_ptr<Archetype>)> newArchetypeCallback
+            const std::function<void(std::shared_ptr<Archetype>)>& newArchetypeCallback
         ) {
             this->newArchetypeCallback = newArchetypeCallback;
         }
 
     private:
-        void makeArchetype(const ComponentSet& componentSet) {
-            archetypePointers.push_back(std::make_shared<Archetype>(
-                &componentSet, initEntityCapacity, initComponentCapacity
-            ));
-            componentSet.associateArchetype(archetypePointers.back());
-            if (newArchetypeCallback) {
-                newArchetypeCallback(archetypePointers.back());
-            }
-        }
+        //gets callbacked by the component set factory
+        void makeArchetype(const ComponentSet& componentSet);
     };
 }

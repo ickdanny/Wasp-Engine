@@ -14,39 +14,47 @@ namespace wasp::ecs::component {
 
     class Archetype {
     private:
+        //friend declarations
+        friend class ArchetypeFactory;
+
         //typedefs
         template <typename T>
         using IntLookupTable = container::IntLookupTable<T>;
         using IntLookupTableBase = container::IntLookupTableBase;
         using EntityID = entity::EntityID;
 
-        //fields
-        const ComponentSet* const componentKeyPointer{};
-        const int initEntityCapacity{};
-        const int initComponentCapacity{};
-        //using unique_ptr to point to base class
-        //todo: can probably just use a normal array or something
-        IntLookupTable<std::unique_ptr<IntLookupTableBase>> componentStorages;
+        //static fields
 
-        static IntLookupTable<std::function<void(const EntityID, Archetype&)>>
+        //the move component vtable maps from the type index to the appropriate
+        //template instantiation of move component
+        static std::vector<std::function<void(const EntityID, Archetype&)>>
             moveComponentVTable;
 
-    public:
+        //fields
+        const ComponentSet* const componentKeyPointer{};
+        const std::size_t initEntityCapacity{};
+        const std::size_t initComponentCapacity{};
+        //using unique_ptr to point to base class
+        std::vector<std::unique_ptr<IntLookupTableBase>> componentStorages;
+
+        //constructors
 
         Archetype(
             const ComponentSet* const componentKeyPointer,
-            int initEntityCapacity,
-            int initComponentCapacity
+            std::size_t initEntityCapacity,
+            std::size_t initComponentCapacity
         ) 
             : componentKeyPointer{ componentKeyPointer }
             , initEntityCapacity{ initEntityCapacity }
             , initComponentCapacity{ initComponentCapacity }
-            , componentStorages(
-                maxComponents, 
-                componentKeyPointer->getPresentTypeIndices().size()
-            ) {
+            , componentStorages(maxComponents) {
         }
+        //deleting the copy constructor (since we use unique ptrs)
+        Archetype(const Archetype& toCopy) = delete;
 
+    public:
+
+        //component access
         template <typename T>
         T& getComponent(const EntityID entityID) {
             return getComponentStorage<T>().get(entityID);
@@ -60,9 +68,9 @@ namespace wasp::ecs::component {
         template <typename T>
         bool setComponent(const EntityID entityID, T& component) {
             //this bit of code causes the compiler to generate a moveComponent func
-            static bool dummyToInstantiateMoveComponent{
-                moveComponentVTable.set(
-                    ComponentIndexer::getIndex<T>(),
+            static auto dummyToInstantiateMoveComponent{
+                moveComponentVTable.emplace(
+                    moveComponentVTable.begin() + ComponentIndexer::getIndex<T>(),
                     [&](const EntityID entityID, Archetype& newArchetype) {
                         moveComponent<T>(entityID, newArchetype);
                     }
@@ -72,48 +80,17 @@ namespace wasp::ecs::component {
             return getComponentStorage<T>().set(entityID, component);
         }
         
-        void moveEntity(const EntityID entityID, Archetype& newArchetype) {
-            for (int typeIndex : 
-                newArchetype.getComponentKeyPointer()->getPresentTypeIndices()
-            ) {
-                if (componentStorages.contains(typeIndex)) {
-                    std::unique_ptr<IntLookupTableBase>& storagePointer =
-                        componentStorages.get(typeIndex);
+        void moveEntity(const EntityID entityID, Archetype& newArchetype);
 
-                    if (storagePointer != nullptr) {
-                        //components present in this archetype but not present in
-                        //the new archetype will be removed
-                        moveComponentVTable.get(typeIndex)(entityID, newArchetype);
-                        storagePointer->remove(entityID);
-                    }
-                }
-            }
-        }
+        bool removeEntity(const EntityID entityID);
 
-        bool removeEntity(const EntityID entityID) {
-            bool wasAnyComponentRemoved{ false };
-            for (int typeIndex : componentKeyPointer->getPresentTypeIndices()) {
-                if (componentStorages.contains(typeIndex)) {
-                    std::unique_ptr<IntLookupTableBase>& storagePointer =
-                        componentStorages.get(typeIndex);
-
-                    if (storagePointer != nullptr 
-                        && storagePointer->remove(entityID)) 
-                    {
-                        wasAnyComponentRemoved = true;
-                    }
-                }
-            }
-            return wasAnyComponentRemoved;
-        }
-
+        //iteration
         template <typename... Ts>
         ArchetypeIterator<Ts...> begin() {
             return ArchetypeIterator<Ts...>{
                 std::tuple{ getComponentStorage<Ts>().begin()... }
             };
         }
-
         template <typename... Ts>
         ArchetypeIterator<Ts...> end() {
             return ArchetypeIterator<Ts...>{
@@ -126,23 +103,33 @@ namespace wasp::ecs::component {
         }
 
     private:
+
+        //helper functions
+
         template <typename T>
         IntLookupTable<T>& getComponentStorage() {
             std::size_t typeIndex{ ComponentIndexer::getIndex<T>() };
             //initialize if necessary
-            if (!componentStorages.contains(typeIndex)) {
+            if (typeIndex >= componentStorages.size()) {
+                throw std::runtime_error{
+                    "type index out of bounds for component storage"
+                };
+            }
+            if (!componentStorages[typeIndex]) {
                 componentStorages.emplace(
-                    typeIndex,
+                    componentStorages.begin() + typeIndex,
                     new IntLookupTable<T>{
                         initEntityCapacity,
                         initComponentCapacity
                     }
                 );
             }
-            IntLookupTableBase& base{ *componentStorages.get(typeIndex) };
+            IntLookupTableBase& base{ *componentStorages[typeIndex] };
             return static_cast<IntLookupTable<T>&>(base);
         }
 
+        //one move component function gets instantiated for every set component
+        //and is placed in the move component v table
         template <typename T>
         void moveComponent(const EntityID entityID, Archetype& newArchetype) {
             if (newArchetype.getComponentKeyPointer()->containsComponent<T>()) {
@@ -152,10 +139,5 @@ namespace wasp::ecs::component {
                 );
             }
         }
-
-        friend class ArchetypeFactory;
     };
-
-    container::IntLookupTable<std::function<void(const entity::EntityID, Archetype&)>>
-        Archetype::moveComponentVTable{};
 }

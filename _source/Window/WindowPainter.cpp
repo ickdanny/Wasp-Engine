@@ -234,10 +234,12 @@ namespace wasp::window {
 	}
 
 	void WindowPainter::drawBitmap(
-		const geometry::Point2 center,
+		const math::Point2 preOffsetCenter,
 		const graphics::BitmapDrawInstruction& bitmapDrawInstruction
 	) {
 		//assume beginDraw has already been called
+
+		math::Point2 center{ preOffsetCenter + bitmapDrawInstruction.getOffset() };
 
 		ID2D1Bitmap& bitmap{ *bitmapDrawInstruction.getBitmap() };
 		D2D1_SIZE_F originalSize = bitmap.GetSize();
@@ -246,7 +248,7 @@ namespace wasp::window {
 		if (bitmapDrawInstruction.requiresRotation()) {
 			D2D1_POINT_2F d2dCenter{ center.x, center.y };
 			D2D1::Matrix3x2F transform = makeRotationMatrix(
-				bitmapDrawInstruction.getRotationDegrees(),
+				bitmapDrawInstruction.getRotation(),
 				d2dCenter
 			);
 			//both rotation and scale
@@ -261,7 +263,7 @@ namespace wasp::window {
 				float scaledHeight{ 
 					originalSize.height * bitmapDrawInstruction.getScale() 
 				};
-				const geometry::Point2& upperLeft{
+				const math::Point2& upperLeft{
 					center.x - (scaledWidth / 2),
 					center.y - (scaledHeight / 2)
 				};
@@ -276,7 +278,7 @@ namespace wasp::window {
 			}
 			//only rotation
 			else {
-				const geometry::Point2& upperLeft{
+				const math::Point2& upperLeft{
 					center.x - (originalSize.width / 2),
 					center.y - (originalSize.height / 2)
 				};
@@ -303,7 +305,7 @@ namespace wasp::window {
 			float scaledHeight{
 				originalSize.height * bitmapDrawInstruction.getScale()
 			};
-			const geometry::Point2& upperLeft{
+			const math::Point2& upperLeft{
 				center.x - (scaledWidth / 2),
 				center.y - (scaledHeight / 2)
 			};
@@ -318,7 +320,7 @@ namespace wasp::window {
 		}
 		//normal draw call
 		else {
-			const geometry::Point2& upperLeft{
+			const math::Point2& upperLeft{
 				center.x - (originalSize.width / 2),
 				center.y - (originalSize.height / 2)
 			};
@@ -333,11 +335,13 @@ namespace wasp::window {
 	}
 
 	void WindowPainter::drawSubBitmap(
-		const geometry::Point2 center,
+		const math::Point2 preOffsetCenter,
 		const graphics::BitmapDrawInstruction& bitmapDrawInstruction,
-		const geometry::Rectangle& sourceRectangle
+		const math::Rectangle& sourceRectangle
 	) {
 		//assume beginDraw has already been called
+
+		math::Point2 center{ preOffsetCenter + bitmapDrawInstruction.getOffset() };
 
 		ID2D1Bitmap& bitmap{ *bitmapDrawInstruction.getBitmap() };
 		D2D1_SIZE_F originalSize = { sourceRectangle.width, sourceRectangle.height };
@@ -346,7 +350,7 @@ namespace wasp::window {
 		if (bitmapDrawInstruction.requiresRotation()) {
 			D2D1_POINT_2F d2dCenter{ center.x, center.y };
 			D2D1::Matrix3x2F transform = makeRotationMatrix(
-				bitmapDrawInstruction.getRotationDegrees(),
+				bitmapDrawInstruction.getRotation(),
 				d2dCenter
 			);
 			//both rotation and scale
@@ -361,7 +365,7 @@ namespace wasp::window {
 				float scaledHeight{
 					originalSize.height * bitmapDrawInstruction.getScale()
 				};
-				const geometry::Point2& upperLeft{
+				const math::Point2& upperLeft{
 					center.x - (scaledWidth / 2),
 					center.y - (scaledHeight / 2)
 				};
@@ -377,7 +381,7 @@ namespace wasp::window {
 			}
 			//only rotation
 			else {
-				const geometry::Point2& upperLeft{
+				const math::Point2& upperLeft{
 					center.x - (originalSize.width / 2),
 					center.y - (originalSize.height / 2)
 				};
@@ -405,7 +409,7 @@ namespace wasp::window {
 			float scaledHeight{
 				originalSize.height * bitmapDrawInstruction.getScale()
 			};
-			const geometry::Point2& upperLeft{
+			const math::Point2& upperLeft{
 				center.x - (scaledWidth / 2),
 				center.y - (scaledHeight / 2)
 			};
@@ -421,7 +425,7 @@ namespace wasp::window {
 		}
 		//normal draw call
 		else {
-			const geometry::Point2& upperLeft{
+			const math::Point2& upperLeft{
 				center.x - (originalSize.width / 2),
 				center.y - (originalSize.height / 2)
 			};
@@ -437,7 +441,7 @@ namespace wasp::window {
 	}
 
 	void WindowPainter::drawText(
-		const geometry::Point2 pos,
+		const math::Point2 pos,
 		const std::wstring& text,
 		const std::pair<float, float> bounds
 	) {
@@ -452,7 +456,7 @@ namespace wasp::window {
 
 	inline void WindowPainter::makeBitmapDrawCall(
 		ID2D1Bitmap& bitmap,
-		const geometry::Point2 upperLeft,
+		const math::Point2 upperLeft,
 		float scaledWidth,
 		float scaledHeight,
 		float opacity
@@ -472,7 +476,7 @@ namespace wasp::window {
 	inline void WindowPainter::makeTransformBitmapDrawCall(
 		ID2D1Bitmap& bitmap,
 		const D2D1::Matrix3x2F& transform,
-		const geometry::Point2 upperLeft,
+		const math::Point2 upperLeft,
 		float scaledWidth,
 		float scaledHeight,
 		float opacity
@@ -484,11 +488,11 @@ namespace wasp::window {
 
 	inline void WindowPainter::makeSubBitmapDrawCall(
 		ID2D1Bitmap& bitmap,
-		const geometry::Point2 upperLeft,
+		const math::Point2 upperLeft,
 		float scaledWidth,
 		float scaledHeight,
 		float opacity,
-		const geometry::Rectangle& sourceRectangle
+		const math::Rectangle& sourceRectangle
 	) {
 		bufferRenderTargetPointer->DrawBitmap(
 			&bitmap,
@@ -496,7 +500,8 @@ namespace wasp::window {
 				upperLeft.x,
 				upperLeft.y,
 				upperLeft.x + scaledWidth,
-				upperLeft.y + scaledHeight),
+				upperLeft.y + scaledHeight
+			),
 			opacity, 
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 			D2D1::RectF(
@@ -511,11 +516,11 @@ namespace wasp::window {
 	inline void WindowPainter::makeTransformSubBitmapDrawCall(
 		ID2D1Bitmap& bitmap,
 		const D2D1::Matrix3x2F& transform,
-		const geometry::Point2 upperLeft,
+		const math::Point2 upperLeft,
 		float scaledWidth,
 		float scaledHeight,
 		float opacity,
-		const geometry::Rectangle& sourceRectangle
+		const math::Rectangle& sourceRectangle
 	) {
 		bufferRenderTargetPointer->SetTransform(transform);
 		makeSubBitmapDrawCall(

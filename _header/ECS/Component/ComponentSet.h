@@ -3,6 +3,8 @@
 #include <initializer_list>
 #include <vector>
 #include <bitset>
+#include <stdexcept>
+#include <memory>
 
 #include "ComponentIndexer.h"
 
@@ -10,13 +12,15 @@ namespace wasp::ecs::component {
 
     constexpr std::size_t maxComponents{ 96 };
 
-    //todo: scene id exists above archetype/group
-
     //forward declaration of Archetype to handle circular dependency
     class Archetype;
 
     class ComponentSet {
     private:
+        //friend declarations
+        friend std::hash<ComponentSet>;
+        friend class ComponentSetFactory;
+
         //typedefs
         using Bitset = std::bitset<maxComponents>;
 
@@ -27,14 +31,31 @@ namespace wasp::ecs::component {
 
         mutable std::weak_ptr<Archetype> archetypeWeakPointer{};
 
+        //public constructors
+
     public:
         //constructs an empty component set
-        ComponentSet()
-            : numComponents{ 0 } {
+        ComponentSet() = default;
+
+        //copy constructor does NOT copy the archetypeWeakPointer
+        ComponentSet(const ComponentSet& toCopy)
+            : bitset{ toCopy.bitset }
+            , numComponents{ toCopy.numComponents }
+            , presentTypeIndices{ toCopy.presentTypeIndices } {
         }
 
+        //private constructors
+
+    private:
+
+        //constructs a component set based on the provided type index
+        ComponentSet(std::size_t typeIndex);
+
+        //constructs a component set based on the provided type indices
+        ComponentSet(const std::vector<std::size_t>& typeIndices);
+
         //factory method for constructing a component set based on the 
-        //provided component types
+        //provided template component types
         template <typename... Ts>
         static ComponentSet makeComponentSetFromVariadicTemplate() {
             std::size_t numComponents{ sizeof... (Ts) };
@@ -48,43 +69,16 @@ namespace wasp::ecs::component {
 
         //helper constructor for the factory method
         ComponentSet(
-            const Bitset& bitset, 
+            const Bitset& bitset,
             std::size_t numComponents,
-            std::vector<std::size_t> presentTypeIndices
+            const std::vector<std::size_t>& presentTypeIndices
         )
             : bitset{ bitset }
             , numComponents{ numComponents }
             , presentTypeIndices{ presentTypeIndices } {
         }
 
-        //constructs a component set based on the provided type index
-        ComponentSet(std::size_t typeIndex)
-            : numComponents{ 1 } 
-        {
-            #pragma warning(suppress : 4834) //suppress discarding return; it throws
-            bitset.test(typeIndex);
-            bitset[typeIndex] = true;
-            presentTypeIndices.push_back(typeIndex);
-        }
-
-        //constructs a component set based on the provided type indices
-        ComponentSet(const std::vector<std::size_t>& typeIndices)
-            : numComponents{ typeIndices.size() }
-        {
-            for (std::size_t typeIndex : typeIndices) {
-                #pragma warning(suppress : 4834) //suppress discarding return
-                bitset.test(typeIndex);
-                bitset[typeIndex] = true;
-            }
-            presentTypeIndices = typeIndices;
-        }
-
-        //copy constructor does NOT copy the archetypeWeakPointer
-        ComponentSet(const ComponentSet& toCopy)
-            : bitset{ toCopy.bitset }
-            , numComponents{ toCopy.numComponents }
-            , presentTypeIndices{ toCopy.presentTypeIndices } {
-        }
+    public:
 
         template <typename T>
         bool containsComponent() const {
@@ -112,22 +106,13 @@ namespace wasp::ecs::component {
             return false;
         }
 
-        bool isContainedIn(const ComponentSet& other) const {
-            Bitset temp{ bitset };    //copy our bitset into our temp
-            temp &= other.bitset;   //our temp is now A&B
-            return bitset == temp;
-        }
+        bool isContainedIn(const ComponentSet& other) const;
 
         int getNumComponents() const {
             return numComponents;
         }
-        const std::vector<std::size_t>& getPresentTypeIndices() const {
-            //assuming the empty ComponentSet will not get called very much
-            if (presentTypeIndices.empty()) {
-                makePresentTypeIndices();
-            }
-            return presentTypeIndices;
-        }
+
+        const std::vector<std::size_t>& getPresentTypeIndices() const;
 
         //archetype stuff
         void associateArchetype(
@@ -135,6 +120,7 @@ namespace wasp::ecs::component {
         ) const {
             this->archetypeWeakPointer = archetypeWeakPointer;
         }
+
         std::weak_ptr<Archetype> getAssociatedArchetypeWeakPointer() const {
             return archetypeWeakPointer;
         }
@@ -206,27 +192,12 @@ namespace wasp::ecs::component {
         }
 
         //helper functions
-        void makePresentTypeIndices() const {
-            presentTypeIndices = std::vector<std::size_t>{};
-            for (int i = 0; i < maxComponents; ++i) {
-                if (bitset[i]) {
-                    presentTypeIndices.push_back(i);
-                }
-            }
-        }
+        void makePresentTypeIndices() const;
 
     //operators
     public:
-        friend bool operator==(const ComponentSet& a, const ComponentSet& b) {
-            return a.bitset == b.bitset;
-        }
-
-        friend bool operator!= (const ComponentSet& a, const ComponentSet& b) {
-            return a.bitset != b.bitset;
-        }
-
-        friend std::hash<ComponentSet>;
-        friend class ComponentSetFactory;
+        friend bool operator==(const ComponentSet& a, const ComponentSet& b);
+        friend bool operator!= (const ComponentSet& a, const ComponentSet& b);
     };
 }
 

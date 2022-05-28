@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 namespace wasp::ecs::component {
     //thanks to a user named DragonSlayer0531
 
@@ -14,6 +16,4 @@ namespace wasp::ecs::component {
             return typeIndex;
         }
     };
-
-    std::size_t ComponentIndexer::indexCounter{ 0 };
 }

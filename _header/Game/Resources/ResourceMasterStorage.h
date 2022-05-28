@@ -5,7 +5,7 @@
 #include "BitmapStorage.h"
 #include "MidiSequenceStorage.h"
 
-namespace wasp::game::gameresource {
+namespace wasp::game::resources {
 	struct ResourceMasterStorage {
 		DirectoryStorage directoryStorage{};
 		ManifestStorage manifestStorage{};

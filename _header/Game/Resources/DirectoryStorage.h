@@ -5,18 +5,18 @@
 
 #pragma warning(disable : 4250) //inherit via dominance
 
-namespace wasp::game::gameresource {
+namespace wasp::game::resources {
 
-	class ManifestStorage
+	class DirectoryStorage
 		: public resource::ParentResourceStorage
 		, public resource::FileLoadable
 		, public resource::ManifestLoadable
 	{
 
 	public:
-		ManifestStorage()
-			: FileLoadable{ { L"mnfst" } }
-			, ManifestLoadable{ { L"manifest" } } {
+		DirectoryStorage()
+			: FileLoadable{ {file::directoryExtension} } 
+			, ManifestLoadable{ {L"directory"} } {
 		}
 
 		void reload(const std::wstring& id) override;

@@ -96,13 +96,13 @@
     <ClCompile Include="_source\Resource\ParentResourceStorage.cpp">
       <Filter>Source Files\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\GameResource\BitmapStorage.cpp">
+    <ClCompile Include="_source\Game\Resources\BitmapStorage.cpp">
       <Filter>Source Files\Game\GameResource</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\GameResource\DirectoryStorage.cpp">
+    <ClCompile Include="_source\Game\Resources\DirectoryStorage.cpp">
       <Filter>Source Files\Game\GameResource</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\GameResource\ManifestStorage.cpp">
+    <ClCompile Include="_source\Game\Resources\ManifestStorage.cpp">
       <Filter>Source Files\Game\GameResource</Filter>
     </ClCompile>
     <ClCompile Include="_source\Game\GameLoop.cpp">
@@ -129,10 +129,64 @@
     <ClCompile Include="_source\Sound\MidiSequenceLoading.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\GameResource\MidiSequenceStorage.cpp">
+    <ClCompile Include="_source\Game\Resources\MidiSequenceStorage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="_source\Graphics\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Component\Archetype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Component\ComponentIndexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Component\ArchetypeFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Component\ComponentSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Component\ComponentSetFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Component\ComponentStorage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Component\Group.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Component\GroupFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Entity\EntityHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Entity\EntityMetadataStorage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\Entity\FreeEntityIDStorage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\ECS\DataStorage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\Scenes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\Components\ButtonData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Math\Angle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Math\Point2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Math\Vector2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Math\PolarVector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -194,9 +248,6 @@
     <ClInclude Include="_header\Game\Config.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Utility\UnsupportedOperationError.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="_header\Resource\IResourceStorage.h">
       <Filter>Header Files\Resource</Filter>
     </ClInclude>
@@ -212,13 +263,13 @@
     <ClInclude Include="_header\Graphics\IDrawer.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Geometry\Point2.h">
+    <ClInclude Include="_header\Math\Point2.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="_header\Graphics\ITextDrawer.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Geometry\Rectangle.h">
+    <ClInclude Include="_header\Math\Rectangle.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="_header\Resource\ParentResourceStorage.h">
@@ -227,16 +278,16 @@
     <ClInclude Include="_header\Game\GameLoop.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\GameResource\ResourceMasterStorage.h">
+    <ClInclude Include="_header\Game\Resources\ResourceMasterStorage.h">
       <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\GameResource\ManifestStorage.h">
+    <ClInclude Include="_header\Game\Resources\ManifestStorage.h">
       <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\GameResource\DirectoryStorage.h">
+    <ClInclude Include="_header\Game\Resources\DirectoryStorage.h">
       <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\GameResource\BitmapStorage.h">
+    <ClInclude Include="_header\Game\Resources\BitmapStorage.h">
       <Filter>Header Files\Game\GameResource</Filter>
     </ClInclude>
     <ClInclude Include="_header\Input\IKeyInputReceiver.h">
@@ -296,7 +347,7 @@
     <ClInclude Include="_header\Container\ObjectPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\GameResource\MidiSequenceStorage.h">
+    <ClInclude Include="_header\Game\Resources\MidiSequenceStorage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Sound\MidiSequenceLoading.h">
@@ -386,10 +437,37 @@
     <ClInclude Include="_header\Scene\SceneList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\SystemChains.h">
+    <ClInclude Include="_header\Game\SystemChainIDs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Scenes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Components.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Components\MenuCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Components\ButtonData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Components\LockCondition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Math\Angle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Math\Constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Math\Vector2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Math\PolarVector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

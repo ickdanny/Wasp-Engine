@@ -1,50 +1,10 @@
-#include "Game\GameResource\ManifestStorage.h"
-
-#include <fstream>
-#include <sstream>
+#include "Game\Resources\DirectoryStorage.h"
 
 #include "Resource\ResourceBase.h"
 
-namespace wasp::game::gameresource {
+namespace wasp::game::resources {
 
-	//helper methods
-	namespace {
-		resource::ManifestArguments splitManifestLine(std::wstring& line) {
-			resource::ManifestArguments toRet{};
-			std::wstringstream stringStream{ line };
-			std::wstring arg{};
-
-			while (std::getline(stringStream, arg, L']')) {
-				toRet.push_back(arg);
-			}
-
-			return toRet;
-		}
-
-		resource::ResourceBase* loadManifestEntry(
-			std::wstring& line,
-			const resource::ResourceLoader& resourceLoader
-		) {
-			return resourceLoader.loadManifestEntry({ splitManifestLine(line) });
-		}
-
-		void populateChildList(
-			const std::wstring& fileName,
-			resource::ChildList& childList,
-			const resource::ResourceLoader& resourceLoader
-		) {
-			std::wifstream inStream{ fileName };
-			std::wstring line{};
-
-			while (std::getline(inStream, line)) {
-				childList.push_back(loadManifestEntry(line, resourceLoader));
-			}
-
-			inStream.close();
-		}
-	}
-
-	void ManifestStorage::reload(const std::wstring& id) {
+	void DirectoryStorage::reload(const std::wstring& id){
 		if (resourceLoaderPointer) {
 			auto found{ resourceMap.find(id) };
 			if (found != resourceMap.end()) {
@@ -55,7 +15,8 @@ namespace wasp::game::gameresource {
 				switch (origin.index()) {
 					case 0: {
 						resource::FileOrigin const* fileTest{
-							std::get_if<resource::FileOrigin>(&origin) };
+							std::get_if<resource::FileOrigin>(&origin) 
+						};
 						if (fileTest) {
 							remove(id);
 							loadFromFile(*fileTest, *resourceLoaderPointer);
@@ -80,17 +41,17 @@ namespace wasp::game::gameresource {
 		}
 	}
 
-	resource::ResourceBase* ManifestStorage::loadFromFile(
-		const resource::FileOrigin& fileOrigin,
+	resource::ResourceBase* DirectoryStorage::loadFromFile(
+		const resource::FileOrigin& fileOrigin, 
 		const resource::ResourceLoader& resourceLoader
-	) {
+	){
 
 		std::shared_ptr childListPointer{ std::make_shared<resource::ChildList>() };
-
-		populateChildList(
+		file::forEachDirectoryEntry(
 			fileOrigin.fileName,
-			*childListPointer,
-			resourceLoader
+			[&](const std::wstring& fileName) {
+				childListPointer->push_back(resourceLoader.loadFile({ fileName }));
+			}
 		);
 
 		const std::wstring& id{ file::getFileName(fileOrigin.fileName) };
@@ -116,22 +77,22 @@ namespace wasp::game::gameresource {
 		return resourceSharedPointer.get();
 	}
 
-	resource::ResourceBase* ManifestStorage::loadFromManifest(
+	resource::ResourceBase* DirectoryStorage::loadFromManifest(
 		const resource::ManifestOrigin& manifestOrigin,
 		const resource::ResourceLoader& resourceLoader
 	) {
-
 		std::shared_ptr childListPointer{ std::make_shared<resource::ChildList>() };
 
-		const std::wstring& fileName{ manifestOrigin.manifestArguments[1] };
+		const std::wstring& directoryName{ manifestOrigin.manifestArguments[1] };
 
-		populateChildList(
-			fileName,
-			*childListPointer,
-			resourceLoader
+		file::forEachDirectoryEntry(
+			directoryName,
+			[&](const std::wstring& fileName) {
+				childListPointer->push_back(resourceLoader.loadFile({ fileName }));
+			}
 		);
 
-		const std::wstring& id{ file::getFileName(fileName) };
+		const std::wstring& id{ file::getFileName(directoryName) };
 		if (resourceMap.find(id) != resourceMap.end()) {
 			throw std::runtime_error{ "Error loaded pre-existing id" };
 		}

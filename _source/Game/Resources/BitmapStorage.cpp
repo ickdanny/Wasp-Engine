@@ -1,8 +1,8 @@
-#include "Game\GameResource\BitmapStorage.h"
+#include "Game\Resources\BitmapStorage.h"
 
 #include "File\FileUtil.h"
 
-namespace wasp::game::gameresource {
+namespace wasp::game::resources {
 
 	void BitmapStorage::reload(const std::wstring& id) {
 		if (resourceLoaderPointer) {

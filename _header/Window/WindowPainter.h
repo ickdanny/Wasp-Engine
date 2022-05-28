@@ -62,18 +62,18 @@ namespace wasp::window {
         void beginDraw() override;
 
         void drawBitmap(
-            const geometry::Point2 center,
+            const math::Point2 preOffsetCenter,
             const graphics::BitmapDrawInstruction& bitmapDrawInstruction
         ) override;
 
         void drawSubBitmap(
-            const geometry::Point2 center,
+            const math::Point2 preOffsetCenter,
             const graphics::BitmapDrawInstruction& bitmapDrawInstruction,
-            const geometry::Rectangle& sourceRectangle
+            const math::Rectangle& sourceRectangle
         ) override;
 
         void drawText(
-            const geometry::Point2 pos,
+            const math::Point2 pos,
             const std::wstring& text,
             const std::pair<float, float> bounds
         ) override;
@@ -83,7 +83,7 @@ namespace wasp::window {
     private:
         inline void makeBitmapDrawCall(
             ID2D1Bitmap& bitmap,
-            const geometry::Point2 upperLeft,
+            const math::Point2 upperLeft,
             float scaledWidth,
             float scaledHeight,
             float opacity
@@ -92,7 +92,7 @@ namespace wasp::window {
         inline void makeTransformBitmapDrawCall(
             ID2D1Bitmap& bitmap,
             const D2D1::Matrix3x2F& transform,
-            const geometry::Point2 upperLeft,
+            const math::Point2 upperLeft,
             float scaledWidth,
             float scaledHeight,
             float opacity
@@ -100,21 +100,21 @@ namespace wasp::window {
 
         inline void makeSubBitmapDrawCall(
             ID2D1Bitmap& bitmap,
-            const geometry::Point2 upperLeft,
+            const math::Point2 upperLeft,
             float scaledWidth,
             float scaledHeight,
             float opacity,
-            const geometry::Rectangle& sourceRectangle
+            const math::Rectangle& sourceRectangle
         );
 
         inline void makeTransformSubBitmapDrawCall(
             ID2D1Bitmap& bitmap,
             const D2D1::Matrix3x2F& transform,
-            const geometry::Point2 upperLeft,
+            const math::Point2 upperLeft,
             float scaledWidth,
             float scaledHeight,
             float opacity,
-            const geometry::Rectangle& sourceRectangle
+            const math::Rectangle& sourceRectangle
         );
 
         CComPtr<ID2D1Bitmap> getBufferBitmap();

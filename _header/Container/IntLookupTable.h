@@ -44,7 +44,10 @@ namespace wasp::container {
 			: IntLookupTable(0, 0) {
 		}
 
-		IntLookupTable(const int initialMaxIndex, const int initialCapacity)
+		IntLookupTable(
+			const std::size_t initialMaxIndex, 
+			const std::size_t initialCapacity
+		)
 			: sparseIndices(initialMaxIndex)
 			, denseValues{}
 			, denseIndexToSparseIndex(initialCapacity)

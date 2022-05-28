@@ -12,7 +12,6 @@ typedef struct IUnknown IUnknown;
 #include <wincodec.h>
 #include <shobjidl.h>
 #include <atlbase.h>
-
 */
 
 // C RunTime Header Files

@@ -15,7 +15,8 @@ namespace wasp::scene {
 		std::size_t initEntityCapacity{};
 		std::size_t initComponentCapacity{};
 		ecs::DataStorage dataStorage;	//not initialized!
-		std::vector<std::unique_ptr<int>> channels{};
+		//todo: refactor this as its own class
+		std::vector<std::unique_ptr<channel::ChannelBase>> channels{};
 		std::vector<bool> systemChainTransparency{};
 		bool refresh{};
 

@@ -6,7 +6,7 @@
 
 #pragma warning(disable : 4250) //suppress inherit via dominance
 
-namespace wasp::game::gameresource {
+namespace wasp::game::resources {
 	class MidiSequenceStorage 
 		: public resource::ResourceStorage<sound::midi::MidiSequence>
 		, public resource::FileLoadable

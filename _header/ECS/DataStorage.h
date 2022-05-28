@@ -33,7 +33,7 @@ namespace wasp::ecs {
 
         template <typename... Ts>
         Group* makeGroup() {
-            return componentStorage.makeGroup<Ts...>();
+            return componentStorage.getGroup<Ts...>();
         }
 
         bool isAlive(EntityHandle entityHandle) const {
@@ -102,12 +102,7 @@ namespace wasp::ecs {
 
         //Returns an entity handle for the entity with the specified entityID of the
         //current generation. Throws runtime_error if there is no such alive entity.
-        EntityHandle makeHandle(EntityID entityID) const {
-            if (entityMetadataStorage.isAlive(entityID)) {
-                return EntityHandle{ entityID, getMetadata(entityID).getGeneration() };
-            }
-            throw std::runtime_error{ "tried to make handle of dead entity!" };
-        }
+        EntityHandle makeHandle(EntityID entityID) const;
 
         //todo: named entities not implemented
 
@@ -193,32 +188,19 @@ namespace wasp::ecs {
 
         //returns entityID
         template <typename... Ts>
-        EntityID addEntity(AddEntityOrder<Ts...> addEntityOrder) {
-            EntityID entityID{ entityMetadataStorage.createEntity() };
+        EntityHandle addEntity(AddEntityOrder<Ts...> addEntityOrder) {
+            EntityHandle entityHandle{ entityMetadataStorage.createEntity() };
 
             const ComponentSet* componentSetPointer{
-                componentStorage.addEntity(addEntityOrder, entityID)
+                componentStorage.addEntity(addEntityOrder, entityHandle.entityID)
             };
 
-            setComponentSetPointer(entityID, componentSetPointer);
-            return entityID;
+            setComponentSetPointer(entityHandle.entityID, componentSetPointer);
+            return entityHandle;
         }
 
         //returns true if successfully removed entity, false otherwise
-        bool removeEntity(RemoveEntityOrder removeEntityOrder) {
-            if (isAlive(removeEntityOrder.entityHandle)) {
-                EntityID entityID{ removeEntityOrder.entityHandle.entityID };
-
-                componentStorage.removeEntity(
-                    removeEntityOrder, 
-                    *getComponentSetPointer(entityID)
-                );
-                entityMetadataStorage.reclaimEntity(entityID);
-
-                return true;
-            }
-            return false;
-        }
+        bool removeEntity(RemoveEntityOrder removeEntityOrder);
 
     private:
         //helper functions
@@ -226,25 +208,19 @@ namespace wasp::ecs {
             return getMetadata(entityID).getComponentSetPointer();
         }
 
-        EntityMetadata getMetadata(EntityID entityID) const {
+        //the non-const version of getMetadata() returns by reference
+        EntityMetadata& getMetadata(EntityID entityID) {
             return entityMetadataStorage.getMetadata(entityID);
         }
 
-        EntityMetadata& getMetadata(EntityID entityID) {
+        //the const version of getMetadata() returns by value
+        EntityMetadata getMetadata(EntityID entityID) const {
             return entityMetadataStorage.getMetadata(entityID);
         }
 
         void setComponentSetPointer(
             EntityID entityID,
             const ComponentSet* componentSetPointer
-        ) {
-            if (entityMetadataStorage.isDead(entityID)) {
-                throw std::runtime_error{
-                    "setComponentSetPointer should not be called on a dead entity : "
-                    + std::to_string(entityID)
-                };
-            }
-            getMetadata(entityID).setComponentSetPointer(componentSetPointer);
-        }
+        );
     };
 }

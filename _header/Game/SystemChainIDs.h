@@ -1,9 +1,9 @@
 #pragma once
 
-namespace wasp::game::systemchains {
+namespace wasp::game {
 
 	enum class SystemChainIDs {
 		update,
-		graphics
+		render
 	};
 }

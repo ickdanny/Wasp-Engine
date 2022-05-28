@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_set>
+#include <functional>
 
 #include "ComponentSet.h"
 
@@ -65,13 +66,6 @@ namespace wasp::ecs::component {
     private:
         const ComponentSet& getCanonicalSetAndBroadcastIfNew(
             const ComponentSet& componentSet
-        ) {
-            const auto [iterator, isNew] = canonicalComponentSets.insert(componentSet);
-            const ComponentSet& toRet{ *iterator };
-            if (isNew) {
-                newComponentSetCallback(toRet);
-            }
-            return toRet;
-        }
+        );
     };
 }

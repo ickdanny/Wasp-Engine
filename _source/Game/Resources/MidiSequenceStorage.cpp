@@ -1,9 +1,9 @@
-#include "Game/GameResource/MidiSequenceStorage.h"
+#include "Game/Resources/MidiSequenceStorage.h"
 
 #include "File/FileUtil.h"
 #include "Sound/MidiSequenceLoading.h"
 
-namespace wasp::game::gameresource {
+namespace wasp::game::resources {
 
 	using sound::midi::parseMidiFile;
 	using sound::midi::parseLoopedMidiFile;
