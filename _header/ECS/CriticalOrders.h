@@ -60,11 +60,11 @@ namespace wasp::ecs {
         std::tuple<Ts...> components{};
         std::string name{};
 
-        AddEntityOrder(std::tuple<Ts...> components)
+        AddEntityOrder(const std::tuple<Ts...>& components)
             : components{ components } {
         }
 
-        AddEntityOrder(std::tuple<Ts...> components, std::string name)
+        AddEntityOrder(const std::tuple<Ts...>& components, const std::string& name)
             : components{ components }
             , name{ name }{
         }

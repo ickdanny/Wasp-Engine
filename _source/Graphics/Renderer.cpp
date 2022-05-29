@@ -9,17 +9,17 @@ namespace wasp::graphics {
 		}
 	}
 
-	void Renderer::render(double dt) {
+	void Renderer::render(float dt) {
 
-		static constexpr double smoothing{ 0.9 };
+		static constexpr float smoothing{ 0.9f };
 
 		static int frameCount{ 0 };
 
 		static std::chrono::steady_clock::time_point lastDraw{};
 		static std::chrono::steady_clock::time_point thisDraw{};
 
-		static double timeToDraw{ 1.0 };
-		static double fps{ 1.0 };
+		static float timeToDraw{ 1.0 };
+		static float fps{ 1.0 };
 
 		if (rendering.load()) {
 			return;
@@ -53,7 +53,7 @@ namespace wasp::graphics {
 		);
 		windowPointer->getWindowPainter().drawText(
 			{ 20.0f, 50.0f },
-			{ std::to_wstring(1.0 / fps) },
+			{ std::to_wstring(1.0f / fps) },
 			{ 400.0f, 300.0f }
 		);
 		windowPointer->getWindowPainter().endDraw();
@@ -65,10 +65,10 @@ namespace wasp::graphics {
 
 			auto duration{ thisDraw - lastDraw };
 			timeToDraw = duration.count()
-				* static_cast<double>(std::chrono::steady_clock::period::num)
+				* static_cast<float>(std::chrono::steady_clock::period::num)
 				/ std::chrono::steady_clock::period::den;
 
-			fps = (fps * smoothing) + (timeToDraw * (1.0 - smoothing));
+			fps = (fps * smoothing) + (timeToDraw * (1.0f - smoothing));
 			rendering.store(false);
 		} };
 	}

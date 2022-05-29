@@ -1,8 +1,7 @@
 #pragma once
 
 #include "ECS/DataStorage.h"
-#include "Channel/Channel.h"
-#include "Channel/Topic.h"
+#include "Channel/ChannelSet.h"
 
 namespace wasp::scene {
 
@@ -15,8 +14,7 @@ namespace wasp::scene {
 		std::size_t initEntityCapacity{};
 		std::size_t initComponentCapacity{};
 		ecs::DataStorage dataStorage;	//not initialized!
-		//todo: refactor this as its own class
-		std::vector<std::unique_ptr<channel::ChannelBase>> channels{};
+		channel::ChannelSet channelSet{};
 		std::vector<bool> systemChainTransparency{};
 		bool refresh{};
 
@@ -49,28 +47,12 @@ namespace wasp::scene {
 		}
 
 		template <typename T>
-		channel::Channel<T>& getChannel(const channel::Topic<T> topic) {
-			//resize the pointer vector if necessary
-			if (topic.index >= channels.size()) {
-				channels.resize(topic.index + 1);
-			}
-			auto& channelPointer{ channels[topic.index] };
-			//if stored pointer is not nullptr, return the result of dereference
-			if (channelPointer) {
-				return static_cast<channel::Channel<T>>(*channelPointer);
-			}
-			//otherwise, emplace a new channel and return that
-			else {
-				channels.emplace(
-					channels.begin() + topic.index,
-					channel::Channel<T>{}
-				);
-				return static_cast<channel::Channel<T>>(*channels[topic.index]);
-			}
+		channel::Channel<T>& getChannel(const channel::Topic<T>& topic) {
+			return channelSet.getChannel(topic);
 		}
 
 		bool isTransparent(SystemChainIDEnumClass systemChainID) const {
-			int index{ static_cast<int>(systemChainID) };
+			std::size_t index{ static_cast<std::size_t>(systemChainID) };
 			if (index >= systemChainTransparency.size()) {
 				throw std::runtime_error{ "system chain index out of bounds!" };
 			}
@@ -83,12 +65,11 @@ namespace wasp::scene {
 
 		void refreshScene() {
 			dataStorage = { initEntityCapacity, initComponentCapacity };
-			channels.clear();
+			channelSet.clear();
 		}
 
 	private:
 		//helper methods
-
 		void setSystemChainTransparency(
 			SystemChainIDEnumClass systemChainID,
 			bool transparency

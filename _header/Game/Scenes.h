@@ -12,10 +12,14 @@ namespace wasp::game{
 		level,
 		options,
 		game,
+		dialogue,
 		pause,
 		continues,
 		credits
 	};
 
-	scene::SceneList<SystemChainIDs, SceneNames> makeSceneList();
+	using Scene = scene::Scene<SystemChainIDs, SceneNames>;
+	using SceneList = scene::SceneList<SystemChainIDs, SceneNames>;
+
+	SceneList makeSceneList();
 }

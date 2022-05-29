@@ -11,10 +11,15 @@ namespace wasp::scene {
 	class SceneList {
 
 	private:
+		//typedefs
 		using Scene = Scene<SystemChainIDEnumClass, SceneNameEnumClass>;
 		using ScenePointer = std::shared_ptr<Scene>;
 		using SceneStorage = SceneStorage<SystemChainIDEnumClass, SceneNameEnumClass>;
+	public:
+		using Iterator = typename std::vector<ScenePointer>::iterator;
+		using ReverseIterator = typename std::vector<ScenePointer>::reverse_iterator;
 
+	private:
 		//fields
 		std::vector<ScenePointer> sceneList{};
 		SceneStorage sceneStorage{};
@@ -26,16 +31,16 @@ namespace wasp::scene {
 		}
 
 		//iteration
-		auto begin() {
+		Iterator begin() {
 			return sceneList.begin();
 		}
-		auto end() {
+		Iterator end() {
 			return sceneList.end();
 		}
-		auto rbegin() {
+		ReverseIterator rbegin() {
 			return sceneList.rbegin();
 		}
-		auto rend() {
+		ReverseIterator rend() {
 			return sceneList.rend();
 		}
 

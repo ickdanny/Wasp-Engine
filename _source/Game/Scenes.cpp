@@ -1,10 +1,11 @@
 #include "Game/Scenes.h"
 
 namespace wasp::game {
-	scene::SceneList<SystemChainIDs, SceneNames> makeSceneList() {
-		using namespace scene;
 
-		SceneStorage<SystemChainIDs, SceneNames> sceneStorage{};
+	using SceneStorage = scene::SceneStorage<SystemChainIDs, SceneNames>;
+
+	SceneList makeSceneList() {
+		SceneStorage sceneStorage{};
 
 		std::vector<std::pair<SystemChainIDs, bool>> transparency{
 			{ SystemChainIDs::update, false},

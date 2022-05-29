@@ -8,16 +8,25 @@ namespace wasp::channel {
 
 	class ChannelBase{
 	public:
-		virtual ~ChannelBase() = 0;
+		virtual ~ChannelBase() = default;
 	};
 
 	template <typename T = utility::Void>
-	class Channel : ChannelBase{
+	class Channel : public ChannelBase{
 	private:
 		std::vector<T> messages{};
 
 	public:
 		Channel() = default;
+		~Channel() override = default;
+
+		bool hasMessage() const {
+			return !messages.empty();
+		}
+
+		bool isEmpty() const {
+			return messages.empty();
+		}
 
 		const auto& getMessages() const {
 			return messages;
@@ -38,13 +47,22 @@ namespace wasp::channel {
 	};
 
 	template<>
-	class Channel<utility::Void> : ChannelBase {
+	class Channel<utility::Void> : public ChannelBase {
 	private:
 		std::size_t messages{};
 
 	public:
 		Channel()
 			: messages{ 0 } {
+		}
+		~Channel() override = default;
+
+		bool hasMessage() const {
+			return static_cast<bool>(messages);
+		}
+
+		bool isEmpty() const {
+			return !static_cast<bool>(messages);
 		}
 
 		std::size_t getMessages() const {

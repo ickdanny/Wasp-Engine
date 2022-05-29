@@ -32,7 +32,7 @@ namespace wasp::ecs {
         //data query functions
 
         template <typename... Ts>
-        Group* makeGroup() {
+        Group* getGroup() {
             return componentStorage.getGroup<Ts...>();
         }
 

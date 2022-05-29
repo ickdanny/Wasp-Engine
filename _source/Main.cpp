@@ -18,6 +18,7 @@
 #include "Input\KeyInputTable.h"
 #include "Sound\MidiSequencer.h"
 #include "Adaptor\ComLibraryGuard.h"
+#include "Game/Game.h"
 
 //debug
 #include "ConsoleOutput.h"
@@ -108,6 +109,9 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             config::graphicsHeight
         };
 
+        //init game
+        Game game{ resourceMasterStorage };
+
         window.show(windowShowMode);
 
         static int updateCount{ 0 };
@@ -117,6 +121,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             config::maxUpdatesWithoutFrame,
             //update function
             [&] {
+                game.update();
                 ++updateCount;
                 keyInputTable.tickOver();
                 pumpMessages();
@@ -133,7 +138,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
                 //end fullscreen test
             },
             //draw function
-            [&](double dt) {
+            [&](float dt) {
                 renderer.render(dt);
             }
         };
@@ -196,7 +201,7 @@ void dummyFunc() {
     using namespace ecs::entity;
 
     DataStorage dataStorage{ 100, 100 };
-    Group* group{ dataStorage.makeGroup<int, float, double>() };
+    Group* group{ dataStorage.getGroup<int, float, double>() };
     
     EntityHandle handle{
         dataStorage.addEntity(

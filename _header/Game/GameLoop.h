@@ -18,20 +18,20 @@ namespace wasp::game {
 		int updatesPerSecond{};
 		int maxUpdatesWithoutFrame{};
 		std::function<void()> updateFunction{};
-		std::function<void(double)> drawFunction{};
+		std::function<void(float)> renderFunction{};
 
 	public:
 		GameLoop(
 			int updatesPerSecond, 
 			int maxUpdatesWithoutFrame,
 			const std::function<void()>& updateFunction,
-			const std::function<void(double)>& drawFunction
+			const std::function<void(float)>& renderFunction
 		)
 			: running{ false }
 			, updatesPerSecond { updatesPerSecond}
 			, maxUpdatesWithoutFrame{ maxUpdatesWithoutFrame }
 			, updateFunction{ updateFunction }
-			, drawFunction{ drawFunction }{
+			, renderFunction{ renderFunction }{
 		};
 
 		void run();
@@ -41,7 +41,7 @@ namespace wasp::game {
 	private:
 		static timePointType getCurrentTime();
 
-		static double calcDeltaTime(
+		static float calcDeltaTime(
 			timePointType timeOfLastUpdate,
 			durationType timeBetweenUpdates
 		);

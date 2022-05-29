@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ECS/Entity/EntityHandle.h"
-#include "Math/Point2.h"
+#include "Components/TwoFramePosition.h"
 #include "Components/MenuCommand.h"
 #include "Components/ButtonData.h"
 #include "Components/LockCondition.h"
@@ -9,16 +9,16 @@
 
 namespace wasp::game {
 
-    struct MenuCommandUp : public components::MenuCommand {};
-    struct MenuCommandDown : public components::MenuCommand {};
-    struct MenuCommandLeft : public components::MenuCommand {};
-    struct MenuCommandRight : public components::MenuCommand {};
-    struct MenuCommandSelect : public components::MenuCommand {};
+    struct MenuCommandUp : components::MenuCommand {};
+    struct MenuCommandDown : components::MenuCommand {};
+    struct MenuCommandLeft : components::MenuCommand {};
+    struct MenuCommandRight : components::MenuCommand {};
+    struct MenuCommandSelect : components::MenuCommand {};
 
-    struct NeighborElementUp : public ecs::entity::EntityHandle {};
-    struct NeighborElementDown : public ecs::entity::EntityHandle {};
-    struct NeighborElementLeft : public ecs::entity::EntityHandle {};
-    struct NeighborElementRight : public ecs::entity::EntityHandle {};
+    struct NeighborElementUp : ecs::entity::EntityHandle {};
+    struct NeighborElementDown : ecs::entity::EntityHandle {};
+    struct NeighborElementLeft : ecs::entity::EntityHandle {};
+    struct NeighborElementRight : ecs::entity::EntityHandle {};
 
     struct ButtonData : public components::ButtonData {
         using components::ButtonData::ButtonData;
@@ -33,6 +33,10 @@ namespace wasp::game {
         int order{};
     };
 
-    struct Position : public math::Point2 {};
-    struct Velocity : public math::Vector2 {};
+    struct Position : components::TwoFramePosition {
+        using components::TwoFramePosition::TwoFramePosition;
+    };
+    struct Velocity : math::Vector2 {
+        using math::Vector2::Vector2;
+    };
 }
