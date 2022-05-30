@@ -19,13 +19,19 @@ namespace wasp::game {
 		ChannelSet globalChannelSet{};
 
 		UpdateSystemChain updateSystemChain;	//not initialized!
+		RenderSystemChain renderSystemChain;	//not initialized!
 
 	public:
 		//constructor
-		Game(resources::ResourceMasterStorage& resourceMasterStorage)
+		Game(
+			resources::ResourceMasterStorage& resourceMasterStorage,
+			window::WindowPainter* windowPainterPointer
+		)
 			: sceneList{ std::move(makeSceneList()) } 
 			, updateSystemChain{ resourceMasterStorage }
+			, renderSystemChain{ windowPainterPointer }
 		{
+			sceneList.pushScene(SceneNames::main);
 		}
 
 		void update();

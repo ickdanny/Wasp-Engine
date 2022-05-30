@@ -170,11 +170,13 @@
     <ClCompile Include="_source\ECS\Entity\FreeEntityIDStorage.cpp" />
     <ClCompile Include="_source\Game\Components\ButtonData.cpp" />
     <ClCompile Include="_source\Game\Game.cpp" />
+    <ClCompile Include="_source\Game\System\DebugRenderSystem.cpp" />
     <ClCompile Include="_source\Game\System\InitSystem.cpp" />
+    <ClCompile Include="_source\Game\System\RenderSystem.cpp" />
     <ClCompile Include="_source\Game\Topics.cpp" />
     <ClCompile Include="_source\Game\Resources\MidiSequenceStorage.cpp" />
     <ClCompile Include="_source\Game\Scenes.cpp" />
-    <ClCompile Include="_source\Graphics\Renderer.cpp" />
+    <ClCompile Include="_source\Graphics\RenderScheduler.cpp" />
     <ClCompile Include="_source\Math\Angle.cpp" />
     <ClCompile Include="_source\Math\Point2.cpp" />
     <ClCompile Include="_source\Math\PolarVector.cpp" />
@@ -222,8 +224,11 @@
     <ClInclude Include="_header\Game\Components\MenuCommand.h" />
     <ClInclude Include="_header\Game\Components\TwoFramePosition.h" />
     <ClInclude Include="_header\Game\Game.h" />
+    <ClInclude Include="_header\Game\Systems\DebugRenderSystem.h" />
     <ClInclude Include="_header\Game\Systems\EntityBuilder.h" />
+    <ClInclude Include="_header\Game\Systems\RenderSystem.h" />
     <ClInclude Include="_header\Game\Systems\systemInclude.h" />
+    <ClInclude Include="_header\Game\Systems\SystemUtil.h" />
     <ClInclude Include="_header\Game\Topics.h" />
     <ClInclude Include="_header\Game\RenderSystemChain.h" />
     <ClInclude Include="_header\Game\Resources\MidiSequenceStorage.h" />
@@ -237,7 +242,7 @@
     <ClInclude Include="_header\Math\Vector2.h" />
     <ClInclude Include="_header\Scene\Scene.h" />
     <ClInclude Include="_header\Game\WindowModes.h" />
-    <ClInclude Include="_header\Graphics\Renderer.h" />
+    <ClInclude Include="_header\Graphics\RenderScheduler.h" />
     <ClInclude Include="_header\Scene\SceneList.h" />
     <ClInclude Include="_header\Scene\SceneStorage.h" />
     <ClInclude Include="_header\Sound\MidiOut.h" />

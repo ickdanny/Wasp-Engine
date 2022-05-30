@@ -8,11 +8,14 @@
 #include "Game/Resources/BitmapStorage.h"
 
 //encapsulates the threading
-//todo: probably need to call the systemChain... whenever that will be lol
-//perhaps refactor as RenderThreader and have a render callback function
 namespace wasp::graphics {
-	class Renderer {
+	class RendererScheduler {
+	public:
+		//typedefs
+		using RenderCallback = std::function<void(float)>;
+
 	private:
+		//fields
 		window::MainWindow* windowPointer{};
 		game::resources::BitmapStorage* bitmapStoragePointer{};
 
@@ -23,7 +26,7 @@ namespace wasp::graphics {
 		int graphicsHeight{};
 
 	public:
-		Renderer(
+		RendererScheduler(
 			window::MainWindow* windowPointer, 
 			game::resources::BitmapStorage* bitmapStoragePointer,
 			int graphicsWidth,
@@ -35,8 +38,8 @@ namespace wasp::graphics {
 			, graphicsHeight{ graphicsHeight } {
 		}
 
-		~Renderer();
+		~RendererScheduler();
 
-		void render(float dt);
+		void render(float dt, RenderCallback& renderCallback);
 	};
 }

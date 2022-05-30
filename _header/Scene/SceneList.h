@@ -48,7 +48,7 @@ namespace wasp::scene {
 		void pushScene(SceneNameEnumClass sceneName) {
 			ScenePointer& scenePointer{ sceneStorage.getScenePointer(sceneName) };
 			if (scenePointer->needsRefresh()) {
-				scenePointer->refresh();
+				scenePointer->refreshScene();
 			}
 			sceneList.push_back(scenePointer);
 		}

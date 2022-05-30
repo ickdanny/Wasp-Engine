@@ -8,16 +8,15 @@ namespace wasp::game::config {
 	//window
 	constexpr wchar_t className[]{ L"WSWP" };
 	constexpr wchar_t windowName[]{ L"WSWP" };
-	constexpr DWORD windowStyleWindowed{  };
 	constexpr int windowWidth{ 640 };
 	constexpr int windowHeight{ 480 };
 
-	//data
+	//resources
 	constexpr wchar_t mainManifestPath[]{ L"res\\main.mnfst" };
 
 	//graphics
-	constexpr int graphicsWidth{ windowWidth / 2 };
-	constexpr int graphicsHeight{ windowHeight / 2 };
+	constexpr int graphicsWidth{ windowWidth / 2 };		//320
+	constexpr int graphicsHeight{ windowHeight / 2 };	//240
 	constexpr int fillColor{ D2D1::ColorF::Black };
 	constexpr int textColor{ D2D1::ColorF::White };
 	constexpr wchar_t fontName[]{ L"Courier New" };

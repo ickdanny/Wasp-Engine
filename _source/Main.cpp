@@ -14,7 +14,7 @@
 #include "Window\BaseWindow.h"
 #include "Window\MainWindow.h"
 #include "Graphics\BitmapConstructor.h"
-#include "Graphics\Renderer.h" //todo: probably should refactor this so renderer doesn't rely on game classes, maybe move wic/d2d bitmap out?
+#include "Graphics\RenderScheduler.h"
 #include "Input\KeyInputTable.h"
 #include "Sound\MidiSequencer.h"
 #include "Adaptor\ComLibraryGuard.h"
@@ -23,10 +23,6 @@
 //debug
 #include "ConsoleOutput.h"
 #include "Logging.h"
-
-#include "ECS/DataStorage.h"
-#include "Game/Scenes.h"
-#include "Game/Components.h"
 
 using namespace wasp;
 using namespace wasp::game;
@@ -37,14 +33,10 @@ using window::getWindowBorderHeightPadding;
 
 void pumpMessages();
 
-void dummyFunc();
-
 #pragma warning(suppress : 28251) //suppress inconsistent annotation warning
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode){
     try {
         debug::initConsoleOutput();
-
-        dummyFunc();
 
         //init COM
         windowsadaptor::ComLibraryGuard comLibraryGuard{ COINIT_APARTMENTTHREADED };
@@ -102,7 +94,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             [&] {keyInputTable.allKeysOff(); }
         );
 
-        graphics::Renderer renderer{
+        graphics::RendererScheduler renderer{
             &window, 
             &resourceMasterStorage.bitmapStorage,
             config::graphicsWidth,
@@ -110,11 +102,19 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         };
 
         //init game
-        Game game{ resourceMasterStorage };
+        Game game{ resourceMasterStorage, &window.getWindowPainter() };
+
+        graphics::RendererScheduler::RenderCallback renderCallback{
+            [&](float deltaTime) {
+                game.render(deltaTime);
+            }
+        };
 
         window.show(windowShowMode);
 
         static int updateCount{ 0 };
+
+
 
         GameLoop gameLoop{
             config::updatesPerSecond,
@@ -126,26 +126,28 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
                 keyInputTable.tickOver();
                 pumpMessages();
 
-                //fullscreen test
-                if (updateCount == 200) {
+                //todo: fullscreen test
+                /*
+                if ((updateCount % 50) == 30) {
                     debug::log("fullscreened");
                     window.changeWindowMode(windowmodes::fullscreen);
                 }
-                if (updateCount == 300) {
+                if ((updateCount % 50) == 40) {
                     debug::log("windowed");
                     window.changeWindowMode(windowmodes::windowed);
                 }
+                */
                 //end fullscreen test
             },
             //draw function
-            [&](float dt) {
-                renderer.render(dt);
+            [&](float deltaTime) {
+                renderer.render(deltaTime, renderCallback);
             }
         };
 
         window.setDestroyCallback([&] {gameLoop.stop(); });
 
-        //midi test
+        //todo: midi test
         sound::midi::MidiOut midiOut{};
         sound::midi::MidiSequencer midiSequencer{&midiOut};
         midiSequencer.start(
@@ -193,40 +195,4 @@ void pumpMessages() {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-}
-
-void dummyFunc() {
-    using namespace ecs;
-    using namespace ecs::component;
-    using namespace ecs::entity;
-
-    DataStorage dataStorage{ 100, 100 };
-    Group* group{ dataStorage.getGroup<int, float, double>() };
-    
-    EntityHandle handle{
-        dataStorage.addEntity(
-            AddEntityOrder{ std::tuple<int, float>(-14, 2.0f) }
-        )
-    };
-
-    debug::log(static_cast<std::string>(handle));
-
-    bool success{
-        dataStorage.addComponent(
-            AddComponentOrder{handle, 3.0}
-        )
-    };
-
-    debug::log(std::to_string(success));
-
-    auto groupIterator{ group->groupIterator<float, double>() };
-    if (groupIterator.isValid()) {
-        auto [f, d] = *groupIterator;
-        debug::log(std::to_string(f));
-        debug::log(std::to_string(d));
-    }
-
-    debug::log(std::to_string(dataStorage.getComponent<int>(handle)));
-
-    auto sceneList{ std::move(makeSceneList()) };
 }

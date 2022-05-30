@@ -25,7 +25,15 @@ namespace wasp::ecs::component {
 	public:
 		GroupIterator(InnerIteratorVectorType innerIterators)
 			: currentIteratorPairIndex{ 0 }
-			, innerIterators { innerIterators } {
+			, innerIterators { innerIterators } 
+		{
+			skipToNextValidArchetype();
+		}
+
+		void skipToNextValidArchetype() {
+			while (isValid() && (getCurrentIterator() == getCurrentEndIterator())) {
+				++currentIteratorPairIndex;
+			}
 		}
 
 		int getEntityID() {
@@ -43,9 +51,7 @@ namespace wasp::ecs::component {
 		//prefix increment
 		GroupIterator& operator++() {
 			++getCurrentIterator();
-			if (getCurrentIterator() == getCurrentEndIterator()) {
-				++currentIteratorPairIndex;
-			}
+			skipToNextValidArchetype();
 			return *this;
 		}
 

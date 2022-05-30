@@ -32,8 +32,8 @@ namespace wasp::ecs {
         //data query functions
 
         template <typename... Ts>
-        Group* getGroup() {
-            return componentStorage.getGroup<Ts...>();
+        Group* getGroupPointer() {
+            return componentStorage.getGroupPointer<Ts...>();
         }
 
         bool isAlive(EntityHandle entityHandle) const {
@@ -188,7 +188,7 @@ namespace wasp::ecs {
 
         //returns entityID
         template <typename... Ts>
-        EntityHandle addEntity(AddEntityOrder<Ts...> addEntityOrder) {
+        EntityHandle addEntity(const AddEntityOrder<Ts...>& addEntityOrder) {
             EntityHandle entityHandle{ entityMetadataStorage.createEntity() };
 
             const ComponentSet* componentSetPointer{
@@ -197,6 +197,20 @@ namespace wasp::ecs {
 
             setComponentSetPointer(entityHandle.entityID, componentSetPointer);
             return entityHandle;
+        }
+
+        //returns entityIDs in order
+        template <typename... Ts, typename... Us>
+        std::vector<EntityHandle> addEntities(
+            const AddEntityOrder<Ts...>& addEntityOrder, 
+            const Us&... args
+        ) {
+            std::vector<EntityHandle> entityHandleVector{};
+            entityHandleVector.push_back(addEntity(addEntityOrder));
+            if constexpr (sizeof...(args) > 0) {
+                addEntities(entityHandleVector, args...);
+            }
+            return std::move(entityHandleVector);
         }
 
         //returns true if successfully removed entity, false otherwise
@@ -222,5 +236,17 @@ namespace wasp::ecs {
             EntityID entityID,
             const ComponentSet* componentSetPointer
         );
+
+        template <typename... Ts, typename... Us>
+        void addEntities(
+            std::vector<EntityHandle>& entityHandleVector,
+            const AddEntityOrder<Ts...>& addEntityOrder,
+            const Us&... args
+        ) {
+            entityHandleVector.push_back(addEntity(addEntityOrder));
+            if constexpr (sizeof...(args) > 0) {
+                addEntities(entityHandleVector, args...);
+            }
+        }
     };
 }

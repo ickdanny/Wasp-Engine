@@ -16,14 +16,14 @@ namespace wasp::ecs::component {
         );
     }
 
-    Group* GroupFactory::getGroup(const ComponentSet& componentKey) {
+    Group* GroupFactory::getGroupPointer(const ComponentSet& componentKey) {
         auto found{ keyToGroupMap.find(componentKey) };
         //create a new group if necessary
         if (found == keyToGroupMap.end()) {
             keyToGroupMap.emplace(componentKey, &componentKey);
             Group* newGroupPointer{ &keyToGroupMap[componentKey] };
             if (!zeroGroupPointer->addNewGroup(newGroupPointer)) {
-                throw std::runtime_error{ "error in getGroup" };
+                throw std::runtime_error{ "error in getGroupPointer" };
             }
             return newGroupPointer;
         }

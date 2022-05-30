@@ -36,12 +36,15 @@ namespace wasp::game::systems {
 		);
 	}
 
-	template <typename... Ts, typename... Cs>
-	ComponentTuple<Ts..., Cs...> operator+(
+	template <typename... Ts, typename... Us>
+	ComponentTuple<Ts..., Us...> operator+(
 		const ComponentTuple<Ts...>& left,
-		const ComponentTuple<Cs...>& right
+		const ComponentTuple<Us...>& right
 	) {
-		return std::tuple_cat(left, right);
+		return std::tuple_cat(
+			static_cast<std::tuple<Ts...>>(left), 
+			static_cast<std::tuple<Us...>>(right)
+		);
 	}
 
 	struct EntityBuilder {
@@ -52,17 +55,17 @@ namespace wasp::game::systems {
 	public:
 		template <typename... Ts>
 		static auto makeEntity(const Ts&... args) {
-			return ComponentTuple{} + (... + args);
+			return ComponentTuple{ args... };
 		}
 
 		template <typename... Ts>
 		static auto makePosition(const Point2& pos, const Ts&... args) {
-			return ComponentTuple{ Position{ pos } } + (... + args);
+			return ComponentTuple{ Position{ pos }, args... };
 		}
 
 		template <typename... Ts>
 		static auto makeVisible(const Point2& pos, const Ts&... args) {
-			return ComponentTuple{ Position{ pos }, VisibleMarker{} } + (... + args);
+			return ComponentTuple{ Position{ pos }, VisibleMarker{}, args... };
 		}
 	};
 }

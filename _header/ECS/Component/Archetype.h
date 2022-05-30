@@ -27,7 +27,7 @@ namespace wasp::ecs::component {
 
         //the move component vtable maps from the type index to the appropriate
         //template instantiation of move component
-        static std::vector<std::function<void(const EntityID, Archetype&)>>
+        static std::vector<std::function<void(const EntityID, Archetype&, Archetype&)>>
             moveComponentVTable;
 
         //fields
@@ -69,12 +69,8 @@ namespace wasp::ecs::component {
         bool setComponent(const EntityID entityID, T& component) {
             //this bit of code causes the compiler to generate a moveComponent func
             static auto dummyToInstantiateMoveComponent{
-                moveComponentVTable.emplace(
-                    moveComponentVTable.begin() + ComponentIndexer::getIndex<T>(),
-                    [&](const EntityID entityID, Archetype& newArchetype) {
-                        moveComponent<T>(entityID, newArchetype);
-                    }
-                )
+                moveComponentVTable[ComponentIndexer::getIndex<T>()] =
+                    moveComponent<T>
             };
 
             return getComponentStorage<T>().set(entityID, component);
@@ -115,27 +111,35 @@ namespace wasp::ecs::component {
                     "type index out of bounds for component storage"
                 };
             }
+            if (!componentKeyPointer->containsComponent<T>()) {
+                throw std::runtime_error{
+                    "somehow does not contain component!"
+                };
+            }
             if (!componentStorages[typeIndex]) {
-                componentStorages.emplace(
-                    componentStorages.begin() + typeIndex,
-                    new IntLookupTable<T>{
-                        initEntityCapacity,
-                        initComponentCapacity
-                    }
+                componentStorages[typeIndex] = std::make_unique<IntLookupTable<T>>(
+                    initEntityCapacity,
+                    initComponentCapacity
                 );
             }
             IntLookupTableBase& base{ *componentStorages[typeIndex] };
             return static_cast<IntLookupTable<T>&>(base);
         }
 
+        //todo: this needs to be a static taking the old archetype as well
         //one move component function gets instantiated for every set component
         //and is placed in the move component v table
         template <typename T>
-        void moveComponent(const EntityID entityID, Archetype& newArchetype) {
-            if (newArchetype.getComponentKeyPointer()->containsComponent<T>()) {
+        static void moveComponent(
+            const EntityID entityID, 
+            Archetype& oldArchetype,
+            Archetype& newArchetype
+        ) {
+            if (oldArchetype.getComponentKeyPointer()->containsComponent<T>()
+                && newArchetype.getComponentKeyPointer()-> containsComponent<T>()) {
                 newArchetype.setComponent(
                     entityID,
-                    getComponentStorage<T>().get(entityID)
+                    oldArchetype.getComponentStorage<T>().get(entityID)
                 );
             }
         }

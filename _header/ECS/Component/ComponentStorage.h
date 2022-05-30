@@ -22,8 +22,8 @@ namespace wasp::ecs::component {
         );
 
         template <typename... Ts>
-        Group* getGroup() {
-            return groupFactory.getGroup(componentSetFactory.makeSet<Ts...>());
+        Group* getGroupPointer() {
+            return groupFactory.getGroupPointer(componentSetFactory.makeSet<Ts...>());
         }
 
         template <typename T>
@@ -128,7 +128,7 @@ namespace wasp::ecs::component {
         //returns a pointer to the component set
         template <typename... Ts>
         const ComponentSet* addEntity(
-            AddEntityOrder<Ts...>& addEntityOrder,
+            AddEntityOrder<Ts...> addEntityOrder,
             const EntityID entityID
         ) {
             const ComponentSet& componentSet{ componentSetFactory.makeSet<Ts...>() };

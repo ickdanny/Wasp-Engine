@@ -20,10 +20,13 @@ namespace wasp::game {
     struct NeighborElementLeft : ecs::entity::EntityHandle {};
     struct NeighborElementRight : ecs::entity::EntityHandle {};
 
-    struct ButtonData : public components::ButtonData {
+    struct ButtonData : components::ButtonData {
         using components::ButtonData::ButtonData;
     };
-    struct SpriteInstruction : public graphics::BitmapDrawInstruction {
+    union ButtonAction {
+        SceneNames sceneName;
+    };
+    struct SpriteInstruction : graphics::BitmapDrawInstruction {
         using graphics::BitmapDrawInstruction::BitmapDrawInstruction;
     };
 

@@ -13,7 +13,7 @@ namespace wasp::ecs::component {
                 if (storagePointer) {
                     //components present in this archetype but not present in
                     //the new archetype will be removed
-                    moveComponentVTable[typeIndex](entityID, newArchetype);
+                    moveComponentVTable[typeIndex](entityID, *this, newArchetype);
                     storagePointer->remove(entityID);
                 }
             }
@@ -36,6 +36,6 @@ namespace wasp::ecs::component {
     }
 
     //initializing the move component function vtable
-    std::vector<std::function<void(const entity::EntityID, Archetype&)>>
-        Archetype::moveComponentVTable{};
+    std::vector<std::function<void(const entity::EntityID, Archetype&, Archetype&)>>
+        Archetype::moveComponentVTable{ maxComponents };
 }

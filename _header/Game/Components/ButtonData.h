@@ -11,30 +11,34 @@ namespace wasp::game::components {
         using Point2 = math::Point2;
 
         //fields
-        const std::string baseImageName{};
+        std::wstring baseImageName{};
+        Point2 unselPos{};
+        Point2 selPos{};
     public:
-        const Point2 unselPos{};
-        const Point2 selPos{};
         bool locked{};
 
-        ButtonData(Point2 pos, const std::string& baseImageName)
+        //constructs a button data with the specified pos and image name
+        ButtonData(Point2 pos, const std::wstring& baseImageName)
             : unselPos{ pos }
             , selPos{ pos }
             , baseImageName{ baseImageName }
             , locked{ false } {
         }
 
-        ButtonData(Point2 unselPos, Point2 selPos, const std::string& baseImageName)
+        //constructs a button data with the specified unselPos, selPos, and image name
+        ButtonData(Point2 unselPos, Point2 selPos, const std::wstring& baseImageName)
             : unselPos{ unselPos }
             , selPos{ selPos }
             , baseImageName{ baseImageName } 
             , locked{ false } {
         }
 
+        //constructs a button data with the specified unselPos, selPos, and image name
+        //which may be locked
         ButtonData(
             Point2 unselPos,
             Point2 selPos,
-            const std::string& baseImage,
+            const std::wstring& baseImage,
             bool locked
         )
             : unselPos{ unselPos }
@@ -43,8 +47,15 @@ namespace wasp::game::components {
             , locked{ locked } {
         }
 
-        const std::string getSelImageName();
-        const std::string getUnselImageName();
-        const std::string getLockedImageName();
+        const Point2& getUnselPos() const {
+            return unselPos;
+        }
+        const Point2& getSelPos() const {
+            return selPos;
+        }
+
+        const std::wstring getSelImageName() const;
+        const std::wstring getUnselImageName() const;
+        const std::wstring getLockedImageName() const;
     };
 }

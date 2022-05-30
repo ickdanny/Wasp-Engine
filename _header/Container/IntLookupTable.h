@@ -88,24 +88,6 @@ namespace wasp::container {
 			}
 		}
 
-		//returns true if an element was replaced, false otherwise
-		template<typename... Ts>
-		bool emplace(int sparseIndex, Ts&&... args) {
-			if (isInvalidSparseIndex(sparseIndex)) {
-				growSparseIndices(sparseIndex);
-			}
-
-			int denseIndex = sparseIndices[sparseIndex];
-			if (isValidDenseIndex(denseIndex)) {
-				denseValues.emplace(denseValues.begin() + denseIndex, args...);
-				return true;
-			}
-			else {
-				emplaceBack(sparseIndex, args...);
-				return false;
-			}
-		}
-
 		T& get(int sparseIndex) {
 			throwIfInvalidSparseIndex(sparseIndex);
 			int denseIndex{ sparseIndices[sparseIndex] };
@@ -332,29 +314,6 @@ namespace wasp::container {
 
 			if (static_cast<std::vector<int>::size_type>(currentSize) 
 				< denseIndexToSparseIndex.size()) 
-			{
-				denseIndexToSparseIndex[currentSize] = sparseIndex;
-			}
-			else {
-				denseIndexToSparseIndex.push_back(sparseIndex);
-			}
-			++currentSize;
-		}
-
-		template <typename... Ts>
-		void emplaceBack(int sparseIndex, Ts&&... args) {
-			sparseIndices[sparseIndex] = currentSize;
-			if (static_cast<std::vector<T>::size_type>(currentSize)
-				< denseValues.size())
-			{
-				denseValues.emplace(denseValues.begin() + currentSize, args...);
-			}
-			else {
-				denseValues.emplace_back(args...);
-			}
-
-			if (static_cast<std::vector<int>::size_type>(currentSize)
-				< denseIndexToSparseIndex.size())
 			{
 				denseIndexToSparseIndex[currentSize] = sparseIndex;
 			}

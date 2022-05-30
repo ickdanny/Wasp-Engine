@@ -19,7 +19,7 @@ namespace wasp::game {
 
 	//scene topics (1 channel per scene)
 	struct SceneTopics {
-	public:
-
+		static const Topic<> pauseFlag;
+		static const Topic<float> lastDeltaTime;
 	};
 }

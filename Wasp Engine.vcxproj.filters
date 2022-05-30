@@ -132,7 +132,7 @@
     <ClCompile Include="_source\Game\Resources\MidiSequenceStorage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Graphics\Renderer.cpp">
+    <ClCompile Include="_source\Graphics\RenderScheduler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="_source\ECS\Component\Archetype.cpp">
@@ -199,6 +199,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="_source\Game\System\InitSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\System\RenderSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\System\DebugRenderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -368,7 +374,7 @@
     <ClInclude Include="_header\Utility\Arithmetic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Graphics\Renderer.h">
+    <ClInclude Include="_header\Graphics\RenderScheduler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Window\WindowMode.h">
@@ -504,6 +510,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Components\TwoFramePosition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\RenderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\DebugRenderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\SystemUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

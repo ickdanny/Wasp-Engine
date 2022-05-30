@@ -28,12 +28,9 @@ namespace wasp::channel {
 			if (channelPointer) {
 				return static_cast<Channel<T>&>(*channelPointer);
 			}
-			//otherwise, emplace a new channel and return that
+			//otherwise, make a new channel and return that
 			else {
-				channels.emplace(
-					channels.begin() + topic.index,
-					new Channel<T>{}
-				);
+				channels[topic.index] = std::make_unique<Channel<T>>();
 				return static_cast<Channel<T>&>(*channels[topic.index]);
 			}
 		}

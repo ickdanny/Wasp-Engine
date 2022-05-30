@@ -4,8 +4,8 @@ namespace wasp::game {
 
 	void Game::update() {
 		for (auto itr{ sceneList.rbegin() }; itr != sceneList.rend(); ++itr) {
-			auto& scene{ **itr };	//dereference itr and shared_ptr
-			//todo: update on scene
+			auto& scene{ *(*itr) };	//dereference itr and shared_ptr
+			updateSystemChain(scene);
 			if (!scene.isTransparent(SystemChainIDs::update)) {
 				break;
 			}
@@ -25,10 +25,10 @@ namespace wasp::game {
 		float deltaTime,
 		const SceneList::ReverseIterator& itr
 	) {
-		auto& scene{ **itr };	//dereference itr and shared_ptr
+		auto& scene{ *(*itr) };	//dereference itr and shared_ptr
 		if (itr != sceneList.rend() && scene.isTransparent(SystemChainIDs::render)) {
 			recursiveRenderHelper(deltaTime, itr + 1);
 		}
-		//todo: render on scene
+		renderSystemChain(scene, deltaTime);
 	}
 }

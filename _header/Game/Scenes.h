@@ -10,6 +10,7 @@ namespace wasp::game{
 		shot,
 		difficulty,
 		level,
+		music,
 		options,
 		game,
 		dialogue,
