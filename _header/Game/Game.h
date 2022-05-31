@@ -3,8 +3,8 @@
 #include "Resources/ResourceMasterStorage.h"
 #include "Scenes.h"
 #include "Topics.h"
-#include "UpdateSystemChain.h"
-#include "RenderSystemChain.h"
+#include "SceneUpdater.h"
+#include "SceneRenderer.h"
 
 namespace wasp::game {
 
@@ -18,25 +18,23 @@ namespace wasp::game {
 		SceneList sceneList;	//not initialized!
 		ChannelSet globalChannelSet{};
 
-		UpdateSystemChain updateSystemChain;	//not initialized!
-		RenderSystemChain renderSystemChain;	//not initialized!
-
+		SceneUpdater sceneUpdater;	//not initialized!
+		SceneRenderer sceneRenderer;	//not initialized!
+		
 	public:
 		//constructor
 		Game(
 			resources::ResourceMasterStorage& resourceMasterStorage,
 			window::WindowPainter* windowPainterPointer
-		)
-			: sceneList{ std::move(makeSceneList()) } 
-			, updateSystemChain{ resourceMasterStorage }
-			, renderSystemChain{ windowPainterPointer }
-		{
-			sceneList.pushScene(SceneNames::main);
-		}
+		);
 
 		void update();
 
 		void render(float deltaTime);
+
+		void setExitCallback(const std::function<void()>& exitCallback) {
+			sceneUpdater.setExitCallback(exitCallback);
+		}
 
 	private:
 		void updateSceneList();

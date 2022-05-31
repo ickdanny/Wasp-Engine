@@ -1,37 +1,43 @@
 #pragma once
 
+#include <variant>
+
 namespace wasp::game::components {
     struct MenuCommand {
         enum class Commands {
-            NAV_UP,
-            NAV_DOWN,
-            NAV_LEFT,
-            NAV_RIGHT,
+            nav_up,
+            nav_down,
+            nav_left,
+            nav_right,
 
-            NAV_FAR_UP,
-            NAV_FAR_DOWN,
-            NAV_FAR_LEFT,
-            NAV_FAR_RIGHT,
+            nav_far_up,
+            nav_far_down,
+            nav_far_left,
+            nav_far_right,
 
-            ENTER,
-            ENTER_AND_STOP_MUSIC,
+            enter,
+            enter_and_stop_music,
 
-            BACK,
-            BACK_TO_MENU,
-            BACK_TO_MAIN,
-            BACK_AND_WRITE_PROPERTIES,
-            BACK_AND_SET_TRACK_TO_MENU,
+            back,
+            back_and_write_settings,
+            back_and_set_track_to_menu,
 
-            START_TRACK,
+            start_music,
 
-            SOUND_TOGGLE,
-            FULLSCREEN_TOGGLE,
+            sound_toggle,
+            fullscreen_toggle,
 
-            RESTART_GAME,
+            restart_game,
 
-            GAME_OVER,
+            game_over,
 
-            EXIT
+            exit,
+
+            none
         } command{};
+        std::variant<SceneNames, std::wstring> data{};
+
+        //static constant for no command
+        static const MenuCommand none;
     };
 }

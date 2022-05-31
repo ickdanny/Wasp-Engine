@@ -1,5 +1,7 @@
 #include "window\WindowPainter.h"
 
+#include <cmath>
+
 #include "Game\Config.h"
 #include "adaptor\HResultError.h"
 #include "Logging.h"
@@ -464,10 +466,11 @@ namespace wasp::window {
 		bufferRenderTargetPointer->DrawBitmap(
 			&bitmap,
 			D2D1::RectF(
-				upperLeft.x,
-				upperLeft.y,
-				upperLeft.x + scaledWidth,
-				upperLeft.y + scaledHeight),
+				std::round(upperLeft.x),
+				std::round(upperLeft.y),
+				std::round(upperLeft.x + scaledWidth),
+				std::round(upperLeft.y + scaledHeight)
+			),
 			opacity,
 			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
 		);

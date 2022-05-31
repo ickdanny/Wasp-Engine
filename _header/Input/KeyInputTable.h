@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <bitset>
 
 #include "IKeyInputReceiver.h"
 #include "IKeyInputTable.h"
@@ -9,6 +10,7 @@
 namespace wasp::input {
 	class KeyInputTable : public IKeyInputReceiver, public IKeyInputTable {
 	private:
+		//typedefs
 		using dataType = std::uint_fast8_t;
 
 		//bitmasks
@@ -18,7 +20,9 @@ namespace wasp::input {
 
 		static constexpr int numKeys{ static_cast<int>(KeyValues::numKeys) };
 
+		//fields
 		std::array<dataType, numKeys> dataArray{};
+		std::bitset<numKeys> locks{};	//true = locked, false = unlocked
 
 	public:
 
@@ -28,6 +32,9 @@ namespace wasp::input {
 
 		const KeyState operator[](KeyValues key) override;
 		const KeyState get(KeyValues key) override;
+		void lock(KeyValues key) override;
+		void lockAll() override;
+		bool isLocked(KeyValues key) override;
 		void tickOver() override;
 
 	private:

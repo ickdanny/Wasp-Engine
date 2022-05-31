@@ -16,7 +16,7 @@
 #include "Graphics\BitmapConstructor.h"
 #include "Graphics\RenderScheduler.h"
 #include "Input\KeyInputTable.h"
-#include "Sound\MidiSequencer.h"
+#include "Sound\MidiHub.h"
 #include "Adaptor\ComLibraryGuard.h"
 #include "Game/Game.h"
 
@@ -94,12 +94,16 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             [&] {keyInputTable.allKeysOff(); }
         );
 
+        //init rendering
         graphics::RendererScheduler renderer{
             &window, 
             &resourceMasterStorage.bitmapStorage,
             config::graphicsWidth,
             config::graphicsHeight
         };
+
+        //init midi
+        sound::midi::MidiHub midiHub{}; //todo: initial mute state via settings!
 
         //init game
         Game game{ resourceMasterStorage, &window.getWindowPainter() };
@@ -113,8 +117,6 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         window.show(windowShowMode);
 
         static int updateCount{ 0 };
-
-
 
         GameLoop gameLoop{
             config::updatesPerSecond,
@@ -145,17 +147,14 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             }
         };
 
-        window.setDestroyCallback([&] {gameLoop.stop(); });
+        auto stopGameLoop{ [&] { gameLoop.stop(); } };
 
-        //todo: midi test
-        sound::midi::MidiOut midiOut{};
-        sound::midi::MidiSequencer midiSequencer{&midiOut};
-        midiSequencer.start(
-            resourceMasterStorage.midiSequenceStorage.get(L"immortal smoke")
-        );
-        //end midi test
+        window.setDestroyCallback(stopGameLoop);
+        game.setExitCallback(stopGameLoop);
 
         gameLoop.run();
+
+        //todo: cleanup e.g. write settings
 
         return 0;
     }

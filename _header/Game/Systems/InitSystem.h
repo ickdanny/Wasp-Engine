@@ -8,6 +8,17 @@ namespace wasp::game::systems {
 
 	class InitSystem {
 	private:
+		//typedefs
+		using BasicButtonComponentTuple = ComponentTuple<
+			Position,
+			VisibleMarker,
+			ButtonData,
+			MenuCommandSelect,
+			SpriteInstruction,
+			DrawOrder
+		>;
+
+		//fields
 		resources::BitmapStorage* bitmapStoragePointer{};
 
 	public:
@@ -24,19 +35,13 @@ namespace wasp::game::systems {
 
 		void addBackground(ecs::DataStorage& dataStorage, std::wstring name) const;
 
-		ComponentTuple<
-			Position,
-			VisibleMarker,
-			ButtonData,
-			MenuCommandSelect,
-			ButtonAction,
-			SpriteInstruction,
-			DrawOrder
-		>
-		makeButton(
-			const ButtonData& buttonData,
+		BasicButtonComponentTuple makeButton(
+			const math::Point2& initPos,
+			const math::Vector2& offset,
+			const math::Vector2& selOffset,
+			int index,
+			const std::wstring& name,
 			MenuCommandSelect selectCommand,
-			const ButtonAction& buttonAction = {},
 			DrawOrder drawOrder = { 0 },
 			bool selected = false
 		) const;

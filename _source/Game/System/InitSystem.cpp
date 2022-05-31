@@ -41,50 +41,56 @@ namespace wasp::game::systems {
 		auto& dataStorage{ scene.getDataStorage() };
 		addBackground(dataStorage, L"background_menu_main");
 
-		constexpr float xOffset{ -10.0f };
-		constexpr float yOffset{ 20.0f };
-		constexpr float x{ 200.0f };
-		constexpr float y{ 130.0f };
-		constexpr float selXOffset{ 2.0f };
-		constexpr float selYOffset{ -2.0f };
+		constexpr math::Point2 initPos{ 200.0f, 130.0f };
+		constexpr math::Vector2 offset{ -10.0f, 20.0f };
+		constexpr math::Vector2 selOffset{ 2.0f, -2.0f };
 
 		auto buttonHandles{ 
 			dataStorage.addEntities(
 				makeButton(
-					{ { x, y }, 
-					{ x + selXOffset, y + selYOffset }, 
-					L"button_start"},
-					{ MenuCommandSelect::Commands::ENTER },
-					{ SceneNames::difficulty },
+					initPos, 
+					offset,
+					selOffset,
+					0,
+					L"button_start",
+					{ MenuCommandSelect::Commands::enter, SceneNames::start_difficulty },
 					{ },	//draw order
 					true
 				).package(),
 				makeButton(
-					{ { x + xOffset, y + yOffset}, 
-					{ x + xOffset + selXOffset, y + yOffset + selYOffset }, 
-					L"button_practice" },
-					{ MenuCommandSelect::Commands::ENTER },
-					{ SceneNames::difficulty }
+					initPos,
+					offset,
+					selOffset,
+					1,
+					L"button_practice",
+					{ 
+						MenuCommandSelect::Commands::enter, 
+						SceneNames::practice_difficulty 
+					}
 				).package(),
 				makeButton(
-					{ { x + 2 * xOffset, y + 2 * yOffset}, 
-					{ x + 2 * xOffset + selXOffset, y + 2 * yOffset + selYOffset },
-					L"button_music" },
-					{ MenuCommandSelect::Commands::ENTER },
-					{ SceneNames::music }
+					initPos,
+					offset,
+					selOffset,
+					2,
+					L"button_music",
+					{ MenuCommandSelect::Commands::enter, SceneNames::music }
 				).package(),
 				makeButton(
-					{ { x + 3 * xOffset, y + 3 * yOffset},
-					{ x + 3 * xOffset + selXOffset, y + 3 * yOffset + selYOffset },
-					L"button_option" },
-					{ MenuCommandSelect::Commands::ENTER },
-					{ SceneNames::options }
+					initPos,
+					offset,
+					selOffset,
+					3,
+					L"button_option",
+					{ MenuCommandSelect::Commands::enter, SceneNames::options }
 				).package(),
 				makeButton(
-					{ { x + 4 * xOffset, y + 4 * yOffset},
-					{ x + 4 * xOffset + selXOffset, y + 4 * yOffset + selYOffset },
-					L"button_quit" },
-					{ MenuCommandSelect::Commands::ENTER }
+					initPos,
+					offset,
+					selOffset,
+					4,
+					L"button_quit",
+					{ MenuCommandSelect::Commands::enter }
 				).package()
 			) 
 		};
@@ -106,37 +112,35 @@ namespace wasp::game::systems {
 		);
 	}
 
-	//todo: should pass in a base point, offset vector, and then button index; p + iv
-	ComponentTuple<
-		Position,
-		VisibleMarker,
-		ButtonData,
-		MenuCommandSelect,
-		ButtonAction,
-		SpriteInstruction,
-		DrawOrder
-	>
-	InitSystem::makeButton(
-		const ButtonData& buttonData,
+	InitSystem::BasicButtonComponentTuple InitSystem::makeButton(
+		const math::Point2& initPos,
+		const math::Vector2& offset,
+		const math::Vector2& selOffset,
+		int index,
+		const std::wstring& name,
 		MenuCommandSelect selectCommand,
-		const ButtonAction& buttonAction,
 		DrawOrder drawOrder,
 		bool selected
 	) const {
+		math::Point2 unselPos{ initPos + (offset * index) };
+		math::Point2 selPos{ unselPos + selOffset };
+		ButtonData buttonData{ unselPos, selPos, name };
+
 		return EntityBuilder::makeVisible(
 			selected ? buttonData.getSelPos() : buttonData.getUnselPos(),
 			buttonData,
 			selectCommand,
-			buttonAction,
 			SpriteInstruction{
 				bitmapStoragePointer->get(
 					selected ? buttonData.getSelImageName() 
-					: buttonData.getUnselImageName()
+							 : buttonData.getUnselImageName()
 				)->d2dBitmap
 			},
 			drawOrder
 		);
 	}
+
+	//todo: set menuCommand as nav
 
 	void InitSystem::attachButtonsVertical(
 		ecs::DataStorage& dataStorage,

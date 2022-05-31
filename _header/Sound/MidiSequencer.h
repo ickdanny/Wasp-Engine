@@ -15,13 +15,15 @@ namespace wasp::sound::midi {
 	//NOT threadsafe
 	class MidiSequencer : public IMidiSequencer{
 	private:
+		//typedefs
+		
 		//on Windows, steady_clock wraps the performance counter
 		using clockType = std::chrono::steady_clock;
 		using timePointType = clockType::time_point;
 
 		using EventUnitTrack = MidiSequence::EventUnitTrack;
 
-		MidiOut* midiOut{};
+		MidiOut* midiOutPointer{};
 
 		//playback fields
 		std::shared_ptr<MidiSequence> midiSequencePointer{};
@@ -36,10 +38,11 @@ namespace wasp::sound::midi {
 		std::atomic_bool running{ false };		//our flag, synchronizes our threads
 
 	public:
-		MidiSequencer(MidiOut* midiOut)
-			: midiOut{ midiOut } {
+		MidiSequencer(MidiOut* midiOutPointer)
+			: midiOutPointer{ midiOutPointer } {
 		}
 
+		//delete copy constructor and assignment operator
 		MidiSequencer(const MidiSequencer& other) = delete;
 		void operator=(const MidiSequencer& other) = delete;
 

@@ -126,7 +126,6 @@ namespace wasp::ecs::component {
             return static_cast<IntLookupTable<T>&>(base);
         }
 
-        //todo: this needs to be a static taking the old archetype as well
         //one move component function gets instantiated for every set component
         //and is placed in the move component v table
         template <typename T>

@@ -7,8 +7,10 @@ namespace wasp::game{
 
 	enum class SceneNames {
 		main,
-		shot,
 		difficulty,
+		start_difficulty,		//goes to same difficulty scene
+		practice_difficulty,	//goes to same difficulty scene
+		shot,
 		level,
 		music,
 		options,

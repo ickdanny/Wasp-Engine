@@ -87,7 +87,7 @@ namespace wasp::sound::midi {
 			clockType::period::den
 		>;
 
-		midiOut->outputReset();
+		midiOutPointer->outputReset();
 		
 		//timing variables
 		microsecondsPerBeat = defaultMicrosecondsPerBeat;
@@ -178,18 +178,18 @@ namespace wasp::sound::midi {
 		}
 
 		//output reset if we finish naturally
-		midiOut->outputReset();
+		midiOutPointer->outputReset();
 		resetPlaybackFields();
 		running.store(false);
 	}
 
 	void MidiSequencer::stop() {
 		stopPlaybackThread();
-		midiOut->outputReset();
+		midiOutPointer->outputReset();
 	}
 
 	void MidiSequencer::outputMidiEvent() {
-		midiOut->outputShortMsg((iter++)->event);
+		midiOutPointer->outputShortMsg((iter++)->event);
 	}
 
 	void MidiSequencer::outputSystemExclusiveEvent() {
@@ -209,7 +209,7 @@ namespace wasp::sound::midi {
 
 		iter += indexLength;
 
-		midiOut->outputSystemExclusive(&midiHDR);
+		midiOutPointer->outputSystemExclusive(&midiHDR);
 
 		//index now points to 1 past the last data entry
 	}

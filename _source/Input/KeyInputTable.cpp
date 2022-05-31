@@ -26,10 +26,23 @@ namespace wasp::input {
 		return getKeyState(dataArray[static_cast<int>(key)]);
 	}
 
+	void KeyInputTable::lock(KeyValues key) {
+		locks.set(static_cast<std::size_t>(key));
+	}
+
+	void KeyInputTable::lockAll() {
+		locks.set();
+	}
+
+	bool KeyInputTable::isLocked(KeyValues key) {
+		return locks[static_cast<int>(key)];
+	}
+
 	void KeyInputTable::tickOver() {
 		for (dataType& data : dataArray) {
 			data = (data << 1) | (data & thisTick); //shift left but repeat last digit
 		}
+		locks.reset();
 	}
 
 	KeyState KeyInputTable::getKeyState(dataType data) {

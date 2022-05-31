@@ -4,8 +4,6 @@
 
 namespace wasp::ecs {
 
-    //todo: systems store these themselves and then pass these on
-
     template <typename T>
     struct AddComponentOrder {
     private:

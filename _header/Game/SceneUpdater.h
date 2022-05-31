@@ -6,20 +6,20 @@
 
 namespace wasp::game {
 
-	class UpdateSystemChain {
+	class SceneUpdater {
 	private:
 		systems::InitSystem initSystem;	//not initialized!
+		std::function<void()> exitCallback{};
 
 	public:
-		UpdateSystemChain(
+		SceneUpdater(
 			resources::ResourceMasterStorage& resourceMasterStorage
-		)
-			: initSystem{ &resourceMasterStorage.bitmapStorage }
-		{
+		);
+
+		void setExitCallback(const std::function<void()>& exitCallback) {
+			this->exitCallback = exitCallback;
 		}
 
-		void operator()(Scene& scene) {
-			initSystem(scene);
-		}
+		void operator()(Scene& scene);
 	};
 }

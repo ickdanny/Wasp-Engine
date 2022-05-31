@@ -2,15 +2,28 @@
 
 namespace wasp::game {
 
+	Game::Game(
+		resources::ResourceMasterStorage& resourceMasterStorage,
+		window::WindowPainter* windowPainterPointer
+	)
+		: sceneList{ std::move(makeSceneList()) }
+		, sceneUpdater{ resourceMasterStorage }
+		, sceneRenderer{ windowPainterPointer }
+	{
+		sceneList.pushScene(SceneNames::main);
+	}
+
 	void Game::update() {
 		for (auto itr{ sceneList.rbegin() }; itr != sceneList.rend(); ++itr) {
 			auto& scene{ *(*itr) };	//dereference itr and shared_ptr
-			updateSystemChain(scene);
+			sceneUpdater(scene);
 			if (!scene.isTransparent(SystemChainIDs::update)) {
 				break;
 			}
 		}
 		updateSceneList();
+		//todo: reset input and shit
+		//todo: global flags and music
 	}
 
 	void Game::updateSceneList() {
@@ -29,6 +42,6 @@ namespace wasp::game {
 		if (itr != sceneList.rend() && scene.isTransparent(SystemChainIDs::render)) {
 			recursiveRenderHelper(deltaTime, itr + 1);
 		}
-		renderSystemChain(scene, deltaTime);
+		sceneRenderer(scene, deltaTime);
 	}
 }

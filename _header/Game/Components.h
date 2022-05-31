@@ -23,9 +23,6 @@ namespace wasp::game {
     struct ButtonData : components::ButtonData {
         using components::ButtonData::ButtonData;
     };
-    union ButtonAction {
-        SceneNames sceneName;
-    };
     struct SpriteInstruction : graphics::BitmapDrawInstruction {
         using graphics::BitmapDrawInstruction::BitmapDrawInstruction;
     };
