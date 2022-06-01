@@ -20,7 +20,7 @@ namespace wasp::channel {
 		Channel() = default;
 		~Channel() override = default;
 
-		bool hasMessage() const {
+		bool hasMessages() const {
 			return !messages.empty();
 		}
 
@@ -57,7 +57,7 @@ namespace wasp::channel {
 		}
 		~Channel() override = default;
 
-		bool hasMessage() const {
+		bool hasMessages() const {
 			return static_cast<bool>(messages);
 		}
 

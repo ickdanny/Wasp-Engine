@@ -90,12 +90,13 @@ namespace wasp::game::systems {
 					selOffset,
 					4,
 					L"button_quit",
-					{ MenuCommandSelect::Commands::enter }
+					{ MenuCommandSelect::Commands::exit }
 				).package()
-			) 
+			)
 		};
 		
 		attachButtonsVertical(dataStorage, buttonHandles);
+		setInitSelectedElement(scene, buttonHandles[0]);
 	}
 
 	void InitSystem::addBackground(
@@ -122,7 +123,7 @@ namespace wasp::game::systems {
 		DrawOrder drawOrder,
 		bool selected
 	) const {
-		math::Point2 unselPos{ initPos + (offset * index) };
+		math::Point2 unselPos{ initPos + (offset * static_cast<float>(index)) };
 		math::Point2 selPos{ unselPos + selOffset };
 		ButtonData buttonData{ unselPos, selPos, name };
 
@@ -140,11 +141,9 @@ namespace wasp::game::systems {
 		);
 	}
 
-	//todo: set menuCommand as nav
-
 	void InitSystem::attachButtonsVertical(
 		ecs::DataStorage& dataStorage,
-		const std::vector<ecs::entity::EntityHandle>& entityHandles
+		const std::vector<EntityHandle>& entityHandles
 	) const 
 	{
 		auto top{ entityHandles.begin() };
@@ -152,11 +151,29 @@ namespace wasp::game::systems {
 		auto end{ entityHandles.end() };
 
 		while (bottom != end) {
+			//hook up neighbor elements
 			dataStorage.addComponent(
 				ecs::AddComponentOrder{ *top, NeighborElementDown{ *bottom } }
 			);
 			dataStorage.addComponent(
 				ecs::AddComponentOrder{ *bottom, NeighborElementUp{ *top } }
+			);
+			//hook up arrow key menu commands
+			dataStorage.addComponent(
+				ecs::AddComponentOrder{
+					*top,
+					MenuCommandDown{
+						components::MenuCommand::Commands::nav_down
+					}
+				}
+			);
+			dataStorage.addComponent(
+				ecs::AddComponentOrder{
+					*bottom,
+					MenuCommandUp{
+						components::MenuCommand::Commands::nav_up
+					}
+				}
 			);
 			++top;
 			++bottom;
@@ -165,7 +182,7 @@ namespace wasp::game::systems {
 
 	void InitSystem::attachButtonsHorizontal(
 		ecs::DataStorage& dataStorage,
-		const std::vector<ecs::entity::EntityHandle>& entityHandles
+		const std::vector<EntityHandle>& entityHandles
 	) const
 	{
 		auto left{ entityHandles.begin() };
@@ -173,14 +190,47 @@ namespace wasp::game::systems {
 		auto end{ entityHandles.end() };
 
 		while (right != end) {
+			//hook up neighbor elements
 			dataStorage.addComponent(
 				ecs::AddComponentOrder{ *left, NeighborElementRight{ *right } }
 			);
 			dataStorage.addComponent(
 				ecs::AddComponentOrder{ *right, NeighborElementLeft{ *left } }
 			);
+			//hook up arrow key menu commands
+			dataStorage.addComponent(
+				ecs::AddComponentOrder{
+					*left,
+					MenuCommandRight{
+						components::MenuCommand::Commands::nav_right
+					}
+				}
+			);
+			dataStorage.addComponent(
+				ecs::AddComponentOrder{
+					*right,
+					MenuCommandLeft{
+						components::MenuCommand::Commands::nav_left
+					}
+				}
+			);
 			++left;
 			++right;
+		}
+	}
+
+	void InitSystem::setInitSelectedElement(
+		Scene& scene,
+		const EntityHandle& entityHandle
+	) const {
+		auto& currentSelectedElementChannel{
+			scene.getChannel(SceneTopics::currentSelectedElement)
+		};
+		if (currentSelectedElementChannel.isEmpty()) {
+			currentSelectedElementChannel.addMessage(entityHandle);
+		}
+		else {
+			throw std::runtime_error{ "existing selected element in initSystem!" };
 		}
 	}
 }

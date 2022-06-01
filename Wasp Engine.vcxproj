@@ -173,6 +173,7 @@
     <ClCompile Include="_source\Game\Game.cpp" />
     <ClCompile Include="_source\Game\SceneRenderer.cpp" />
     <ClCompile Include="_source\Game\SceneUpdater.cpp" />
+    <ClCompile Include="_source\Game\System\ButtonSpriteSystem.cpp" />
     <ClCompile Include="_source\Game\System\DebugRenderSystem.cpp" />
     <ClCompile Include="_source\Game\System\InitSystem.cpp" />
     <ClCompile Include="_source\Game\System\InputParserSystem.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="_header\Game\Components\MenuCommand.h" />
     <ClInclude Include="_header\Game\Components\TwoFramePosition.h" />
     <ClInclude Include="_header\Game\Game.h" />
+    <ClInclude Include="_header\Game\Systems\ButtonSpriteSystem.h" />
     <ClInclude Include="_header\Game\Systems\MenuNavigationCommands.h" />
     <ClInclude Include="_header\Game\Settings.h" />
     <ClInclude Include="_header\Game\Systems\DebugRenderSystem.h" />

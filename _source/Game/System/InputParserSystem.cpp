@@ -28,25 +28,30 @@ namespace wasp::game::systems {
 	}
 
 	void InputParserSystem::parseMenuInput(Scene& scene) {
-		auto& channel{ scene.getChannel(SceneTopics::menuNavigationCommands) };
+		auto& menuNavigationCommandChannel{ 
+			scene.getChannel(SceneTopics::menuNavigationCommands) 
+		};
+		menuNavigationCommandChannel.clear();
+
 		if (isJustPressed(KeyValues::K_escape) || isJustPressed(KeyValues::K_X)) {
-			channel.addMessage(MenuNavigationCommands::back);
+			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::back);
 		}
 		if (isJustPressed(KeyValues::K_Z)) {
-			channel.addMessage(MenuNavigationCommands::select);
+			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::select);
 		}
 		if (isJustPressed(KeyValues::K_up)) {
-			channel.addMessage(MenuNavigationCommands::up);
+			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::up);
 		}
 		if (isJustPressed(KeyValues::K_down)) {
-			channel.addMessage(MenuNavigationCommands::down);
+			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::down);
 		}
 		if (isJustPressed(KeyValues::K_left)) {
-			channel.addMessage(MenuNavigationCommands::left);
+			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::left);
 		}
 		if (isJustPressed(KeyValues::K_right)) {
-			channel.addMessage(MenuNavigationCommands::right);
+			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::right);
 		}
+
 		keyInputTablePointer->lockAll();	//menues have no input transparency
 	}
 

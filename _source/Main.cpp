@@ -106,7 +106,12 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         sound::midi::MidiHub midiHub{}; //todo: initial mute state via settings!
 
         //init game
-        Game game{ resourceMasterStorage, &window.getWindowPainter() };
+        Game game{ 
+            &resourceMasterStorage, 
+            &window.getWindowPainter(), 
+            &keyInputTable,
+            &midiHub
+        };
 
         graphics::RendererScheduler::RenderCallback renderCallback{
             [&](float deltaTime) {

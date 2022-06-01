@@ -3,18 +3,24 @@
 namespace wasp::game::systems {
 
 	void MenuNavigationSystem::operator()(Scene& scene) {
-		//todo: clear elementSelect channel
+
 		//if this scene has a selected element (in other words, if this scene is a menu)
 		auto& currentSelectedElementChannel{
 			scene.getChannel(SceneTopics::currentSelectedElement)
 		};
-		if (currentSelectedElementChannel.hasMessage()) {
+		if (currentSelectedElementChannel.hasMessages()) {
+
+			//this system is responsible for clearing the elementSelection channel
+			auto& elementSelectionChannel{
+				scene.getChannel(SceneTopics::elementSelection)
+			};
+			elementSelectionChannel.clear();
+
+			//if this scene has any menu navigation commands to parse
 			auto& menuNavigationCommandChannel{
 				scene.getChannel(SceneTopics::menuNavigationCommands)
 			};
-
-			//and if this scene has any menu navigation commands to parse
-			if (menuNavigationCommandChannel.hasMessage()) {
+			if (menuNavigationCommandChannel.hasMessages()) {
 
 				//grab the selected element
 				EntityHandle currentSelectedElement{
@@ -25,12 +31,15 @@ namespace wasp::game::systems {
 				for (auto menuNavigationCommand 
 					: menuNavigationCommandChannel.getMessages()) 
 				{
-					//todo: read the bool return value!
-					parseNavigationCommand(
-						scene, 
-						menuNavigationCommand, 
-						currentSelectedElement
-					);
+					if (
+						!parseNavigationCommand(
+							scene,
+							menuNavigationCommand,
+							currentSelectedElement
+						)
+					) {
+						break;	//break out of loop if we hit a critical command
+					}
 				}
 			}
 		}
@@ -90,13 +99,14 @@ namespace wasp::game::systems {
 		auto& keyboardBackMenuCommandChannel{
 			scene.getChannel(SceneTopics::keyboardBackMenuCommand)
 		};
-		if (keyboardBackMenuCommandChannel.hasMessage()) {
+		if (keyboardBackMenuCommandChannel.hasMessages()) {
 			return keyboardBackMenuCommandChannel.getMessages()[0];
 		}
 		return { MenuCommand::none };
 	}
 
 	//true if we can continue parsing navigation commands, false if critical
+	#pragma warning(suppress : 4715)  //suppress not all paths returning (throw instead)
 	bool MenuNavigationSystem::parseMenuCommand(
 		Scene& scene,
 		const MenuCommand& menuCommand,
@@ -136,7 +146,7 @@ namespace wasp::game::systems {
 			case MenuCommand::Commands::enter_and_stop_music:
 				handleStopMusic();
 			case MenuCommand::Commands::enter:
-				handleEnterCommand(menuCommand);
+				handleEnterCommand(menuCommand);	//todo: handle difficulties!!
 				return false;
 			case MenuCommand::Commands::back_and_set_track_to_menu:
 				handleStartMusic(L"01");

@@ -9,6 +9,7 @@ namespace wasp::game::systems {
 	class InitSystem {
 	private:
 		//typedefs
+		using EntityHandle = ecs::entity::EntityHandle;
 		using BasicButtonComponentTuple = ComponentTuple<
 			Position,
 			VisibleMarker,
@@ -49,13 +50,16 @@ namespace wasp::game::systems {
 		//attaches buttons from top down
 		void attachButtonsVertical(
 			ecs::DataStorage& dataStorage,
-			const std::vector<ecs::entity::EntityHandle>& entityHandles
+			const std::vector<EntityHandle>& entityHandles
 		) const;
 
 		//attaches buttons from left to right
 		void attachButtonsHorizontal(
 			ecs::DataStorage& dataStorage,
-			const std::vector<ecs::entity::EntityHandle>& entityHandles
+			const std::vector<EntityHandle>& entityHandles
 		) const;
+
+		void setInitSelectedElement(Scene& scene, const EntityHandle& entityHandle)
+			const;
 	};
 }

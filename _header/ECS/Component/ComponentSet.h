@@ -135,6 +135,7 @@ namespace wasp::ecs::component {
                 ComponentSet toRet{ *this };
                 toRet.bitset.set(index);
                 toRet.numComponents = numComponents + 1;
+                toRet.presentTypeIndices.push_back(index);
                 return toRet;
             }
             //otherwise return ourselves
@@ -164,10 +165,11 @@ namespace wasp::ecs::component {
             std::vector<std::size_t> indicesToAdd{};
             (indicesToAdd.push_back(ComponentIndexer.getIndex<Ts>), ...);
             ComponentSet toRet{ *this };
-            for (int index : indicesToAdd) {
+            for (std::size_t index : indicesToAdd) {
                 if (!bitset[index]) {
                     toRet.bitset.set(index);
                     ++(toRet.numComponents);
+                    toRet.presentTypeIndices.push_back(index);
                 }
             }
             return toRet;

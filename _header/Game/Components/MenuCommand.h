@@ -1,6 +1,9 @@
 #pragma once
 
 #include <variant>
+#include <string>
+
+#include "Game/Scenes.h"
 
 namespace wasp::game::components {
     struct MenuCommand {

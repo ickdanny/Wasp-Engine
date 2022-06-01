@@ -32,6 +32,14 @@ namespace wasp::ecs::component {
                 ->getComponent<T>(entityID);
         }
 
+        template <typename T>
+        const T& getComponent(EntityID entityID, const ComponentSet& componentSet) 
+            const 
+        {
+            return componentSet.getAssociatedArchetypeWeakPointer().lock()
+                ->getComponent<T>(entityID);
+        }
+
         //returns a pointer to the new component set if successful, nullptr otherwise
         template <typename T>
         const ComponentSet* addComponent(

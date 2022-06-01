@@ -29,7 +29,7 @@ namespace wasp::scene {
 					return scenePointer;
 				}
 			}
-			throw std::runtime_error{ "bad scene name!" };
+			throw std::runtime_error{ "unrecognized scene name in SceneStorage!" };
 		}
 
 		void makeScene(

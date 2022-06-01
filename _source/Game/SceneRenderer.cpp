@@ -1,4 +1,4 @@
-#include "Game/GameRenderer.h"
+#include "Game/SceneRenderer.h"
 
 namespace wasp::game {
 

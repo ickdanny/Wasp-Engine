@@ -6,12 +6,6 @@
 
 namespace wasp::math {
 
-    namespace {
-        void throwIfZero(float f) {
-
-        }
-    }
-
 	//conversion to point
 	Vector2::operator Point2() const {
 		return Point2{ x, y };
