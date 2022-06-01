@@ -130,7 +130,6 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             [&] {
                 game.update();
                 ++updateCount;
-                keyInputTable.tickOver();
                 pumpMessages();
 
                 //todo: fullscreen test
