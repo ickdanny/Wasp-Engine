@@ -173,6 +173,7 @@
     <ClCompile Include="_source\Game\Game.cpp" />
     <ClCompile Include="_source\Game\SceneRenderer.cpp" />
     <ClCompile Include="_source\Game\SceneUpdater.cpp" />
+    <ClCompile Include="_source\Game\Settings.cpp" />
     <ClCompile Include="_source\Game\System\ButtonSpriteSystem.cpp" />
     <ClCompile Include="_source\Game\System\DebugRenderSystem.cpp" />
     <ClCompile Include="_source\Game\System\InitSystem.cpp" />
@@ -282,14 +283,12 @@
     <ClInclude Include="_header\Game\Config.h" />
     <ClCompile Include="_source\Main.cpp" />
     <ClCompile Include="_source\Window\MainWindow.cpp" />
-    <ClInclude Include="_header\File\FileError.h" />
     <ClInclude Include="_header\Resource\FileLoadable.h" />
     <ClInclude Include="_header\Game\Resources\DirectoryStorage.h" />
     <ClInclude Include="_header\File\FileUtil.h" />
     <ClInclude Include="_header\Graphics\IDrawer.h" />
     <ClInclude Include="_header\Input\IKeyInputReceiver.h" />
     <ClInclude Include="_header\Input\IKeyInputTable.h" />
-    <ClInclude Include="_header\Sound\MidiError.h" />
     <ClInclude Include="_header\Sound\MidiSequence.h" />
     <ClInclude Include="_header\Sound\MidiSequencer.h" />
     <ClInclude Include="_header\Utility\Scheduling.h" />

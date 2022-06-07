@@ -370,3 +370,4 @@ FodyWeavers.xsd
 #Custom Ignore
 *.png
 *.mid
+*.cfg

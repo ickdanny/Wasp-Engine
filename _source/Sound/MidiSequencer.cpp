@@ -6,7 +6,6 @@
 #include <condition_variable>
 #include <chrono>
 
-#include "Sound\MidiError.h"
 #include "Utility\ByteUtil.h"
 #include "Utility\Scheduling.h"
 
@@ -172,7 +171,7 @@ namespace wasp::sound::midi {
 						outputSystemExclusiveEvent();
 						break;
 					default:
-						throw MidiError("Error unrecognized MIDI status");
+						throw std::runtime_error{ "Error unrecognized MIDI status" };
 				}
 			}
 		}

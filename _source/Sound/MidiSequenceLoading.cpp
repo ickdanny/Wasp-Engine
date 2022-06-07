@@ -5,7 +5,6 @@
 #include "Utility\ByteUtil.h"
 #include "Utility\Arithmetic.h"
 #include "Sound\MidiConstants.h"
-#include "Sound\MidiError.h"
 
 namespace wasp::sound::midi {
 
@@ -755,7 +754,7 @@ namespace wasp::sound::midi {
 			midiSequence.compiledTrack = compileTracks(individualTracks);
 		}
 		else {
-			throw MidiError("Error unsupported MIDI format");
+			throw std::runtime_error{ "Error unsupported MIDI format" };
 		}
 
 		return midiSequence;
@@ -792,7 +791,7 @@ namespace wasp::sound::midi {
 			);
 		}
 		else {
-			throw MidiError("Error unsupported MIDI format");
+			throw std::runtime_error{ "Error unsupported MIDI format" };
 		}
 
 		return midiSequence;

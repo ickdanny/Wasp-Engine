@@ -15,7 +15,7 @@ namespace wasp::game::resources {
 
 	public:
 		ManifestStorage()
-			: FileLoadable{ { L"mnfst" } }
+			: FileLoadable{ { L"mnft" } }
 			, ManifestLoadable{ { L"manifest" } } {
 		}
 

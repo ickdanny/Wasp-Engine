@@ -21,7 +21,7 @@ namespace wasp::game::windowmodes {
 	extern const window::WindowMode fullscreen{
 		L"FULLSCREEN",
 		WS_POPUP | WS_VISIBLE,
-		WS_EX_APPWINDOW | WS_EX_TOPMOST,
+		WS_EX_APPWINDOW,
 		window::fitToFullscreen,
 		window::findFullscreenPosition
 	};

@@ -6,8 +6,6 @@
 #include <filesystem>
 #include <functional>
 
-#include "File\FileError.h"
-
 namespace wasp::file {
 
 	std::wstring getFileName(const std::wstring& fileName){
@@ -54,7 +52,7 @@ namespace wasp::file {
 			iterator = std::filesystem::directory_iterator{ path };
 		}
 		catch (...){
-			throw std::runtime_error("Error cannot open directory");
+			throw std::runtime_error{ "Error cannot open directory" };
 		}
 
 		for (auto const& dir_entry : iterator) {
@@ -64,7 +62,7 @@ namespace wasp::file {
 
 	void throwIfFileDoesNotExist(const std::wstring& fileName){
 		if (!PathFileExistsW(fileName.c_str())) {
-			throw FileError{"File not found"};
+			throw std::runtime_error{ "File not found" };
 		}
 	}
 }

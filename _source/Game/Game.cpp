@@ -112,7 +112,7 @@ namespace wasp::game {
 		}
 	}
 	void Game::updateSettings() {
-		//toggle sound
+		//toggle muted
 		auto& soundToggleFlagChannel{
 			globalChannelSet.getChannel(GlobalTopics::soundToggleFlag)
 		};

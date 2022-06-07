@@ -12,7 +12,8 @@ namespace wasp::game::config {
 	constexpr int windowHeight{ 480 };
 
 	//resources
-	constexpr wchar_t mainManifestPath[]{ L"res\\main.mnfst" };
+	constexpr wchar_t mainManifestPath[]{ L"res\\wswp.mnft" };
+	constexpr wchar_t mainConfigPath[]{ L"res\\wswp.cfg" };
 
 	//graphics
 	constexpr int graphicsWidth{ windowWidth / 2 };		//320

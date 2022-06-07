@@ -33,6 +33,7 @@ namespace wasp::game::systems {
 	private:
 		void initScene(Scene& scene) const;
 		void initMainMenu(Scene& scene) const;
+		void initOptionsMenu(Scene& scene) const;
 
 		void addBackground(ecs::DataStorage& dataStorage, std::wstring name) const;
 

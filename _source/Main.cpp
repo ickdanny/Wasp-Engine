@@ -4,6 +4,8 @@
 
 #include <thread>
 #include <chrono>
+#include <iostream>
+#include <fstream>
 #include "windowsInclude.h"
 
 #include "Game\Config.h"
@@ -19,6 +21,7 @@
 #include "Sound\MidiHub.h"
 #include "Adaptor\ComLibraryGuard.h"
 #include "Game/Game.h"
+#include "Game/Settings.h"
 
 //debug
 #include "ConsoleOutput.h"
@@ -31,12 +34,18 @@ using window::getPrimaryMonitorInfo;
 using window::getWindowBorderWidthPadding;
 using window::getWindowBorderHeightPadding;
 
+//forward declarations
 void pumpMessages();
 
 #pragma warning(suppress : 28251) //suppress inconsistent annotation warning
 int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMode){
     try {
         debug::initConsoleOutput();
+
+        //read settings
+        Settings settings{ 
+            settings::readOrCreateSettingsFromFile(config::mainConfigPath) 
+        };
 
         //init COM
         windowsadaptor::ComLibraryGuard comLibraryGuard{ COINIT_APARTMENTTHREADED };
@@ -56,7 +65,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
         //init window and Direct 2D
         window::MainWindow window{
-            windowmodes::windowed,
+            settings.fullscreen ? windowmodes::fullscreen : windowmodes::windowed,
             instanceHandle,
             config::className,
             config::windowName,
@@ -103,7 +112,7 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         };
 
         //init midi
-        sound::midi::MidiHub midiHub{}; //todo: initial mute state via settings!
+        sound::midi::MidiHub midiHub{ settings.muted };
 
         //init game
         Game game{ 
@@ -119,32 +128,14 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             }
         };
 
-        window.show(windowShowMode);
-
-        static int updateCount{ 0 };
-
+        //init gameloop
         GameLoop gameLoop{
             config::updatesPerSecond,
             config::maxUpdatesWithoutFrame,
             //update function
             [&] {
                 game.update();
-                ++updateCount;
-                keyInputTable.tickOver();
                 pumpMessages();
-
-                //todo: fullscreen test
-                /*
-                if ((updateCount % 50) == 30) {
-                    debug::log("fullscreened");
-                    window.changeWindowMode(windowmodes::fullscreen);
-                }
-                if ((updateCount % 50) == 40) {
-                    debug::log("windowed");
-                    window.changeWindowMode(windowmodes::windowed);
-                }
-                */
-                //end fullscreen test
             },
             //draw function
             [&](float deltaTime) {
@@ -152,14 +143,17 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             }
         };
 
-        auto stopGameLoop{ [&] { gameLoop.stop(); } };
+        auto stopGameLoopCallback{ [&] { gameLoop.stop(); } };
 
-        window.setDestroyCallback(stopGameLoop);
-        game.setExitCallback(stopGameLoop);
+        window.setDestroyCallback(stopGameLoopCallback);
+        game.setExitCallback(stopGameLoopCallback);
 
+        //make the game visible and begin running
+        window.show(windowShowMode);
         gameLoop.run();
 
-        //todo: cleanup e.g. write settings
+        //after the game has ended, write settings and exit
+        settings::writeSettingsToFile(settings, config::mainConfigPath);
 
         return 0;
     }
@@ -193,7 +187,7 @@ void pumpMessages() {
         int result{ GetMessage(&msg, NULL, 0, 0) };
 
         if (result == -1) {
-            throw std::runtime_error("Error failed to get message");
+            throw std::runtime_error{ "Error message pump failed to get message" };
         }
 
         TranslateMessage(&msg);

@@ -228,6 +228,9 @@
     <ClCompile Include="_source\Game\System\ButtonSpriteSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="_source\Game\Settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Header\windowsInclude.h">
@@ -276,9 +279,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\File\FileUtil.h">
-      <Filter>Header Files\File</Filter>
-    </ClInclude>
-    <ClInclude Include="_header\File\FileError.h">
       <Filter>Header Files\File</Filter>
     </ClInclude>
     <ClInclude Include="_header\Resource\Loadable.h">
@@ -361,9 +361,6 @@
     </ClInclude>
     <ClInclude Include="_header\Utility\Scheduling.h">
       <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="_header\Sound\MidiError.h">
-      <Filter>Header Files\Sound</Filter>
     </ClInclude>
     <ClInclude Include="_header\Utility\ByteUtil.h">
       <Filter>Header Files\Utility</Filter>

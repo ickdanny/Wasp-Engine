@@ -1,7 +1,6 @@
 #include "Sound/MidiOut.h"
 
 #include "Sound/MidiConstants.h"
-#include "Sound/MidiError.h"
 
 #include "Logging.h"
 
@@ -57,7 +56,7 @@ namespace wasp::sound::midi {
 			}
 		}
 		else {
-			throw MidiError{ "Error MIDI short msg must end in 0b0000" };
+			throw std::runtime_error{ "Error MIDI short msg must end in 0b0000" };
 		}
 	}
 

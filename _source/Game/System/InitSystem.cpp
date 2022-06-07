@@ -30,6 +30,9 @@ namespace wasp::game::systems {
 			case SceneNames::main:
 				initMainMenu(scene);
 				break;
+			case SceneNames::options:
+				initOptionsMenu(scene);
+				break;
 			default:
 				int nameID{ static_cast<int>(scene.getName()) };
 				debug::log("No init function for: " + std::to_string(nameID));
@@ -97,6 +100,10 @@ namespace wasp::game::systems {
 		
 		attachButtonsVertical(dataStorage, buttonHandles);
 		setInitSelectedElement(scene, buttonHandles[0]);
+	}
+
+	void InitSystem::initOptionsMenu(Scene& scene) const {
+
 	}
 
 	void InitSystem::addBackground(
