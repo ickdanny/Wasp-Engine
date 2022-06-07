@@ -135,8 +135,6 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             //update function
             [&] {
                 game.update();
-                keyInputTable.tickOver();
-                keyInputTable.tickOver();
                 pumpMessages();
             },
             //draw function
