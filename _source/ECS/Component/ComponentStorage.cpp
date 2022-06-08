@@ -14,6 +14,12 @@ namespace wasp::ecs::component {
         , groupFactory{ componentSetFactory, archetypeFactory } {
     }
 
+    void ComponentStorage::recreate() {
+        componentSetFactory.clear();
+        archetypeFactory.clear();
+        groupFactory.recreate(componentSetFactory);
+    }
+
     void ComponentStorage::removeEntity(
         const RemoveEntityOrder& removeEntityOrder,
         const ComponentSet& componentSet

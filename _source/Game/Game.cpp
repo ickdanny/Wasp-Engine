@@ -5,6 +5,7 @@
 namespace wasp::game {
 
 	Game::Game(
+		Settings* settingsPointer,
 		resources::ResourceMasterStorage* resourceMasterStoragePointer,
 		window::WindowPainter* windowPainterPointer,
 		input::IKeyInputTable* keyInputTablePointer,
@@ -17,6 +18,7 @@ namespace wasp::game {
 			&globalChannelSet 
 		}
 		, sceneRenderer{ windowPainterPointer }
+		, settingsPointer{ settingsPointer }
 		, resourceMasterStoragePointer{ resourceMasterStoragePointer }
 		, keyInputTablePointer{ keyInputTablePointer }
 		, midiHubPointer{ midiHubPointer }
@@ -117,6 +119,7 @@ namespace wasp::game {
 			globalChannelSet.getChannel(GlobalTopics::soundToggleFlag)
 		};
 		if (soundToggleFlagChannel.hasMessages()) {
+			settingsPointer->muted = !settingsPointer->muted;
 			midiHubPointer->toggleMute();
 			soundToggleFlagChannel.clear();
 		}
@@ -126,11 +129,18 @@ namespace wasp::game {
 			globalChannelSet.getChannel(GlobalTopics::fullscreenToggleFlag)
 		};
 		if (fullscreenToggleFlagChannel.hasMessages()) {
-			//todo: toggle fullscreen on and off
+			settingsPointer->fullscreen = !settingsPointer->fullscreen;
+			updateFullscreenCallback();
 			fullscreenToggleFlagChannel.clear();
 		}
 		
-		//todo: write settings to disk
+		//write settings to disk
+		auto& writeSettingsFlagChannel{
+			globalChannelSet.getChannel(GlobalTopics::writeSettingsFlag)
+		};
+		if (writeSettingsFlagChannel.hasMessages()) {
+			writeSettingsCallback();
+		}
 	}
 
 	void Game::render(float deltaTime) {

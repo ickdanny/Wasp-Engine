@@ -64,7 +64,7 @@ namespace wasp::scene {
 		}
 
 		void refreshScene() {
-			dataStorage = { initEntityCapacity, initComponentCapacity };
+			dataStorage.recreate();
 			channelSet.clear();
 		}
 

@@ -232,7 +232,11 @@
     <ClInclude Include="_header\Game\Components\MenuCommand.h" />
     <ClInclude Include="_header\Game\Components\TwoFramePosition.h" />
     <ClInclude Include="_header\Game\Game.h" />
+    <ClInclude Include="_header\Game\Systems\GameBuilderCommands.h" />
+    <ClInclude Include="_header\Game\Components\PlayerData.h" />
+    <ClInclude Include="_header\Game\Systems\ShotType.h" />
     <ClInclude Include="_header\Game\Systems\ButtonSpriteSystem.h" />
+    <ClInclude Include="_header\Game\Systems\GameState.h" />
     <ClInclude Include="_header\Game\Systems\MenuNavigationCommands.h" />
     <ClInclude Include="_header\Game\Settings.h" />
     <ClInclude Include="_header\Game\Systems\DebugRenderSystem.h" />

@@ -9,6 +9,15 @@ namespace wasp::ecs::entity {
         entityMetadataList.resize(initCapacity);
     }
 
+    void EntityMetadataStorage::clear() {
+        std::fill(
+            entityMetadataList.begin(), 
+            entityMetadataList.end(), 
+            EntityMetadata{}
+        );
+        freeEntityIDStorage.clear();
+    }
+
     EntityHandle EntityMetadataStorage::createEntity() {
         EntityID entityID{ freeEntityIDStorage.retrieveID() };
         auto generation{ entityMetadataList[entityID].getGeneration() };

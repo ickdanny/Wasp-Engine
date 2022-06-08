@@ -1,0 +1,24 @@
+#pragma once
+
+#include "ShotType.h"
+
+namespace wasp::game::systems {
+	enum class GameMode {
+		campaign,
+		practice
+	};
+	enum class Difficulty {
+		easy,
+		normal,
+		hard,
+		lunatic
+	};
+
+	struct GameState {
+		GameMode gameMode{};
+		Difficulty difficulty{};
+		ShotType shotType{};
+		int stage{};
+		unsigned int prngSeed{};
+	};
+}

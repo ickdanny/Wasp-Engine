@@ -29,6 +29,11 @@ namespace wasp::ecs {
             , componentStorage{ initEntityCapacity, initComponentCapacity } {
         }
 
+        void recreate() {
+            entityMetadataStorage.clear();
+            componentStorage.recreate();
+        }
+
         //data query functions
 
         template <typename... Ts>
@@ -103,8 +108,6 @@ namespace wasp::ecs {
         //Returns an entity handle for the entity with the specified entityID of the
         //current generation. Throws runtime_error if there is no such alive entity.
         EntityHandle makeHandle(EntityID entityID) const;
-
-        //todo: named entities not implemented
 
         //data modification functions
 

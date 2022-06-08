@@ -5,15 +5,20 @@ namespace wasp::ecs::component {
         ComponentSetFactory& componentSetFactory,
         ArchetypeFactory& archetypeFactory
     ) {
-        const auto& zeroSet{ componentSetFactory.makeSet() };
-        keyToGroupMap.emplace(zeroSet, &zeroSet);
-        zeroGroupPointer = &keyToGroupMap[zeroSet];
-        initSingleComponentGroups(componentSetFactory);
+        initGroups(componentSetFactory);
         archetypeFactory.setNewArchetypeCallback(
             [&](std::shared_ptr<Archetype> archetypePointer) {
-                zeroGroupPointer->receiveNewArchetype(archetypePointer);
+                if (zeroGroupPointer) {
+                    zeroGroupPointer->receiveNewArchetype(archetypePointer);
+                }
             }
         );
+    }
+
+    void GroupFactory::recreate(ComponentSetFactory& componentSetFactory) {
+        keyToGroupMap.clear();
+        zeroGroupPointer = nullptr;
+        initGroups(componentSetFactory);
     }
 
     Group* GroupFactory::getGroupPointer(const ComponentSet& componentKey) {
@@ -31,6 +36,13 @@ namespace wasp::ecs::component {
         else {
             return &(found->second);
         }
+    }
+
+    void GroupFactory::initGroups(ComponentSetFactory& componentSetFactory) {
+        const auto& zeroSet{ componentSetFactory.makeSet() };
+        keyToGroupMap.emplace(zeroSet, &zeroSet);
+        zeroGroupPointer = &keyToGroupMap[zeroSet];
+        initSingleComponentGroups(componentSetFactory);
     }
 
     void GroupFactory::initSingleComponentGroups(

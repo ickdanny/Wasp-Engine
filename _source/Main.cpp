@@ -116,19 +116,37 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
 
         //init game
         Game game{ 
+            &settings,
             &resourceMasterStorage, 
             &window.getWindowPainter(), 
             &keyInputTable,
             &midiHub
         };
 
+        game.setUpdateFullscreenCallback(
+            [&]() {
+                if (settings.fullscreen) {
+                    window.changeWindowMode(windowmodes::fullscreen);
+                }
+                else {
+                    window.changeWindowMode(windowmodes::windowed);
+                }
+            }
+        );
+
+        game.setWriteSettingsCallback(
+            [&]() {
+                settings::writeSettingsToFile(settings, config::mainConfigPath);
+            }
+        );
+
+        //init gameloop
         graphics::RendererScheduler::RenderCallback renderCallback{
             [&](float deltaTime) {
                 game.render(deltaTime);
             }
         };
 
-        //init gameloop
         GameLoop gameLoop{
             config::updatesPerSecond,
             config::maxUpdatesWithoutFrame,
@@ -139,7 +157,10 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
             },
             //draw function
             [&](float deltaTime) {
-                renderer.render(deltaTime, renderCallback);
+                renderer.render(
+                    deltaTime, 
+                    renderCallback
+                );
             }
         };
 

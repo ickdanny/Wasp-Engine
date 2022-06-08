@@ -4,6 +4,7 @@
 #include "Game/Components/MenuCommand.h"
 #include "Game/Systems/MenuNavigationCommands.h"
 #include "ECS/Entity/EntityHandle.h"
+#include "Game/Systems/GameState.h"
 
 namespace wasp::game {
 
@@ -25,15 +26,17 @@ namespace wasp::game {
 		static const Topic<> stopMusicFlag;
 
 		//handled by Game::updateSettings
-		static const Topic<> writeSettingsFlag;		//todo: not handled!
+		static const Topic<> writeSettingsFlag;
 		static const Topic<> soundToggleFlag;
 		static const Topic<> fullscreenToggleFlag;
 
 		//handled by Game::updateSceneList
 		static const Topic<> exitFlag;
 
-		//todo: not handled!
-		static const Topic<> gameOverFlag;
+		static const Topic<systems::GameState> gameState;	//todo: not handled!
+
+
+		static const Topic<> gameOverFlag;			//todo: not handled!
 	};
 
 	//scene topics (1 channel per scene)

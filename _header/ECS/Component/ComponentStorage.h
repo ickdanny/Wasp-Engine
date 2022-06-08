@@ -21,6 +21,8 @@ namespace wasp::ecs::component {
             std::size_t initComponentCapacity
         );
 
+        void recreate();
+
         template <typename... Ts>
         Group* getGroupPointer() {
             return groupFactory.getGroupPointer(componentSetFactory.makeSet<Ts...>());

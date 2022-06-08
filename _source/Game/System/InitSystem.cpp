@@ -100,10 +100,57 @@ namespace wasp::game::systems {
 		
 		attachButtonsVertical(dataStorage, buttonHandles);
 		setInitSelectedElement(scene, buttonHandles[0]);
+
+		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
+			{ components::MenuCommand::Commands::nav_far_down }
+		);
 	}
 
 	void InitSystem::initOptionsMenu(Scene& scene) const {
+		auto& dataStorage{ scene.getDataStorage() };
+		addBackground(dataStorage, L"background_menu_option");
 
+		constexpr math::Point2 initPos{ center.x, 100.0f };
+		constexpr math::Vector2 offset{ 0.0f, 50.0f };
+		constexpr math::Vector2 selOffset{ 0.0f, -2.0f };
+
+		auto buttonHandles{
+			dataStorage.addEntities(
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					0,
+					L"button_sound",
+					{ MenuCommandSelect::Commands::sound_toggle },
+					{ },	//draw order
+					true
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					1,
+					L"button_fullscreen",
+					{ MenuCommandSelect::Commands::fullscreen_toggle }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					2,
+					L"button_option_exit",
+					{ MenuCommandSelect::Commands::back_and_write_settings }
+				).package()
+			)
+		};
+
+		attachButtonsVertical(dataStorage, buttonHandles);
+		setInitSelectedElement(scene, buttonHandles[0]);
+
+		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
+			{ components::MenuCommand::Commands::nav_far_down }
+		);
 	}
 
 	void InitSystem::addBackground(

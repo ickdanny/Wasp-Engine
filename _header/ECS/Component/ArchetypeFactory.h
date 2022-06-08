@@ -24,6 +24,8 @@ namespace wasp::ecs::component {
             ComponentSetFactory& componentSetFactory
         );
 
+        void clear();
+
         //setting callbacks
         void setNewArchetypeCallback(
             const std::function<void(std::shared_ptr<Archetype>)>& newArchetypeCallback

@@ -4,9 +4,16 @@
 #include <string>
 
 #include "Game/Scenes.h"
+#include "Game/Systems/GameBuilderCommands.h"
 
 namespace wasp::game::components {
     struct MenuCommand {
+    private:
+        //typedefs
+        using GameBuilderCommands = systems::GameBuilderCommands;
+
+    public:
+        //fields
         enum class Commands {
             nav_up,
             nav_down,
@@ -38,7 +45,7 @@ namespace wasp::game::components {
 
             none
         } command{};
-        std::variant<SceneNames, std::wstring> data{};
+        std::variant<std::tuple<SceneNames, GameBuilderCommands>, std::wstring> data{};
 
         //static constant for no command
         static const MenuCommand none;

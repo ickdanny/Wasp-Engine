@@ -12,6 +12,12 @@ namespace wasp::ecs::entity {
         }
     }
 
+    void FreeEntityIDStorage::clear() {
+        std::fill(entityIDSet.begin(), entityIDSet.end(), false);
+        currentLiveEntities = 0;
+        currentPos = 0;
+    }
+
     bool FreeEntityIDStorage::isIDUsed(EntityID entityID) const {
         if (entityID >= entityIDSet.size()) {
             return false;

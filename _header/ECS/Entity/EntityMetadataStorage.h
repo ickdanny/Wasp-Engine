@@ -20,6 +20,8 @@ namespace wasp::ecs::entity {
         //default initialized entity metadatas
         EntityMetadataStorage(std::size_t initCapacity);
 
+        void clear();
+
         //creates an entity and returns its handle
         EntityHandle createEntity();
 

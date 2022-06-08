@@ -16,6 +16,11 @@ namespace wasp::ecs::component {
         //default constructor
         ComponentSetFactory() = default;
 
+        //does not reset the new component set callback
+        void clear() {
+            canonicalComponentSets.clear();
+        }
+
         //component set creation
         
         //returns the empty component set

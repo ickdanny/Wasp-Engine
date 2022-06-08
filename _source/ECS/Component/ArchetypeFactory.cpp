@@ -17,6 +17,10 @@ namespace wasp::ecs::component {
         );
     }
 
+    void ArchetypeFactory::clear() {
+        archetypePointers.clear();
+    }
+
     void ArchetypeFactory::makeArchetype(const ComponentSet& componentSet) {
         archetypePointers.emplace_back(
             new Archetype{

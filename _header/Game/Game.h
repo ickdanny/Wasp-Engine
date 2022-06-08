@@ -6,6 +6,7 @@
 #include "SceneUpdater.h"
 #include "SceneRenderer.h"
 #include "Sound/MidiHub.h"
+#include "Settings.h"
 
 namespace wasp::game {
 
@@ -22,15 +23,19 @@ namespace wasp::game {
 		SceneUpdater sceneUpdater;		//not initialized!
 		SceneRenderer sceneRenderer;	//not initialized!
 
+		Settings* settingsPointer{};
 		resources::ResourceMasterStorage* resourceMasterStoragePointer{};
 		input::IKeyInputTable* keyInputTablePointer{};
 		sound::midi::MidiHub* midiHubPointer{};
 
 		std::function<void()> exitCallback{};
+		std::function<void()> updateFullscreenCallback{};
+		std::function<void()> writeSettingsCallback{};
 		
 	public:
 		//constructor
 		Game(
+			Settings* settingsPointer,
 			resources::ResourceMasterStorage* resourceMasterStoragePointer,
 			window::WindowPainter* windowPainterPointer,
 			input::IKeyInputTable* keyInputTablePointer,
@@ -43,6 +48,18 @@ namespace wasp::game {
 
 		void setExitCallback(const std::function<void()>& exitCallback) {
 			this->exitCallback = exitCallback;
+		}
+
+		void setUpdateFullscreenCallback(
+			const std::function<void()>& updateFullscreenCallback
+		) {
+			this->updateFullscreenCallback = updateFullscreenCallback;
+		}
+
+		void setWriteSettingsCallback(
+			const std::function<void()>& writeSettingsCallback
+		) {
+			this->writeSettingsCallback = writeSettingsCallback;
 		}
 
 	private:

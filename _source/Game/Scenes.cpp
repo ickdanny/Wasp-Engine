@@ -30,7 +30,7 @@ namespace wasp::game {
 			20,						//initEntityCapacity
 			20,						//initComponentCapacity
 			renderTransparency,		//transparency
-			false					//refresh
+			true					//refresh
 		);
 
 		return SceneList(std::move(sceneStorage));

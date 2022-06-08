@@ -18,9 +18,12 @@ namespace wasp::ecs::component {
             ArchetypeFactory& archetypeFactory
         );
 
+        void recreate(ComponentSetFactory& componentSetFactory);
+
         Group* getGroupPointer(const ComponentSet& componentKey);
 
     private:
+        void initGroups(ComponentSetFactory& componentSetFactory);
         void initSingleComponentGroups(
             ComponentSetFactory& componentSetFactory
         );

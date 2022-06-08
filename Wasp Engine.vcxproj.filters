@@ -560,5 +560,17 @@
     <ClInclude Include="_header\Game\Systems\ButtonSpriteSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="_header\Game\Systems\GameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\ShotType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Components\PlayerData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\GameBuilderCommands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

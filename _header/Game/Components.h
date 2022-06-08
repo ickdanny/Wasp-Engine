@@ -6,6 +6,7 @@
 #include "Components/ButtonData.h"
 #include "Components/LockCondition.h"
 #include "Graphics/BitmapDrawInstruction.h"
+#include "Components/PlayerData.h"
 
 namespace wasp::game {
 
@@ -39,4 +40,6 @@ namespace wasp::game {
     struct Velocity : math::Vector2 {
         using math::Vector2::Vector2;
     };
+
+    struct PlayerData : components::PlayerData {};
 }
