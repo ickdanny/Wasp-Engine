@@ -176,6 +176,8 @@
     <ClCompile Include="_source\Game\Settings.cpp" />
     <ClCompile Include="_source\Game\System\ButtonSpriteSystem.cpp" />
     <ClCompile Include="_source\Game\System\DebugRenderSystem.cpp" />
+    <ClCompile Include="_source\Game\System\GameBuilderSystem.cpp" />
+    <ClCompile Include="_source\Game\System\GameState.cpp" />
     <ClCompile Include="_source\Game\System\InitSystem.cpp" />
     <ClCompile Include="_source\Game\System\InputParserSystem.cpp" />
     <ClCompile Include="_source\Game\System\MenuNavigationSystem.cpp" />
@@ -234,6 +236,7 @@
     <ClInclude Include="_header\Game\Game.h" />
     <ClInclude Include="_header\Game\Systems\GameBuilderCommands.h" />
     <ClInclude Include="_header\Game\Components\PlayerData.h" />
+    <ClInclude Include="_header\Game\Systems\GameBuilderSystem.h" />
     <ClInclude Include="_header\Game\Systems\ShotType.h" />
     <ClInclude Include="_header\Game\Systems\ButtonSpriteSystem.h" />
     <ClInclude Include="_header\Game\Systems\GameState.h" />

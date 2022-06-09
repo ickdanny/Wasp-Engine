@@ -135,11 +135,11 @@ namespace wasp::container {
 		class Iterator;
 
 		Iterator begin() {
-			return Iterator{ *this, 0 };
+			return Iterator{ this, 0 };
 		}
 
 		Iterator end() {
-			return Iterator{ *this, currentSize };
+			return Iterator{ this, currentSize };
 		}
 
 		class Iterator {
@@ -153,21 +153,27 @@ namespace wasp::container {
 
 		private:
 			//fields
+			IntLookupTable* intLookupTablePointer{};
 			typename std::vector<T>::iterator valueIterator{};
 			int currentDenseIndex{};
 
-			Iterator(IntLookupTable& intLookupTable, int denseIndex)
-				: valueIterator{ intLookupTable.denseValues.begin() + denseIndex }
+			Iterator(IntLookupTable* intLookupTablePointer, int denseIndex)
+				: intLookupTablePointer{ intLookupTablePointer }
+				, valueIterator{ 
+					intLookupTablePointer->denseValues.begin() + denseIndex 
+				}
 				, currentDenseIndex{ denseIndex } {
 			}
 
 		public:
 
 			int getCurrentSparseIndex() {
-				throwIfInvalidDenseIndex(currentDenseIndex);
+				intLookupTablePointer->throwIfInvalidDenseIndex(currentDenseIndex);
 
-				int sparseIndex{ denseIndexToSparseIndex[currentDenseIndex] };
-				throwIfInvalidSparseIndex(sparseIndex);
+				int sparseIndex{ 
+					intLookupTablePointer->denseIndexToSparseIndex[currentDenseIndex] 
+				};
+				intLookupTablePointer->throwIfInvalidSparseIndex(sparseIndex);
 
 				return sparseIndex;
 			}

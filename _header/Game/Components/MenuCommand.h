@@ -11,6 +11,8 @@ namespace wasp::game::components {
     private:
         //typedefs
         using GameBuilderCommands = systems::GameBuilderCommands;
+        using DataVariant
+            = std::variant<std::tuple<SceneNames, GameBuilderCommands>, std::wstring>;
 
     public:
         //fields
@@ -45,9 +47,36 @@ namespace wasp::game::components {
 
             none
         } command{};
-        std::variant<std::tuple<SceneNames, GameBuilderCommands>, std::wstring> data{};
+        DataVariant data{};
 
         //static constant for no command
         static const MenuCommand none;
+
+        //constructors
+
+        //default constructor
+        MenuCommand()
+            : command{ Commands::none }
+            , data{} {
+        }
+        
+        //full arg constructor
+        MenuCommand(Commands command, const DataVariant& data)
+            : command{ command }
+            , data{ data }{
+        }
+
+        //constructs a MenuCommand with the given scene name as data and "none" as the
+        //game builder command
+        MenuCommand(Commands command, SceneNames sceneName)
+            : command{ command }
+            , data{ std::tuple{ sceneName, GameBuilderCommands::none } }{
+        }
+
+        //constructs a MenuCommand with a default-initialized data member
+        MenuCommand(Commands command)
+            : command{ command }
+            , data{}{
+        }
     };
 }

@@ -472,7 +472,7 @@ namespace wasp::window {
 				std::round(upperLeft.y + scaledHeight)
 			),
 			opacity,
-			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR
+			game::config::interpolationMode
 		);
 	}
 
@@ -506,7 +506,7 @@ namespace wasp::window {
 				upperLeft.y + scaledHeight
 			),
 			opacity, 
-			D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+			game::config::interpolationMode,
 			D2D1::RectF(
 				sourceRectangle.x,
 				sourceRectangle.y,

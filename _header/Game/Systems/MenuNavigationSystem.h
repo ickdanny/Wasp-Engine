@@ -15,7 +15,6 @@ namespace wasp::game::systems {
 
         //fields
         channel::ChannelSet* globalChannelSetPointer{};
-        //todo: cleanup for quitting, fullscreen, mute togling
 
     public:
         MenuNavigationSystem(channel::ChannelSet* globalChannelSetPointer) 
@@ -101,7 +100,7 @@ namespace wasp::game::systems {
         }
 
         void handleStopMusic();
-        void handleEnterCommand(const MenuCommand& menuCommand);
+        void handleEnterCommand(Scene& scene, const MenuCommand& menuCommand);
 
         void handleBackCommand(const MenuCommand& menuCommand);
         void handleStartMusic(const std::wstring& trackName);

@@ -71,7 +71,6 @@ namespace wasp::game {
 		auto& sceneEntryChannel{ globalChannelSet.getChannel(GlobalTopics::sceneEntry) };
 		if (sceneEntryChannel.hasMessages()) {
 			for (SceneNames sceneName : sceneEntryChannel.getMessages()) {
-				//todo: game builder system changes messages to handle start_difficulty
 				sceneList.pushScene(sceneName);
 				sceneUpdater(*(*sceneList.rbegin()));	//dereference itr and shared_ptr
 			}

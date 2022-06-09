@@ -6,7 +6,7 @@ namespace wasp::game::systems {
         practice,
 
         easy,
-        medium,
+        normal,
         hard,
         lunatic,
 
@@ -18,6 +18,8 @@ namespace wasp::game::systems {
         stage3,
         stage4,
         stage5,
+
+        beginGame,
 
         none
     };

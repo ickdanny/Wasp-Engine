@@ -10,11 +10,21 @@
 
 namespace wasp::game {
 
-    struct MenuCommandUp : components::MenuCommand {};
-    struct MenuCommandDown : components::MenuCommand {};
-    struct MenuCommandLeft : components::MenuCommand {};
-    struct MenuCommandRight : components::MenuCommand {};
-    struct MenuCommandSelect : components::MenuCommand {};
+    struct MenuCommandUp : components::MenuCommand {
+        using components::MenuCommand::MenuCommand;
+    };
+    struct MenuCommandDown : components::MenuCommand {
+        using components::MenuCommand::MenuCommand;
+    };
+    struct MenuCommandLeft : components::MenuCommand {
+        using components::MenuCommand::MenuCommand;
+    };
+    struct MenuCommandRight : components::MenuCommand {
+        using components::MenuCommand::MenuCommand;
+    };
+    struct MenuCommandSelect : components::MenuCommand {
+        using components::MenuCommand::MenuCommand;
+    };
 
     struct NeighborElementUp : ecs::entity::EntityHandle {};
     struct NeighborElementDown : ecs::entity::EntityHandle {};

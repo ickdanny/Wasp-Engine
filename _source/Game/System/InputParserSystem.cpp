@@ -6,8 +6,6 @@ namespace wasp::game::systems {
 		switch (scene.getName()){
 			case SceneNames::main:
 			case SceneNames::difficulty:
-			case SceneNames::start_difficulty:
-			case SceneNames::practice_difficulty:
 			case SceneNames::shot:
 			case SceneNames::level:
 			case SceneNames::music:

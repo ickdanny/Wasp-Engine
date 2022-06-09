@@ -14,6 +14,7 @@ namespace wasp::game {
 	const Topic<> GlobalTopics::soundToggleFlag{};
 	const Topic<> GlobalTopics::fullscreenToggleFlag{};
 	const Topic<> GlobalTopics::exitFlag{};
+	const Topic<systems::GameState> GlobalTopics::gameState{};
 	const Topic<> GlobalTopics::gameOverFlag{};
 
 	//scene topics
@@ -23,6 +24,7 @@ namespace wasp::game {
 	const Topic<ecs::entity::EntityHandle> SceneTopics::currentSelectedElement{};
 	const Topic<std::tuple<ecs::entity::EntityHandle, bool>>
 		SceneTopics::elementSelection{};
+	const Topic<systems::GameBuilderCommands> SceneTopics::gameBuilderCommands{};
 	const Topic<> SceneTopics::pauseFlag{};
 	const Topic<float> SceneTopics::lastDeltaTime{};
 }

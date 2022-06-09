@@ -56,7 +56,10 @@ namespace wasp::game::systems {
 					selOffset,
 					0,
 					L"button_start",
-					{ MenuCommandSelect::Commands::enter, SceneNames::start_difficulty },
+					{ 
+						MenuCommandSelect::Commands::enter, 
+						std::tuple{ SceneNames::difficulty, GameBuilderCommands::start }
+					},
 					{ },	//draw order
 					true
 				).package(),
@@ -68,7 +71,10 @@ namespace wasp::game::systems {
 					L"button_practice",
 					{ 
 						MenuCommandSelect::Commands::enter, 
-						SceneNames::practice_difficulty 
+						std::tuple{ 
+							SceneNames::difficulty, 
+							GameBuilderCommands::practice 
+						}
 					}
 				).package(),
 				makeButton(
@@ -110,8 +116,8 @@ namespace wasp::game::systems {
 		auto& dataStorage{ scene.getDataStorage() };
 		addBackground(dataStorage, L"background_menu_option");
 
-		constexpr math::Point2 initPos{ center.x, 100.0f };
-		constexpr math::Vector2 offset{ 0.0f, 50.0f };
+		constexpr math::Point2 initPos{ center.x, 85.0f };
+		constexpr math::Vector2 offset{ 0.0f, 55.0f };
 		constexpr math::Vector2 selOffset{ 0.0f, -2.0f };
 
 		auto buttonHandles{

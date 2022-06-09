@@ -36,7 +36,7 @@ namespace wasp::ecs::component {
 			}
 		}
 
-		int getEntityID() {
+		std::size_t getEntityID() {
 			return getCurrentIterator().getEntityID();
 		}
 

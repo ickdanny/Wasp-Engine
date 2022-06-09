@@ -7,6 +7,7 @@
 #include "Game/Systems/InputParserSystem.h"
 #include "Game/Systems/MenuNavigationSystem.h"
 #include "Game/Systems/ButtonSpriteSystem.h"
+#include "Game/Systems/GameBuilderSystem.h"
 
 namespace wasp::game {
 
@@ -16,6 +17,7 @@ namespace wasp::game {
 		systems::InputParserSystem inputParserSystem;			//not initialized!
 		systems::MenuNavigationSystem menuNavigationSystem;		//not initialized!
 		systems::ButtonSpriteSystem buttonSpriteSystem;			//not initialized!
+		systems::GameBuilderSystem gameBuilderSystem;			//not initialized!
 
 	public:
 		SceneUpdater(

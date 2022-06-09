@@ -7,6 +7,9 @@ namespace wasp::game::systems {
 
 	class RenderSystem {
 	private:
+		//typedefs
+		using IDOrderTuple = std::tuple<ecs::entity::EntityID, DrawOrder>;
+
 		//fields
 		window::WindowPainter* windowPainterPointer{};
 

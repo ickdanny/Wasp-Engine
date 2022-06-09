@@ -35,7 +35,7 @@ namespace wasp::ecs::component {
 			: innerIteratorTuple{ innerIteratorTuple } {
 		}
 
-		int getEntityID() {
+		std::size_t getEntityID() {
 			return std::get<0>(innerIteratorTuple).getCurrentSparseIndex();
 		}
 

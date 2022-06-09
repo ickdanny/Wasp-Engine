@@ -28,6 +28,10 @@ namespace wasp::channel {
 			return messages.empty();
 		}
 
+		auto& getMessages() {
+			return messages;
+		}
+
 		const auto& getMessages() const {
 			return messages;
 		}

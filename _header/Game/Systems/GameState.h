@@ -20,5 +20,7 @@ namespace wasp::game::systems {
 		ShotType shotType{};
 		int stage{};
 		unsigned int prngSeed{};
+
+		void setPrngSeedToClock();
 	};
 }

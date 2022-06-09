@@ -35,20 +35,34 @@ namespace wasp::ecs {
         }
 
         //data query functions
+        //the overloads that take an EntityHandle check for generation matching
 
+        //returns a pointer to the group specified by the template parameters
         template <typename... Ts>
         Group* getGroupPointer() {
             return componentStorage.getGroupPointer<Ts...>();
         }
 
+        //checks if the given entityID is alive and matches the generation
         bool isAlive(EntityHandle entityHandle) const {
             return entityMetadataStorage.isAlive(entityHandle);
         }
-
+        //checks if the given entityID is dead or doesn't match the generation
         bool isDead(EntityHandle entityHandle) const {
             return entityMetadataStorage.isDead(entityHandle);
         }
 
+        //checks if the given entityID is alive ignoring generation
+        bool isAlive(EntityID entityID) const {
+            return entityMetadataStorage.isAlive(entityID);
+        }
+        //checks if the given entityID is dead ignoring generation
+        bool isDead(EntityID entityID) const {
+            return entityMetadataStorage.isDead(entityID);
+        }
+
+        //returns true if the given entity handle contains the component,
+        //returns false otherwise, including the case where the entity is dead
         template <typename T>
         bool containsComponent(EntityHandle entityHandle) const {
             if (isAlive(entityHandle)) {
@@ -58,6 +72,19 @@ namespace wasp::ecs {
             return false;
         }
 
+        //returns true if the given entityID contains the component ignoring generation,
+        //returns false otherwise
+        template <typename T>
+        bool containsComponent(EntityID entityID) const {
+            if (isAlive(entityID)) {
+                return getComponentSetPointer(entityID)
+                    ->containsComponent<T>();
+            }
+            return false;
+        }
+
+        //returns true if the given entity handle contains all specified components,
+        //returns false otherwise, including the case where the entity is dead
         template <typename... Ts>
         bool containsAllComponents(EntityHandle entityHandle) const {
             if (isAlive(entityHandle)) {
@@ -67,6 +94,20 @@ namespace wasp::ecs {
             return false;
         }
 
+        //returns true if the given entityID contains all specified components
+        //ignoring generation, returns false otherwise
+        template <typename... Ts>
+        bool containsAllComponents(EntityID entityID) const {
+            if (isAlive(entityID)) {
+                return getComponentSetPointer(entityID)
+                    ->containsAllComponents<Ts...>();
+            }
+            return false;
+        }
+
+        //returns true if the given entity handle contains any of the specified
+        //components, returns false othwerise, including the case where the entity is
+        //dead
         template <typename... Ts>
         bool containsAnyComponent(EntityHandle entityHandle) const {
             if (isAlive(entityHandle)) {
@@ -76,6 +117,20 @@ namespace wasp::ecs {
             return false;
         }
 
+        //returns true if the given entityID contains any of the specified components
+        //ignoring generation, returns false othwerise, including the case where the 
+        //entity is dead
+        template <typename... Ts>
+        bool containsAnyComponent(EntityID entityID) const {
+            if (isAlive(entityID)) {
+                return getComponentSetPointer(entityID)
+                    ->containsAnyComponent<Ts...>();
+            }
+            return false;
+        }
+
+        //retrieves the specified component for the given entity handle, throwing
+        //if the entity either does not have that component or is dead
         template <typename T>
         T& getComponent(EntityHandle entityHandle) {
             if (isAlive(entityHandle)) {
@@ -91,7 +146,7 @@ namespace wasp::ecs {
             }
             throw std::runtime_error{ "tried to get component of dead entity!" };
         }
-
+        //const version
         template <typename T>
         const T& getComponent(EntityHandle entityHandle) const {
             if (isAlive(entityHandle)) {
@@ -100,6 +155,43 @@ namespace wasp::ecs {
                         entityHandle.entityID,
                         *getComponentSetPointer(entityHandle.entityID)
                     );
+                }
+                else {
+                    throw std::runtime_error{ "entity doesn't contain component!" };
+                }
+            }
+            throw std::runtime_error{ "tried to get component of dead entity!" };
+        }
+
+        //retrieves the specified component for the given entityID ignoring generation,
+        //throwing if the entity either does not have that component or is dead
+        template <typename T>
+        T& getComponent(EntityID entityID) {
+            if (isAlive(entityID)) {
+                if (containsComponent<T>(entityID)) {
+                    return componentStorage.getComponent<T>(
+                        entityID,
+                        *getComponentSetPointer(entityID)
+                        );
+                }
+                else {
+                    throw std::runtime_error{ "entity doesn't contain component!" };
+                }
+            }
+            throw std::runtime_error{ "tried to get component of dead entity!" };
+        }
+        //const version
+        template <typename T>
+        const T& getComponent(EntityID entityID) const {
+            if (isAlive(entityID)) {
+                if (containsComponent<T>(entityID)) {
+                    return componentStorage.getComponent<T>(
+                        entityID,
+                        *getComponentSetPointer(entityID)
+                        );
+                }
+                else {
+                    throw std::runtime_error{ "entity doesn't contain component!" };
                 }
             }
             throw std::runtime_error{ "tried to get component of dead entity!" };

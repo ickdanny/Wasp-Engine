@@ -12,7 +12,7 @@ namespace wasp::game::config {
 	constexpr int windowHeight{ 480 };
 
 	//resources
-	constexpr wchar_t mainManifestPath[]{ L"res\\wswp.mnft" };
+	constexpr wchar_t mainManifestPath[]{ L"res\\wswp.mfst" };
 	constexpr wchar_t mainConfigPath[]{ L"res\\wswp.cfg" };
 
 	//graphics
@@ -28,6 +28,9 @@ namespace wasp::game::config {
 	constexpr DWRITE_TEXT_ALIGNMENT textAlignment{ DWRITE_TEXT_ALIGNMENT_LEADING };
 	constexpr DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment{
 		DWRITE_PARAGRAPH_ALIGNMENT_NEAR
+	};
+	constexpr D2D1_BITMAP_INTERPOLATION_MODE interpolationMode{
+		D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
 	};
 
 	//game

@@ -33,9 +33,9 @@ namespace wasp::game {
 		//handled by Game::updateSceneList
 		static const Topic<> exitFlag;
 
+		//set by GameBuilderSystem; persistent
 		static const Topic<systems::GameState> gameState;	//todo: not handled!
-
-
+		
 		static const Topic<> gameOverFlag;			//todo: not handled!
 	};
 
@@ -54,6 +54,10 @@ namespace wasp::game {
 		//true = select, false = unselect
 		static const Topic<std::tuple<ecs::entity::EntityHandle, bool>>
 			elementSelection;
+
+		//set by MenuNavigationSystem, cleared by GameBuilderSystem
+		//todo: when we restart campaign, need to set stage back to 1 and prng to clock
+		static const Topic<systems::GameBuilderCommands> gameBuilderCommands;
 
 		//todo: use these for delta time shenanigans
 		static const Topic<> pauseFlag;

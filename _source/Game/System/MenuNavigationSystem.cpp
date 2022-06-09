@@ -52,7 +52,7 @@ namespace wasp::game::systems {
 	) {
 		DataStorage& dataStorage{ scene.getDataStorage() };
 
-		MenuCommand menuCommand;	//uninitialized!
+		MenuCommand menuCommand{};
 		switch (menuNavigationCommand) {
 			case MenuNavigationCommands::back:
 				menuCommand = getKeyboardBackMenuCommand(scene);
@@ -146,8 +146,9 @@ namespace wasp::game::systems {
 			case MenuCommand::Commands::enter_and_stop_music:
 				handleStopMusic();
 			case MenuCommand::Commands::enter:
-				handleEnterCommand(menuCommand);	//todo: handle difficulties!!
+				handleEnterCommand(scene, menuCommand);
 				return false;
+
 			case MenuCommand::Commands::back_and_set_track_to_menu:
 				handleStartMusic(L"01");
 			case MenuCommand::Commands::back:
@@ -186,20 +187,37 @@ namespace wasp::game::systems {
 
 			default:
 				throw std::runtime_error{ "default case in parseMenuCommand" };
-		}	//switch
+		}	//end of switch
 	}
 
 	void MenuNavigationSystem::handleStopMusic() {
 		globalChannelSetPointer->getChannel(GlobalTopics::stopMusicFlag).addMessage();
 	}
-	void MenuNavigationSystem::handleEnterCommand(const MenuCommand& menuCommand) {
+	void MenuNavigationSystem::handleEnterCommand(
+		Scene& scene,
+		const MenuCommand& menuCommand
+	) {
+		const auto& [sceneName, gameBuilderCommand] 
+			= std::get<std::tuple<SceneNames, GameBuilderCommands>>(menuCommand.data);
+		//push a scene entry message
 		globalChannelSetPointer->getChannel(GlobalTopics::sceneEntry)
-			.addMessage(std::get<SceneNames>(menuCommand.data));
+			.addMessage(sceneName);
+		//push a game builder message if necessary
+		if (gameBuilderCommand != GameBuilderCommands::none) {
+			scene.getChannel(SceneTopics::gameBuilderCommands)
+				.addMessage(gameBuilderCommand);
+		}
 	}
 
 	void MenuNavigationSystem::handleBackCommand(const MenuCommand& menuCommand) {
 		globalChannelSetPointer->getChannel(GlobalTopics::sceneExitTo)
-			.addMessage(std::get<SceneNames>(menuCommand.data));
+			.addMessage(
+				std::get<0>(
+					std::get<std::tuple<SceneNames, GameBuilderCommands>>(
+						menuCommand.data
+					)
+				)
+			);
 	}
 	void MenuNavigationSystem::handleStartMusic(const std::wstring& trackName) {
 		globalChannelSetPointer->getChannel(GlobalTopics::startMusic)
