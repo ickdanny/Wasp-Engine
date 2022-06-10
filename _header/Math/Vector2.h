@@ -1,14 +1,22 @@
 #pragma once
 
 #include "Point2.h"
+#include "MathUtil.h"
 
 namespace wasp::math {
 	struct Vector2 {
 		float x{};
 		float y{};
 
+        constexpr Vector2() = default;
+
+        constexpr Vector2(float x, float y)
+            : x{ x }
+            , y{ y }{
+        }
+
         //unary negative operator
-        Vector2 operator-() const {
+        constexpr Vector2 operator-() const {
             return { -x, -y };
         }
 
@@ -31,16 +39,34 @@ namespace wasp::math {
     //mathematical operators for Vector2 class
 
     //vector addition and subtraction
-    Vector2 operator+(const Vector2& a, const Vector2& b);
-    Vector2 operator-(const Vector2& a, const Vector2& b);
+    constexpr Vector2 operator+(const Vector2& a, const Vector2& b) {
+        return { a.x + b.x, a.y + b.y };
+    }
+    constexpr Vector2 operator-(const Vector2& a, const Vector2& b) {
+        return { a.x - b.x, a.y - b.y };
+    }
     //point addition and subtraction
-    Point2 operator+(const Point2& a, const Vector2& b);
-    Point2 operator-(const Point2& a, const Vector2& b);
+    constexpr Point2 operator+(const Point2& a, const Vector2& b) {
+        return { a.x + b.x, a.y + b.y };
+    }
+    constexpr Point2 operator-(const Point2& a, const Vector2& b) {
+        return { a.x - b.x, a.y - b.y };
+    }
     //scalar multiplication and division
-    Vector2 operator*(const Vector2& vector, float scalar);
-    Vector2 operator*(float scalar, const Vector2& vector);
-    Vector2 operator/(const Vector2& vector, float scalar);
-    Vector2 operator/(float scalar, const Vector2& vector);
+    constexpr Vector2 operator*(const Vector2& vector, float scalar) {
+        return { vector.x * scalar, vector.y * scalar };
+    }
+    constexpr Vector2 operator*(float scalar, const Vector2& vector) {
+        return { vector.x * scalar, vector.y * scalar };
+    }
+    constexpr Vector2 operator/(const Vector2& vector, float scalar) {
+        throwIfZero(scalar, "vector divide by zero!");
+        return { vector.x / scalar, vector.y / scalar };
+    }
+    constexpr Vector2 operator/(float scalar, const Vector2& vector) {
+        throwIfZero(scalar, "vector divide by zero!");
+        return { vector.x / scalar, vector.y / scalar };
+    }
 
     //not implementing equivalence operators due to floating point imprecision
 }

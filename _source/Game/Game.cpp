@@ -115,7 +115,7 @@ namespace wasp::game {
 	void Game::updateSettings() {
 		//toggle muted
 		auto& soundToggleFlagChannel{
-			globalChannelSet.getChannel(GlobalTopics::soundToggleFlag)
+			globalChannelSet.getChannel(GlobalTopics::toggleSoundFlag)
 		};
 		if (soundToggleFlagChannel.hasMessages()) {
 			settingsPointer->muted = !settingsPointer->muted;
@@ -125,7 +125,7 @@ namespace wasp::game {
 
 		//toggle fullscreen
 		auto& fullscreenToggleFlagChannel{
-			globalChannelSet.getChannel(GlobalTopics::fullscreenToggleFlag)
+			globalChannelSet.getChannel(GlobalTopics::toggleFullscreenFlag)
 		};
 		if (fullscreenToggleFlagChannel.hasMessages()) {
 			settingsPointer->fullscreen = !settingsPointer->fullscreen;

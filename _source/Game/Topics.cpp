@@ -11,8 +11,8 @@ namespace wasp::game {
 	const Topic<std::wstring> GlobalTopics::startMusic{};
 	const Topic<> GlobalTopics::stopMusicFlag{};
 	const Topic<> GlobalTopics::writeSettingsFlag{};
-	const Topic<> GlobalTopics::soundToggleFlag{};
-	const Topic<> GlobalTopics::fullscreenToggleFlag{};
+	const Topic<> GlobalTopics::toggleSoundFlag{};
+	const Topic<> GlobalTopics::toggleFullscreenFlag{};
 	const Topic<> GlobalTopics::exitFlag{};
 	const Topic<systems::GameState> GlobalTopics::gameState{};
 	const Topic<> GlobalTopics::gameOverFlag{};

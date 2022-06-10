@@ -19,8 +19,6 @@ namespace wasp::game::systems {
         stage4,
         stage5,
 
-        beginGame,
-
         none
     };
 }

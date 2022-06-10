@@ -20,11 +20,16 @@ namespace wasp::game::systems {
 		>;
 
 		//fields
+		channel::ChannelSet* globalChannelSetPointer{};
 		resources::BitmapStorage* bitmapStoragePointer{};
 
 	public:
-		InitSystem(resources::BitmapStorage* bitmapStoragePointer)
-			: bitmapStoragePointer{ bitmapStoragePointer } {
+		InitSystem(
+			channel::ChannelSet* globalChannelSetPointer, 
+			resources::BitmapStorage* bitmapStoragePointer
+		)
+			: globalChannelSetPointer{ globalChannelSetPointer }
+			, bitmapStoragePointer { bitmapStoragePointer } {
 		}
 
 		void operator()(Scene& scene) const;
@@ -33,6 +38,9 @@ namespace wasp::game::systems {
 	private:
 		void initScene(Scene& scene) const;
 		void initMainMenu(Scene& scene) const;
+		void initDifficultyMenu(Scene& scene) const;
+		void initShotMenu(Scene& scene) const;
+		void initStageMenu(Scene& scene) const;
 		void initOptionsMenu(Scene& scene) const;
 
 		void addBackground(ecs::DataStorage& dataStorage, std::wstring name) const;
@@ -42,6 +50,15 @@ namespace wasp::game::systems {
 			const math::Vector2& offset,
 			const math::Vector2& selOffset,
 			int index,
+			const std::wstring& name,
+			MenuCommandSelect selectCommand,
+			DrawOrder drawOrder = { 0 },
+			bool selected = false
+		) const;
+
+		BasicButtonComponentTuple makeButton(
+			const math::Point2& unselPos,
+			const math::Vector2& selOffset,
 			const std::wstring& name,
 			MenuCommandSelect selectCommand,
 			DrawOrder drawOrder = { 0 },

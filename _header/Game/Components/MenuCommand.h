@@ -17,31 +17,31 @@ namespace wasp::game::components {
     public:
         //fields
         enum class Commands {
-            nav_up,
-            nav_down,
-            nav_left,
-            nav_right,
+            navUp,
+            navDown,
+            navLeft,
+            navRight,
 
-            nav_far_up,
-            nav_far_down,
-            nav_far_left,
-            nav_far_right,
+            navFarUp,
+            navFarDown,
+            navFarLeft,
+            navFarRight,
 
             enter,
-            enter_and_stop_music,
+            enterAndStopMusic,
 
-            back,
-            back_and_write_settings,
-            back_and_set_track_to_menu,
+            backTo,
+            backAndWriteSettings,
+            backAndSetTrackToMenu,
 
-            start_music,
+            startTrack,
 
-            sound_toggle,
-            fullscreen_toggle,
+            toggleSound,
+            toggleFullscreen,
 
-            restart_game,
+            restartGame,
 
-            game_over,
+            gameOver,
 
             exit,
 

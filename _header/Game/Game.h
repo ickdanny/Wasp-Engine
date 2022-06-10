@@ -10,7 +10,7 @@
 
 namespace wasp::game {
 
-	//represents the logical state of the game
+	//stores and acts upon the logical state of the game
 	class Game {
 	private:
 		//typedefs

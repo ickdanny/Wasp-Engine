@@ -9,7 +9,7 @@ namespace wasp::game{
 		main,
 		difficulty,
 		shot,
-		level,
+		stage,
 		music,
 		options,
 		game,

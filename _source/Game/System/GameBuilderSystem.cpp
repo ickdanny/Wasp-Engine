@@ -40,28 +40,33 @@ namespace wasp::game::systems {
 			case GameBuilderCommands::lunatic:
 				gameStatePointer->difficulty = Difficulty::lunatic;
 				break;
+			//the following can all lead to the game, so we finalize the game state
 			case GameBuilderCommands::shotA:
 				gameStatePointer->shotType = ShotType::shotA;
+				finalizeGameState(gameStatePointer);
 				break;
 			case GameBuilderCommands::shotB:
 				gameStatePointer->shotType = ShotType::shotB;
+				finalizeGameState(gameStatePointer);
 				break;
 			case GameBuilderCommands::stage1:
 				gameStatePointer->stage = 1;
+				finalizeGameState(gameStatePointer);
 				break;
 			case GameBuilderCommands::stage2:
 				gameStatePointer->stage = 2;
+				finalizeGameState(gameStatePointer);
 				break;
 			case GameBuilderCommands::stage3:
 				gameStatePointer->stage = 3;
+				finalizeGameState(gameStatePointer);
 				break;
 			case GameBuilderCommands::stage4:
 				gameStatePointer->stage = 4;
+				finalizeGameState(gameStatePointer);
 				break;
 			case GameBuilderCommands::stage5:
 				gameStatePointer->stage = 5;
-				break;
-			case GameBuilderCommands::beginGame:
 				finalizeGameState(gameStatePointer);
 				break;
 			case GameBuilderCommands::none:

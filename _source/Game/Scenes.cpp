@@ -26,6 +26,38 @@ namespace wasp::game {
 		);
 
 		sceneStorage.makeScene(
+			SceneNames::difficulty,	//name
+			20,						//initEntityCapacity
+			20,						//initComponentCapacity
+			noTransparency,			//transparency
+			false					//refresh
+		);
+
+		sceneStorage.makeScene(
+			SceneNames::shot,		//name
+			50,						//initEntityCapacity
+			20,						//initComponentCapacity
+			noTransparency,			//transparency
+			true					//refresh - true so we can figure out game or stage
+		);
+
+		sceneStorage.makeScene(
+			SceneNames::stage,		//name
+			20,						//initEntityCapacity
+			20,						//initComponentCapacity
+			noTransparency,			//transparency
+			false					//refresh
+		);
+
+		sceneStorage.makeScene(
+			SceneNames::music,		//name
+			20,						//initEntityCapacity
+			20,						//initComponentCapacity
+			renderTransparency,		//transparency
+			true					//refresh
+		);
+
+		sceneStorage.makeScene(
 			SceneNames::options,	//name
 			20,						//initEntityCapacity
 			20,						//initComponentCapacity

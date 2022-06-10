@@ -6,7 +6,10 @@ namespace wasp::game {
 		input::IKeyInputTable* keyInputTablePointer,
 		channel::ChannelSet* globalChannelSetPointer
 	)
-		: initSystem{ &(resourceMasterStoragePointer->bitmapStorage) }
+		: initSystem{ 
+			globalChannelSetPointer, 
+			&(resourceMasterStoragePointer->bitmapStorage) 
+		}
 		, inputParserSystem{ keyInputTablePointer }
 		, menuNavigationSystem{ globalChannelSetPointer }
 		, buttonSpriteSystem{ &(resourceMasterStoragePointer->bitmapStorage) }

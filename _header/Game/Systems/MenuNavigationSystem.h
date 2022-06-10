@@ -102,12 +102,12 @@ namespace wasp::game::systems {
         void handleStopMusic();
         void handleEnterCommand(Scene& scene, const MenuCommand& menuCommand);
 
-        void handleBackCommand(const MenuCommand& menuCommand);
-        void handleStartMusic(const std::wstring& trackName);
+        void handleBackToCommand(const MenuCommand& menuCommand);
+        void handleStartTrack(const std::wstring& trackName);
         void handleWriteSettings();
 
-        void handleSoundToggleCommand();
-        void handleFullscreenToggleCommand();
+        void handleToggleSoundCommand();
+        void handleToggleFullscreenCommand();
         void handleRestartGameCommand();
         void handleGameOverCommand();
         void handleExitCommand();

@@ -30,6 +30,18 @@ namespace wasp::game::systems {
 			case SceneNames::main:
 				initMainMenu(scene);
 				break;
+			case SceneNames::difficulty:
+				initDifficultyMenu(scene);
+				break;
+			case SceneNames::shot:
+				initShotMenu(scene);
+				break;
+			case SceneNames::stage:
+				initStageMenu(scene);
+				break;
+			case SceneNames::music:
+				throw "no music menu yet";
+				break;
 			case SceneNames::options:
 				initOptionsMenu(scene);
 				break;
@@ -108,7 +120,218 @@ namespace wasp::game::systems {
 		setInitSelectedElement(scene, buttonHandles[0]);
 
 		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
-			{ components::MenuCommand::Commands::nav_far_down }
+			{ components::MenuCommand::Commands::navFarDown }
+		);
+	}
+
+	void InitSystem::initDifficultyMenu(Scene& scene) const {
+		auto& dataStorage{ scene.getDataStorage() };
+		addBackground(dataStorage, L"background_menu_difficulty");
+
+		constexpr math::Point2 initPos{ center.x, 80.0f };
+		constexpr math::Vector2 offset{ 0.0f, 40.0f };
+		constexpr math::Vector2 selOffset{ 0.0f, -2.0f };
+
+		auto buttonHandles{
+			dataStorage.addEntities(
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					0,
+					L"button_easy",
+					{
+						MenuCommandSelect::Commands::enter,
+						std::tuple{ SceneNames::shot, GameBuilderCommands::easy }
+					},
+					{ },	//draw order
+					true
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					1,
+					L"button_normal",
+					{
+						MenuCommandSelect::Commands::enter,
+						std::tuple{ SceneNames::shot, GameBuilderCommands::normal }
+					}
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					2,
+					L"button_hard",
+					{ 
+						MenuCommandSelect::Commands::enter, 
+						std::tuple{ SceneNames::shot, GameBuilderCommands::hard}
+					}
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					3,
+					L"button_lunatic",
+					{ 
+						MenuCommandSelect::Commands::enter, 
+						std::tuple{ SceneNames::shot, GameBuilderCommands::lunatic }
+					}
+				).package()
+			)
+		};
+
+		attachButtonsVertical(dataStorage, buttonHandles);
+		setInitSelectedElement(scene, buttonHandles[0]);
+
+		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
+			{ 
+				components::MenuCommand::Commands::backTo, 
+				SceneNames::main
+			}
+		);
+	}
+
+	void InitSystem::initShotMenu(Scene& scene) const {
+		auto& dataStorage{ scene.getDataStorage() };
+		addBackground(dataStorage, L"background_menu_shot");
+
+		constexpr float y{ 130.0f };
+		constexpr float xOffset{ 120.0f };
+
+		SceneNames nextScene;
+
+		const auto& gameStateChannel{
+			globalChannelSetPointer->getChannel(GlobalTopics::gameState)
+		};
+		if (gameStateChannel.hasMessages()) {
+			if (gameStateChannel.getMessages()[0].gameMode == GameMode::campaign) {
+				nextScene = SceneNames::game;
+			}
+			else {
+				nextScene = SceneNames::stage;
+			}
+		}
+		else {
+			throw std::runtime_error{ "no game state for init shot menu!" };
+		}
+
+		auto buttonHandles{
+			dataStorage.addEntities(
+				makeButton(
+					{ center.x - xOffset, y },
+					{ },	//selOffset
+					L"button_a",
+					{
+						MenuCommandSelect::Commands::enter,
+						std::tuple{ nextScene, GameBuilderCommands::shotA }
+					},
+					{ },	//draw order
+					true
+				).package(),
+				makeButton(
+					{ center.x + xOffset, y },
+					{ },	//selOffset
+					L"button_b",
+					{
+						MenuCommandSelect::Commands::enter,
+						std::tuple{ nextScene, GameBuilderCommands::shotB }
+					}
+				).package()
+			)
+		};
+
+		attachButtonsHorizontal(dataStorage, buttonHandles);
+		setInitSelectedElement(scene, buttonHandles[0]);
+
+		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
+			{ 
+				components::MenuCommand::Commands::backTo,
+				SceneNames::difficulty
+			}
+		);
+	}
+
+	void InitSystem::initStageMenu(Scene& scene) const {
+		auto& dataStorage{ scene.getDataStorage() };
+		addBackground(dataStorage, L"background_menu_stage");
+
+		constexpr math::Point2 initPos{ center.x, 70.0f };
+		constexpr math::Vector2 offset{ 0.0f, 35.0f };
+		constexpr math::Vector2 selOffset{ 0.0f, -2.0f };
+
+		auto buttonHandles{
+			dataStorage.addEntities(
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					0,
+					L"button_stage1",
+					{
+						MenuCommandSelect::Commands::enter,
+						std::tuple{ SceneNames::game, GameBuilderCommands::stage1 }
+					},
+					{ },	//draw order
+					true
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					1,
+					L"button_stage2",
+					{
+						MenuCommandSelect::Commands::enter,
+						std::tuple{ SceneNames::game, GameBuilderCommands::stage2 }
+					}
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					2,
+					L"button_stage3",
+					{
+						MenuCommandSelect::Commands::enter,
+						std::tuple{ SceneNames::game, GameBuilderCommands::stage3}
+					}
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					3,
+					L"button_stage4",
+					{
+						MenuCommandSelect::Commands::enter,
+						std::tuple{ SceneNames::game, GameBuilderCommands::stage4 }
+					}
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					4,
+					L"button_stage5",
+					{
+						MenuCommandSelect::Commands::enter,
+						std::tuple{ SceneNames::game, GameBuilderCommands::stage5 }
+					}
+				).package()
+			)
+		};
+
+		attachButtonsVertical(dataStorage, buttonHandles);
+		setInitSelectedElement(scene, buttonHandles[0]);
+
+		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
+			{
+				components::MenuCommand::Commands::backTo,
+				SceneNames::shot
+			}
 		);
 	}
 
@@ -128,7 +351,7 @@ namespace wasp::game::systems {
 					selOffset,
 					0,
 					L"button_sound",
-					{ MenuCommandSelect::Commands::sound_toggle },
+					{ MenuCommandSelect::Commands::toggleSound },
 					{ },	//draw order
 					true
 				).package(),
@@ -138,7 +361,7 @@ namespace wasp::game::systems {
 					selOffset,
 					1,
 					L"button_fullscreen",
-					{ MenuCommandSelect::Commands::fullscreen_toggle }
+					{ MenuCommandSelect::Commands::toggleFullscreen }
 				).package(),
 				makeButton(
 					initPos,
@@ -146,7 +369,7 @@ namespace wasp::game::systems {
 					selOffset,
 					2,
 					L"button_option_exit",
-					{ MenuCommandSelect::Commands::back_and_write_settings }
+					{ MenuCommandSelect::Commands::backAndWriteSettings }
 				).package()
 			)
 		};
@@ -155,7 +378,7 @@ namespace wasp::game::systems {
 		setInitSelectedElement(scene, buttonHandles[0]);
 
 		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
-			{ components::MenuCommand::Commands::nav_far_down }
+			{ components::MenuCommand::Commands::navFarDown }
 		);
 	}
 
@@ -184,6 +407,17 @@ namespace wasp::game::systems {
 		bool selected
 	) const {
 		math::Point2 unselPos{ initPos + (offset * static_cast<float>(index)) };
+		return makeButton(unselPos, selOffset, name, selectCommand, drawOrder, selected);
+	}
+
+	InitSystem::BasicButtonComponentTuple InitSystem::makeButton(
+		const math::Point2& unselPos,
+		const math::Vector2& selOffset,
+		const std::wstring& name,
+		MenuCommandSelect selectCommand,
+		DrawOrder drawOrder,
+		bool selected
+	) const {
 		math::Point2 selPos{ unselPos + selOffset };
 		ButtonData buttonData{ unselPos, selPos, name };
 
@@ -193,7 +427,7 @@ namespace wasp::game::systems {
 			selectCommand,
 			SpriteInstruction{
 				bitmapStoragePointer->get(
-					selected ? buttonData.getSelImageName() 
+					selected ? buttonData.getSelImageName()
 							 : buttonData.getUnselImageName()
 				)->d2dBitmap
 			},
@@ -223,7 +457,7 @@ namespace wasp::game::systems {
 				ecs::AddComponentOrder{
 					*top,
 					MenuCommandDown{
-						components::MenuCommand::Commands::nav_down
+						components::MenuCommand::Commands::navDown
 					}
 				}
 			);
@@ -231,7 +465,7 @@ namespace wasp::game::systems {
 				ecs::AddComponentOrder{
 					*bottom,
 					MenuCommandUp{
-						components::MenuCommand::Commands::nav_up
+						components::MenuCommand::Commands::navUp
 					}
 				}
 			);
@@ -262,7 +496,7 @@ namespace wasp::game::systems {
 				ecs::AddComponentOrder{
 					*left,
 					MenuCommandRight{
-						components::MenuCommand::Commands::nav_right
+						components::MenuCommand::Commands::navRight
 					}
 				}
 			);
@@ -270,7 +504,7 @@ namespace wasp::game::systems {
 				ecs::AddComponentOrder{
 					*right,
 					MenuCommandLeft{
-						components::MenuCommand::Commands::nav_left
+						components::MenuCommand::Commands::navLeft
 					}
 				}
 			);

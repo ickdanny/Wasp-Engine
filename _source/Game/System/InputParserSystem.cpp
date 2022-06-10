@@ -7,7 +7,7 @@ namespace wasp::game::systems {
 			case SceneNames::main:
 			case SceneNames::difficulty:
 			case SceneNames::shot:
-			case SceneNames::level:
+			case SceneNames::stage:
 			case SceneNames::music:
 			case SceneNames::options:
 			case SceneNames::dialogue:

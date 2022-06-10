@@ -27,14 +27,14 @@ namespace wasp::game {
 
 		//handled by Game::updateSettings
 		static const Topic<> writeSettingsFlag;
-		static const Topic<> soundToggleFlag;
-		static const Topic<> fullscreenToggleFlag;
+		static const Topic<> toggleSoundFlag;
+		static const Topic<> toggleFullscreenFlag;
 
 		//handled by Game::updateSceneList
 		static const Topic<> exitFlag;
 
 		//set by GameBuilderSystem; persistent
-		static const Topic<systems::GameState> gameState;	//todo: not handled!
+		static const Topic<systems::GameState> gameState;
 		
 		static const Topic<> gameOverFlag;			//todo: not handled!
 	};
@@ -57,6 +57,7 @@ namespace wasp::game {
 
 		//set by MenuNavigationSystem, cleared by GameBuilderSystem
 		//todo: when we restart campaign, need to set stage back to 1 and prng to clock
+		//todo: have a GameBuilderCommand for reset
 		static const Topic<systems::GameBuilderCommands> gameBuilderCommands;
 
 		//todo: use these for delta time shenanigans

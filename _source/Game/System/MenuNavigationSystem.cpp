@@ -114,28 +114,28 @@ namespace wasp::game::systems {
 	) {
 		switch (menuCommand.command) {
 			//menu navigation
-			case MenuCommand::Commands::nav_up:
+			case MenuCommand::Commands::navUp:
 				handleNavCommand<NeighborElementUp>(scene, currentSelectedElement);
 				return true;
-			case MenuCommand::Commands::nav_down:
+			case MenuCommand::Commands::navDown:
 				handleNavCommand<NeighborElementDown>(scene, currentSelectedElement);
 				return true;
-			case MenuCommand::Commands::nav_left:
+			case MenuCommand::Commands::navLeft:
 				handleNavCommand<NeighborElementLeft>(scene, currentSelectedElement);
 				return true;
-			case MenuCommand::Commands::nav_right:
+			case MenuCommand::Commands::navRight:
 				handleNavCommand<NeighborElementRight>(scene, currentSelectedElement);
 				return true;
-			case MenuCommand::Commands::nav_far_up:
+			case MenuCommand::Commands::navFarUp:
 				handleNavFarCommand<NeighborElementUp>(scene, currentSelectedElement);
 				return true;
-			case MenuCommand::Commands::nav_far_down:
+			case MenuCommand::Commands::navFarDown:
 				handleNavFarCommand<NeighborElementDown>(scene, currentSelectedElement);
 				return true;
-			case MenuCommand::Commands::nav_far_left:
+			case MenuCommand::Commands::navFarLeft:
 				handleNavFarCommand<NeighborElementLeft>(scene, currentSelectedElement);
 				return true;
-			case MenuCommand::Commands::nav_far_right:
+			case MenuCommand::Commands::navFarRight:
 				handleNavFarCommand<NeighborElementRight>(
 					scene, 
 					currentSelectedElement
@@ -143,38 +143,39 @@ namespace wasp::game::systems {
 				return true;
 
 			//scene navigation and variants thereof
-			case MenuCommand::Commands::enter_and_stop_music:
+			case MenuCommand::Commands::enterAndStopMusic:
 				handleStopMusic();
 			case MenuCommand::Commands::enter:
 				handleEnterCommand(scene, menuCommand);
 				return false;
 
-			case MenuCommand::Commands::back_and_set_track_to_menu:
-				handleStartMusic(L"01");
-			case MenuCommand::Commands::back:
-				handleBackCommand(menuCommand);
+			case MenuCommand::Commands::backAndSetTrackToMenu:
+				handleStartTrack(L"01");
+			case MenuCommand::Commands::backTo:
+				handleBackToCommand(menuCommand);
 				return false;
-			case MenuCommand::Commands::back_and_write_settings:
+			case MenuCommand::Commands::backAndWriteSettings:
 				handleWriteSettings();
-				handleBackCommand(menuCommand);
+				handleBackToCommand(menuCommand);
 				return false;
 
 			//miscellaneous functionality
-			case MenuCommand::Commands::start_music:
-				handleStartMusic(std::get<std::wstring>(menuCommand.data));
+			case MenuCommand::Commands::startTrack:
+				handleStartTrack(std::get<std::wstring>(menuCommand.data));
 				return true;
 
-			case MenuCommand::Commands::sound_toggle:
-				handleSoundToggleCommand();
+			case MenuCommand::Commands::toggleSound:
+				handleToggleSoundCommand();
 				return true;
-			case MenuCommand::Commands::fullscreen_toggle:
-				handleFullscreenToggleCommand();
+			case MenuCommand::Commands::toggleFullscreen:
+				handleToggleFullscreenCommand();
 				return true;
 
-			case MenuCommand::Commands::restart_game:
+			case MenuCommand::Commands::restartGame:
+				//todo:
 				break;
 
-			case MenuCommand::Commands::game_over:
+			case MenuCommand::Commands::gameOver:
 				handleGameOverCommand();
 				return false;
 
@@ -209,7 +210,7 @@ namespace wasp::game::systems {
 		}
 	}
 
-	void MenuNavigationSystem::handleBackCommand(const MenuCommand& menuCommand) {
+	void MenuNavigationSystem::handleBackToCommand(const MenuCommand& menuCommand) {
 		globalChannelSetPointer->getChannel(GlobalTopics::sceneExitTo)
 			.addMessage(
 				std::get<0>(
@@ -219,7 +220,7 @@ namespace wasp::game::systems {
 				)
 			);
 	}
-	void MenuNavigationSystem::handleStartMusic(const std::wstring& trackName) {
+	void MenuNavigationSystem::handleStartTrack(const std::wstring& trackName) {
 		globalChannelSetPointer->getChannel(GlobalTopics::startMusic)
 			.addMessage(trackName);
 	}
@@ -232,11 +233,11 @@ namespace wasp::game::systems {
 		//todo: need to read the gameConfig and send us back to the correct scene
 		//todo: then, need to immediately pop up a new game
 	}
-	void MenuNavigationSystem::handleSoundToggleCommand() {
-		globalChannelSetPointer->getChannel(GlobalTopics::soundToggleFlag).addMessage();
+	void MenuNavigationSystem::handleToggleSoundCommand() {
+		globalChannelSetPointer->getChannel(GlobalTopics::toggleSoundFlag).addMessage();
 	}
-	void MenuNavigationSystem::handleFullscreenToggleCommand() {
-		globalChannelSetPointer->getChannel(GlobalTopics::fullscreenToggleFlag)
+	void MenuNavigationSystem::handleToggleFullscreenCommand() {
+		globalChannelSetPointer->getChannel(GlobalTopics::toggleFullscreenFlag)
 			.addMessage();
 	}
 
