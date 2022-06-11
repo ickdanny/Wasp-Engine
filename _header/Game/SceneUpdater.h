@@ -8,6 +8,9 @@
 #include "Game/Systems/MenuNavigationSystem.h"
 #include "Game/Systems/ButtonSpriteSystem.h"
 #include "Game/Systems/GameBuilderSystem.h"
+#include "Game/Systems/VelocitySystem.h"
+#include "Game/Systems/ScriptSystem.h"
+#include "Game/Systems/CollisionSystem.h"
 
 namespace wasp::game {
 
@@ -18,6 +21,9 @@ namespace wasp::game {
 		systems::MenuNavigationSystem menuNavigationSystem;		//not initialized!
 		systems::ButtonSpriteSystem buttonSpriteSystem;			//not initialized!
 		systems::GameBuilderSystem gameBuilderSystem;			//not initialized!
+		systems::VelocitySystem velocitySystem{};
+		systems::ScriptSystem scriptSystem{};
+		systems::CollisionSystem<int, int> collisionSystem{};	//todo: correct template
 
 	public:
 		SceneUpdater(

@@ -63,146 +63,146 @@ namespace wasp::input {
 		switch(wParam) {
 			//alphabet
 			case 'A':
-				return KeyValues::K_A;
+				return KeyValues::k_a;
 			case 'B':
-				return KeyValues::K_B;
+				return KeyValues::k_b;
 			case 'C':
-				return KeyValues::K_C;
+				return KeyValues::k_c;
 			case 'D':
-				return KeyValues::K_D;
+				return KeyValues::k_d;
 			case 'E':
-				return KeyValues::K_E;
+				return KeyValues::k_e;
 			case 'F':
-				return KeyValues::K_F;
+				return KeyValues::k_f;
 			case 'G':
-				return KeyValues::K_G;
+				return KeyValues::k_g;
 			case 'H':
-				return KeyValues::K_H;
+				return KeyValues::k_h;
 			case 'I':
-				return KeyValues::K_I;
+				return KeyValues::k_i;
 			case 'J':
-				return KeyValues::K_J;
+				return KeyValues::k_j;
 			case 'K':
-				return KeyValues::K_K;
+				return KeyValues::k_k;
 			case 'L':
-				return KeyValues::K_L;
+				return KeyValues::k_l;
 			case 'M':
-				return KeyValues::K_M;
+				return KeyValues::k_m;
 			case 'N':
-				return KeyValues::K_N;
+				return KeyValues::k_n;
 			case 'O':
-				return KeyValues::K_O;
+				return KeyValues::k_o;
 			case 'P':
-				return KeyValues::K_P;
+				return KeyValues::k_p;
 			case 'Q':
-				return KeyValues::K_Q;
+				return KeyValues::k_q;
 			case 'R':
-				return KeyValues::K_R;
+				return KeyValues::k_r;
 			case 'S':
-				return KeyValues::K_S;
+				return KeyValues::k_s;
 			case 'T':
-				return KeyValues::K_T;
+				return KeyValues::k_t;
 			case 'U':
-				return KeyValues::K_U;
+				return KeyValues::k_u;
 			case 'V':
-				return KeyValues::K_V;
+				return KeyValues::k_v;
 			case 'W':
-				return KeyValues::K_W;
+				return KeyValues::k_w;
 			case 'X':
-				return KeyValues::K_X;
+				return KeyValues::k_x;
 			case 'Y':
-				return KeyValues::K_Y;
+				return KeyValues::k_y;
 			case 'Z':
-				return KeyValues::K_Z;
+				return KeyValues::k_z;
 			//numbers
 			case '0':
-				return KeyValues::K_0;
+				return KeyValues::k_0;
 			case '1':
-				return KeyValues::K_1;
+				return KeyValues::k_1;
 			case '2':
-				return KeyValues::K_2;
+				return KeyValues::k_2;
 			case '3':
-				return KeyValues::K_3;
+				return KeyValues::k_3;
 			case '4':
-				return KeyValues::K_4;
+				return KeyValues::k_4;
 			case '5':
-				return KeyValues::K_5;
+				return KeyValues::k_5;
 			case '6':
-				return KeyValues::K_6;
+				return KeyValues::k_6;
 			case '7':
-				return KeyValues::K_7;
+				return KeyValues::k_7;
 			case '8':
-				return KeyValues::K_8;
+				return KeyValues::k_8;
 			case '9':
-				return KeyValues::K_9;
+				return KeyValues::k_9;
 			case VK_NUMPAD0:
-				return KeyValues::K_numpad0;
+				return KeyValues::k_numpad0;
 			case VK_NUMPAD1:
-				return KeyValues::K_numpad1;
+				return KeyValues::k_numpad1;
 			case VK_NUMPAD2:
-				return KeyValues::K_numpad2;
+				return KeyValues::k_numpad2;
 			case VK_NUMPAD3:
-				return KeyValues::K_numpad3;
+				return KeyValues::k_numpad3;
 			case VK_NUMPAD4:
-				return KeyValues::K_numpad4;
+				return KeyValues::k_numpad4;
 			case VK_NUMPAD5:
-				return KeyValues::K_numpad5;
+				return KeyValues::k_numpad5;
 			case VK_NUMPAD6:
-				return KeyValues::K_numpad6;
+				return KeyValues::k_numpad6;
 			case VK_NUMPAD7:
-				return KeyValues::K_numpad7;
+				return KeyValues::k_numpad7;
 			case VK_NUMPAD8:
-				return KeyValues::K_numpad8;
+				return KeyValues::k_numpad8;
 			case VK_NUMPAD9:
-				return KeyValues::K_numpad9;
+				return KeyValues::k_numpad9;
 			//arrow keys
 			case VK_LEFT:
-				return KeyValues::K_left;
+				return KeyValues::k_left;
 			case VK_RIGHT:
-				return KeyValues::K_right;
+				return KeyValues::k_right;
 			case VK_UP:
-				return KeyValues::K_up;
+				return KeyValues::k_up;
 			case VK_DOWN:
-				return KeyValues::K_down;
+				return KeyValues::k_down;
 			//special
 			case VK_ESCAPE:
-				return KeyValues::K_escape;
+				return KeyValues::k_escape;
 			case VK_SPACE:
-				return KeyValues::K_space;
+				return KeyValues::k_space;
 			case VK_OEM_3:
-				return KeyValues::K_backTick;
+				return KeyValues::k_backTick;
 			case VK_OEM_MINUS:
-				return KeyValues::K_minus;
+				return KeyValues::k_minus;
 			case VK_OEM_PLUS:
-				return KeyValues::K_plus;
+				return KeyValues::k_plus;
 			case VK_OEM_5:
-				return KeyValues::K_backSlash;
+				return KeyValues::k_backSlash;
 			case VK_BACK:
-				return KeyValues::K_backSpace;
+				return KeyValues::k_backSpace;
 			case VK_RETURN:
-				return KeyValues::K_enter;
+				return KeyValues::k_enter;
 			case VK_OEM_4:
-				return KeyValues::K_openBracket;
+				return KeyValues::k_openBracket;
 			case VK_OEM_6:
-				return KeyValues::K_closeBracket;
+				return KeyValues::k_closeBracket;
 			case VK_OEM_1:
-				return KeyValues::K_semicolon;
+				return KeyValues::k_semicolon;
 			case VK_OEM_7:
-				return KeyValues::K_quote;
+				return KeyValues::k_quote;
 			case VK_OEM_COMMA:
-				return KeyValues::K_comma;
+				return KeyValues::k_comma;
 			case VK_OEM_PERIOD:
-				return KeyValues::K_period;
+				return KeyValues::k_period;
 			case VK_OEM_2:
-				return KeyValues::K_slash;
+				return KeyValues::k_slash;
 			case VK_TAB:
-				return KeyValues::K_tab;
+				return KeyValues::k_tab;
 			case VK_SHIFT:
-				return KeyValues::K_shift;
+				return KeyValues::k_shift;
 			case VK_CONTROL:
-				return KeyValues::K_control;
+				return KeyValues::k_control;
 			case VK_MENU:
-				return KeyValues::K_alt;
+				return KeyValues::k_alt;
 
 			default:
 				return KeyValues::undefined;

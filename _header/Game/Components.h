@@ -4,7 +4,6 @@
 #include "Components/TwoFramePosition.h"
 #include "Components/MenuCommand.h"
 #include "Components/ButtonData.h"
-#include "Components/LockCondition.h"
 #include "Graphics/BitmapDrawInstruction.h"
 #include "Components/PlayerData.h"
 
@@ -49,6 +48,12 @@ namespace wasp::game {
     };
     struct Velocity : math::Vector2 {
         using math::Vector2::Vector2;
+
+        Velocity& operator=(const Velocity& right) = default;
+        Velocity& operator=(const math::Vector2& right) {
+            math::Vector2::operator=(right);
+            return *this;
+        }
     };
 
     struct PlayerData : components::PlayerData {};

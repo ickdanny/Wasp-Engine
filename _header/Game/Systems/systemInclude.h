@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/Config.h"
+#include "Game/GameConfig.h"
 #include "Game/Scenes.h"
 #include "Game/Topics.h"
 #include "Game/Components.h"

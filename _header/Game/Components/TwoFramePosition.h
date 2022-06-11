@@ -2,8 +2,31 @@
 
 #include "Math/Point2.h"
 #include "Math/Vector2.h"
+#include "Utility/TwoFrame.h"
 
 namespace wasp::game::components {
+
+	class TwoFramePosition : public utility::TwoFrame<math::Point2> {
+	private:
+		//typedefs
+		using Point2 = math::Point2;
+		using Vector2 = math::Vector2;
+
+	public:
+		using utility::TwoFrame<math::Point2>::TwoFrame;
+
+		//mathematical assignment operators
+		TwoFramePosition& operator+=(const Vector2& right) {
+			x += right.x;
+			y += right.y;
+		}
+		TwoFramePosition& operator-=(const Vector2& right) {
+			x -= right.x;
+			y -= right.y;
+		}
+	};
+
+	/*
 	class TwoFramePosition : public math::Point2 {
 	private:
 		//typedefs
@@ -47,4 +70,5 @@ namespace wasp::game::components {
 			y -= right.y;
 		}
 	};
+	*/
 }

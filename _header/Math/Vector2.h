@@ -68,5 +68,10 @@ namespace wasp::math {
         return { vector.x / scalar, vector.y / scalar };
     }
 
+    //utility functions
+    constexpr float getMagnitude(const Vector2& vector) {
+        return std::sqrtf((vector.x * vector.x) + (vector.y * vector.y));
+    }
+
     //not implementing equivalence operators due to floating point imprecision
 }

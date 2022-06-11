@@ -3,6 +3,9 @@
 #include <stdexcept>
 
 namespace wasp::windowsadaptor {
+
+	//rationale: constructors taking HRESULTs
+
 	class HResultError : public std::runtime_error {
 	public:
 		explicit HResultError(const std::string& what_arg)

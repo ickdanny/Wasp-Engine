@@ -13,7 +13,8 @@ namespace wasp::game::systems {
 
 		auto groupPointer{
 			getGroupPointer<Position, VisibleMarker, SpriteInstruction, DrawOrder>(
-				scene, groupPointerStorageTopic
+				scene, 
+				groupPointerStorageTopic
 			)
 		};
 

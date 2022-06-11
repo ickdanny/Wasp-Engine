@@ -23,5 +23,8 @@ namespace wasp::game {
 		menuNavigationSystem(scene);
 		buttonSpriteSystem(scene);
 		gameBuilderSystem(scene);
+		velocitySystem(scene);
+		scriptSystem(scene);
+		collisionSystem(scene);
 	}
 }

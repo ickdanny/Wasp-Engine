@@ -15,9 +15,9 @@ namespace wasp::resource {
 		std::unordered_map<std::wstring, ManifestLoadable*> manifestPrefixMap{};
 
 	public:
-		template <std::size_t NUM_LOADABLES>
+		template <std::size_t numLoadables>
 		ResourceLoader(
-			const std::array<Loadable*, NUM_LOADABLES>& loadables
+			const std::array<Loadable*, numLoadables>& loadables
 		) {
 			for (Loadable* loadable : loadables) {
 				if (loadable->isFileLoadable()) {

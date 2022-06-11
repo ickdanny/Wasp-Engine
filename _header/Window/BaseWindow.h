@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 namespace wasp::window {
-    template<class DERIVED_CLASS>
+    template<class DerivedClass>
     class BaseWindow {
 
     protected:
@@ -18,13 +18,13 @@ namespace wasp::window {
             WPARAM wParam, 
             LPARAM lParam
         ){
-            DERIVED_CLASS* derivedInstancePointer = NULL;
+            DerivedClass* derivedInstancePointer = NULL;
 
             if (messageCode == WM_NCCREATE){
                 CREATESTRUCT* createStructPointer = (CREATESTRUCT*)lParam;
 
                 derivedInstancePointer 
-                    = (DERIVED_CLASS*)createStructPointer->lpCreateParams;
+                    = (DerivedClass*)createStructPointer->lpCreateParams;
 
                 SetWindowLongPtr(
                     windowHandle, 
@@ -36,7 +36,7 @@ namespace wasp::window {
             }
             else{
                 derivedInstancePointer 
-                    = (DERIVED_CLASS*)GetWindowLongPtr(windowHandle, GWLP_USERDATA);
+                    = (DerivedClass*)GetWindowLongPtr(windowHandle, GWLP_USERDATA);
             }
 
             if (derivedInstancePointer){
@@ -104,7 +104,7 @@ namespace wasp::window {
 
             WNDCLASS windowClass{ };
 
-            windowClass.lpfnWndProc = DERIVED_CLASS::WindowProc;
+            windowClass.lpfnWndProc = DerivedClass::WindowProc;
             windowClass.hInstance = instanceHandle;
             windowClass.lpszClassName = className;
 

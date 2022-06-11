@@ -31,22 +31,22 @@ namespace wasp::game::systems {
 		};
 		menuNavigationCommandChannel.clear();
 
-		if (isJustPressed(KeyValues::K_escape) || isJustPressed(KeyValues::K_X)) {
+		if (isJustPressed(KeyValues::k_escape) || isJustPressed(KeyValues::k_x)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::back);
 		}
-		if (isJustPressed(KeyValues::K_Z)) {
+		if (isJustPressed(KeyValues::k_z)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::select);
 		}
-		if (isJustPressed(KeyValues::K_up)) {
+		if (isJustPressed(KeyValues::k_up)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::up);
 		}
-		if (isJustPressed(KeyValues::K_down)) {
+		if (isJustPressed(KeyValues::k_down)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::down);
 		}
-		if (isJustPressed(KeyValues::K_left)) {
+		if (isJustPressed(KeyValues::k_left)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::left);
 		}
-		if (isJustPressed(KeyValues::K_right)) {
+		if (isJustPressed(KeyValues::k_right)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::right);
 		}
 
@@ -54,12 +54,50 @@ namespace wasp::game::systems {
 	}
 
 	void InputParserSystem::parseGameInput(Scene& scene) {
-		//todo: parse game input
+		auto& gameCommandChannel{
+			scene.getChannel(SceneTopics::gameCommands)
+		};
+		gameCommandChannel.clear();
+
+		if (isJustPressed(KeyValues::k_escape)) {
+			gameCommandChannel.addMessage(GameCommands::pause);
+		}
+		if (isBeingPressed(KeyValues::k_shift)) {
+			gameCommandChannel.addMessage(GameCommands::focus);
+		}
+		if (isBeingPressed(KeyValues::k_z)) {
+			gameCommandChannel.addMessage(GameCommands::shoot);
+		}
+		if (isJustPressed(KeyValues::k_x)) {
+			gameCommandChannel.addMessage(GameCommands::bomb);
+		}
+		if (isBeingPressed(KeyValues::k_up)) {
+			gameCommandChannel.addMessage(GameCommands::up);
+		}
+		if (isBeingPressed(KeyValues::k_down)) {
+			gameCommandChannel.addMessage(GameCommands::down);
+		}
+		if (isBeingPressed(KeyValues::k_left)) {
+			gameCommandChannel.addMessage(GameCommands::left);
+		}
+		if (isBeingPressed(KeyValues::k_right)) {
+			gameCommandChannel.addMessage(GameCommands::right);
+		}
+
+		keyInputTablePointer->lockAll();	//game has no input transparency
 	}
 
 	bool InputParserSystem::isJustPressed(KeyValues key) {
 		if (keyInputTablePointer->isNotLocked(key)) {
 			return keyInputTablePointer->get(key) == KeyState::Press;
+		}
+		return false;
+	}
+
+	bool InputParserSystem::isBeingPressed(KeyValues key) {
+		if (keyInputTablePointer->isNotLocked(key)) {
+			KeyState keyState{ keyInputTablePointer->get(key) };
+			return keyState == KeyState::Press || keyState == KeyState::Down;
 		}
 		return false;
 	}

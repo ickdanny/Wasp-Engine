@@ -14,4 +14,10 @@ namespace wasp::math {
 			throw std::runtime_error{ message };
 		}
 	}
+
+	template <typename T>
+	constexpr T ceilingIntegerDivide(T x, T y) {
+		static_assert(std::is_integral<T>::value, "integral type required!");
+		return x / y + (x % y != 0);
+	}
 }

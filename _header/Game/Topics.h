@@ -5,6 +5,8 @@
 #include "Game/Systems/MenuNavigationCommands.h"
 #include "ECS/Entity/EntityHandle.h"
 #include "Game/Systems/GameState.h"
+#include "Game/Systems/GameCommands.h"
+#include "Game/Systems/PlayerStates.h"
 
 namespace wasp::game {
 
@@ -59,6 +61,12 @@ namespace wasp::game {
 		//todo: when we restart campaign, need to set stage back to 1 and prng to clock
 		//todo: have a GameBuilderCommand for reset
 		static const Topic<systems::GameBuilderCommands> gameBuilderCommands;
+
+		//set and cleared by InputParserSystem
+		static const Topic<systems::GameCommands> gameCommands;
+
+		//todo: not handled!
+		static const Topic<systems::PlayerStates> playerStateEntry;
 
 		//todo: use these for delta time shenanigans
 		static const Topic<> pauseFlag;

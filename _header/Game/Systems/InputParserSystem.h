@@ -28,5 +28,6 @@ namespace wasp::game::systems {
 		void parseGameInput(Scene& scene);
 
 		bool isJustPressed(KeyValues keyValue);
+		bool isBeingPressed(KeyValues keyValue);
 	};
 }
