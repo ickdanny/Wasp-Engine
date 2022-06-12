@@ -43,6 +43,8 @@ namespace wasp::game::systems {
 		void initStageMenu(Scene& scene) const;
 		void initOptionsMenu(Scene& scene) const;
 
+		void initGame(Scene& scene) const;
+
 		void addBackground(ecs::DataStorage& dataStorage, std::wstring name) const;
 
 		BasicButtonComponentTuple makeButton(

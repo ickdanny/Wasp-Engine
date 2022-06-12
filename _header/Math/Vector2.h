@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 #include "Point2.h"
 #include "MathUtil.h"
 
@@ -21,7 +23,9 @@ namespace wasp::math {
         }
 
         //conversion to point
-        explicit operator Point2() const;
+        constexpr explicit operator Point2() const {
+            return Point2{ x, y };
+        }
 
         //conversion to string
         explicit operator std::string() const;
@@ -69,9 +73,7 @@ namespace wasp::math {
     }
 
     //utility functions
-    constexpr float getMagnitude(const Vector2& vector) {
-        return std::sqrtf((vector.x * vector.x) + (vector.y * vector.y));
-    }
+    float getMagnitude(const Vector2& vector);
 
     //not implementing equivalence operators due to floating point imprecision
 }

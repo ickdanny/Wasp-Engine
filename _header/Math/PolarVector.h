@@ -35,7 +35,8 @@ namespace wasp::math {
 		//conversion to Vector2
 		operator Vector2() const;
 
-	public:
+	private:
+		//helper functions
 		void updateVector2Representation();
 	};
 }

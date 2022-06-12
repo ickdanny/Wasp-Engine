@@ -11,6 +11,10 @@
 #include "Game/Systems/VelocitySystem.h"
 #include "Game/Systems/ScriptSystem.h"
 #include "Game/Systems/CollisionSystem.h"
+#include "Game/Systems/PlayerMovementSystem.h"
+#include "Game/Systems/PlayerShotSystem.h"
+
+#include "Game/Systems/InboundSystem.h"
 
 namespace wasp::game {
 
@@ -24,6 +28,10 @@ namespace wasp::game {
 		systems::VelocitySystem velocitySystem{};
 		systems::ScriptSystem scriptSystem{};
 		systems::CollisionSystem<int, int> collisionSystem{};	//todo: correct template
+		systems::PlayerMovementSystem playerMovementSystem{};
+		systems::PlayerShotSystem playerShotSystem{};
+
+		systems::InboundSystem inboundSystem{};
 
 	public:
 		SceneUpdater(

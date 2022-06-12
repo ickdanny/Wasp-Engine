@@ -5,40 +5,42 @@ namespace wasp::game::systems {
 	void MenuNavigationSystem::operator()(Scene& scene) {
 
 		//if this scene has a selected element (in other words, if this scene is a menu)
-		auto& currentSelectedElementChannel{
-			scene.getChannel(SceneTopics::currentSelectedElement)
-		};
-		if (currentSelectedElementChannel.hasMessages()) {
-
-			//this system is responsible for clearing the elementSelection channel
-			auto& elementSelectionChannel{
-				scene.getChannel(SceneTopics::elementSelection)
+		if (scene.hasChannel(SceneTopics::currentSelectedElement)) {
+			auto& currentSelectedElementChannel{
+				scene.getChannel(SceneTopics::currentSelectedElement)
 			};
-			elementSelectionChannel.clear();
+			if (currentSelectedElementChannel.hasMessages()) {
 
-			//if this scene has any menu navigation commands to parse
-			auto& menuNavigationCommandChannel{
-				scene.getChannel(SceneTopics::menuNavigationCommands)
-			};
-			if (menuNavigationCommandChannel.hasMessages()) {
-
-				//grab the selected element
-				EntityHandle currentSelectedElement{
-					currentSelectedElementChannel.getMessages()[0]
+				//this system is responsible for clearing the elementSelection channel
+				auto& elementSelectionChannel{
+					scene.getChannel(SceneTopics::elementSelection)
 				};
+				elementSelectionChannel.clear();
 
-				//and start parsing commands
-				for (auto menuNavigationCommand 
-					: menuNavigationCommandChannel.getMessages()) 
-				{
-					if (
-						!parseNavigationCommand(
-							scene,
-							menuNavigationCommand,
-							currentSelectedElement
-						)
-					) {
-						break;	//break out of loop if we hit a critical command
+				//if this scene has any menu navigation commands to parse
+				auto& menuNavigationCommandChannel{
+					scene.getChannel(SceneTopics::menuNavigationCommands)
+				};
+				if (menuNavigationCommandChannel.hasMessages()) {
+
+					//grab the selected element
+					EntityHandle currentSelectedElement{
+						currentSelectedElementChannel.getMessages()[0]
+					};
+
+					//and start parsing commands
+					for (auto menuNavigationCommand
+						: menuNavigationCommandChannel.getMessages())
+					{
+						if (
+							!parseNavigationCommand(
+								scene,
+								menuNavigationCommand,
+								currentSelectedElement
+							)
+							) {
+							break;	//break out of loop if we hit a critical command
+						}
 					}
 				}
 			}

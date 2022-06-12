@@ -125,6 +125,9 @@ namespace wasp::ecs::component {
             return archetypeWeakPointer;
         }
 
+        //conversion to string
+        explicit operator std::string() const;
+
     private:
         //modifiers
         template <typename T>

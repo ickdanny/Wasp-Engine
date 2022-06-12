@@ -5,8 +5,9 @@ namespace wasp::game::systems {
 	void PlayerMovementSystem::operator()(Scene& scene) {
 
         //this system only operators on scenes with game commands 
-        auto& gameCommandChannel{ scene.getChannel(SceneTopics::gameCommands) };
-        if (gameCommandChannel.hasMessages()) {
+        if (scene.hasChannel(SceneTopics::gameCommands)) {
+
+            auto& gameCommandChannel{ scene.getChannel(SceneTopics::gameCommands) };
 
             //retrieve system data from the scene
             static Topic<SceneData> sceneDataTopic{};
@@ -21,7 +22,7 @@ namespace wasp::game::systems {
             //update the input data
             twoFramePlayerInputData.reset();
             checkActive(scene, active);
-            if (active) {
+            if (active && gameCommandChannel.hasMessages()) {
                 for (auto& gameCommand : gameCommandChannel.getMessages()) {
                     parseGameCommand(gameCommand, twoFramePlayerInputData);
                 }
@@ -47,13 +48,18 @@ namespace wasp::game::systems {
                     playerVelocity = velocity;
                     ++groupIterator;
                 }
-                twoFramePlayerInputData.step();
             }
+            twoFramePlayerInputData.step();
         }
 	}
 
     //checks if this system should operate on the player based on their state
     void PlayerMovementSystem::checkActive(Scene& scene, bool& active) {
+
+        //todo: debug
+        active = true;
+        return;
+
         auto& playerStateEntryChannel{ scene.getChannel(SceneTopics::playerStateEntry) };
         if(playerStateEntryChannel.hasMessages()) {
             for (auto& playerState : playerStateEntryChannel.getMessages()) {
@@ -64,7 +70,6 @@ namespace wasp::game::systems {
                         active = true;
                         break;
                     case PlayerStates::dead:
-                    case PlayerStates::checkContinue:
                     case PlayerStates::respawning:
                     case PlayerStates::gameOver:
                         active = false;
@@ -125,7 +130,7 @@ namespace wasp::game::systems {
             ++x;
         }
         if (x | y) {
-            Vector2 velocity{ x, y };
+            Vector2 velocity{ static_cast<float>(x), static_cast<float>(y) };
             float magnitude = inputData.isFocused() 
                 ? config::focusedSpeed 
                 : config::playerSpeed;
@@ -133,7 +138,7 @@ namespace wasp::game::systems {
             return velocity;
         }
         else {
-            throw std::runtime_error{ "expect either x or y =/= 0!" };
+            return {};
         }
     }
 }

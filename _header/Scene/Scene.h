@@ -47,6 +47,11 @@ namespace wasp::scene {
 		}
 
 		template <typename T>
+		bool hasChannel(const channel::Topic<T>& topic) {
+			return channelSet.hasChannel(topic);
+		}
+
+		template <typename T>
 		channel::Channel<T>& getChannel(const channel::Topic<T>& topic) {
 			return channelSet.getChannel(topic);
 		}

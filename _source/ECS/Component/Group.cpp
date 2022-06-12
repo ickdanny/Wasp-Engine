@@ -1,12 +1,12 @@
 #include "ECS/Component/Group.h"
 
+#include "Logging.h"
+
 namespace wasp::ecs::component {
     Group::Group(const ComponentSet* const componentKeyPointer)
         : componentKeyPointer{ componentKeyPointer }
     {
-        receiveNewArchetype(
-            componentKeyPointer->getAssociatedArchetypeWeakPointer().lock()
-        );
+        //we do NOT receive the new archetype here
     }
 
     void Group::receiveNewArchetype(std::shared_ptr<Archetype> archetypePointer) {

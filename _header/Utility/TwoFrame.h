@@ -13,6 +13,14 @@ namespace wasp::utility {
 		//inherit constructors
 		using T::T;
 
+		//Explicitly define copy and move constructors taking T
+		TwoFrame(const T& toCopy)
+			: T(toCopy) {
+		}
+		TwoFrame(T&& toMove)
+			: T(toMove) {
+		}
+
 		void step() {
 			past = *this;
 		}

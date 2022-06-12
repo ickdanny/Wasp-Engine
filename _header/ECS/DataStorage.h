@@ -305,7 +305,7 @@ namespace wasp::ecs {
             if constexpr (sizeof...(args) > 0) {
                 addEntities(entityHandleVector, args...);
             }
-            return std::move(entityHandleVector);
+            return entityHandleVector;
         }
 
         //returns true if successfully removed entity, false otherwise

@@ -6,11 +6,6 @@
 
 namespace wasp::math {
 
-	//conversion to point
-	Vector2::operator Point2() const {
-		return Point2{ x, y };
-	}
-
 	//conversion to string
 	Vector2::operator std::string() const {
 		return "<" + std::to_string(x) + ", " + std::to_string(y) + ">";
@@ -40,5 +35,10 @@ namespace wasp::math {
         x /= scalar;
         y /= scalar;
         return *this;
+    }
+
+    //utility functions
+    float getMagnitude(const Vector2& vector) {
+        return std::sqrtf((vector.x * vector.x) + (vector.y * vector.y));
     }
 }

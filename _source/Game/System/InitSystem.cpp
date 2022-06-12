@@ -45,6 +45,9 @@ namespace wasp::game::systems {
 			case SceneNames::options:
 				initOptionsMenu(scene);
 				break;
+			case SceneNames::game:
+				initGame(scene);
+				break;
 			default:
 				int nameID{ static_cast<int>(scene.getName()) };
 				debug::log("No init function for: " + std::to_string(nameID));
@@ -382,6 +385,36 @@ namespace wasp::game::systems {
 		);
 	}
 
+	void InitSystem::initGame(Scene& scene) const {
+		const auto& gameStateChannel{ 
+			globalChannelSetPointer->getChannel(GlobalTopics::gameState) 
+		};
+		const auto& gameState{ gameStateChannel.getMessages()[0] };
+
+		auto& dataStorage{ scene.getDataStorage() };
+		addBackground(dataStorage, L"temp_background_game");
+
+		dataStorage.addEntity(
+			EntityBuilder::makeStationaryCollidable(
+				config::playerSpawn,
+				config::playerHitbox,
+				Velocity{},
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"temp_player")->d2dBitmap
+				},
+				DrawOrder{ config::playerDrawOrder },
+				PlayerData{
+					gameState.shotType,
+					config::initLives,
+					config::initBombs,
+					config::initContinues,
+					0	//todo: init power
+				}
+				//todo: inbound, spawn, damage, death, animation
+			).package()
+		);
+	}
+
 	void InitSystem::addBackground(
 		ecs::DataStorage& dataStorage, std::wstring name
 	) const {
@@ -391,7 +424,7 @@ namespace wasp::game::systems {
 				SpriteInstruction{
 					bitmapStoragePointer->get(name)->d2dBitmap
 				},
-				DrawOrder{ -1000 }
+				DrawOrder{ config::backgroundDrawOrder }
 			).package()
 		);
 	}

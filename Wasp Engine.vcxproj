@@ -178,10 +178,12 @@
     <ClCompile Include="_source\Game\System\DebugRenderSystem.cpp" />
     <ClCompile Include="_source\Game\System\GameBuilderSystem.cpp" />
     <ClCompile Include="_source\Game\System\GameState.cpp" />
+    <ClCompile Include="_source\Game\System\InboundSystem.cpp" />
     <ClCompile Include="_source\Game\System\InitSystem.cpp" />
     <ClCompile Include="_source\Game\System\InputParserSystem.cpp" />
     <ClCompile Include="_source\Game\System\MenuNavigationSystem.cpp" />
     <ClCompile Include="_source\Game\System\PlayerMovementSystem.cpp" />
+    <ClCompile Include="_source\Game\System\PlayerShotSystem.cpp" />
     <ClCompile Include="_source\Game\System\RenderSystem.cpp" />
     <ClCompile Include="_source\Game\System\ScriptSystem.cpp" />
     <ClCompile Include="_source\Game\System\VelocitySystem.cpp" />
@@ -242,6 +244,7 @@
     <ClInclude Include="_header\Game\Components\PlayerData.h" />
     <ClInclude Include="_header\Game\Systems\GameBuilderSystem.h" />
     <ClInclude Include="_header\Game\Systems\GameCommands.h" />
+    <ClInclude Include="_header\Game\Systems\InboundSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerMovementSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerShotSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerStates.h" />
@@ -266,10 +269,13 @@
     <ClInclude Include="_header\Game\SystemChainIDs.h" />
     <ClInclude Include="_header\Game\Systems\InitSystem.h" />
     <ClInclude Include="_header\Game\SceneUpdater.h" />
+    <ClInclude Include="_header\Math\AABB.h" />
     <ClInclude Include="_header\Math\Angle.h" />
     <ClInclude Include="_header\Math\Constants.h" />
+    <ClInclude Include="_header\Math\Geometry.h" />
     <ClInclude Include="_header\Math\MathUtil.h" />
     <ClInclude Include="_header\Math\PolarVector.h" />
+    <ClInclude Include="_header\Math\Rectangle.h" />
     <ClInclude Include="_header\Math\Vector2.h" />
     <ClInclude Include="_header\Scene\Scene.h" />
     <ClInclude Include="_header\Game\WindowModes.h" />
@@ -316,7 +322,6 @@
     <ClInclude Include="_header\Game\Resources\ManifestStorage.h" />
     <ClInclude Include="_header\Resource\ParentResourceStorage.h" />
     <ClInclude Include="_header\Math\Point2.h" />
-    <ClInclude Include="_header\Math\Rectangle.h" />
     <ClInclude Include="_header\Game\Resources\ResourceMasterStorage.h" />
     <ClInclude Include="_header\Resource\ResourceOriginVariant.h" />
     <ClInclude Include="_header\Resource\ResourceStorage.h" />

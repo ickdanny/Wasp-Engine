@@ -38,10 +38,9 @@ namespace wasp::game::systems {
             static constexpr DataType rightMask =    0b0000'1000;
             static constexpr DataType focusMask =    0b0001'0000;
 
-            static constexpr DataType upAndDownMask = upMask | downMask;
-            static constexpr DataType leftAndRightMask = leftMask | rightMask;
-            static constexpr DataType allDirectionMask 
-                = upAndDownMask | leftAndRightMask;
+            static constexpr DataType verticalMask = upMask | downMask;
+            static constexpr DataType horizontalMask = leftMask | rightMask;
+            static constexpr DataType allDirectionMask = verticalMask | horizontalMask;
 
             //fields
             DataType data{};

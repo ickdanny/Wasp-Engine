@@ -5,14 +5,17 @@
 namespace wasp::game::systems {
 
 	void GameBuilderSystem::operator()(Scene& scene) {
-		auto& gameBuilderCommandChannel{
-			scene.getChannel(SceneTopics::gameBuilderCommands)
-		};
-		if (gameBuilderCommandChannel.hasMessages()) {
-			for (auto gameBuilderCommand : gameBuilderCommandChannel.getMessages()) {
-				handleGameBuilderCommand(gameBuilderCommand);
+		//this system only works if there are game builder commands sent to it
+		if (scene.hasChannel(SceneTopics::gameBuilderCommands)) {
+			auto& gameBuilderCommandChannel{
+				scene.getChannel(SceneTopics::gameBuilderCommands)
+			};
+			if (gameBuilderCommandChannel.hasMessages()) {
+				for (auto gameBuilderCommand : gameBuilderCommandChannel.getMessages()) {
+					handleGameBuilderCommand(gameBuilderCommand);
+				}
+				gameBuilderCommandChannel.clear();
 			}
-			gameBuilderCommandChannel.clear();
 		}
 	}
 

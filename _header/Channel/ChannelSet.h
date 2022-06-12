@@ -18,6 +18,16 @@ namespace wasp::channel {
 		ChannelSet() = default;
 
 		template <typename T>
+		bool hasChannel(const Topic<T>& topic) {
+			//if our index is out of bounds, we definitely don't have that channel
+			if (topic.index >= channels.size()) {
+				return false;
+			}
+			//use the unique_ptr conversion to bool to see if it points to anything
+			return static_cast<bool>(channels[topic.index]);
+		}
+
+		template <typename T>
 		Channel<T>& getChannel(const Topic<T>& topic) {
 			//resize the pointer vector if necessary
 			if (topic.index >= channels.size()) {

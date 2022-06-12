@@ -9,6 +9,7 @@
 
 namespace wasp::game {
 
+    //ui
     struct MenuCommandUp : components::MenuCommand {
         using components::MenuCommand::MenuCommand;
     };
@@ -33,18 +34,26 @@ namespace wasp::game {
     struct ButtonData : components::ButtonData {
         using components::ButtonData::ButtonData;
     };
+
+    //graphics
+    struct VisibleMarker {};
     struct SpriteInstruction : graphics::BitmapDrawInstruction {
         using graphics::BitmapDrawInstruction::BitmapDrawInstruction;
     };
-
-    struct VisibleMarker {};
-
     struct DrawOrder {
         int order{};
     };
 
     struct Position : components::TwoFramePosition {
         using components::TwoFramePosition::TwoFramePosition;
+
+        //Explicitly define copy and move constructors taking Point2
+        Position(const math::Point2& toCopy)
+            : components::TwoFramePosition(toCopy) {
+        }
+        Position(math::Point2&& toMove)
+            : components::TwoFramePosition(toMove) {
+        }
     };
     struct Velocity : math::Vector2 {
         using math::Vector2::Vector2;
@@ -56,5 +65,28 @@ namespace wasp::game {
         }
     };
 
-    struct PlayerData : components::PlayerData {};
+    //game
+    struct CollidableMarker {};
+    struct Hitbox : math::AABB {
+        using math::AABB::AABB;
+
+        //Explicitly define copy and move constructors taking AABB
+        Hitbox(const AABB& toCopy)
+            : math::AABB(toCopy) {
+        }
+        Hitbox(AABB&& toMove)
+            : math::AABB(toMove) {
+        }
+    };
+
+    struct Inbound {
+        float bound;
+    };
+    struct Outbound {
+        float bound;
+    };
+
+    struct PlayerData : components::PlayerData {
+        using components::PlayerData::PlayerData;
+    };
 }

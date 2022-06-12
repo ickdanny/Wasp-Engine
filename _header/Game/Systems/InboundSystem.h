@@ -4,13 +4,10 @@
 
 namespace wasp::game::systems {
 
-	class PlayerShotSystem {
+	class InboundSystem {
+	private:
 
 	public:
 		void operator()(Scene& scene);
-
-	private:
-		//helper functions
-		void addPlayerShot(Scene& scene);
 	};
 }

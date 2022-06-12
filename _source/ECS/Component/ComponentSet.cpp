@@ -38,6 +38,11 @@ namespace wasp::ecs::component {
         return presentTypeIndices;
     }
 
+    //conversion to string
+    ComponentSet::operator std::string() const {
+        return bitset.to_string();
+    }
+
     //helper functions
     void ComponentSet::makePresentTypeIndices() const {
         presentTypeIndices = std::vector<std::size_t>{};

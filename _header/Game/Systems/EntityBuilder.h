@@ -9,6 +9,7 @@ namespace wasp::game::systems {
 
 	//utility for creating entities
 
+	//ComponentTuple struct
 	template <typename... Ts>
 	struct ComponentTuple : public std::tuple<Ts...> {
 		ComponentTuple(const Ts&... args)
@@ -25,6 +26,7 @@ namespace wasp::game::systems {
 		}
 	};
 
+	//adding anything to the tuple
 	template <typename... Ts, typename C>
 	ComponentTuple<Ts..., C> operator+(
 		const ComponentTuple<Ts...>& tuple, 
@@ -36,6 +38,7 @@ namespace wasp::game::systems {
 		);
 	}
 
+	//concatenating two tuples
 	template <typename... Ts, typename... Us>
 	ComponentTuple<Ts..., Us...> operator+(
 		const ComponentTuple<Ts...>& left,
@@ -51,6 +54,7 @@ namespace wasp::game::systems {
 	private:
 		//typedefs
 		using Point2 = math::Point2;
+		using AABB = math::AABB;
 
 	public:
 		template <typename... Ts>
@@ -66,6 +70,34 @@ namespace wasp::game::systems {
 		template <typename... Ts>
 		static auto makeVisible(const Point2& pos, const Ts&... args) {
 			return ComponentTuple{ Position{ pos }, VisibleMarker{}, args... };
+		}
+
+		template <typename... Ts>
+		static auto makeStationaryCollidable(
+			const Point2& pos,
+			const AABB& hitbox,
+			const Ts&... args
+		) {
+			return ComponentTuple{
+				Position{ pos },
+				VisibleMarker{},
+				Hitbox{ hitbox },
+				CollidableMarker{},
+				args...
+			};
+		}
+
+		template <typename... Ts>
+		static auto makeStationaryUncollidable(
+			const Point2& pos,
+			const AABB& hitbox,
+			const Ts&... args
+		) {
+			return ComponentTuple{
+				Position{ pos },
+				VisibleMarker{},
+				Hitbox{ hitbox }
+			};
 		}
 	};
 }

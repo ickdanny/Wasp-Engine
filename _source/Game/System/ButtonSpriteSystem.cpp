@@ -9,6 +9,7 @@ namespace wasp::game::systems {
 	}
 
 	void ButtonSpriteSystem::operator()(Scene& scene) {
+		//this system only runs when there are new elementSelection messages
 		auto& elementSelectionChannel{ scene.getChannel(SceneTopics::elementSelection) };
 		if (elementSelectionChannel.hasMessages()) {
 			for (auto& [entityHandle, select] : elementSelectionChannel.getMessages()) {
@@ -65,6 +66,6 @@ namespace wasp::game::systems {
 		dataStorage.getComponent<SpriteInstruction>(buttonHandle).setBitmap(
 			bitmapStoragePointer->get(spriteName)->d2dBitmap
 		);
-		dataStorage.getComponent<Position>(buttonHandle) = position;
+		dataStorage.getComponent<Position>(buttonHandle) = Position{ position };
 	}
 }
