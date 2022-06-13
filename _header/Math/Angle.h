@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "MathUtil.h"
+
 namespace wasp::math {
 
     //utility functions

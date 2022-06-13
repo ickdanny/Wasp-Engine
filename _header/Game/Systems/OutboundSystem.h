@@ -4,7 +4,7 @@
 
 namespace wasp::game::systems {
 
-	class InboundSystem {
+	class OutboundSystem {
 	public:
 		void operator()(Scene& scene);
 	};

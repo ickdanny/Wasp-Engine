@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/Scenes.h"
+#include "Game/GameConfig.h"
 
 namespace wasp::game::systems {
 	
@@ -23,4 +24,8 @@ namespace wasp::game::systems {
 		}
 		return groupPointer;
 	}
+
+	//Returns true if the given position is outside of the bounds specified,
+	//false otherwise
+	bool isOutOfBounds(math::Point2 pos, float bound);
 }

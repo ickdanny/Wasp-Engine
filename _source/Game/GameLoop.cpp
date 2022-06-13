@@ -3,15 +3,15 @@
 namespace wasp::game {
 
 	void GameLoop::run() {
-		durationType timeBetweenUpdates{
-			static_cast<durationType::rep>(
-				((1.0 / updatesPerSecond) * clockType::period::den)
-				/ clockType::period::num
+		DurationType timeBetweenUpdates{
+			static_cast<DurationType::rep>(
+				((1.0 / updatesPerSecond) * ClockType::period::den)
+				/ ClockType::period::num
 			)
 		};
 
-		timePointType nextUpdate{ getCurrentTime() };
-		timePointType timeOfLastUpdate{ getCurrentTime() };
+		TimePointType nextUpdate{ getCurrentTime() };
+		TimePointType timeOfLastUpdate{ getCurrentTime() };
 		int updatesWithoutFrame{ 0 };
 
 		running = true;
@@ -52,19 +52,19 @@ namespace wasp::game {
 	}
 
 	//static
-	GameLoop::timePointType GameLoop::getCurrentTime() {
-		return clockType::now();
+	GameLoop::TimePointType GameLoop::getCurrentTime() {
+		return ClockType::now();
 	}
 
 	//static
 	float GameLoop::calcDeltaTime(
-		timePointType timeOfLastUpdate,
-		durationType timeBetweenUpdates
+		TimePointType timeOfLastUpdate,
+		DurationType timeBetweenUpdates
 	) {
-		durationType timeSinceLastUpdate{ calcTimeSinceLastUpdate(timeOfLastUpdate) };
+		DurationType timeSinceLastUpdate{ calcTimeSinceLastUpdate(timeOfLastUpdate) };
 		float deltaTime{
 			static_cast<float>(
-				durationType{timeSinceLastUpdate / timeBetweenUpdates}.count()
+				DurationType{timeSinceLastUpdate / timeBetweenUpdates}.count()
 			)
 		};
 		if (deltaTime < 0.0) {
@@ -77,8 +77,8 @@ namespace wasp::game {
 	}
 
 	//static
-	GameLoop::durationType GameLoop::calcTimeSinceLastUpdate(
-		timePointType timeOfLastUpdate
+	GameLoop::DurationType GameLoop::calcTimeSinceLastUpdate(
+		TimePointType timeOfLastUpdate
 	) {
 		return getCurrentTime() - timeOfLastUpdate;
 	}

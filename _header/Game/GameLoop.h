@@ -10,9 +10,9 @@ namespace wasp::game {
 	//making this a class because i want to be able to stop it
 	class GameLoop {
 	private:
-		using clockType = std::chrono::steady_clock;
-		using timePointType = clockType::time_point;
-		using durationType = clockType::duration;
+		using ClockType = std::chrono::steady_clock;
+		using TimePointType = ClockType::time_point;
+		using DurationType = ClockType::duration;
 
 		bool running{};
 		int updatesPerSecond{};
@@ -39,13 +39,15 @@ namespace wasp::game {
 		void stop();
 
 	private:
-		static timePointType getCurrentTime();
+		static TimePointType getCurrentTime();
 
+		//returns a float between 0 and 1 inclusive representing the delta time in terms
+		//of the timestep
 		static float calcDeltaTime(
-			timePointType timeOfLastUpdate,
-			durationType timeBetweenUpdates
+			TimePointType timeOfLastUpdate,
+			DurationType timeBetweenUpdates
 		);
 
-		static durationType calcTimeSinceLastUpdate(timePointType timeOfLastUpdate);
+		static DurationType calcTimeSinceLastUpdate(TimePointType timeOfLastUpdate);
 	};
 }

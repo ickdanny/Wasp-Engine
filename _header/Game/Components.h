@@ -6,6 +6,7 @@
 #include "Components/ButtonData.h"
 #include "Graphics/BitmapDrawInstruction.h"
 #include "Components/PlayerData.h"
+#include "Components/CollisionType.h"
 
 namespace wasp::game {
 
@@ -67,6 +68,8 @@ namespace wasp::game {
 
     //game
     struct CollidableMarker {};
+    struct PlayerCollisions : components::CollisionType<PlayerCollisions>{};
+
     struct Hitbox : math::AABB {
         using math::AABB::AABB;
 

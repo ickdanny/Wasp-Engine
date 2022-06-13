@@ -29,4 +29,17 @@ namespace wasp::math {
 			aabb.yHigh - vector.y
 		};
 	}
+
+	Angle getAngle(const Vector2& vector);
+
+	float distanceFromAToB(const Point2& a, const Point2& b);
+
+	Angle getAngleFromAToB(const Point2& a, const Point2& b);
+
+	//Returns 360/n
+	constexpr float fullAngleDivide(int n) {
+		return 360.0f / static_cast<float>(n);
+	}
+
+	bool isPointWithinAABB(const Point2& point, const AABB& aabb);
 }

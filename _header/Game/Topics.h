@@ -68,8 +68,10 @@ namespace wasp::game {
 		//todo: not handled!
 		static const Topic<systems::PlayerStates> playerStateEntry;
 
-		//todo: use these for delta time shenanigans
+		//todo: not set!
 		static const Topic<> pauseFlag;
+
+		//set and cleared by RenderSystem and SceneStateSystem
 		static const Topic<float> lastDeltaTime;
 	};
 }

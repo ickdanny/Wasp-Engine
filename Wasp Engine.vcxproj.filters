@@ -252,6 +252,21 @@
     <ClCompile Include="_source\Game\System\InboundSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="_source\Math\Geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\System\SystemUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\System\OutboundSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\System\CollisionSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\System\SceneStateSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Header\windowsInclude.h">
@@ -624,6 +639,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Systems\InboundSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\OutboundSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Components\CollisionType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\QuadTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\SceneStateSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

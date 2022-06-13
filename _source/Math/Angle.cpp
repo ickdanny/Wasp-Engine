@@ -20,17 +20,6 @@ namespace wasp::math {
 			}
 			return angle;
 		}
-
-		constexpr float toDegreesRatio{ half / pi };
-		constexpr float toRadiansRatio{ pi / half };
-	}
-
-	//utility functions
-	constexpr float toDegrees(float radians) {
-		return radians * toDegreesRatio;
-	}
-	constexpr float toRadians(float degrees) {
-		return degrees * toRadiansRatio;
 	}
 
 	//getters

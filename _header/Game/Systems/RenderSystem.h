@@ -23,6 +23,11 @@ namespace wasp::game::systems {
 
 	private:
 		//helper functions
+		void drawSpritesFromList(
+			const std::vector<IDOrderTuple>& entityIDList,
+			const ecs::DataStorage& dataStorage,
+			float deltaTime
+		);
 		
 		void drawSprite(
 			const Position& position,

@@ -409,8 +409,9 @@ namespace wasp::game::systems {
 					config::initBombs,
 					config::initContinues,
 					0	//todo: init power
-				}
-				//todo: inbound, spawn, damage, death, animation
+				},
+				Inbound{ config::playerInbound }
+				//todo:spawn, damage, death, animation
 			).package()
 		);
 	}

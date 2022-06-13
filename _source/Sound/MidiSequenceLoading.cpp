@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include "Utility\ByteUtil.h"
-#include "Utility\Arithmetic.h"
+#include "Math\MathUtil.h"
 #include "Sound\MidiConstants.h"
 
 namespace wasp::sound::midi {
@@ -12,7 +12,7 @@ namespace wasp::sound::midi {
 
 	using wasp::utility::byteSwap16;
 	using wasp::utility::byteSwap32;
-	using wasp::utility::ceilingIntegerDivide;
+	using wasp::math::ceilingIntegerDivide;
 
 	using EventUnit = MidiSequence::EventUnit;
 	using EventUnitTrack = MidiSequence::EventUnitTrack;

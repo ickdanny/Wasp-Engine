@@ -19,6 +19,7 @@ namespace wasp::game {
 
 	void SceneUpdater::operator()(Scene& scene) {
 		initSystem(scene);
+		sceneStateSystem(scene);
 		inputParserSystem(scene);
 		menuNavigationSystem(scene);
 		buttonSpriteSystem(scene);
@@ -52,24 +53,14 @@ namespace wasp::game {
         //gameConstantSpriteRotationSystem = new ConstantSpriteRotationSystem(GAME_COMPONENT_TYPES);
         //gameSinusoidalSpriteVerticalOffsetSystem = new SinusoidalSpriteVerticalOffsetSystem(GAME_COMPONENT_TYPES);
         //gameScrollingSubImageSystem = new ScrollingSubImageSystem(GAME_COMPONENT_TYPES);
-        //gameMakeOpaqueWhenPlayerFocusedAndAliveSystem = new MakeOpaqueWhenPlayerFocusedAndAliveSystem(GAME_COMPONENT_TYPES);
         //gameSpriteSubImageFlagUpdateSystem = new SpriteSubImageFlagUpdateSystem(GAME_COMPONENT_TYPES);
-        //gameTrailSystem = new TrailSystem(GAME_COMPONENT_TYPES);
         //gameSpriteInstructionSystem = new SpriteInstructionSystem(imageManager, GAME_COMPONENT_TYPES);
         //gameSpriteRemovalSystem = new SpriteRemovalSystem(GAME_COMPONENT_TYPES);
-        //
-        //gamePrimaryDataStorageCriticalSystem = new DataStorageCriticalSystem<>();
-        //
+
         inboundSystem(scene);
-        //gameOutboundSystem = new OutboundSystem(GAME_COMPONENT_TYPES);
-        //
-        //gameSecondaryDataStorageCriticalSystem = new DataStorageCriticalSystem<>();
-        //
-        //gameDrawCommandSystem = new GameDrawCommandSystem(GAME_COMPONENT_TYPES);
-        //
+        outboundSystem(scene);
+
         //gameGameOverSystem = new GameOverSystem();
         //gameWinSystem = new GameWinSystem();
-        //gameMusicSystem = new MusicSystem(midiManager, trackStartBroadcaster, sequencerResetBroadcaster);
-        //gameSliceStackCriticalSystem = new SliceStackCriticalSystem<>();
 	}
 }

@@ -30,7 +30,7 @@ namespace wasp::game::config {
 	constexpr float playerSpeed{ 3.0f };
     constexpr float focusSpeedMulti{ 0.4f };
 	constexpr float focusedSpeed{ playerSpeed * focusSpeedMulti };
-    constexpr float playerInbound{ 20.0f };
+    constexpr float playerInbound{ 10.0f };
 
     constexpr int deathBombPeriod{ 15 };
     constexpr int bombInvulnerabilityPeriod{ 4 * 60 };

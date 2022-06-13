@@ -73,7 +73,13 @@ namespace wasp::math {
     }
 
     //utility functions
+
     float getMagnitude(const Vector2& vector);
+
+    //Returns a vector which, when added to A, will yield B.
+    constexpr Vector2 vectorFromAToB(const Point2& a, const Point2& b) {
+        return { b.x - a.x, b.y - a.y };
+    }
 
     //not implementing equivalence operators due to floating point imprecision
 }

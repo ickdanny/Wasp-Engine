@@ -26,7 +26,7 @@ namespace wasp::math {
 
 	void PolarVector::updateVector2Representation() {
 		float radians{ angle.getAngleRadians() };
-		vector2Representation.x = magnitude * std::cos(radians);
-		vector2Representation.y = -1 * magnitude * std::sin(radians);
+		vector2Representation.x = magnitude * std::cosf(radians);
+		vector2Representation.y = -1 * magnitude * std::sinf(radians);
 	}
 }
