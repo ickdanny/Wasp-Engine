@@ -264,7 +264,7 @@
     <ClCompile Include="_source\Game\System\CollisionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\SceneStateSystem.cpp">
+    <ClCompile Include="_source\Game\System\MiscellaneousSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -650,7 +650,7 @@
     <ClInclude Include="_header\Game\Systems\QuadTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Systems\SceneStateSystem.h">
+    <ClInclude Include="_header\Game\Systems\MiscellaneousSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

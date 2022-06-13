@@ -1,4 +1,4 @@
-#include "Game/Systems/SceneStateSystem.h"
+#include "Game/Systems/MiscellaneousSystem.h"
 
 namespace wasp::game::systems {
 
@@ -12,7 +12,7 @@ namespace wasp::game::systems {
 		}
 	}
 
-	void SceneStateSystem::operator()(Scene& scene) {
+	void MiscellaneousSystem::operator()(Scene& scene) {
 		resetLastDeltaTime(scene);
 	}
 }

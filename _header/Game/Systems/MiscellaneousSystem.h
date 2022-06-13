@@ -4,7 +4,7 @@
 
 namespace wasp::game::systems {
 
-	class SceneStateSystem {
+	class MiscellaneousSystem {
 	public:
 		void operator()(Scene& scene);
 	};

@@ -187,7 +187,7 @@
     <ClCompile Include="_source\Game\System\PlayerMovementSystem.cpp" />
     <ClCompile Include="_source\Game\System\PlayerShotSystem.cpp" />
     <ClCompile Include="_source\Game\System\RenderSystem.cpp" />
-    <ClCompile Include="_source\Game\System\SceneStateSystem.cpp" />
+    <ClCompile Include="_source\Game\System\MiscellaneousSystem.cpp" />
     <ClCompile Include="_source\Game\System\ScriptSystem.cpp" />
     <ClCompile Include="_source\Game\System\SystemUtil.cpp" />
     <ClCompile Include="_source\Game\System\VelocitySystem.cpp" />
@@ -256,7 +256,7 @@
     <ClInclude Include="_header\Game\Systems\PlayerShotSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerStates.h" />
     <ClInclude Include="_header\Game\Systems\QuadTree.h" />
-    <ClInclude Include="_header\Game\Systems\SceneStateSystem.h" />
+    <ClInclude Include="_header\Game\Systems\MiscellaneousSystem.h" />
     <ClInclude Include="_header\Game\Systems\ScriptSystem.h" />
     <ClInclude Include="_header\Game\Systems\ShotType.h" />
     <ClInclude Include="_header\Game\Systems\ButtonSpriteSystem.h" />

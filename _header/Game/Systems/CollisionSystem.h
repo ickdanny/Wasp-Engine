@@ -3,8 +3,6 @@
 #include "systemInclude.h"
 
 namespace wasp::game::systems {
-
-	//template <typename CollisionType>
 	class CollisionSystem {
 
 	private:

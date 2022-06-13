@@ -19,7 +19,7 @@ namespace wasp::game {
 
 	void SceneUpdater::operator()(Scene& scene) {
 		initSystem(scene);
-		sceneStateSystem(scene);
+		miscellaneousSystem(scene);
 		inputParserSystem(scene);
 		menuNavigationSystem(scene);
 		buttonSpriteSystem(scene);
