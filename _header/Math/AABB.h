@@ -94,10 +94,10 @@ namespace wasp::math {
 
     //Returns true if the two given AABBs intersect
     constexpr bool collides(const AABB& left, const AABB& right) {
-        return left.xLow <= right.xLow
-            && left.xHigh >= right.xHigh
-            && left.yLow <= right.yLow
-            && left.yHigh >= right.yHigh;
+        return left.xLow <= right.xHigh
+            && left.xHigh >= right.xLow
+            && left.yLow <= right.yHigh
+            && left.yHigh >= right.yLow;
     }
 
     //Returns the smallest AABB which wholly contains both the given AABBs

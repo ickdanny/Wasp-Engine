@@ -10,9 +10,15 @@ namespace wasp::game::systems {
 			lastDeltaTimeChannel.clear();
 			lastDeltaTimeChannel.addMessage(0.0f);
 		}
+
+		//clears death channel
+		void clearChannels(Scene& scene) {
+			scene.getChannel(SceneTopics::deaths).clear();
+		}
 	}
 
 	void MiscellaneousSystem::operator()(Scene& scene) {
 		resetLastDeltaTime(scene);
+		clearChannels(scene);
 	}
 }

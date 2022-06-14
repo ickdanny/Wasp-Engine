@@ -7,6 +7,7 @@
 #include "Graphics/BitmapDrawInstruction.h"
 #include "Components/PlayerData.h"
 #include "Components/CollisionType.h"
+#include "Components/DeathCommand.h"
 
 namespace wasp::game {
 
@@ -80,6 +81,16 @@ namespace wasp::game {
         Hitbox(AABB&& toMove)
             : math::AABB(toMove) {
         }
+    };
+
+    struct Health {
+        int value{};
+    };
+    struct Damage {
+        int value{};
+    };
+    struct DeathCommand : components::DeathCommand {
+        using components::DeathCommand::DeathCommand;
     };
 
     struct Inbound {

@@ -1,12 +1,21 @@
-#include "Game/Systems/CollisionSystem.h"
+#include "Game/Systems/CollisionDetectorSystem.h"
 
-#include "Game//Systems//QuadTree.h"
+#include "Game/Systems/QuadTree.h"
 
 namespace wasp::game::systems {
 
 	namespace {
 		template <typename CollisionType>
-		void checkCollisions(Scene& scene) {
+		void detectCollisions(Scene& scene) {
+
+			//this system is responsible for clearing the collision channel
+			auto& collisionChannel{ 
+				scene.getChannel(CollisionType::collisionTopic) 
+			};
+			collisionChannel.clear();
+
+			auto& dataStorage{ scene.getDataStorage() };
+
 			//get the group iterator for Position, Hitbox, CollidableMarker, and our
 			//source type
 			static const Topic<ecs::component::Group*> sourceGroupPointerStorageTopic{};
@@ -22,10 +31,7 @@ namespace wasp::game::systems {
 				)
 			};
 			auto sourceGroupIterator{ 
-				sourceGroupPointer->groupIterator<
-					Position, 
-					Hitbox
-				>() 
+				sourceGroupPointer->groupIterator<Position, Hitbox>() 
 			};
 
 			//insert all source entities into a quadTree
@@ -35,6 +41,11 @@ namespace wasp::game::systems {
 				ecs::entity::EntityID id{ sourceGroupIterator.getEntityID() };
 				quadTree.insert(id, hitbox, position);
 				++sourceGroupIterator;
+			}
+
+			//if our quadTree is empty, bail
+			if (quadTree.isEmpty()) {
+				return;
 			}
 
 			//get the group iterator for Position, Hitbox, CollidableMarker, and our
@@ -52,10 +63,7 @@ namespace wasp::game::systems {
 				)
 			};
 			auto targetGroupIterator{
-				targetGroupPointer->groupIterator<
-					Position,
-					Hitbox
-				>()
+				targetGroupPointer->groupIterator<Position, Hitbox>()
 			};
 
 			//check every target entity against our quadTree
@@ -66,18 +74,25 @@ namespace wasp::game::systems {
 				};
 
 				if (!collidedEntities.empty()) {
-					ecs::entity::EntityID targetID{ sourceGroupIterator.getEntityID() };
+					ecs::entity::EntityID targetID{ targetGroupIterator.getEntityID() };
 					for (ecs::entity::EntityID sourceID : collidedEntities) {
 						if (sourceID != targetID) {
-							//todo: handle collisions
+							ecs::entity::EntityHandle sourceHandle{
+								dataStorage.makeHandle(sourceID)
+							};
+							ecs::entity::EntityHandle targetHandle{
+								dataStorage.makeHandle(targetID)
+							};
+							collisionChannel.addMessage({ sourceHandle, targetHandle });
 						}
 					}
 				}
+				++targetGroupIterator;
 			}
 		}
 	}
 
-	void CollisionSystem::operator()(Scene& scene) {
-		checkCollisions<PlayerCollisions>(scene);
+	void CollisionDetectorSystem::operator()(Scene& scene) {
+		detectCollisions<PlayerCollisions>(scene);
 	}
 }

@@ -20,7 +20,6 @@ namespace wasp::window {
         CComPtr<IDWriteTextFormat> textFormatPointer{};
         CComPtr<ID2D1SolidColorBrush> textBrushPointer{};
 
-        //todo: text color and fill color? pass a struct instead?
         int graphicsWidth{};
         int graphicsHeight{};
         int fillColor{};

@@ -16,13 +16,4 @@ namespace wasp::file{
     );
 
     void throwIfFileDoesNotExist(const std::wstring& fileName);
-
-
-    /*
-    * //todo: ini file?
-
-    public static Properties parseProperties(File propertiesFile);
-
-    public static void writeProperties(Properties properties, File propertiesFile);
-    */
 }

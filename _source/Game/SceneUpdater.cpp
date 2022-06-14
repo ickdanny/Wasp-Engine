@@ -26,20 +26,18 @@ namespace wasp::game {
 		gameBuilderSystem(scene);
 		velocitySystem(scene);
 		scriptSystem(scene);
-		collisionSystem(scene);
+		collisionDetectorSystem(scene);
 		playerMovementSystem(scene);
 		playerShotSystem(scene);
-
+		collisionHandlerSystem(scene);
 		
-		//gameDamageParserSystem = new DamageParserSystem(GAME_COMPONENT_TYPES);
-        //gameDamageHandlingSystem = new DamageHandlingSystem(GAME_COMPONENT_TYPES);
         //gamePlayerStateSystem = new PlayerStateSystem();
         //gamePlayerBombSystem = new PlayerBombSystem(GAME_COMPONENT_TYPES);
         //gamePlayerDeathParserSystem = new PlayerDeathParserSystem();
         //gameContinueAndGameOverSystem = new ContinueAndGameOverSystem();
         //gamePlayerRespawnSystem = new PlayerRespawnSystem(GAME_COMPONENT_TYPES);
         //gamePlayerReactivateSystem = new PlayerReactivateSystem(GAME_COMPONENT_TYPES);
-        //gameDeathHandlingSystem = new DeathHandlingSystem(GAME_COMPONENT_TYPES);
+		deathHandlerSystem(scene);
         //gameSpawnSystem = new SpawnSystem(GAME_COMPONENT_TYPES);
         //
         //gamePlayerUISystem = new PlayerUISystem(imageManager, GAME_COMPONENT_TYPES);

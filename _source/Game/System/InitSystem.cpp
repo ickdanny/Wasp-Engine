@@ -410,8 +410,23 @@ namespace wasp::game::systems {
 					config::initContinues,
 					0	//todo: init power
 				},
-				Inbound{ config::playerInbound }
+				Inbound{ config::playerInbound },
+				PlayerCollisions::Target{ components::CollisionCommands::death }
 				//todo:spawn, damage, death, animation
+			).package()
+		);
+
+		//todo: temp dummy
+		dataStorage.addEntity(
+			EntityBuilder::makeStationaryCollidable(
+				Position{ config::gameWidth / 2.0f, config::gameHeight / 2.0f } 
+					+ config::gameOffset,
+				config::playerHitbox,
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"temp_player")->d2dBitmap
+				},
+				DrawOrder{ config::playerDrawOrder },
+				PlayerCollisions::Source{}
 			).package()
 		);
 	}

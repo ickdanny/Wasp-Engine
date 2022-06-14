@@ -175,7 +175,9 @@
     <ClCompile Include="_source\Game\SceneUpdater.cpp" />
     <ClCompile Include="_source\Game\Settings.cpp" />
     <ClCompile Include="_source\Game\System\ButtonSpriteSystem.cpp" />
-    <ClCompile Include="_source\Game\System\CollisionSystem.cpp" />
+    <ClCompile Include="_source\Game\System\CollisionDetectorSystem.cpp" />
+    <ClCompile Include="_source\Game\System\CollisionHandlerSystem.cpp" />
+    <ClCompile Include="_source\Game\System\DeathHandlerSystem.cpp" />
     <ClCompile Include="_source\Game\System\DebugRenderSystem.cpp" />
     <ClCompile Include="_source\Game\System\GameBuilderSystem.cpp" />
     <ClCompile Include="_source\Game\System\GameState.cpp" />
@@ -186,6 +188,7 @@
     <ClCompile Include="_source\Game\System\OutboundSystem.cpp" />
     <ClCompile Include="_source\Game\System\PlayerMovementSystem.cpp" />
     <ClCompile Include="_source\Game\System\PlayerShotSystem.cpp" />
+    <ClCompile Include="_source\Game\System\PlayerStateSystem.cpp" />
     <ClCompile Include="_source\Game\System\RenderSystem.cpp" />
     <ClCompile Include="_source\Game\System\MiscellaneousSystem.cpp" />
     <ClCompile Include="_source\Game\System\ScriptSystem.cpp" />
@@ -241,11 +244,14 @@
     <ClInclude Include="_header\Game\Components.h" />
     <ClInclude Include="_header\Game\Components\ButtonData.h" />
     <ClInclude Include="_header\Game\Components\CollisionType.h" />
+    <ClInclude Include="_header\Game\Components\DeathCommand.h" />
     <ClInclude Include="_header\Game\Components\MenuCommand.h" />
     <ClInclude Include="_header\Game\Components\TwoFramePosition.h" />
     <ClInclude Include="_header\Game\Game.h" />
     <ClInclude Include="_header\Game\GameConfig.h" />
-    <ClInclude Include="_header\Game\Systems\CollisionSystem.h" />
+    <ClInclude Include="_header\Game\Systems\CollisionDetectorSystem.h" />
+    <ClInclude Include="_header\Game\Systems\CollisionHandlerSystem.h" />
+    <ClInclude Include="_header\Game\Systems\DeathHandlerSystem.h" />
     <ClInclude Include="_header\Game\Systems\GameBuilderCommands.h" />
     <ClInclude Include="_header\Game\Components\PlayerData.h" />
     <ClInclude Include="_header\Game\Systems\GameBuilderSystem.h" />
@@ -255,6 +261,7 @@
     <ClInclude Include="_header\Game\Systems\PlayerMovementSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerShotSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerStates.h" />
+    <ClInclude Include="_header\Game\Systems\PlayerStateSystem.h" />
     <ClInclude Include="_header\Game\Systems\QuadTree.h" />
     <ClInclude Include="_header\Game\Systems\MiscellaneousSystem.h" />
     <ClInclude Include="_header\Game\Systems\ScriptSystem.h" />

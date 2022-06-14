@@ -11,9 +11,12 @@
 #include "Game/Systems/GameBuilderSystem.h"
 #include "Game/Systems/VelocitySystem.h"
 #include "Game/Systems/ScriptSystem.h"
-#include "Game/Systems/CollisionSystem.h"
+#include "Game/Systems/CollisionDetectorSystem.h"
 #include "Game/Systems/PlayerMovementSystem.h"
 #include "Game/Systems/PlayerShotSystem.h"
+#include "Game/Systems/CollisionHandlerSystem.h"
+
+#include "Game/Systems/DeathHandlerSystem.h"
 
 #include "Game/Systems/InboundSystem.h"
 #include "Game/Systems/OutboundSystem.h"
@@ -30,9 +33,12 @@ namespace wasp::game {
 		systems::GameBuilderSystem gameBuilderSystem;			//not initialized!
 		systems::VelocitySystem velocitySystem{};
 		systems::ScriptSystem scriptSystem{};
-		systems::CollisionSystem collisionSystem{};
+		systems::CollisionDetectorSystem collisionDetectorSystem{};
 		systems::PlayerMovementSystem playerMovementSystem{};
 		systems::PlayerShotSystem playerShotSystem{};
+		systems::CollisionHandlerSystem collisionHandlerSystem{};
+
+		systems::DeathHandlerSystem deathHandlerSystem{};
 
 		systems::InboundSystem inboundSystem{};
 		systems::OutboundSystem outboundSystem{};

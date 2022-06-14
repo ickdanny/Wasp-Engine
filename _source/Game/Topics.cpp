@@ -27,6 +27,8 @@ namespace wasp::game {
 	const Topic<systems::GameBuilderCommands> SceneTopics::gameBuilderCommands{};
 	const Topic<systems::GameCommands> SceneTopics::gameCommands{};
 	const Topic<systems::PlayerStates> SceneTopics::playerStateEntry{};
+	const Topic<ecs::entity::EntityHandle> SceneTopics::deaths{};
+	const Topic<ecs::entity::EntityHandle> SceneTopics::bossDeaths{};
 	const Topic<> SceneTopics::pauseFlag{};
 	const Topic<float> SceneTopics::lastDeltaTime{};
 }

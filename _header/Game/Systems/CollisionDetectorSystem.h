@@ -3,10 +3,7 @@
 #include "systemInclude.h"
 
 namespace wasp::game::systems {
-	class CollisionSystem {
-
-	private:
-
+	class CollisionDetectorSystem {
 	public:
 		void operator()(Scene& scene);
 	};

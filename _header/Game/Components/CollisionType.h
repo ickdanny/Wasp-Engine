@@ -1,10 +1,13 @@
 #pragma once
 
+#include "ECS/Entity/EntityHandle.h"
+
 namespace wasp::game::components {
 
 	enum class CollisionCommands {
+		none,
 		death,
-		takeDamage
+		damage
 	};
 
 	//When creating a collision type, pass the derived type as the template parameter
@@ -12,6 +15,14 @@ namespace wasp::game::components {
 	//each collision type.
 	template <typename Derived>
 	struct CollisionType {
+	private:
+		using EntityHandle = ecs::entity::EntityHandle;
+
+	public:
+		//set and cleared by CollisionDetectorSystem
+		//format = sourceEntity, targetEntity
+		static const Topic<std::tuple<EntityHandle, EntityHandle>> collisionTopic;
+
 		struct Source {
 			CollisionCommands command;
 		};
@@ -19,4 +30,8 @@ namespace wasp::game::components {
 			CollisionCommands command;
 		};
 	};
+
+	template <typename Derived>
+	const Topic<std::tuple<ecs::entity::EntityHandle, ecs::entity::EntityHandle>> 
+		CollisionType<Derived>::collisionTopic{};
 }

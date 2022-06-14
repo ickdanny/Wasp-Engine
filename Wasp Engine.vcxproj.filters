@@ -261,10 +261,19 @@
     <ClCompile Include="_source\Game\System\OutboundSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\CollisionSystem.cpp">
+    <ClCompile Include="_source\Game\System\CollisionDetectorSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="_source\Game\System\MiscellaneousSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\System\CollisionHandlerSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\System\DeathHandlerSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\System\PlayerStateSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -608,7 +617,7 @@
     <ClInclude Include="_header\Game\Systems\ScriptSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Systems\CollisionSystem.h">
+    <ClInclude Include="_header\Game\Systems\CollisionDetectorSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Systems\GameCommands.h">
@@ -651,6 +660,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Systems\MiscellaneousSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\CollisionHandlerSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\DeathHandlerSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Components\DeathCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\PlayerStateSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

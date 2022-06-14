@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/Systems/ShotType.h"
+#include "Game/Systems/PlayerStates.h"
 
 namespace wasp::game::components {
 
@@ -12,6 +13,7 @@ namespace wasp::game::components {
 		int bombs{};
 		int continues{};
 		int power{};
+		systems::PlayerStates playerState{};
 
 		//Constructs a player data with the given parameters
 		PlayerData(
@@ -25,7 +27,8 @@ namespace wasp::game::components {
 			, lives{ lives }
 			, bombs{ bombs }
 			, continues{ continues }
-			, power{ power } {
+			, power{ power }
+			, playerState{ systems::PlayerStates::none } {
 		}
 
 		//Default copy and move constructors

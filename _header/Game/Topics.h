@@ -43,6 +43,10 @@ namespace wasp::game {
 
 	//scene topics (1 channel per scene)
 	struct SceneTopics {
+	private:
+		using EntityHandle = ecs::entity::EntityHandle;
+
+	public:
 		//set and cleared by InputParserSystem
 		static const Topic<systems::MenuNavigationCommands> menuNavigationCommands;
 
@@ -50,11 +54,11 @@ namespace wasp::game {
 		static const Topic<components::MenuCommand> keyboardBackMenuCommand;
 
 		//set and cleared by MenuNavigationSystem; initially by InitSystem
-		static const Topic<ecs::entity::EntityHandle> currentSelectedElement;
+		static const Topic<EntityHandle> currentSelectedElement;
 
 		//set and cleared by MenuNavigationSystem
 		//true = select, false = unselect
-		static const Topic<std::tuple<ecs::entity::EntityHandle, bool>>
+		static const Topic<std::tuple<EntityHandle, bool>>
 			elementSelection;
 
 		//set by MenuNavigationSystem, cleared by GameBuilderSystem
@@ -67,6 +71,13 @@ namespace wasp::game {
 
 		//todo: not handled!
 		static const Topic<systems::PlayerStates> playerStateEntry;
+
+		//set by CollisionHandlerSystem, cleared by MiscellaneousSystem
+		static const Topic<EntityHandle> deaths;
+
+		//todo: not cleared!
+		//set by DeathHandlerSystem
+		static const Topic<EntityHandle> bossDeaths;
 
 		//todo: not set!
 		static const Topic<> pauseFlag;

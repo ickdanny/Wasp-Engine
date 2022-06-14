@@ -119,6 +119,18 @@ namespace wasp::game::systems {
             return bounds;
         }
 
+        //Returns true if this quadtree has no objects
+        bool isEmpty() const {
+            if (hasSubTrees()) {
+                for (const auto& subTreePointer : subTreePointers) {
+                    if (!subTreePointer->isEmpty()) {
+                        return false;
+                    }
+                }
+            }
+            return elements.empty();
+        }
+
     private:
         //helper functions
 
