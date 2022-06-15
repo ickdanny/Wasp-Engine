@@ -198,19 +198,19 @@
     <ClCompile Include="_source\Game\Topics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\InitSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\InitSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\RenderSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\RenderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\DebugRenderSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\DebugRenderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\InputParserSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\InputParserSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\MenuNavigationSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\MenuNavigationSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="_source\Game\Components\MenuCommand.cpp">
@@ -225,55 +225,55 @@
     <ClCompile Include="_source\Game\SceneRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\ButtonSpriteSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\ButtonSpriteSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="_source\Game\Settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\GameBuilderSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\GameBuilderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\GameState.cpp">
+    <ClCompile Include="_source\Game\Systems\GameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\VelocitySystem.cpp">
+    <ClCompile Include="_source\Game\Systems\VelocitySystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\ScriptSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\ScriptSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\PlayerMovementSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\PlayerMovementSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\PlayerShotSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\PlayerShotSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\InboundSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\InboundSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="_source\Math\Geometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\SystemUtil.cpp">
+    <ClCompile Include="_source\Game\Systems\SystemUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\OutboundSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\OutboundSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\CollisionDetectorSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\CollisionDetectorSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\MiscellaneousSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\MiscellaneousSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\CollisionHandlerSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\CollisionHandlerSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\DeathHandlerSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\DeathHandlerSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\System\PlayerStateSystem.cpp">
+    <ClCompile Include="_source\Game\Systems\PlayerStateSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -672,6 +672,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Systems\PlayerStateSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\PlayerBombSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
