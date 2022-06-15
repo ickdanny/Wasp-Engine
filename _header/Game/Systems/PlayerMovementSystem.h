@@ -13,7 +13,6 @@ namespace wasp::game::systems {
 
         //typedefs
         using TwoFramePlayerInputData = utility::TwoFrame<PlayerInputData>;
-        using SceneData = std::tuple<TwoFramePlayerInputData, bool>;
         using Vector2 = math::Vector2;
 
     public:
@@ -21,7 +20,6 @@ namespace wasp::game::systems {
 
     private:
         //helper functions
-        void checkActive(Scene& scene, bool& active);
         void parseGameCommand(GameCommands gameCommand, PlayerInputData& inputData);
         math::Vector2 calculateVelocity(PlayerInputData inputData);
 

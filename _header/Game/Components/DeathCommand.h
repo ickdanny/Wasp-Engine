@@ -6,7 +6,6 @@ namespace wasp::game::components {
         //fields
         enum class Commands {
             playerDeath,
-            pickupDeath,
             bossDeath,
             deathSpawn
         } command{};

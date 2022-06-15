@@ -411,8 +411,9 @@ namespace wasp::game::systems {
 					0	//todo: init power
 				},
 				Inbound{ config::playerInbound },
-				PlayerCollisions::Target{ components::CollisionCommands::death }
-				//todo:spawn, damage, death, animation
+				PlayerCollisions::Target{ components::CollisionCommands::player },
+				DeathCommand{ DeathCommand::Commands::playerDeath }
+				//todo:spawn, animation
 			).package()
 		);
 

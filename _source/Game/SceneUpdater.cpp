@@ -30,8 +30,8 @@ namespace wasp::game {
 		playerMovementSystem(scene);
 		playerShotSystem(scene);
 		collisionHandlerSystem(scene);
-		
-        //gamePlayerStateSystem = new PlayerStateSystem();
+		playerStateSystem(scene);
+
         //gamePlayerBombSystem = new PlayerBombSystem(GAME_COMPONENT_TYPES);
         //gamePlayerDeathParserSystem = new PlayerDeathParserSystem();
         //gameContinueAndGameOverSystem = new ContinueAndGameOverSystem();

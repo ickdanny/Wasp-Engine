@@ -69,8 +69,12 @@ namespace wasp::game {
 		//set and cleared by InputParserSystem
 		static const Topic<systems::GameCommands> gameCommands;
 
-		//todo: not handled!
-		static const Topic<systems::PlayerStates> playerStateEntry;
+		//set and cleared by PlayerStateSystem
+		static const Topic<std::tuple<EntityHandle, systems::PlayerStates>> 
+			playerStateEntry;
+
+		//set and cleared by CollisionHandlerSystem
+		static const Topic<EntityHandle> playerHits;
 
 		//set by CollisionHandlerSystem, cleared by MiscellaneousSystem
 		static const Topic<EntityHandle> deaths;

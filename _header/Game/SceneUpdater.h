@@ -15,6 +15,7 @@
 #include "Game/Systems/PlayerMovementSystem.h"
 #include "Game/Systems/PlayerShotSystem.h"
 #include "Game/Systems/CollisionHandlerSystem.h"
+#include "Game/Systems/PlayerStateSystem.h"
 
 #include "Game/Systems/DeathHandlerSystem.h"
 
@@ -37,6 +38,7 @@ namespace wasp::game {
 		systems::PlayerMovementSystem playerMovementSystem{};
 		systems::PlayerShotSystem playerShotSystem{};
 		systems::CollisionHandlerSystem collisionHandlerSystem{};
+		systems::PlayerStateSystem playerStateSystem{};
 
 		systems::DeathHandlerSystem deathHandlerSystem{};
 

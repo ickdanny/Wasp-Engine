@@ -5,6 +5,8 @@
 
 namespace wasp::game::components {
 
+	
+
 	struct PlayerData {
 
 		//fields
@@ -13,7 +15,11 @@ namespace wasp::game::components {
 		int bombs{};
 		int continues{};
 		int power{};
-		systems::PlayerStates playerState{};
+
+		struct PlayerStateMachine {
+			systems::PlayerStates playerState{};
+			int timer{};
+		} stateMachine{};
 
 		//Constructs a player data with the given parameters
 		PlayerData(
@@ -28,7 +34,7 @@ namespace wasp::game::components {
 			, bombs{ bombs }
 			, continues{ continues }
 			, power{ power }
-			, playerState{ systems::PlayerStates::none } {
+			, stateMachine{ systems::PlayerStates::none, 0 } {
 		}
 
 		//Default copy and move constructors

@@ -7,7 +7,9 @@ namespace wasp::game::components {
 	enum class CollisionCommands {
 		none,
 		death,
-		damage
+		damage,
+		player,
+		pickup
 	};
 
 	//When creating a collision type, pass the derived type as the template parameter

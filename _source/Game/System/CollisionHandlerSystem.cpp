@@ -39,6 +39,21 @@ namespace wasp::game::systems {
 			}
 		}
 
+		void handlePlayerCommand(
+			Scene& scene,
+			const ecs::entity::EntityHandle& playerHandle
+		) {
+			scene.getChannel(SceneTopics::playerHits).addMessage(playerHandle);
+		}
+
+		void handlePickupCommand(
+			Scene& scene,
+			const ecs::entity::EntityHandle& pickupHandle,
+			const ecs::entity::EntityHandle& collidedHandle
+		) {
+			//todo: handle pickups
+		}
+
 		void handleCollisionCommand(
 			Scene& scene,
 			const ecs::entity::EntityHandle& entityHandle,
@@ -51,6 +66,12 @@ namespace wasp::game::systems {
 					break;
 				case components::CollisionCommands::damage:
 					handleDamageCommand(scene, entityHandle, collidedHandle);
+					break;
+				case components::CollisionCommands::player:
+					handlePlayerCommand(scene, entityHandle);
+					break;
+				case components::CollisionCommands::pickup:
+					handlePickupCommand(scene, entityHandle, collidedHandle);
 					break;
 				case components::CollisionCommands::none:
 					//do nothing
@@ -78,7 +99,7 @@ namespace wasp::game::systems {
 					const auto sourceCommand{
 						dataStorage.getComponent<typename CollisionType::Source>(
 							sourceHandle
-						)
+						).command
 					};
 					handleCollisionCommand(
 						scene, 
@@ -89,7 +110,7 @@ namespace wasp::game::systems {
 					const auto targetCommand{
 						dataStorage.getComponent<typename CollisionType::Target>(
 							targetHandle
-						)
+						).command
 					};
 					handleCollisionCommand(
 						scene, 
@@ -103,6 +124,9 @@ namespace wasp::game::systems {
 	}
 
 	void CollisionHandlerSystem::operator()(Scene& scene) {
+		//this system is responsible for clearing the playerHits channel
+		scene.getChannel(SceneTopics::playerHits).clear();
+
 		handleCollisions<PlayerCollisions>(scene);
 	}
 }

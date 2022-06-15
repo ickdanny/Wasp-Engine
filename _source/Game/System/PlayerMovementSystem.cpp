@@ -2,6 +2,24 @@
 
 namespace wasp::game::systems {
 
+    namespace {
+        //checks if this system should operate on the player based on their state
+        bool canMove(const PlayerData& playerData) {
+            switch (playerData.stateMachine.playerState) {
+                case PlayerStates::normal:
+                case PlayerStates::bombing:
+                case PlayerStates::respawnInvulnerable:
+                    return true;
+                case PlayerStates::dead:
+                case PlayerStates::respawning:
+                case PlayerStates::gameOver:
+                    return false;
+                default:
+                    throw std::runtime_error{ "Unexpected player state!" };
+            }
+        }
+    }
+
 	void PlayerMovementSystem::operator()(Scene& scene) {
 
         //this system only operators on scenes with game commands 
@@ -10,19 +28,18 @@ namespace wasp::game::systems {
             auto& gameCommandChannel{ scene.getChannel(SceneTopics::gameCommands) };
 
             //retrieve system data from the scene
-            static Topic<SceneData> sceneDataTopic{};
-            auto& sceneDataChannel{
-                scene.getChannel(sceneDataTopic)
+            static Topic<TwoFramePlayerInputData> inputDataTopic{};
+            auto& inputDataChannel{
+                scene.getChannel(inputDataTopic)
             };
-            if (sceneDataChannel.isEmpty()) {
-                sceneDataChannel.addMessage({ });
+            if (inputDataChannel.isEmpty()) {
+                inputDataChannel.addMessage({ });
             }
-            auto& [twoFramePlayerInputData, active] = sceneDataChannel.getMessages()[0];
+            auto& twoFramePlayerInputData{ inputDataChannel.getMessages()[0] };
 
             //update the input data
             twoFramePlayerInputData.reset();
-            checkActive(scene, active);
-            if (active && gameCommandChannel.hasMessages()) {
+            if (gameCommandChannel.hasMessages()) {
                 for (auto& gameCommand : gameCommandChannel.getMessages()) {
                     parseGameCommand(gameCommand, twoFramePlayerInputData);
                 }
@@ -41,11 +58,18 @@ namespace wasp::game::systems {
                     )
                 };
 
-                auto groupIterator{ groupPointer->groupIterator<Velocity>() };
+                auto groupIterator{ 
+                    groupPointer->groupIterator<PlayerData, Velocity>() 
+                };
 
                 while (groupIterator.isValid()) {
-                    auto [playerVelocity] = *groupIterator;
-                    playerVelocity = velocity;
+                    auto [playerData, playerVelocity] = *groupIterator;
+                    if (canMove(playerData)) {
+                        playerVelocity = velocity;
+                    }
+                    else {
+                        playerVelocity = Velocity{};
+                    }
                     ++groupIterator;
                 }
             }
@@ -53,33 +77,7 @@ namespace wasp::game::systems {
         }
 	}
 
-    //checks if this system should operate on the player based on their state
-    void PlayerMovementSystem::checkActive(Scene& scene, bool& active) {
 
-        //todo: debug
-        active = true;
-        return;
-
-        auto& playerStateEntryChannel{ scene.getChannel(SceneTopics::playerStateEntry) };
-        if(playerStateEntryChannel.hasMessages()) {
-            for (auto& playerState : playerStateEntryChannel.getMessages()) {
-                switch (playerState) {
-                    case PlayerStates::normal:
-                    case PlayerStates::bombing:
-                    case PlayerStates::respawnInvulnerable:
-                        active = true;
-                        break;
-                    case PlayerStates::dead:
-                    case PlayerStates::respawning:
-                    case PlayerStates::gameOver:
-                        active = false;
-                        break;
-                    default:
-                        throw std::runtime_error{ "Unexpected player state!" };
-                }
-            }
-        }
-    }
 
     //updates the given PlayerInputData based on the specified game command
     void PlayerMovementSystem::parseGameCommand(

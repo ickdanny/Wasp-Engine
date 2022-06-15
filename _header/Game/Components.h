@@ -91,6 +91,11 @@ namespace wasp::game {
     };
     struct DeathCommand : components::DeathCommand {
         using components::DeathCommand::DeathCommand;
+
+        //Explicitly defined constructor taking the command
+        DeathCommand(components::DeathCommand::Commands command)
+            : components::DeathCommand{ command } {
+        }
     };
 
     struct Inbound {

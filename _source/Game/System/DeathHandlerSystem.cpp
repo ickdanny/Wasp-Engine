@@ -1,13 +1,31 @@
 #include "Game/Systems/DeathHandlerSystem.h"
 
+#include "Logging.h"
+
 namespace wasp::game::systems {
 
 	namespace {
+
+		void handlePlayerDeath(
+			Scene& scene,
+			const ecs::entity::EntityHandle& playerHandle
+		) {
+			//todo: handle player death
+			debug::log("player death");
+		}
+
 		void handleBossDeath(
 			Scene& scene, 
+			const ecs::entity::EntityHandle& bossHandle
+		) {
+			scene.getChannel(SceneTopics::bossDeaths).addMessage(bossHandle);
+		}
+
+		void handleDeathSpawn(
+			Scene& scene,
 			const ecs::entity::EntityHandle& entityHandle
 		) {
-			scene.getChannel(SceneTopics::bossDeaths).addMessage(entityHandle);
+			//todo: handle death spawn
 		}
 
 		void handleDeath(
@@ -17,16 +35,13 @@ namespace wasp::game::systems {
 		) {
 			switch (command) {
 				case DeathCommand::Commands::playerDeath:
-					//todo: handle player death
-					break;
-				case DeathCommand::Commands::pickupDeath:
-					//todo: handle pickup death
+					handlePlayerDeath(scene, entityHandle);
 					break;
 				case DeathCommand::Commands::bossDeath:
 					handleBossDeath(scene, entityHandle);
 					break;
 				case DeathCommand::Commands::deathSpawn:
-					//todo: handle death spawn
+					handleDeathSpawn(scene, entityHandle);
 					break;
 			}
 		}
