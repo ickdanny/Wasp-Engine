@@ -79,11 +79,11 @@ namespace wasp::ecs::component {
         //returns a pointer to the new component set
         template <typename T>
         const ComponentSet* setComponent(
-            const SetComponentOrder<T>& setComponentOrder,
+            SetComponentOrder<T>& setComponentOrder,
             const ComponentSet& oldComponentSet
         ) {
             const ComponentSet& newComponentSet{
-                componentSetFactory.addComponent<T>()
+                componentSetFactory.addComponent<T>(oldComponentSet)
             };
 
             auto newArchetypePointer{

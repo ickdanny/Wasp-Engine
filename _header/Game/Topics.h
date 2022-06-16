@@ -36,9 +36,7 @@ namespace wasp::game {
 		static const Topic<> exitFlag;
 
 		//set by GameBuilderSystem; persistent
-		static const Topic<systems::GameState> gameState;
-		
-		static const Topic<> gameOverFlag;			//todo: not handled!
+		static const Topic<systems::GameState> gameState;	
 	};
 
 	//scene topics (1 channel per scene)
@@ -53,7 +51,7 @@ namespace wasp::game {
 		//set by InitSystem; persistent
 		static const Topic<components::MenuCommand> keyboardBackMenuCommand;
 
-		//set and cleared by MenuNavigationSystem; initially by InitSystem
+		//set and cleared by MenuNavigationSystem; init by InitSystem
 		static const Topic<EntityHandle> currentSelectedElement;
 
 		//set and cleared by MenuNavigationSystem
@@ -76,17 +74,18 @@ namespace wasp::game {
 		//set and cleared by CollisionHandlerSystem
 		static const Topic<EntityHandle> playerHits;
 
-		//set by CollisionHandlerSystem, cleared by MiscellaneousSystem
+		//set by CollisionHandlerSystem and PlayerDeathDetectorSystem,
+		//cleared by MiscellaneousSystem
 		static const Topic<EntityHandle> deaths;
 
 		//todo: not cleared!
 		//set by DeathHandlerSystem
 		static const Topic<EntityHandle> bossDeaths;
 
-		//todo: not set!
+		//set by ContinueSystem, cleared by MiscellaneousSystem
 		static const Topic<> pauseFlag;
 
-		//set and cleared by RenderSystem and SceneStateSystem
+		//set and cleared by RenderSystem and MiscellaneousSystem
 		static const Topic<float> lastDeltaTime;
 	};
 }

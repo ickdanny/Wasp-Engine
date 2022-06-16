@@ -34,7 +34,7 @@ namespace wasp::game::config {
 
     constexpr int deathBombPeriod{ 15 };
     constexpr int bombInvulnerabilityPeriod{ 4 * 60 };
-    constexpr int deathPeriod{ 5 };
+    constexpr int deathPeriod{ 30 };
     constexpr int respawnPeriod{ 30 };
     constexpr int respawnInvulnerabilityPeriod{ 3 * 60 };
 
@@ -48,7 +48,7 @@ namespace wasp::game::config {
     constexpr int maxPower{ 128 };
 
     constexpr int continueLives{ 2 };
-    constexpr int continueBombs{ 2 };
+    constexpr int respawnBombs{ 2 };
 
     /*
     //PLAYER SHOT

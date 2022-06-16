@@ -15,7 +15,6 @@ namespace wasp::game {
 	const Topic<> GlobalTopics::toggleFullscreenFlag{};
 	const Topic<> GlobalTopics::exitFlag{};
 	const Topic<systems::GameState> GlobalTopics::gameState{};
-	const Topic<> GlobalTopics::gameOverFlag{};
 
 	//scene topics
 	const Topic<systems::MenuNavigationCommands> 

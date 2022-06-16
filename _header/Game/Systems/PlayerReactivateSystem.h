@@ -4,15 +4,16 @@
 
 namespace wasp::game::systems {
 
-	class PlayerBombSystem {
+	class PlayerReactivateSystem {
 	private:
 		//typedefs
 		using EntityHandle = ecs::entity::EntityHandle;
+
 	public:
 		void operator()(Scene& scene);
 
 	private:
 		//helper functions
-		void bomb(Scene& scene, const EntityHandle& playerHandle);
+		void reactivate(Scene& scene, const EntityHandle& playerHandle);
 	};
 }

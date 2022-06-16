@@ -14,6 +14,9 @@ namespace wasp::game {
 		, menuNavigationSystem{ globalChannelSetPointer }
 		, buttonSpriteSystem{ &(resourceMasterStoragePointer->bitmapStorage) }
 		, gameBuilderSystem { globalChannelSetPointer }
+		, continueSystem{ globalChannelSetPointer }
+
+		, gameOverSystem{ globalChannelSetPointer }
 	{
 	}
 
@@ -31,13 +34,13 @@ namespace wasp::game {
 		playerShotSystem(scene);
 		collisionHandlerSystem(scene);
 		playerStateSystem(scene);
-
-        //gamePlayerBombSystem = new PlayerBombSystem(GAME_COMPONENT_TYPES);
-        //gamePlayerDeathParserSystem = new PlayerDeathParserSystem();
-        //gameContinueAndGameOverSystem = new ContinueAndGameOverSystem();
-        //gamePlayerRespawnSystem = new PlayerRespawnSystem(GAME_COMPONENT_TYPES);
-        //gamePlayerReactivateSystem = new PlayerReactivateSystem(GAME_COMPONENT_TYPES);
+		playerBombSystem(scene);
+		playerDeathDetectorSystem(scene);
+		continueSystem(scene);
+		playerRespawnSystem(scene);
+		playerReactivateSystem(scene);
 		deathHandlerSystem(scene);
+
         //gameSpawnSystem = new SpawnSystem(GAME_COMPONENT_TYPES);
         //
         //gamePlayerUISystem = new PlayerUISystem(imageManager, GAME_COMPONENT_TYPES);
@@ -57,8 +60,7 @@ namespace wasp::game {
 
         inboundSystem(scene);
         outboundSystem(scene);
-
-        //gameGameOverSystem = new GameOverSystem();
+		gameOverSystem(scene);
         //gameWinSystem = new GameWinSystem();
 	}
 }

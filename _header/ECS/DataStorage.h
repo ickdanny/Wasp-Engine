@@ -172,7 +172,7 @@ namespace wasp::ecs {
                     return componentStorage.getComponent<T>(
                         entityID,
                         *getComponentSetPointer(entityID)
-                        );
+                    );
                 }
                 else {
                     throw std::runtime_error{ "entity doesn't contain component!" };

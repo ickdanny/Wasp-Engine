@@ -3,6 +3,7 @@
 #include "ShotType.h"
 
 namespace wasp::game::systems {
+
 	enum class GameMode {
 		campaign,
 		practice
@@ -15,12 +16,14 @@ namespace wasp::game::systems {
 	};
 
 	struct GameState {
+		//fields
 		GameMode gameMode{};
 		Difficulty difficulty{};
 		ShotType shotType{};
 		int stage{};
 		unsigned int prngSeed{};
 
+		//methods
 		void setPrngSeedToClock();
 	};
 }

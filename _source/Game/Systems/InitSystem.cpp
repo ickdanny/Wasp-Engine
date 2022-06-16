@@ -412,8 +412,9 @@ namespace wasp::game::systems {
 				},
 				Inbound{ config::playerInbound },
 				PlayerCollisions::Target{ components::CollisionCommands::player },
-				DeathCommand{ DeathCommand::Commands::playerDeath }
-				//todo:spawn, animation
+				DeathCommand{ DeathCommand::Commands::playerDeath },
+				SpawnData{}	//todo: no args to spawn data for now...
+				//todo: animation
 			).package()
 		);
 

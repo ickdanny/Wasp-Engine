@@ -11,9 +11,10 @@ namespace wasp::game::systems {
 			lastDeltaTimeChannel.addMessage(0.0f);
 		}
 
-		//clears death channel
+		//clears death channel and pause flag channel
 		void clearChannels(Scene& scene) {
 			scene.getChannel(SceneTopics::deaths).clear();
+			scene.getChannel(SceneTopics::pauseFlag).clear();
 		}
 	}
 

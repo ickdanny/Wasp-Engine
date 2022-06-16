@@ -16,11 +16,17 @@
 #include "Game/Systems/PlayerShotSystem.h"
 #include "Game/Systems/CollisionHandlerSystem.h"
 #include "Game/Systems/PlayerStateSystem.h"
-
+#include "Game/Systems/PlayerBombSystem.h"
+#include "Game/Systems/PlayerDeathDetectorSystem.h"
+#include "Game/Systems/ContinueSystem.h"
+#include "Game/Systems/PlayerRespawnSystem.h"
+#include "Game/Systems/PlayerReactivateSystem.h"
 #include "Game/Systems/DeathHandlerSystem.h"
 
 #include "Game/Systems/InboundSystem.h"
 #include "Game/Systems/OutboundSystem.h"
+
+#include "Game/Systems/GameOverSystem.h"
 
 namespace wasp::game {
 
@@ -39,11 +45,16 @@ namespace wasp::game {
 		systems::PlayerShotSystem playerShotSystem{};
 		systems::CollisionHandlerSystem collisionHandlerSystem{};
 		systems::PlayerStateSystem playerStateSystem{};
-
+		systems::PlayerBombSystem playerBombSystem{};
+		systems::PlayerDeathDetectorSystem playerDeathDetectorSystem{};
+		systems::ContinueSystem continueSystem;					//not initialized!
+		systems::PlayerRespawnSystem playerRespawnSystem{};
+		systems::PlayerReactivateSystem playerReactivateSystem{};
 		systems::DeathHandlerSystem deathHandlerSystem{};
 
 		systems::InboundSystem inboundSystem{};
 		systems::OutboundSystem outboundSystem{};
+		systems::GameOverSystem gameOverSystem;					//not initialized!
 
 	public:
 		SceneUpdater(

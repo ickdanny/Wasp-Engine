@@ -8,6 +8,7 @@
 #include "Components/PlayerData.h"
 #include "Components/CollisionType.h"
 #include "Components/DeathCommand.h"
+#include "Components/SpawnData.h"
 
 namespace wasp::game {
 
@@ -96,6 +97,10 @@ namespace wasp::game {
         DeathCommand(components::DeathCommand::Commands command)
             : components::DeathCommand{ command } {
         }
+    };
+
+    struct SpawnData : components::SpawnData {
+        using components::SpawnData::SpawnData;
     };
 
     struct Inbound {

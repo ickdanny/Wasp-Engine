@@ -246,7 +246,7 @@ namespace wasp::game::systems {
 	void MenuNavigationSystem::handleGameOverCommand() {
 		handleStopMusic();
 		//todo: need to read the gameConfig and send us back to the correct scene
-		globalChannelSetPointer->getChannel(GlobalTopics::gameOverFlag).addMessage();
+		//see GameOverSystem.gameOver()
 	}
 	void MenuNavigationSystem::handleExitCommand() {
 		globalChannelSetPointer->getChannel(GlobalTopics::exitFlag).addMessage();

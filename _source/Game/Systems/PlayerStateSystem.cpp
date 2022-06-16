@@ -59,12 +59,6 @@ namespace wasp::game::systems {
                         "unhandled player state in player state system onEntry()"
                     };
             }
-
-            debug::log(
-                "entering state: " + std::to_string(
-                    static_cast<int>(playerData.stateMachine.playerState)
-                )
-            );
         }
 
         //Updates the state machine and returns the next state.
