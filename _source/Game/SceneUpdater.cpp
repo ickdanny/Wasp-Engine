@@ -16,6 +16,9 @@ namespace wasp::game {
 		, gameBuilderSystem { globalChannelSetPointer }
 		, continueSystem{ globalChannelSetPointer }
 
+		, overlaySystem{ &(resourceMasterStoragePointer->bitmapStorage) }
+		, pauseSystem{ globalChannelSetPointer }
+
 		, gameOverSystem{ globalChannelSetPointer }
 	{
 	}
@@ -43,9 +46,8 @@ namespace wasp::game {
 
         //gameSpawnSystem = new SpawnSystem(GAME_COMPONENT_TYPES);
         //
-        //gamePlayerUISystem = new PlayerUISystem(imageManager, GAME_COMPONENT_TYPES);
-        //
-        //gamePauseMenuEntrySystem = new PauseMenuEntrySystem();
+		overlaySystem(scene);
+		pauseSystem(scene);
         //gameDialogueScreenEntrySystem = new DialogueScreenEntrySystem();
         //gameNextStageEntrySystem = new NextStageEntrySystem();
         //

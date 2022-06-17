@@ -73,6 +73,22 @@ namespace wasp::game {
 			true					//refresh
 		);
 
+		sceneStorage.makeScene(
+			SceneNames::pause,		//name
+			20,						//initEntityCapacity
+			20,						//initComponentCapacity
+			renderTransparency,		//transparency
+			true					//refresh
+		);
+
+		sceneStorage.makeScene(
+			SceneNames::continues,	//name
+			20,						//initEntityCapacity
+			20,						//initComponentCapacity
+			renderTransparency,		//transparency
+			true					//refresh
+		);
+
 		return SceneList(std::move(sceneStorage));
 	}
 }

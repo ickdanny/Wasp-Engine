@@ -23,9 +23,11 @@
 #include "Game/Systems/PlayerReactivateSystem.h"
 #include "Game/Systems/DeathHandlerSystem.h"
 
+#include "Game/Systems/OverlaySystem.h"
+#include "Game/Systems/PauseSystem.h"
+
 #include "Game/Systems/InboundSystem.h"
 #include "Game/Systems/OutboundSystem.h"
-
 #include "Game/Systems/GameOverSystem.h"
 
 namespace wasp::game {
@@ -51,6 +53,9 @@ namespace wasp::game {
 		systems::PlayerRespawnSystem playerRespawnSystem{};
 		systems::PlayerReactivateSystem playerReactivateSystem{};
 		systems::DeathHandlerSystem deathHandlerSystem{};
+
+		systems::OverlaySystem overlaySystem;					//not initialized!
+		systems::PauseSystem pauseSystem;						//not initialized!
 
 		systems::InboundSystem inboundSystem{};
 		systems::OutboundSystem outboundSystem{};

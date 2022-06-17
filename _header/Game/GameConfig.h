@@ -5,9 +5,9 @@
 namespace wasp::game::config {
 
 	//field of play
-    constexpr float gameWidth{ 160.0f };
-    constexpr float gameHeight{ 220.0f };
-    constexpr math::Vector2 gameOffset{ 20.0f, 10.0f };
+    constexpr float gameWidth{ 170.0f };
+    constexpr float gameHeight{ 214.0f };
+    constexpr math::Vector2 gameOffset{ 15.0f, 13.0f };
 
     constexpr float collisionOutbound{ 100.0f };
     constexpr math::AABB collisionBounds = math::AABB{
@@ -30,7 +30,7 @@ namespace wasp::game::config {
 	constexpr float playerSpeed{ 3.0f };
     constexpr float focusSpeedMulti{ 0.4f };
 	constexpr float focusedSpeed{ playerSpeed * focusSpeedMulti };
-    constexpr float playerInbound{ 10.0f };
+    constexpr float playerInbound{ 5.0f };
 
     constexpr int deathBombPeriod{ 15 };
     constexpr int bombInvulnerabilityPeriod{ 4 * 60 };
@@ -42,7 +42,7 @@ namespace wasp::game::config {
     constexpr int initBombs{ 2 };
     constexpr int initContinues{ 3 };
 
-    constexpr int maxLives{ 8 };
+    constexpr int maxLives{ 6 };
     constexpr int maxBombs{ maxLives };
 
     constexpr int maxPower{ 128 };

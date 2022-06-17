@@ -48,6 +48,12 @@ namespace wasp::game::systems {
 			case SceneNames::game:
 				initGame(scene);
 				break;
+			case SceneNames::pause:
+				initPauseMenu(scene);
+				break;
+			case SceneNames::continues:
+				initContinueMenu(scene);
+				break;
 			default:
 				int nameID{ static_cast<int>(scene.getName()) };
 				debug::log("No init function for: " + std::to_string(nameID));
@@ -392,7 +398,7 @@ namespace wasp::game::systems {
 		const auto& gameState{ gameStateChannel.getMessages()[0] };
 
 		auto& dataStorage{ scene.getDataStorage() };
-		addBackground(dataStorage, L"temp_background_game");
+		addForeground(dataStorage, L"overlay_frame");
 
 		dataStorage.addEntity(
 			EntityBuilder::makeStationaryCollidable(
@@ -433,16 +439,139 @@ namespace wasp::game::systems {
 		);
 	}
 
+	void InitSystem::initPauseMenu(Scene& scene) const {
+		auto& dataStorage{ scene.getDataStorage() };
+
+		constexpr float middleX = 100.0f;
+
+		addBackground(
+			dataStorage,
+			L"background_menu_pause", 
+			0, 
+			{ middleX, center.y });
+
+		constexpr math::Point2 initPos{ middleX, 100.0f };
+		constexpr math::Vector2 offset{ 0.0f, 30.0f };
+		constexpr math::Vector2 selOffset{ 0.0f, -2.0f };
+
+		auto buttonHandles{
+			dataStorage.addEntities(
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					0,
+					L"button_resume",
+					{ MenuCommandSelect::Commands::backTo, SceneNames::game },
+					{ },	//draw order
+					true
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					1,
+					L"button_retry",
+					{ MenuCommandSelect::Commands::restartGame }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					2,
+					L"button_retire",
+					{ MenuCommandSelect::Commands::gameOver }
+				).package()
+			)
+		};
+
+		attachButtonsVertical(dataStorage, buttonHandles);
+		setInitSelectedElement(scene, buttonHandles[0]);
+
+		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
+			{ components::MenuCommand::Commands::navFarDown }
+		);
+	}
+
+	void InitSystem::initContinueMenu(Scene& scene) const {
+		auto& dataStorage{ scene.getDataStorage() };
+
+		constexpr float middleX = 100.0f;
+
+		addBackground(
+			dataStorage,
+			L"background_menu_continue",
+			0,
+			{ middleX, center.y });
+
+		constexpr math::Point2 initPos{ middleX, 100.0f };
+		constexpr math::Vector2 offset{ 0.0f, 30.0f };
+		constexpr math::Vector2 selOffset{ 0.0f, -2.0f };
+
+		auto buttonHandles{
+			dataStorage.addEntities(
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					0,
+					L"button_accept",
+					{ MenuCommandSelect::Commands::backTo, SceneNames::game },
+					{ },	//draw order
+					true
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					1,
+					L"button_decline",
+					{ MenuCommandSelect::Commands::gameOver }
+				).package()
+			)
+		};
+
+		attachButtonsVertical(dataStorage, buttonHandles);
+		setInitSelectedElement(scene, buttonHandles[0]);
+
+		//todo: add graphical elements representing how many continues are left
+		//(similar to the life/bomb icons?)
+
+		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
+			{ components::MenuCommand::Commands::navFarDown }
+		);
+	}
+
 	void InitSystem::addBackground(
-		ecs::DataStorage& dataStorage, std::wstring name
+		ecs::DataStorage& dataStorage, 
+		const std::wstring& name,
+		int relativeDrawOrder,
+		const math::Point2& position
 	) const {
 		dataStorage.addEntity(
 			EntityBuilder::makeVisible(
-				center,
+				position,
 				SpriteInstruction{
 					bitmapStoragePointer->get(name)->d2dBitmap
 				},
-				DrawOrder{ config::backgroundDrawOrder }
+				DrawOrder{ config::backgroundDrawOrder + relativeDrawOrder }
+			).package()
+		);
+	}
+
+	void InitSystem::addForeground(
+		ecs::DataStorage& dataStorage, 
+		const std::wstring& name,
+		int relativeDrawOrder,
+		const math::Point2& position
+	) const {
+		dataStorage.addEntity(
+			EntityBuilder::makeVisible(
+				position,
+				SpriteInstruction{
+					bitmapStoragePointer->get(name)->d2dBitmap
+				},
+				DrawOrder{ config::foregroundDrawOrder + relativeDrawOrder}
 			).package()
 		);
 	}

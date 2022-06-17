@@ -259,7 +259,7 @@ namespace wasp::ecs {
         template <typename T>
         bool removeComponent(RemoveComponentOrder<T> removeComponentOrder) {
             if (isAlive(removeComponentOrder.entityHandle)) {
-                EntityID entityID{ removeComponentOrder.entityHandle.entityID() };
+                EntityID entityID{ removeComponentOrder.entityHandle.entityID };
 
                 const ComponentSet* oldComponentSetPointer{
                     getComponentSetPointer(entityID)

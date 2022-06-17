@@ -147,7 +147,7 @@ namespace wasp::ecs::component {
 
         template <typename T>
         ComponentSet removeComponent() const {
-            const int index{ ComponentIndexer::getIndex<T>() };
+            const std::size_t index{ ComponentIndexer::getIndex<T>() };
             //if we need to remove a component
             if (bitset[index]) {
                 ComponentSet toRet{};
@@ -187,7 +187,7 @@ namespace wasp::ecs::component {
             (indicesToRemove.push_back(ComponentIndexer.getIndex<Ts>), ...);
             ComponentSet toRet{};
             toRet.bitset = bitset;
-            for (int index : indicesToRemove) {
+            for (std::size_t index : indicesToRemove) {
                 if (bitset[index]) {
                     toRet.bitset.reset(index);
                 }

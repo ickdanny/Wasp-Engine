@@ -111,11 +111,11 @@ namespace wasp::ecs::component {
         //returns a pointer to the new component set
         template <typename T>
         const ComponentSet* removeComponent(
-            const RemoveComponentOrder<T>& removeComponentOrder,
+            RemoveComponentOrder<T>& removeComponentOrder,
             const ComponentSet& oldComponentSet
         ) {
             const ComponentSet& newComponentSet{
-                componentSetFactory.addComponent<T>()
+                componentSetFactory.removeComponent<T>(oldComponentSet)
             };
 
             if (oldComponentSet != newComponentSet) {

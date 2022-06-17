@@ -82,7 +82,7 @@ namespace wasp::game {
 		//set by DeathHandlerSystem
 		static const Topic<EntityHandle> bossDeaths;
 
-		//set by ContinueSystem, cleared by MiscellaneousSystem
+		//set by ContinueSystem and PauseSystem, cleared by MiscellaneousSystem
 		static const Topic<> pauseFlag;
 
 		//set and cleared by RenderSystem and MiscellaneousSystem

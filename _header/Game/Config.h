@@ -18,7 +18,7 @@ namespace wasp::game::config {
 	//graphics
 	constexpr int graphicsWidth{ windowWidth / 2 };		//320
 	constexpr int graphicsHeight{ windowHeight / 2 };	//240
-	constexpr int fillColor{ D2D1::ColorF::Black };
+	constexpr int fillColor{ D2D1::ColorF::Gray };
 	constexpr int textColor{ D2D1::ColorF::White };
 	constexpr wchar_t fontName[]{ L"Courier New" };
 	constexpr float fontSize{ 11.0f };

@@ -232,8 +232,35 @@ namespace wasp::game::systems {
 	}
 	void MenuNavigationSystem::handleRestartGameCommand() {
 		handleStopMusic();
-		//todo: need to read the gameConfig and send us back to the correct scene
-		//todo: then, need to immediately pop up a new game
+		
+		//send us back to the correct menu
+		auto& gameStateChannel{
+			globalChannelSetPointer->getChannel(GlobalTopics::gameState)
+		};
+		GameState& gameState{ gameStateChannel.getMessages()[0] };
+
+		SceneNames backTo{};
+		switch (gameState.gameMode) {
+			case GameMode::campaign:
+				backTo = SceneNames::main;
+				break;
+			case GameMode::practice:
+				backTo = SceneNames::stage;
+				break;
+			default:
+				throw std::runtime_error{
+					"default case reached in GameOverSystem.gameOver()!"
+				};
+		}
+
+		globalChannelSetPointer->getChannel(GlobalTopics::sceneExitTo).addMessage(
+			backTo
+		);
+
+		//then, immediately pop up a new game
+		globalChannelSetPointer->getChannel(GlobalTopics::sceneEntry)
+			.addMessage(SceneNames::game);
+		//todo: also need to go to loading screen... eventually
 	}
 	void MenuNavigationSystem::handleToggleSoundCommand() {
 		globalChannelSetPointer->getChannel(GlobalTopics::toggleSoundFlag).addMessage();
@@ -245,8 +272,30 @@ namespace wasp::game::systems {
 
 	void MenuNavigationSystem::handleGameOverCommand() {
 		handleStopMusic();
-		//todo: need to read the gameConfig and send us back to the correct scene
-		//see GameOverSystem.gameOver()
+
+		//send us back to the correct menu
+		auto& gameStateChannel{
+			globalChannelSetPointer->getChannel(GlobalTopics::gameState)
+		};
+		GameState& gameState{ gameStateChannel.getMessages()[0] };
+
+		SceneNames backTo{};
+		switch (gameState.gameMode) {
+			case GameMode::campaign:
+				backTo = SceneNames::main;
+				break;
+			case GameMode::practice:
+				backTo = SceneNames::stage;
+				break;
+			default:
+				throw std::runtime_error{
+					"default case reached in GameOverSystem.gameOver()!"
+				};
+		}
+
+		globalChannelSetPointer->getChannel(GlobalTopics::sceneExitTo).addMessage(
+			backTo
+		);
 	}
 	void MenuNavigationSystem::handleExitCommand() {
 		globalChannelSetPointer->getChannel(GlobalTopics::exitFlag).addMessage();

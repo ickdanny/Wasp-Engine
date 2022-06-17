@@ -42,10 +42,25 @@ namespace wasp::game::systems {
 		void initShotMenu(Scene& scene) const;
 		void initStageMenu(Scene& scene) const;
 		void initOptionsMenu(Scene& scene) const;
+		void initContinueMenu(Scene& scene) const;
 
 		void initGame(Scene& scene) const;
+		void initPauseMenu(Scene& scene) const;
 
-		void addBackground(ecs::DataStorage& dataStorage, std::wstring name) const;
+		void addBackground(
+			ecs::DataStorage& dataStorage, 
+			const std::wstring& name,
+			int relativeDrawOrder = 0,
+			const math::Point2& position = 
+				{ config::graphicsWidth / 2.0f, config::graphicsHeight / 2.0f }
+		) const;
+		void addForeground(
+			ecs::DataStorage& dataStorage, 
+			const std::wstring& name,
+			int relativeDrawOrder = 0,
+			const math::Point2& position =
+				{ config::graphicsWidth / 2.0f, config::graphicsHeight / 2.0f }
+		) const;
 
 		BasicButtonComponentTuple makeButton(
 			const math::Point2& initPos,

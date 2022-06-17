@@ -188,6 +188,8 @@
     <ClCompile Include="_source\Game\Systems\InputParserSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\MenuNavigationSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\OutboundSystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\OverlaySystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\PauseSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\PlayerBombSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\PlayerDeathDetectorSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\PlayerMovementSystem.cpp" />
@@ -267,6 +269,7 @@
     <ClInclude Include="_header\Game\Systems\GameOverSystem.h" />
     <ClInclude Include="_header\Game\Systems\InboundSystem.h" />
     <ClInclude Include="_header\Game\Systems\OutboundSystem.h" />
+    <ClInclude Include="_header\Game\Systems\PauseSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerBombSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerDeathDetectorSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerMovementSystem.h" />
@@ -362,6 +365,7 @@
     <ClInclude Include="_header\Game\Resources\BitmapStorage.h" />
     <ClInclude Include="_header\Window\WindowMode.h" />
     <ClInclude Include="_header\Window\WindowUtil.h" />
+    <ClInclude Include="_header\Game\Systems\OverlaySystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_header\Adaptor\ComLibraryGuard.h" />
