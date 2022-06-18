@@ -46,13 +46,22 @@ namespace wasp::scene {
 			return dataStorage;
 		}
 
+		const auto& getDataStorage() const {
+			return dataStorage;
+		}
+
 		template <typename T>
-		bool hasChannel(const channel::Topic<T>& topic) {
+		bool hasChannel(const channel::Topic<T>& topic) const {
 			return channelSet.hasChannel(topic);
 		}
 
 		template <typename T>
 		channel::Channel<T>& getChannel(const channel::Topic<T>& topic) {
+			return channelSet.getChannel(topic);
+		}
+
+		template <typename T>
+		const channel::Channel<T>& getChannel(const channel::Topic<T>& topic) const {
 			return channelSet.getChannel(topic);
 		}
 

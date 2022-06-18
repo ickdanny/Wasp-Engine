@@ -9,6 +9,11 @@ namespace wasp::game::systems {
 
 	//utility for creating entities
 
+	//Base struct
+	struct ComponentTupleBase {
+		virtual ecs::entity::EntityHandle addTo(ecs::DataStorage& dataStorage) const;
+	};
+
 	//ComponentTuple struct
 	template <typename... Ts>
 	struct ComponentTuple : public std::tuple<Ts...> {
@@ -23,6 +28,11 @@ namespace wasp::game::systems {
 		//conversion to AddEntityOrder
 		ecs::AddEntityOrder<Ts...> package() const {
 			return ecs::AddEntityOrder{ *this };
+		}
+
+		//override addTo
+		ecs::entity::EntityHandle addTo(ecs::DataStorage& dataStorage) const override {
+			return dataStorage.addEntity(package());
 		}
 	};
 

@@ -200,6 +200,7 @@
     <ClCompile Include="_source\Game\Systems\RenderSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\MiscellaneousSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\ScriptSystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SystemUtil.cpp" />
     <ClCompile Include="_source\Game\Systems\VelocitySystem.cpp" />
     <ClCompile Include="_source\Game\Topics.cpp" />
@@ -254,7 +255,7 @@
     <ClInclude Include="_header\Game\Components\CollisionType.h" />
     <ClInclude Include="_header\Game\Components\DeathCommand.h" />
     <ClInclude Include="_header\Game\Components\MenuCommand.h" />
-    <ClInclude Include="_header\Game\Components\SpawnData.h" />
+    <ClInclude Include="_header\Game\Components\SpawnProgramList.h" />
     <ClInclude Include="_header\Game\Components\TwoFramePosition.h" />
     <ClInclude Include="_header\Game\Game.h" />
     <ClInclude Include="_header\Game\GameConfig.h" />
@@ -291,6 +292,8 @@
     <ClInclude Include="_header\Game\Systems\InputParserSystem.h" />
     <ClInclude Include="_header\Game\Systems\MenuNavigationSystem.h" />
     <ClInclude Include="_header\Game\Systems\RenderSystem.h" />
+    <ClInclude Include="_header\Game\Systems\SpawnSystem.h" />
+    <ClInclude Include="_header\Game\Systems\Spawns\PlayerSpawns.h" />
     <ClInclude Include="_header\Game\Systems\systemInclude.h" />
     <ClInclude Include="_header\Game\Systems\SystemUtil.h" />
     <ClInclude Include="_header\Game\Systems\VelocitySystem.h" />
@@ -317,6 +320,7 @@
     <ClInclude Include="_header\Sound\MidiHub.h" />
     <ClInclude Include="_header\Sound\MidiOut.h" />
     <ClInclude Include="_header\Sound\MidiSequenceLoading.h" />
+    <ClInclude Include="_header\Utility\Ticker.h" />
     <ClInclude Include="_header\Utility\TwoFrame.h" />
     <ClInclude Include="_header\Utility\Void.h" />
     <ClInclude Include="_header\windowsD2DInclude.h" />

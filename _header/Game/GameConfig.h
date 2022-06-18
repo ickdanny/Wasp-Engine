@@ -45,7 +45,7 @@ namespace wasp::game::config {
     constexpr int maxLives{ 6 };
     constexpr int maxBombs{ maxLives };
 
-    constexpr int maxPower{ 128 };
+    constexpr int maxPower{ 80 };
 
     constexpr int continueLives{ 2 };
     constexpr int respawnBombs{ 2 };

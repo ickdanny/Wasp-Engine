@@ -300,6 +300,9 @@
     <ClCompile Include="_source\Game\Systems\OverlaySystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Header\windowsInclude.h">
@@ -701,9 +704,6 @@
     <ClInclude Include="_header\Game\Systems\PlayerBombSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Components\SpawnData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="_header\Game\Systems\PlayerDeathDetectorSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -723,6 +723,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Systems\OverlaySystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Components\SpawnProgramList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Utility\Ticker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\SpawnSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\Spawns\PlayerSpawns.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

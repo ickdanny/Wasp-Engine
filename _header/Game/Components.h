@@ -8,7 +8,7 @@
 #include "Components/PlayerData.h"
 #include "Components/CollisionType.h"
 #include "Components/DeathCommand.h"
-#include "Components/SpawnData.h"
+#include "Components/SpawnProgramList.h"
 
 namespace wasp::game {
 
@@ -70,7 +70,9 @@ namespace wasp::game {
 
     //game
     struct CollidableMarker {};
-    struct PlayerCollisions : components::CollisionType<PlayerCollisions>{};
+
+    struct PlayerCollisions : components::CollisionType<PlayerCollisions> {};
+    struct EnemyCollisions : components::CollisionType<EnemyCollisions> {};
 
     struct Hitbox : math::AABB {
         using math::AABB::AABB;
@@ -99,8 +101,8 @@ namespace wasp::game {
         }
     };
 
-    struct SpawnData : components::SpawnData {
-        using components::SpawnData::SpawnData;
+    struct SpawnProgramList : components::SpawnProgramList {
+        using components::SpawnProgramList::SpawnProgramList;
     };
 
     struct Inbound {

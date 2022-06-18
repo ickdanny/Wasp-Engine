@@ -194,5 +194,68 @@ namespace wasp::game::systems {
         const PlayerData& playerData
     ) {
         //todo: update power meter
+
+        /*
+                private void updatePower(AbstractECSInterface ecsInterface, AbstractPublishSubscribeBoard sliceBoard){
+            AbstractDataStorage dataStorage = ecsInterface.getSliceData();
+            SpriteInstruction spriteInstruction = dataStorage.getComponent(powerDisplay, spriteInstructionComponentType);
+
+            int currentPower = playerData.getPower();
+            if(currentPower == 0){
+                if(dataStorage.containsComponent(powerDisplay, visibleMarker)){
+                    sliceBoard.publishMessage(ECSUtil.makeRemoveComponentMessage(
+                            new RemoveComponentOrder(powerDisplay, visibleMarker)
+                    ));
+                }
+            }
+            else{
+                if(!dataStorage.containsComponent(powerDisplay, visibleMarker)){
+                    sliceBoard.publishMessage(ECSUtil.makeAddComponentMessage(
+                            new AddComponentOrder<>(powerDisplay, visibleMarker, null)
+                    ));
+                }
+            }
+            if (currentPower != MAX_POWER){
+                if(!spriteInstruction.getImage().equals(POWER_IMAGE)){
+                    spriteInstruction.setImage(POWER_IMAGE);
+                }
+
+                double ratio = ((double)currentPower)/MAX_POWER;
+                int width = (int)(ratio * powerBarWidth);
+
+
+                if(dataStorage.containsComponent(powerDisplay, spriteSubImageComponentType)) {
+                    Rectangle subImage = dataStorage.getComponent(powerDisplay, spriteSubImageComponentType);
+                    if (subImage.getWidth() != width) {
+                        updatePowerBarWidth(sliceBoard, width);
+                    }
+                }
+                else{
+                    updatePowerBarWidth(sliceBoard, width);
+                }
+            }
+            else{
+                if(dataStorage.containsComponent(powerDisplay, spriteSubImageComponentType)){
+                    sliceBoard.publishMessage(ECSUtil.makeRemoveComponentMessage(new RemoveComponentOrder(
+                            powerDisplay,
+                            spriteSubImageComponentType)
+                    ));
+                }
+
+                if(!spriteInstruction.getImage().equals(POWER_MAX_IMAGE)){
+                    spriteInstruction.setImage(POWER_MAX_IMAGE);
+                }
+            }
+        }
+
+        private void updatePowerBarWidth(AbstractPublishSubscribeBoard sliceBoard, int width){
+            sliceBoard.publishMessage(ECSUtil.makeSetComponentMessage(new SetComponentOrder<>(
+                    powerDisplay,
+                    spriteSubImageComponentType,
+                    //new Rectangle(powerBarWidth - width, 0, width, powerBarHeight)
+                    new Rectangle(0, 0, width, powerBarHeight)
+            )));
+        }
+        */
     }
 }
