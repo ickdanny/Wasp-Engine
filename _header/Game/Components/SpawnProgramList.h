@@ -13,10 +13,10 @@ namespace wasp::game::components {
         condition,          //if statement [predicateNode, trueNode]
         conditionElse,      //if-else statement [predicateNode, trueNode, falseNode]
         playerPowerSplit,   //chooses node based on player power [0Node, 8Node...]
-        spawn,              //cast the node data to a ComponentTupleSharedPtr
-        //todo: implement spawnPos and spawnPosVel
-        spawnPos,           //cast the node data with [posNode]
-        spawnPosVel,        //cast the node data with [posNode, velNode]
+        spawn,              //cast the node data to a ComponentTupleBaseSharedPtr
+        spawnPos,           //spawn at [posNode]
+        //todo: implement spawnPosVel
+        spawnPosVel,        //spawn with [posNode, velNode]
 
         value,              //returns a stored value
         valueDifficulty,    //returns a stored value based on the difficulty
@@ -25,6 +25,9 @@ namespace wasp::game::components {
         tickMod,            //returns (tick + int1) % int2 == 0  [intNode1, intNode2]
         lastTick,           //returns tick == 1
         isPlayerFocused,    //returns true if the focus gameCommand is found
+
+        //point2
+        entityPosition,     //returns the position of the entity
 
         numInstructions
     };
@@ -43,11 +46,12 @@ namespace wasp::game::components {
         virtual ~SpawnNode() = default;
 
         template <typename... Ts>
-        void link(const std::shared_ptr<SpawnNode>& node, Ts... args) {
+        SpawnNode& link(const std::shared_ptr<SpawnNode>& node, Ts... args) {
             linkedNodePointers.push_back(node);
             if constexpr (sizeof...(args) > 0) {
-                link(args...);
+                return link(args...);
             }
+            return *this;
         }
     };
 
@@ -57,9 +61,9 @@ namespace wasp::game::components {
         std::tuple<Ts...> data{};
 
         //Constructs a spawn node with the given spawnInstruction and data
-        SpawnNodeData(SpawnInstructions spawnInstruction, const Ts& args...)
+        SpawnNodeData(SpawnInstructions spawnInstruction, const Ts&... args)
             : SpawnNode{ spawnInstruction }
-            , data{ args } {
+            , data{ args... } {
         }
 
         ~SpawnNodeData() override = default;
@@ -71,7 +75,7 @@ namespace wasp::game::components {
 
         //Constructs a SpawnProgram with the given baseSpawnNodePointer and tick data
         SpawnProgram(
-            const std::shared_ptr<SpawnNode>& baseSpawnNode,
+            const std::shared_ptr<SpawnNode>& baseSpawnNodePointer,
             int maxTick,
             bool looping
         )

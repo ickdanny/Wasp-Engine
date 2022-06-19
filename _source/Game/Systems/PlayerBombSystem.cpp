@@ -25,12 +25,14 @@ namespace wasp::game::systems {
 		if (!dataStorage.containsComponent<PlayerData>(playerHandle)) {
 			throw std::runtime_error{ "cannot find player data for bomb!" };
 		}
-		if (!dataStorage.containsComponent<SpawnData>(playerHandle)) {
+		if (!dataStorage.containsComponent<SpawnProgramList>(playerHandle)) {
 			throw std::runtime_error{ "player has no spawn data at bomb!" };
 		}
 
 		auto& playerData{ dataStorage.getComponent<PlayerData>(playerHandle) };
-		auto& spawnData{ dataStorage.getComponent<SpawnData>(playerHandle) };
+		auto& spawnProgramList{ 
+			dataStorage.getComponent<SpawnProgramList>(playerHandle) 
+		};
 
 		//todo: add the bomb spawn to the spawn data
 		debug::log("spawn bomb");

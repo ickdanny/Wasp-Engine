@@ -4,6 +4,7 @@
 #include "Vector2.h"
 
 namespace wasp::math {
+
 	class PolarVector {
 	private:
 		//fields
@@ -15,6 +16,7 @@ namespace wasp::math {
 	public:
 		PolarVector() = default;
 		PolarVector(float magnitude, Angle angle);
+		PolarVector(const Vector2& vector2);
 
 		//getters and setters
 		float getMagnitude() const {
@@ -36,7 +38,9 @@ namespace wasp::math {
 		operator Vector2() const;
 
 	private:
-		//helper functions
 		void updateVector2Representation();
 	};
+
+	//helper function
+	Angle getAngle(const Vector2& vector);
 }

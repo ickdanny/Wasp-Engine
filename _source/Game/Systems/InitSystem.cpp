@@ -419,7 +419,7 @@ namespace wasp::game::systems {
 				Inbound{ config::playerInbound },
 				PlayerCollisions::Target{ components::CollisionCommands::player },
 				DeathCommand{ DeathCommand::Commands::playerDeath },
-				SpawnData{}	//todo: no args to spawn data for now...
+				SpawnProgramList{}	//todo: no args to spawn data for now...
 				//todo: animation
 			).package()
 		);
@@ -430,11 +430,13 @@ namespace wasp::game::systems {
 				Position{ config::gameWidth / 2.0f, config::gameHeight / 2.0f } 
 					+ config::gameOffset,
 				config::playerHitbox,
+				PlayerCollisions::Source{},
+				EnemyCollisions::Target{ components::CollisionCommands::damage },
+				Health{ 100 },
 				SpriteInstruction{
 					bitmapStoragePointer->get(L"temp_player")->d2dBitmap
 				},
-				DrawOrder{ config::playerDrawOrder },
-				PlayerCollisions::Source{}
+				DrawOrder{ config::playerDrawOrder }
 			).package()
 		);
 	}

@@ -30,8 +30,6 @@ namespace wasp::math {
 		};
 	}
 
-	Angle getAngle(const Vector2& vector);
-
 	float distanceFromAToB(const Point2& a, const Point2& b);
 
 	Angle getAngleFromAToB(const Point2& a, const Point2& b);

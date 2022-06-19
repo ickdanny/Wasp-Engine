@@ -303,6 +303,9 @@
     <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="_source\Game\Systems\SpawnPrograms\PlayerSpawnPrograms.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Header\windowsInclude.h">
@@ -734,7 +737,16 @@
     <ClInclude Include="_header\Game\Systems\SpawnSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Systems\Spawns\PlayerSpawns.h">
+    <ClInclude Include="_header\Game\Systems\SpawnPrograms\PlayerSpawnPrograms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\SpawnPrograms\SpawnProgramUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\SpawnPrograms\spawnProgramInclude.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\SpawnPrograms\SpawnPrograms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

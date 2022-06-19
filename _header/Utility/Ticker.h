@@ -30,5 +30,9 @@ namespace wasp::utility {
         void setLooping(bool looping) {
             this->looping = looping;
         }
+
+        int getMaxTick() const {
+            return maxTick;
+        }
     };
 }

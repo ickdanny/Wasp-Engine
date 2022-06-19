@@ -1,19 +1,25 @@
 #include "Game/SceneUpdater.h"
 
+#include "Logging.h"
+
 namespace wasp::game {
 	SceneUpdater::SceneUpdater(
 		resources::ResourceMasterStorage* resourceMasterStoragePointer,
 		input::IKeyInputTable* keyInputTablePointer,
 		channel::ChannelSet* globalChannelSetPointer
 	)
-		: initSystem{ 
+		: spawnPrograms{ &(resourceMasterStoragePointer->bitmapStorage) }
+
+		, initSystem{ 
 			globalChannelSetPointer, 
-			&(resourceMasterStoragePointer->bitmapStorage) 
+			&(resourceMasterStoragePointer->bitmapStorage),
+			&spawnPrograms
 		}
 		, inputParserSystem{ keyInputTablePointer }
 		, menuNavigationSystem{ globalChannelSetPointer }
 		, buttonSpriteSystem{ &(resourceMasterStoragePointer->bitmapStorage) }
 		, gameBuilderSystem { globalChannelSetPointer }
+		, playerShotSystem{ &spawnPrograms }
 		, continueSystem{ globalChannelSetPointer }
 
 		, overlaySystem{ &(resourceMasterStoragePointer->bitmapStorage) }
@@ -43,9 +49,7 @@ namespace wasp::game {
 		playerRespawnSystem(scene);
 		playerReactivateSystem(scene);
 		deathHandlerSystem(scene);
-
-        //gameSpawnSystem = new SpawnSystem(GAME_COMPONENT_TYPES);
-        //
+		spawnSystem(scene);
 		overlaySystem(scene);
 		pauseSystem(scene);
         //gameDialogueScreenEntrySystem = new DialogueScreenEntrySystem();

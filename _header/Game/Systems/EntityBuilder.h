@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tuple>
+#include <type_traits>
 
 #include "ECS/CriticalOrders.h"
 #include "Game/Components.h"
@@ -9,14 +10,48 @@ namespace wasp::game::systems {
 
 	//utility for creating entities
 
+	//utility type for testing whether or not a list of types contains a type
+	template <typename T, typename... Ts>
+	constexpr auto contains() {
+		return !std::is_same<
+			std::integer_sequence<bool, false, std::is_same<T, Ts>::value...>,
+			std::integer_sequence<bool, std::is_same<T, Ts>::value..., false>
+		>::value;
+	}
+
 	//Base struct
 	struct ComponentTupleBase {
-		virtual ecs::entity::EntityHandle addTo(ecs::DataStorage& dataStorage) const;
+	private:
+		//typedefs
+		using EntityHandle = ecs::entity::EntityHandle;
+
+	public:
+		//Adds the entity represented by this object to the given data storage.
+		virtual EntityHandle addTo(ecs::DataStorage& dataStorage) const = 0;
+
+		//returns a shared pointer to a clone of this object made on the heap
+		virtual std::shared_ptr<ComponentTupleBase> heapClone() const = 0;
+
+		//Special function for adding position to a tuple
+		virtual std::shared_ptr<ComponentTupleBase> addPosition(
+			const Position& position
+		) const = 0;
+
+		//Special function for adding velocity to a tuple
+		virtual std::shared_ptr<ComponentTupleBase> addVelocity(
+			const Velocity& velocity
+		) const = 0;
+
+		//Special function for adding position AND velocity to a tuple
+		virtual std::shared_ptr<ComponentTupleBase> addPosVel(
+			const Position& position,
+			const Velocity& velocity
+		) const = 0;
 	};
 
 	//ComponentTuple struct
 	template <typename... Ts>
-	struct ComponentTuple : public std::tuple<Ts...> {
+	struct ComponentTuple : public std::tuple<Ts...>, ComponentTupleBase {
 		ComponentTuple(const Ts&... args)
 			: std::tuple<Ts...>{ args... } {
 		}
@@ -30,9 +65,70 @@ namespace wasp::game::systems {
 			return ecs::AddEntityOrder{ *this };
 		}
 
-		//override addTo
+		//override base functions
 		ecs::entity::EntityHandle addTo(ecs::DataStorage& dataStorage) const override {
 			return dataStorage.addEntity(package());
+		}
+
+		std::shared_ptr<ComponentTupleBase> heapClone() const override {
+			ComponentTuple<Ts...>* rawPointer{
+				new ComponentTuple<Ts...>(*this)
+			};
+			return std::shared_ptr<ComponentTupleBase>(rawPointer);
+		}
+
+		std::shared_ptr<ComponentTupleBase> addPosition(
+			const Position& position
+		) const override {
+			if constexpr (contains<Position, Ts...>()) {
+				throw std::runtime_error{ "add position template wrong somewhere " };
+			}
+			else {
+				ComponentTupleBase* newTuplePointer{
+					static_cast<ComponentTupleBase*>(new auto (*this + position))
+				};
+				return std::shared_ptr<ComponentTupleBase>{
+					newTuplePointer
+				};
+			}
+		}
+
+		std::shared_ptr<ComponentTupleBase> addVelocity(
+			const Velocity& velocity
+		) const override {
+			if constexpr (contains<Velocity, Ts...>()) {
+				throw std::runtime_error{ "add velocity template wrong somewhere " };
+			}
+			else {
+				ComponentTupleBase* newTuplePointer{
+					static_cast<ComponentTupleBase*>(new auto (*this + velocity))
+				};
+				return std::shared_ptr<ComponentTupleBase>{
+					newTuplePointer
+				};
+			}
+		}
+
+		std::shared_ptr<ComponentTupleBase> addPosVel(
+			const Position& position,
+			const Velocity& velocity
+		) const override {
+			if constexpr (contains<Position, Ts...>()) {
+				throw std::runtime_error{ "add position template wrong somewhere " };
+			}
+			else if constexpr (contains<Velocity, Ts...>()) {
+				throw std::runtime_error{ "add velocity template wrong somewhere " };
+			}
+			else {
+				ComponentTupleBase* newTuplePointer{
+					static_cast<ComponentTupleBase*>(
+						new auto ((*this + position) + velocity)
+					)
+				};
+				return std::shared_ptr<ComponentTupleBase>{
+					newTuplePointer
+				};
+			}
 		}
 	};
 
@@ -107,6 +203,67 @@ namespace wasp::game::systems {
 				Position{ pos },
 				VisibleMarker{},
 				Hitbox{ hitbox }
+			};
+		}
+
+		template <typename... Ts>
+		static auto makeLinearCollidable(
+			const Point2& pos,
+			const Velocity& velocity,
+			const AABB& hitbox,
+			const Ts&... args
+		) {
+			return ComponentTuple{
+				Position{ pos },
+				Velocity{ velocity },
+				VisibleMarker{},
+				Hitbox{ hitbox },
+				CollidableMarker{},
+				args...
+			};
+		}
+
+		template <typename... Ts>
+		static auto makeLinearUncollidable(
+			const Point2& pos,
+			const Velocity& velocity,
+			const AABB& hitbox,
+			const Ts&... args
+		) {
+			return ComponentTuple{
+				Position{ pos },
+				Velocity{ velocity },
+				VisibleMarker{},
+				Hitbox{ hitbox },
+				args...
+			};
+		}
+
+		template <typename... Ts>
+		static auto makePosPrototype(
+			const Velocity& velocity,
+			const AABB& hitbox,
+			const Ts&... args
+		) {
+			return ComponentTuple{
+				Velocity{ velocity },
+				VisibleMarker{},
+				Hitbox{ hitbox },
+				CollidableMarker{},
+				args...
+			};
+		}
+
+		template <typename... Ts>
+		static auto makePosVelPrototype(
+			const AABB& hitbox,
+			const Ts&... args
+		) {
+			return ComponentTuple{
+				VisibleMarker{},
+				Hitbox{ hitbox },
+				CollidableMarker{},
+				args...
 			};
 		}
 	};

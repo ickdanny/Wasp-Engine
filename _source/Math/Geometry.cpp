@@ -2,10 +2,6 @@
 
 namespace wasp::math {
 
-	Angle getAngle(const Vector2& vector) {
-		return Angle{ toDegrees(std::atan2f(vector.x, -vector.y)) };
-	}
-
 	float distanceFromAToB(const Point2& a, const Point2& b) {
 		return getMagnitude(vectorFromAToB(a, b));
 	}

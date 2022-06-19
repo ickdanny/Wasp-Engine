@@ -1,5 +1,7 @@
 #include "Game/Systems/SpawnSystem.h"
 
+#include <array>
+
 #include "Game/Systems/EntityBuilder.h"
 
 namespace wasp::game::systems {
@@ -18,26 +20,28 @@ namespace wasp::game::systems {
 		#define NODE_HANDLER_ARGS \
 			Scene& scene, \
 			EntityID entityID, \
-			const components::SpawnNode* currentSpawnNodePointer, \
+			std::shared_ptr<components::SpawnNode>& currentSpawnNodePointer, \
 			int tick, \
 			SpawnList& spawnList
 
 		int evaluateIntNode(NODE_HANDLER_ARGS) {
 			switch (currentSpawnNodePointer->spawnInstruction) {
-				case components::SpawnInstructions::value:
-					const auto[value] = 
+				case components::SpawnInstructions::value: {
+					const auto [value] =
 						dynamic_cast<const components::SpawnNodeData<int>*>(
-							currentSpawnNodePointer
+							currentSpawnNodePointer.get()
 						)->data;
 					return value;
-				case components::SpawnInstructions::valueDifficulty:
+				}
+				case components::SpawnInstructions::valueDifficulty: {
 					const auto& [valueArray] =
 						dynamic_cast<
 							const components::SpawnNodeData<std::array<int, 4>>*
 						>(
-							currentSpawnNodePointer
+							currentSpawnNodePointer.get()
 						)->data;
 					return valueArray[static_cast<int>(getDifficulty(scene))];
+				}
 				default:
 					throw std::runtime_error{ "not an int instruction!" };
 			}
@@ -45,27 +49,29 @@ namespace wasp::game::systems {
 
 		bool evaluatePredicateNode(NODE_HANDLER_ARGS) {
 			switch (currentSpawnNodePointer->spawnInstruction) {
-				case components::SpawnInstructions::tickMod:
+				case components::SpawnInstructions::tickMod: {
 					//returns (tick + int1) % int2 == 0
 					int add = evaluateIntNode(
-						scene, 
-						entityID, 
-						currentSpawnNodePointer->linkedNodePointers[0].get(),
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
 						tick,
 						spawnList
 					);
 					int mod = evaluateIntNode(
 						scene,
 						entityID,
-						currentSpawnNodePointer->linkedNodePointers[1].get(),
+						currentSpawnNodePointer->linkedNodePointers[1],
 						tick,
 						spawnList
 					);
 					return (tick + add) % mod == 0;
-				case components::SpawnInstructions::lastTick:
+				}
+				case components::SpawnInstructions::lastTick: {
 					//returns true if this is the last tick of the SpawnProgram
 					return tick == 1;
-				case components::SpawnInstructions::isPlayerFocused:
+				}
+				case components::SpawnInstructions::isPlayerFocused: {
 					//returns true if the focus gameCommand is found
 					const auto& gameCommandChannel{
 						scene.getChannel(SceneTopics::gameCommands)
@@ -76,6 +82,32 @@ namespace wasp::game::systems {
 						}
 					}
 					return false;
+				}
+				default:
+					throw std::runtime_error{ "not a predicate instruction!" };
+			}
+		}
+
+		math::Point2 evaluatePointNode(NODE_HANDLER_ARGS) {
+			switch (currentSpawnNodePointer->spawnInstruction) {
+				case components::SpawnInstructions::value: {
+					const auto [value] =
+						dynamic_cast<const components::SpawnNodeData<math::Point2>*>(
+							currentSpawnNodePointer.get()
+						)->data;
+					return value;
+				}
+				case components::SpawnInstructions::valueDifficulty: {
+					const auto& [valueArray] =
+						dynamic_cast<
+							const components::SpawnNodeData<std::array<math::Point2, 4>>*
+						>(
+							currentSpawnNodePointer.get()
+						)->data;
+					return valueArray[static_cast<int>(getDifficulty(scene))];
+				}
+				case components::SpawnInstructions::entityPosition:
+					return scene.getDataStorage().getComponent<Position>(entityID);
 				default:
 					throw std::runtime_error{ "not a predicate instruction!" };
 			}
@@ -86,57 +118,61 @@ namespace wasp::game::systems {
 				case components::SpawnInstructions::error:
 					//throw an error
 					throw std::runtime_error{ "spawn program error instruction" };
-				case components::SpawnInstructions::list:
+				case components::SpawnInstructions::list: {
 					//run every node contained in the list
-					for (const auto& linkedNodeSharedPointer 
+					for (auto& linkedNodeSharedPointer
 						: currentSpawnNodePointer->linkedNodePointers
 					) {
-						const components::SpawnNode* linkedNodePointer{
-							linkedNodeSharedPointer.get()
-						};
-						while (linkedNodePointer) {
+						while (linkedNodeSharedPointer) {
 							runSpawnNode(
 								scene,
 								entityID,
-								linkedNodePointer,
+								linkedNodeSharedPointer,
 								tick,
 								spawnList
 							);
 						}
 					}
+					currentSpawnNodePointer = nullptr;
 					break;
-				case components::SpawnInstructions::condition:
+				}
+				case components::SpawnInstructions::condition: {
 					//if our predicate is met, set the current pointer to trueNode
 					if (evaluatePredicateNode(
 						scene,
 						entityID,
-						currentSpawnNodePointer->linkedNodePointers[0].get(),
+						currentSpawnNodePointer->linkedNodePointers[0],
 						tick,
 						spawnList
 					)) {
 						currentSpawnNodePointer =
-							currentSpawnNodePointer->linkedNodePointers[1].get();
+							currentSpawnNodePointer->linkedNodePointers[1];
+					}
+					else {
+						currentSpawnNodePointer = nullptr;
 					}
 					break;
-				case components::SpawnInstructions::conditionElse:
+				}
+				case components::SpawnInstructions::conditionElse: {
 					//if our predicate is met, set the current pointer to trueNode
 					if (evaluatePredicateNode(
 						scene,
 						entityID,
-						currentSpawnNodePointer->linkedNodePointers[0].get(),
+						currentSpawnNodePointer->linkedNodePointers[0],
 						tick,
 						spawnList
 					)) {
 						currentSpawnNodePointer =
-							currentSpawnNodePointer->linkedNodePointers[1].get();
+							currentSpawnNodePointer->linkedNodePointers[1];
 					}
 					//otherwise, set the current pointer to falseNode
 					else {
 						currentSpawnNodePointer =
-							currentSpawnNodePointer->linkedNodePointers[2].get();
+							currentSpawnNodePointer->linkedNodePointers[2];
 					}
 					break;
-				case components::SpawnInstructions::playerPowerSplit:
+				}
+				case components::SpawnInstructions::playerPowerSplit: {
 					//chooses node based on player power
 					//buckets are as follows
 					//0  - 7	bucket0
@@ -176,9 +212,10 @@ namespace wasp::game::systems {
 							};
 					}
 					currentSpawnNodePointer =
-						currentSpawnNodePointer->linkedNodePointers[bucket].get();
+						currentSpawnNodePointer->linkedNodePointers[bucket];
 					break;
-				case components::SpawnInstructions::spawn:
+				}
+				case components::SpawnInstructions::spawn: {
 					//cast the node data to a ComponentTupleSharedPtr and add to our list
 					const auto& [componentTupleBaseSharedPtr] =
 						dynamic_cast<
@@ -186,14 +223,42 @@ namespace wasp::game::systems {
 								std::shared_ptr<ComponentTupleBase>
 							>*
 						>(
-							currentSpawnNodePointer
+							currentSpawnNodePointer.get()
 						)->data;
 					spawnList.emplace_back(componentTupleBaseSharedPtr);
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
+				case components::SpawnInstructions::spawnPos: {
+					//cast the node data to a ComponentTupleSharedPtr
+					const auto& [componentTupleBaseSharedPtr] =
+						dynamic_cast<
+							const components::SpawnNodeData<
+								std::shared_ptr<ComponentTupleBase>
+							>*
+						>(
+							currentSpawnNodePointer.get()
+						)->data;
+					//get the position
+					math::Point2 pos{ evaluatePointNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					//add position
+					spawnList.emplace_back(
+						componentTupleBaseSharedPtr->addPosition(pos)
+					);
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
 				default:
 					throw std::runtime_error{ "unknown spawn instruction" };
 			}
 		}
-			
+		
 		#undef NODE_HANDLER_ARGS
 
 		//Returns true if the program can continue, false if the program is over.
@@ -207,9 +272,7 @@ namespace wasp::game::systems {
 			if (tick <= 0) {
 				return false;
 			}
-			const components::SpawnNode* currentSpawnNodePointer {
-				spawnProgram.baseSpawnNodePointer.get()
-			};
+			auto currentSpawnNodePointer { spawnProgram.baseSpawnNodePointer };
 
 			while (currentSpawnNodePointer) {
 				runSpawnNode(

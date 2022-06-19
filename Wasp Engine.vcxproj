@@ -200,6 +200,7 @@
     <ClCompile Include="_source\Game\Systems\RenderSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\MiscellaneousSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\ScriptSystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\SpawnPrograms\PlayerSpawnPrograms.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SystemUtil.cpp" />
     <ClCompile Include="_source\Game\Systems\VelocitySystem.cpp" />
@@ -292,8 +293,11 @@
     <ClInclude Include="_header\Game\Systems\InputParserSystem.h" />
     <ClInclude Include="_header\Game\Systems\MenuNavigationSystem.h" />
     <ClInclude Include="_header\Game\Systems\RenderSystem.h" />
+    <ClInclude Include="_header\Game\Systems\SpawnPrograms\spawnProgramInclude.h" />
+    <ClInclude Include="_header\Game\Systems\SpawnPrograms\SpawnPrograms.h" />
+    <ClInclude Include="_header\Game\Systems\SpawnPrograms\SpawnProgramUtil.h" />
     <ClInclude Include="_header\Game\Systems\SpawnSystem.h" />
-    <ClInclude Include="_header\Game\Systems\Spawns\PlayerSpawns.h" />
+    <ClInclude Include="_header\Game\Systems\SpawnPrograms\PlayerSpawnPrograms.h" />
     <ClInclude Include="_header\Game\Systems\systemInclude.h" />
     <ClInclude Include="_header\Game\Systems\SystemUtil.h" />
     <ClInclude Include="_header\Game\Systems\VelocitySystem.h" />

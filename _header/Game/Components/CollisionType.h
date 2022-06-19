@@ -18,12 +18,16 @@ namespace wasp::game::components {
 	template <typename Derived>
 	struct CollisionType {
 	private:
+		//typedefs
 		using EntityHandle = ecs::entity::EntityHandle;
 
 	public:
 		//set and cleared by CollisionDetectorSystem
 		//format = sourceEntity, targetEntity
 		static const Topic<std::tuple<EntityHandle, EntityHandle>> collisionTopic;
+
+		//delete constructor
+		CollisionType() = delete;
 
 		struct Source {
 			CollisionCommands command;

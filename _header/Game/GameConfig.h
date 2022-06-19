@@ -50,6 +50,9 @@ namespace wasp::game::config {
     constexpr int continueLives{ 2 };
     constexpr int respawnBombs{ 2 };
 
+    //player shot
+    constexpr int playerShotMaxTick{ 40 };
+
     /*
     //PLAYER SHOT
     public static final double BASIC_PLAYER_BULLET_SPEED = 16.5;
@@ -123,5 +126,6 @@ namespace wasp::game::config {
 	//graphics
 	constexpr int backgroundDrawOrder{ -10000 };
 	constexpr int playerDrawOrder{ 0 };
+    constexpr int playerBulletDrawOrder{ -5000 };
 	constexpr int foregroundDrawOrder{ 10000 };
 }

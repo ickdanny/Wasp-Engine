@@ -2,6 +2,8 @@
 
 #include "Game/Systems/QuadTree.h"
 
+#include "Logging.h"
+
 namespace wasp::game::systems {
 
 	namespace {
@@ -94,5 +96,7 @@ namespace wasp::game::systems {
 
 	void CollisionDetectorSystem::operator()(Scene& scene) {
 		detectCollisions<PlayerCollisions>(scene);
+		detectCollisions<EnemyCollisions>(scene);
+		detectCollisions<PickupCollisions>(scene);
 	}
 }

@@ -13,15 +13,20 @@ namespace wasp::math {
     //The Angle class represents an angle from 0 to 360 degrees.
     class Angle {
     private:
+        //constants
+        constexpr static float min{ 0.0f };
+        constexpr static float max{ 360.0f };
+        constexpr static float half{ 180.0f };
+        constexpr static float range{ 360.0f };
+
         //fields
         mutable float angle{};
 
     public:
         Angle() = default;
 
-        Angle(float degrees)
-            : angle{ degrees } {
-            modAngle();
+        constexpr Angle(float degrees)
+            : angle{ modAngle(degrees) } {
         }
 
         //getters
@@ -57,7 +62,15 @@ namespace wasp::math {
         explicit operator std::string() const;
 
     private:
-        void modAngle() const;
+        constexpr float modAngle(float angle) {
+            if (angle < min) {
+                angle += range;
+            }
+            else if (angle >= max) {
+                angle -= range;
+            }
+            return angle;
+        }
     };
 
     //mathematical operators for Angle class

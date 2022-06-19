@@ -65,7 +65,7 @@ namespace wasp::game::systems {
                 while (groupIterator.isValid()) {
                     auto [playerData, playerVelocity] = *groupIterator;
                     if (canMove(playerData)) {
-                        playerVelocity = velocity;
+                        playerVelocity = Velocity{ velocity };
                     }
                     else {
                         playerVelocity = Velocity{};

@@ -128,5 +128,7 @@ namespace wasp::game::systems {
 		scene.getChannel(SceneTopics::playerHits).clear();
 
 		handleCollisions<PlayerCollisions>(scene);
+		handleCollisions<EnemyCollisions>(scene);
+		handleCollisions<PickupCollisions>(scene);
 	}
 }

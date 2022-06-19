@@ -58,12 +58,34 @@ namespace wasp::game {
             : components::TwoFramePosition(toMove) {
         }
     };
-    struct Velocity : math::Vector2 {
-        using math::Vector2::Vector2;
+    struct Velocity : math::PolarVector {
+    private:
+        using PolarVector = math::PolarVector;
+        using Vector2 = math::Vector2;
 
+    public:
+        using PolarVector::PolarVector;
+
+        //Explicitly define copy and move constructors taking PolarVector
+        Velocity(const PolarVector& toCopy)
+            : PolarVector(toCopy) {
+        }
+        Velocity(PolarVector&& toMove)
+            : PolarVector(toMove) {
+        }
+
+        //Explicitly define copy and move constructors taking Vector2
+        Velocity(const Vector2& toCopy)
+            : PolarVector(toCopy) {
+        }
+        Velocity(Vector2&& toMove)
+            : PolarVector(toMove) {
+        }
+
+        //Explicitly define assignment operators
         Velocity& operator=(const Velocity& right) = default;
-        Velocity& operator=(const math::Vector2& right) {
-            math::Vector2::operator=(right);
+        Velocity& operator=(const PolarVector& right) {
+            PolarVector::operator=(right);
             return *this;
         }
     };
@@ -73,6 +95,7 @@ namespace wasp::game {
 
     struct PlayerCollisions : components::CollisionType<PlayerCollisions> {};
     struct EnemyCollisions : components::CollisionType<EnemyCollisions> {};
+    struct PickupCollisions : components::CollisionType<PickupCollisions> {};
 
     struct Hitbox : math::AABB {
         using math::AABB::AABB;

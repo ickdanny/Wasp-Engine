@@ -43,7 +43,7 @@ namespace wasp::game::systems {
 			if (isOutOfBounds(nextPos, inbound.bound)) {
 				math::Point2 inboundPos{ inboundPosition(nextPos, inbound.bound) };
 				math::Vector2 inboundVel = math::vectorFromAToB(position, inboundPos);
-				velocity = inboundVel;
+				velocity = Velocity{ inboundVel };
 			}
 			++groupIterator;
 		}

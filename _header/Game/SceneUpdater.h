@@ -3,6 +3,9 @@
 #include "Resources/ResourceMasterStorage.h"
 #include "Input/IKeyInputTable.h"
 #include "Game/Scenes.h"
+
+#include "Game/Systems/SpawnPrograms/SpawnPrograms.h"
+
 #include "Game/Systems/InitSystem.h"
 #include "Game/Systems/MiscellaneousSystem.h"
 #include "Game/Systems/InputParserSystem.h"
@@ -22,7 +25,7 @@
 #include "Game/Systems/PlayerRespawnSystem.h"
 #include "Game/Systems/PlayerReactivateSystem.h"
 #include "Game/Systems/DeathHandlerSystem.h"
-
+#include "Game/Systems/SpawnSystem.h"
 #include "Game/Systems/OverlaySystem.h"
 #include "Game/Systems/PauseSystem.h"
 
@@ -34,6 +37,10 @@ namespace wasp::game {
 
 	class SceneUpdater {
 	private:
+		//fields
+		systems::SpawnPrograms spawnPrograms;					//not initialized!
+
+		//systems
 		systems::InitSystem initSystem;							//not initialized!
 		systems::MiscellaneousSystem miscellaneousSystem;
 		systems::InputParserSystem inputParserSystem;			//not initialized!
@@ -44,7 +51,7 @@ namespace wasp::game {
 		systems::ScriptSystem scriptSystem{};
 		systems::CollisionDetectorSystem collisionDetectorSystem{};
 		systems::PlayerMovementSystem playerMovementSystem{};
-		systems::PlayerShotSystem playerShotSystem{};
+		systems::PlayerShotSystem playerShotSystem;				//not initialized!
 		systems::CollisionHandlerSystem collisionHandlerSystem{};
 		systems::PlayerStateSystem playerStateSystem{};
 		systems::PlayerBombSystem playerBombSystem{};
@@ -53,7 +60,7 @@ namespace wasp::game {
 		systems::PlayerRespawnSystem playerRespawnSystem{};
 		systems::PlayerReactivateSystem playerReactivateSystem{};
 		systems::DeathHandlerSystem deathHandlerSystem{};
-
+		systems::SpawnSystem spawnSystem{};
 		systems::OverlaySystem overlaySystem;					//not initialized!
 		systems::PauseSystem pauseSystem;						//not initialized!
 
