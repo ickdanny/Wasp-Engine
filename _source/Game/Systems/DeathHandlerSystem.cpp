@@ -25,7 +25,7 @@ namespace wasp::game::systems {
 			Scene& scene,
 			const ecs::entity::EntityHandle& entityHandle
 		) {
-			//todo: handle death spawn
+			//todo: handle death spawn (ghost -> remove instruction?)
 		}
 
 		void handleDeath(

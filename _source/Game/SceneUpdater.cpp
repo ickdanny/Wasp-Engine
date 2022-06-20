@@ -26,7 +26,7 @@ namespace wasp::game {
 		, pauseSystem{ globalChannelSetPointer }
 
 		, gameOverSystem{ globalChannelSetPointer }
-	{
+		, winSystem{ globalChannelSetPointer } {
 	}
 
 	void SceneUpdater::operator()(Scene& scene) {
@@ -52,6 +52,7 @@ namespace wasp::game {
 		spawnSystem(scene);
 		overlaySystem(scene);
 		pauseSystem(scene);
+
         //gameDialogueScreenEntrySystem = new DialogueScreenEntrySystem();
         //gameNextStageEntrySystem = new NextStageEntrySystem();
         //
@@ -67,6 +68,6 @@ namespace wasp::game {
         inboundSystem(scene);
         outboundSystem(scene);
 		gameOverSystem(scene);
-        //gameWinSystem = new GameWinSystem();
+		winSystem(scene);
 	}
 }

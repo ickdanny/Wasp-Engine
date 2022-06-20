@@ -52,7 +52,7 @@ namespace wasp::game::systems {
 						};
 						if (playerData.lives <= 0 && playerData.continues > 0) {
 							sceneDataChannel.addMessage(
-								{ playerHandle, config::deathPeriod - 1 }
+								{ playerHandle, config::deathPeriod - 2 }
 							);
 						}
 						//if continues <= 0, this system does nothing
@@ -89,7 +89,5 @@ namespace wasp::game::systems {
 
 		//pause the game
 		scene.getChannel(SceneTopics::pauseFlag).addMessage();
-
-		debug::log("continue menu");
 	}
 }

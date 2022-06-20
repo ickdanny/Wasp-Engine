@@ -23,15 +23,8 @@ namespace wasp::game::systems {
 		Scene& scene, 
 		const EntityHandle& playerHandle
 	) {
-		//todo: add a spawn component to player
-		debug::log("player reactivate");
-		/*
-        private void reactivate(AbstractPublishSubscribeBoard sliceBoard){
-            AddComponentOrder<SpawnComponent> addSpawnComponentOrder = new AddComponentOrder<>(
-                    player, spawnComponentType, new SpawnComponent()
-            );
-            sliceBoard.publishMessage(ECSUtil.makeAddComponentMessage(addSpawnComponentOrder));
-        }
-		*/
+		//reactivate player by adding a spawn program list
+		auto& dataStorage{ scene.getDataStorage() };
+		dataStorage.addComponent<SpawnProgramList>({ playerHandle, {} });
 	}
 }

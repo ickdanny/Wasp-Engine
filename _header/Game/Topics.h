@@ -87,5 +87,8 @@ namespace wasp::game {
 
 		//set and cleared by RenderSystem and MiscellaneousSystem
 		static const Topic<float> lastDeltaTime;
+
+		//todo: not handled!
+		static const Topic<> winFlag;
 	};
 }

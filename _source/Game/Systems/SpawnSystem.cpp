@@ -109,7 +109,30 @@ namespace wasp::game::systems {
 				case components::SpawnInstructions::entityPosition:
 					return scene.getDataStorage().getComponent<Position>(entityID);
 				default:
-					throw std::runtime_error{ "not a predicate instruction!" };
+					throw std::runtime_error{ "not a point instruction!" };
+			}
+		}
+
+		Velocity evaluateVelocityNode(NODE_HANDLER_ARGS) {
+			switch (currentSpawnNodePointer->spawnInstruction) {
+				case components::SpawnInstructions::value: {
+					const auto [value] =
+						dynamic_cast<const components::SpawnNodeData<Velocity>*>(
+							currentSpawnNodePointer.get()
+						)->data;
+					return value;
+				}
+				case components::SpawnInstructions::valueDifficulty: {
+					const auto& [valueArray] =
+						dynamic_cast<
+						const components::SpawnNodeData<std::array<Velocity, 4>>*
+						>(
+							currentSpawnNodePointer.get()
+						)->data;
+					return valueArray[static_cast<int>(getDifficulty(scene))];
+				}
+				default:
+					throw std::runtime_error{ "not a velocity instruction!" };
 			}
 		}
 
@@ -254,6 +277,39 @@ namespace wasp::game::systems {
 					currentSpawnNodePointer = nullptr;
 					break;
 				}
+				case components::SpawnInstructions::spawnPosVel: {
+					//cast the node data to a ComponentTupleSharedPtr
+					const auto& [componentTupleBaseSharedPtr] =
+						dynamic_cast<
+						const components::SpawnNodeData<
+						std::shared_ptr<ComponentTupleBase>
+						>*
+						>(
+							currentSpawnNodePointer.get()
+							)->data;
+					//get the position
+					math::Point2 pos{ evaluatePointNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					//get the velocity
+					Velocity vel{ evaluateVelocityNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					//add position and velocity
+					spawnList.emplace_back(
+						componentTupleBaseSharedPtr->addPosVel(pos, vel)
+					);
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
 				default:
 					throw std::runtime_error{ "unknown spawn instruction" };
 			}
@@ -302,7 +358,6 @@ namespace wasp::game::systems {
 				}
 			}
 		}
-
 	}
 
 	void SpawnSystem::operator()(Scene& scene) {

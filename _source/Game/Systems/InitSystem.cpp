@@ -11,6 +11,26 @@ namespace wasp::game::systems {
 			config::graphicsWidth / 2,
 			config::graphicsHeight / 2
 		};
+
+		int getInitPower(const GameState& gameState) {
+			if (gameState.gameMode == GameMode::campaign) {
+				return 0;
+			}
+			else {
+				switch (gameState.stage) {
+					case 1:
+						return 0;
+					case 2:
+						return config::maxPower / 2;
+					case 3:
+					case 4:
+					case 5:
+						return config::maxPower;
+					default:
+						throw std::runtime_error{ "bad stage in getInitPower!" };
+				}
+			}
+		}
 	}
 
 	void InitSystem::operator()(Scene& scene) const {
@@ -414,12 +434,12 @@ namespace wasp::game::systems {
 					config::initLives,
 					config::initBombs,
 					config::initContinues,
-					0	//todo: init power
+					getInitPower(gameState)
 				},
 				Inbound{ config::playerInbound },
 				PlayerCollisions::Target{ components::CollisionCommands::player },
 				DeathCommand{ DeathCommand::Commands::playerDeath },
-				SpawnProgramList{}	//todo: no args to spawn data for now...
+				SpawnProgramList{}
 				//todo: animation
 			).package()
 		);

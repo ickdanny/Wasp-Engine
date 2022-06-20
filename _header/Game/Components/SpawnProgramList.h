@@ -15,7 +15,6 @@ namespace wasp::game::components {
         playerPowerSplit,   //chooses node based on player power [0Node, 8Node...]
         spawn,              //cast the node data to a ComponentTupleBaseSharedPtr
         spawnPos,           //spawn at [posNode]
-        //todo: implement spawnPosVel
         spawnPosVel,        //spawn with [posNode, velNode]
 
         value,              //returns a stored value

@@ -204,6 +204,7 @@
     <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SystemUtil.cpp" />
     <ClCompile Include="_source\Game\Systems\VelocitySystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\WinSystem.cpp" />
     <ClCompile Include="_source\Game\Topics.cpp" />
     <ClCompile Include="_source\Game\Resources\MidiSequenceStorage.cpp" />
     <ClCompile Include="_source\Game\Scenes.cpp" />
@@ -256,6 +257,7 @@
     <ClInclude Include="_header\Game\Components\CollisionType.h" />
     <ClInclude Include="_header\Game\Components\DeathCommand.h" />
     <ClInclude Include="_header\Game\Components\MenuCommand.h" />
+    <ClInclude Include="_header\Game\Components\ScriptProgramList.h" />
     <ClInclude Include="_header\Game\Components\SpawnProgramList.h" />
     <ClInclude Include="_header\Game\Components\TwoFramePosition.h" />
     <ClInclude Include="_header\Game\Game.h" />
@@ -270,6 +272,7 @@
     <ClInclude Include="_header\Game\Systems\GameCommands.h" />
     <ClInclude Include="_header\Game\Systems\GameOverSystem.h" />
     <ClInclude Include="_header\Game\Systems\InboundSystem.h" />
+    <ClInclude Include="_header\Game\Systems\ComponentOrderQueue.h" />
     <ClInclude Include="_header\Game\Systems\OutboundSystem.h" />
     <ClInclude Include="_header\Game\Systems\PauseSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerBombSystem.h" />
@@ -301,6 +304,7 @@
     <ClInclude Include="_header\Game\Systems\systemInclude.h" />
     <ClInclude Include="_header\Game\Systems\SystemUtil.h" />
     <ClInclude Include="_header\Game\Systems\VelocitySystem.h" />
+    <ClInclude Include="_header\Game\Systems\WinSystem.h" />
     <ClInclude Include="_header\Game\Topics.h" />
     <ClInclude Include="_header\Game\SceneRenderer.h" />
     <ClInclude Include="_header\Game\Resources\MidiSequenceStorage.h" />

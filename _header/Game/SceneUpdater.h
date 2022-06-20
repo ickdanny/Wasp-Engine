@@ -32,6 +32,7 @@
 #include "Game/Systems/InboundSystem.h"
 #include "Game/Systems/OutboundSystem.h"
 #include "Game/Systems/GameOverSystem.h"
+#include "Game/Systems/WinSystem.h"
 
 namespace wasp::game {
 
@@ -67,6 +68,7 @@ namespace wasp::game {
 		systems::InboundSystem inboundSystem{};
 		systems::OutboundSystem outboundSystem{};
 		systems::GameOverSystem gameOverSystem;					//not initialized!
+		systems::WinSystem winSystem;							//not initialized!
 
 	public:
 		SceneUpdater(

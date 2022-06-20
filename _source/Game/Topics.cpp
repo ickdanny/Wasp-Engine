@@ -32,4 +32,5 @@ namespace wasp::game {
 	const Topic<ecs::entity::EntityHandle> SceneTopics::bossDeaths{};
 	const Topic<> SceneTopics::pauseFlag{};
 	const Topic<float> SceneTopics::lastDeltaTime{};
+	const Topic<> SceneTopics::winFlag{};
 }

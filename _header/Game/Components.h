@@ -9,6 +9,7 @@
 #include "Components/CollisionType.h"
 #include "Components/DeathCommand.h"
 #include "Components/SpawnProgramList.h"
+#include "Components/ScriptProgramList.h"
 
 namespace wasp::game {
 
@@ -122,6 +123,9 @@ namespace wasp::game {
         DeathCommand(components::DeathCommand::Commands command)
             : components::DeathCommand{ command } {
         }
+    };
+    struct ScriptProgramList : components::ScriptProgramList {
+        using components::ScriptProgramList::ScriptProgramList;
     };
 
     struct SpawnProgramList : components::SpawnProgramList {
