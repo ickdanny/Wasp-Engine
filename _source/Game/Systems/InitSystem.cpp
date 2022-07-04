@@ -13,6 +13,9 @@ namespace wasp::game::systems {
 		};
 
 		int getInitPower(const GameState& gameState) {
+			//todo: temp power
+			return 16;
+
 			if (gameState.gameMode == GameMode::campaign) {
 				return 0;
 			}

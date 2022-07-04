@@ -25,10 +25,16 @@ namespace wasp::game::systems {
 		//fields
 		resources::BitmapStorage* bitmapStoragePointer{};
 
-		ComponentTupleSharedPointer smallBulletPrototype;	//uninitialized!
-		ComponentTupleSharedPointer largeBulletPrototype;	//uninitialized!
-		SpawnNodeSharedPointer spawnSmallBulletNode;		//uninitialized!
-		SpawnNodeSharedPointer powerBucket0Node;			//uninitialized!
+		ComponentTupleSharedPointer smallBubblePrototype;	//uninitialized!
+		ComponentTupleSharedPointer largeBubblePrototype;	//uninitialized!
+		SpawnNodeSharedPointer spawnSingleSmallBubbleNode;	//uninitialized!
+		SpawnNodeSharedPointer spawnDoubleSmallBubbleNode;	//uninitialized!
+		SpawnNodeSharedPointer spawnTripleSmallBubbleNode;	//uninitialized!
+		SpawnNodeSharedPointer shotAPowerBucket0Node;		//uninitialized!
+		SpawnNodeSharedPointer shotAPowerBucket1Node;		//uninitialized!
+		SpawnNodeSharedPointer shotAPowerBucket2Node;		//uninitialized!
+
+		SpawnNodeSharedPointer shotANode;					//uninitialized!
 
 	public:
 		const SpawnProgram shotA;							//uninitialized!

@@ -47,6 +47,41 @@ namespace wasp::game::systems {
 			}
 		}
 
+		float evaluateFloatNode(NODE_HANDLER_ARGS) {
+			switch (currentSpawnNodePointer->spawnInstruction) {
+				case components::SpawnInstructions::value: {
+					const auto [value] =
+						dynamic_cast<const components::SpawnNodeData<float>*>(
+							currentSpawnNodePointer.get()
+						)->data;
+					return value;
+				}
+				case components::SpawnInstructions::valueDifficulty: {
+					const auto& [valueArray] =
+						dynamic_cast<
+						const components::SpawnNodeData<std::array<float, 4>>*
+						>(
+							currentSpawnNodePointer.get()
+						)->data;
+					return valueArray[static_cast<int>(getDifficulty(scene))];
+				}
+				case components::SpawnInstructions::entityX: {
+					math::Point2 pos{
+						scene.getDataStorage().getComponent<Position>(entityID)
+					};
+					return pos.x;
+				}
+				case components::SpawnInstructions::entityY: {
+					math::Point2 pos{
+						scene.getDataStorage().getComponent<Position>(entityID)
+					};
+					return pos.y;
+				}
+				default:
+					throw std::runtime_error{ "not a float instruction!" };
+			}
+		}
+
 		bool evaluatePredicateNode(NODE_HANDLER_ARGS) {
 			switch (currentSpawnNodePointer->spawnInstruction) {
 				case components::SpawnInstructions::tickMod: {
@@ -88,6 +123,8 @@ namespace wasp::game::systems {
 			}
 		}
 
+		Velocity evaluateVelocityNode(NODE_HANDLER_ARGS);	//forward declare
+
 		math::Point2 evaluatePointNode(NODE_HANDLER_ARGS) {
 			switch (currentSpawnNodePointer->spawnInstruction) {
 				case components::SpawnInstructions::value: {
@@ -106,8 +143,22 @@ namespace wasp::game::systems {
 						)->data;
 					return valueArray[static_cast<int>(getDifficulty(scene))];
 				}
-				case components::SpawnInstructions::entityPosition:
+				case components::SpawnInstructions::entityPosition: {
 					return scene.getDataStorage().getComponent<Position>(entityID);
+				}
+				case components::SpawnInstructions::entityOffset: {
+					math::Point2 basePos{
+						scene.getDataStorage().getComponent<Position>(entityID)
+					};
+					Velocity offset{ evaluateVelocityNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					return basePos + offset;
+				}
 				default:
 					throw std::runtime_error{ "not a point instruction!" };
 			}
@@ -136,6 +187,67 @@ namespace wasp::game::systems {
 			}
 		}
 
+		void runSpawnNodePassingPos(NODE_HANDLER_ARGS, const math::Point2& pos) {
+			switch (currentSpawnNodePointer->spawnInstruction) {
+				case components::SpawnInstructions::error:
+					//throw an error
+					throw std::runtime_error{ "spawn program error instruction" };
+				case components::SpawnInstructions::spawnPos: {
+					//cast the node data to a ComponentTupleSharedPtr
+					const auto& [componentTupleBaseSharedPtr] =
+						dynamic_cast<
+							const components::SpawnNodeData<
+								std::shared_ptr<ComponentTupleBase>
+							>*
+						>(
+							currentSpawnNodePointer.get()
+						)->data;
+
+					//add position
+					spawnList.emplace_back(
+						componentTupleBaseSharedPtr->addPosition(pos)
+					);
+
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
+				default:
+					throw std::runtime_error{ "cannot pass pos!" };
+			}
+		}
+
+		void runSpawnNodePassingPosVel(
+			NODE_HANDLER_ARGS,
+			const math::Point2& pos,
+			const Velocity& vel
+		) {
+			switch (currentSpawnNodePointer->spawnInstruction) {
+				case components::SpawnInstructions::error:
+					//throw an error
+					throw std::runtime_error{ "spawn program error instruction" };
+				case components::SpawnInstructions::spawnPosVel: {
+					//cast the node data to a ComponentTupleSharedPtr
+					const auto& [componentTupleBaseSharedPtr] =
+						dynamic_cast<
+							const components::SpawnNodeData<
+								std::shared_ptr<ComponentTupleBase>
+							>*
+						>(
+							currentSpawnNodePointer.get()
+						)->data;
+					//add position and velocity
+					spawnList.emplace_back(
+						componentTupleBaseSharedPtr->addPosVel(pos, vel)
+					);
+
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
+				default:
+					throw std::runtime_error{ "cannot pass pos and vel!" };
+			}
+		}
+
 		void runSpawnNode(NODE_HANDLER_ARGS) {
 			switch (currentSpawnNodePointer->spawnInstruction) {
 				case components::SpawnInstructions::error:
@@ -143,7 +255,7 @@ namespace wasp::game::systems {
 					throw std::runtime_error{ "spawn program error instruction" };
 				case components::SpawnInstructions::list: {
 					//run every node contained in the list
-					for (auto& linkedNodeSharedPointer
+					for (auto linkedNodeSharedPointer	//intentional copy
 						: currentSpawnNodePointer->linkedNodePointers
 					) {
 						while (linkedNodeSharedPointer) {
@@ -215,20 +327,26 @@ namespace wasp::game::systems {
 							break;
 						case 1:
 							bucket = 1;
+							break;
 						case 2:
 						case 3:
 							bucket = 2;
+							break;
 						case 4:
 						case 5:
 							bucket = 3;
+							break;
 						case 6:
 						case 7:
 							bucket = 4;
+							break;
 						case 8:
 						case 9:
 							bucket = 5;
+							break;
 						case 10:
 							bucket = 6;
+							break;
 						default:
 							throw std::runtime_error{
 								"unexpected power: " + std::to_string(playerData.power)
@@ -281,12 +399,12 @@ namespace wasp::game::systems {
 					//cast the node data to a ComponentTupleSharedPtr
 					const auto& [componentTupleBaseSharedPtr] =
 						dynamic_cast<
-						const components::SpawnNodeData<
-						std::shared_ptr<ComponentTupleBase>
-						>*
+							const components::SpawnNodeData<
+								std::shared_ptr<ComponentTupleBase>
+							>*
 						>(
 							currentSpawnNodePointer.get()
-							)->data;
+						)->data;
 					//get the position
 					math::Point2 pos{ evaluatePointNode(
 						scene,
@@ -307,6 +425,126 @@ namespace wasp::game::systems {
 					spawnList.emplace_back(
 						componentTupleBaseSharedPtr->addPosVel(pos, vel)
 					);
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
+				case components::SpawnInstructions::mirrorFormation: {
+					//get the base position
+					math::Point2 basePos{ evaluatePointNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					//get the base velocity
+					Velocity baseVel{ evaluateVelocityNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					//get the axis of symmetry (x coordinate to reflect around)
+					float axis{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[2],
+						tick,
+						spawnList
+					) };
+
+					//in point slope form, our new X n follows the equation
+					// n - a = -(o - a)
+					// where a is our axis and o is the old X
+					math::Point2 mirrorPos{ -basePos.x + (2 * axis), basePos.y };
+					Velocity mirrorVel{
+						baseVel.getMagnitude(),
+						baseVel.getAngle().flipY() 
+					};
+
+					//pass both normal and reflected pos/vel pairs
+					auto posVelConsumerSharedPointer{
+						currentSpawnNodePointer->linkedNodePointers[3]
+					};
+					while (posVelConsumerSharedPointer) {
+						runSpawnNodePassingPosVel(
+							scene,
+							entityID,
+							posVelConsumerSharedPointer,
+							tick,
+							spawnList,
+							basePos,
+							baseVel
+						);
+					}
+					posVelConsumerSharedPointer =
+						currentSpawnNodePointer->linkedNodePointers[3];
+					while (posVelConsumerSharedPointer) {
+						runSpawnNodePassingPosVel(
+							scene,
+							entityID,
+							posVelConsumerSharedPointer,
+							tick,
+							spawnList,
+							mirrorPos,
+							mirrorVel
+						);
+					}
+
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
+				case components::SpawnInstructions::mirrorPosFormation: {
+					//get the base position
+					math::Point2 basePos{ evaluatePointNode(
+						scene,
+						entityID,
+						{ currentSpawnNodePointer->linkedNodePointers[0] },
+						tick,
+						spawnList
+					) };
+					//get the axis of symmetry (x coordinate to reflect around)
+					float axis{ evaluateFloatNode(
+						scene,
+						entityID,
+						{ currentSpawnNodePointer->linkedNodePointers[1] },
+						tick,
+						spawnList
+					) };
+
+					//in point slope form, our new X n follows the equation
+					// n - a = -(o - a)
+					// where a is our axis and o is the old X
+					math::Point2 mirrorPos{ -basePos.x + (2 * axis), basePos.y };
+
+					//pass both normal and reflected pos
+					auto posConsumerSharedPointer{
+						currentSpawnNodePointer->linkedNodePointers[2]
+					};
+					while (posConsumerSharedPointer) {
+						runSpawnNodePassingPos(
+							scene,
+							entityID,
+							posConsumerSharedPointer,
+							tick,
+							spawnList,
+							basePos
+						);
+					}
+					posConsumerSharedPointer =
+						currentSpawnNodePointer->linkedNodePointers[2];
+					while (posConsumerSharedPointer) {
+						runSpawnNodePassingPos(
+							scene,
+							entityID,
+							posConsumerSharedPointer,
+							tick,
+							spawnList,
+							mirrorPos
+						);
+					}
+
 					currentSpawnNodePointer = nullptr;
 					break;
 				}

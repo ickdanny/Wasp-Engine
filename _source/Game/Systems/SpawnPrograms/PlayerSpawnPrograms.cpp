@@ -6,15 +6,20 @@ namespace wasp::game::systems {
 	using namespace components;
 
 	namespace a {
-		//small bullet data
-		constexpr float smallSpeed{ 8.0f };
+		constexpr float opacity{ 0.8f };
+
+		//small bubble data
+		constexpr float smallSpeed{ 6.0f };
 		constexpr AABB smallHitbox{ 8.0f };
 		constexpr int smallDamage{ 10 };
 		constexpr float smallOutbound{ -20.0f };
 
+		constexpr float smallSpacing{ 7.0f };
+
 		constexpr int smallMod0{ 8 };
 		constexpr int smallMod1{ 5 };
 
+		//large bubble data
 		constexpr float largeSpeed{ smallSpeed * 0.8f };
 		constexpr float largeHitbox{ 14.0f };
 		constexpr Angle unfocusedLargeAngle{ 70.0f };
@@ -25,7 +30,7 @@ namespace wasp::game::systems {
 		resources::BitmapStorage* bitmapStoragePointer
 	)
 		: bitmapStoragePointer{ bitmapStoragePointer }
-		, smallBulletPrototype{
+		, smallBubblePrototype{
 			EntityBuilder::makePosPrototype(
 				Velocity{ Vector2{ 0.0f, -a::smallSpeed } },
 				a::smallHitbox,
@@ -33,33 +38,89 @@ namespace wasp::game::systems {
 				Damage{ a::smallDamage },
 				Outbound{ a::smallOutbound },
 				SpriteInstruction{
-					bitmapStoragePointer->get(L"temp_player")->d2dBitmap
+					bitmapStoragePointer->get(L"bubble_small")->d2dBitmap,
+					{},		//offset
+					{0.0f},	//rotation
+					a::opacity
 				},
 				DrawOrder{ config::playerBulletDrawOrder }
 			).heapClone()
-		}
-		, largeBulletPrototype{
+	}
+		, largeBubblePrototype{
 			EntityBuilder::makePosVelPrototype(
 				a::largeHitbox
 				//todo: large bullet prototype
 			).heapClone()
-		}
-		, spawnSmallBulletNode{
+	}
+		, spawnSingleSmallBubbleNode{
+		/*
 			&(new SpawnNodeData<std::shared_ptr<ComponentTupleBase>>{
 				SpawnInstructions::spawnPos,
-				smallBulletPrototype
+				smallBubblePrototype
 			})->link(
 				std::make_shared<SpawnNode>(SpawnInstructions::entityPosition)
 			)
+			*/
+			SpawnProgramUtil::makeSpawnPosNode(
+				smallBubblePrototype,
+				SpawnProgramUtil::makeEntityPositionNode()
+			)
+	}
+		, spawnDoubleSmallBubbleNode{
+			SpawnProgramUtil::makeMirrorPosFormationNode(
+				SpawnProgramUtil::makeEntityOffsetNode(
+					SpawnProgramUtil::makeVelocityValueSpawnNode(
+						math::Vector2{ a::smallSpacing / 2.0f, 0.0f }
+					)
+				),
+				SpawnProgramUtil::makeEntityXNode(),
+				//pass this since linked node is a non-factor
+				spawnSingleSmallBubbleNode	
+			)
+		},
+		spawnTripleSmallBubbleNode{
+			SpawnProgramUtil::makeListNode(
+				spawnSingleSmallBubbleNode,
+				SpawnProgramUtil::makeMirrorPosFormationNode(
+					SpawnProgramUtil::makeEntityOffsetNode(
+						SpawnProgramUtil::makeVelocityValueSpawnNode(
+							math::Vector2{ a::smallSpacing, 0.0f }
+						)
+					),
+					SpawnProgramUtil::makeEntityXNode(),
+					//pass this since linked node is a non-factor
+					spawnSingleSmallBubbleNode
+				)
+			)
 		}
-		, powerBucket0Node{
+		, shotAPowerBucket0Node{
 			SpawnProgramUtil::makeIfNode(
 				SpawnProgramUtil::makeTickModNode(0, a::smallMod0),
-				spawnSmallBulletNode
+				spawnSingleSmallBubbleNode
+			)
+		}
+		, shotAPowerBucket1Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, a::smallMod1),
+				spawnSingleSmallBubbleNode
+			)
+		}
+		, shotAPowerBucket2Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, a::smallMod1),
+				spawnDoubleSmallBubbleNode
+			)
+		}
+		, shotANode{
+			&(new SpawnNode{SpawnInstructions::playerPowerSplit})
+			->link(
+				shotAPowerBucket0Node,
+				shotAPowerBucket1Node,
+				shotAPowerBucket2Node
 			)
 		}
 		, shotA{
-			powerBucket0Node, 
+			shotANode, 
 			config::playerShotMaxTick, 
 			false
 		} {

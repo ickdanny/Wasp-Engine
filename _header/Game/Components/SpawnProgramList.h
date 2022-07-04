@@ -25,9 +25,21 @@ namespace wasp::game::components {
         lastTick,           //returns tick == 1
         isPlayerFocused,    //returns true if the focus gameCommand is found
 
+        //float
+        entityX,            //returns the x coordinate of the entity
+        entityY,            //returns the y coordinate of the entity
+
         //point2
         entityPosition,     //returns the position of the entity
+        entityOffset,       //applies an offset to the position of the entity 
+                            //[offsetNode] (Velocity node)
 
+        //formations
+        mirrorFormation,    //reflects over y axis 
+                            //[posNode, velNode, axisNode, posVelConsumerNode]
+
+        mirrorPosFormation, //reflects over y axis; doesn't affect velocity
+                            //[posNode, axisNode, posConsumerNode]
         numInstructions
     };
 
