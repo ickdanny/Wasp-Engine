@@ -57,7 +57,9 @@ namespace wasp::game {
         //gameNextStageEntrySystem = new NextStageEntrySystem();
         //
         //gameAnimationSystem = new AnimationSystem(GAME_COMPONENT_TYPES);
-        //gameRotateSpriteForwardSystem = new RotateSpriteForwardSystem(GAME_COMPONENT_TYPES);
+
+		rotateSpriteForwardSystem(scene);
+
         //gameConstantSpriteRotationSystem = new ConstantSpriteRotationSystem(GAME_COMPONENT_TYPES);
         //gameSinusoidalSpriteVerticalOffsetSystem = new SinusoidalSpriteVerticalOffsetSystem(GAME_COMPONENT_TYPES);
         //gameScrollingSubImageSystem = new ScrollingSubImageSystem(GAME_COMPONENT_TYPES);

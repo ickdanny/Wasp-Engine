@@ -1,5 +1,7 @@
 #include "Game/Systems/OutboundSystem.h"
 
+#include "Logging.h"
+
 namespace wasp::game::systems {
 
     void OutboundSystem::operator()(Scene& scene) {
@@ -29,6 +31,10 @@ namespace wasp::game::systems {
         }
         for (auto& removeEntityOrder : removeEntityOrders) {
             dataStorage.removeEntity(removeEntityOrder);
+            debug::log(
+                "removed entity "
+                + std::to_string(removeEntityOrder.entityHandle.entityID)
+            );
         }
     }
 }

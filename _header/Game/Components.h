@@ -48,6 +48,8 @@ namespace wasp::game {
         int order{};
     };
 
+    struct RotateSpriteForwardMarker {};
+
     struct Position : components::TwoFramePosition {
         using components::TwoFramePosition::TwoFramePosition;
 

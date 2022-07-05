@@ -32,10 +32,10 @@ namespace wasp::game::systems {
 			)
 		};
 		auto groupIterator{ 
-			groupPointer->groupIterator<SpawnProgramList>() 
+			groupPointer->groupIterator<PlayerData, SpawnProgramList>() 
 		};
 		while (groupIterator.isValid()) {
-			auto [spawnProgramList] = *groupIterator;
+			auto [playerData, spawnProgramList] = *groupIterator;
 
 			//check to see if the player already has a shot spawn program by
 			//checking each active spawn program's max tick
@@ -49,9 +49,19 @@ namespace wasp::game::systems {
 
 			//if there is no pre-existing shot program, add one
 			if (!isPlayerAlreadyShooting) {
-				spawnProgramList.push_back(
-					{ spawnProgramsPointer->playerSpawnPrograms.shotA }
-				);
+				if (playerData.shotType == ShotType::shotA) {
+					spawnProgramList.push_back(
+						{ spawnProgramsPointer->playerSpawnPrograms.shotA }
+					);
+				}
+				else if (playerData.shotType == ShotType::shotB) {
+					spawnProgramList.push_back(
+						{ spawnProgramsPointer->playerSpawnPrograms.shotB }
+					);
+				}
+				else {
+					throw std::runtime_error("unexpected player shot type!");
+				}
 			}
 			++groupIterator;
 		}

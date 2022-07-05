@@ -2,6 +2,11 @@
 
 namespace wasp::ecs::entity {
 
+    namespace {
+        constexpr float usageCapacityLimit{ 0.75f };
+        constexpr float resizeRatio{ 2.0f };
+    }
+
     FreeEntityIDStorage::FreeEntityIDStorage(std::size_t initCapacity)
         : entityIDSet(initCapacity, false)
         , currentLiveEntities{ 0 }
@@ -54,6 +59,7 @@ namespace wasp::ecs::entity {
         if (auto ref{ entityIDSet[entityID] }) {
             //kill that entity
             ref = false;
+            --currentLiveEntities;
         }
         //otherwise something went wrong
         else {

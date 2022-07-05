@@ -29,6 +29,8 @@
 #include "Game/Systems/OverlaySystem.h"
 #include "Game/Systems/PauseSystem.h"
 
+#include "Game/Systems/RotateSpriteForwardSystem.h"
+
 #include "Game/Systems/InboundSystem.h"
 #include "Game/Systems/OutboundSystem.h"
 #include "Game/Systems/GameOverSystem.h"
@@ -64,6 +66,8 @@ namespace wasp::game {
 		systems::SpawnSystem spawnSystem{};
 		systems::OverlaySystem overlaySystem;					//not initialized!
 		systems::PauseSystem pauseSystem;						//not initialized!
+
+		systems::RotateSpriteForwardSystem rotateSpriteForwardSystem{};
 
 		systems::InboundSystem inboundSystem{};
 		systems::OutboundSystem outboundSystem{};

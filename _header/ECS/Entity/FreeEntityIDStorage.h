@@ -7,11 +7,6 @@
 
 namespace wasp::ecs::entity {
 
-    namespace {
-        constexpr float usageCapacityLimit{ 0.75f };
-        constexpr float resizeRatio{ 2.0f };
-    }
-
     class FreeEntityIDStorage {
     private:
         //typedefs

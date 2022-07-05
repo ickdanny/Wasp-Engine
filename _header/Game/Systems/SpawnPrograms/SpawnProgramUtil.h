@@ -89,6 +89,56 @@ namespace wasp::game::systems {
 			return SpawnNodeSharedPointer{ ifNodePointer };
 		}
 
+		//Returns a spawn node representing an if statement for the given predicate.
+		static SpawnNodeSharedPointer makeIfNode(
+			SpawnInstructions predicateInstruction,
+			const SpawnNodeSharedPointer& trueNodePointer
+		) {
+			SpawnNode* ifNodePointer{
+				new SpawnNode{ SpawnInstructions::condition }
+			};
+			ifNodePointer->link(
+				std::make_shared<SpawnNode>(predicateInstruction),
+				trueNodePointer
+			);
+			return SpawnNodeSharedPointer{ ifNodePointer };
+		}
+
+		//Returns a spawn node representing an if-else statement.
+		static SpawnNodeSharedPointer makeIfElseNode(
+			const SpawnNodeSharedPointer& predicateNodePointer,
+			const SpawnNodeSharedPointer& trueNodePointer,
+			const SpawnNodeSharedPointer& falseNodePointer
+		) {
+			SpawnNode* ifElseNodePointer{
+				new SpawnNode{ SpawnInstructions::conditionElse }
+			};
+			ifElseNodePointer->link(
+				predicateNodePointer,
+				trueNodePointer,
+				falseNodePointer
+			);
+			return SpawnNodeSharedPointer{ ifElseNodePointer };
+		}
+
+		//Returns a spawn node representing an if-else statement for the given 
+		//predicate.
+		static SpawnNodeSharedPointer makeIfElseNode(
+			SpawnInstructions predicateInstruction,
+			const SpawnNodeSharedPointer& trueNodePointer,
+			const SpawnNodeSharedPointer& falseNodePointer
+		) {
+			SpawnNode* ifElseNodePointer{
+				new SpawnNode{ SpawnInstructions::conditionElse }
+			};
+			ifElseNodePointer->link(
+				std::make_shared<SpawnNode>(predicateInstruction),
+				trueNodePointer,
+				falseNodePointer
+			);
+			return SpawnNodeSharedPointer{ ifElseNodePointer };
+		}
+
 		//Returns a spawn node representing a sequential list of instructions.
 		template <typename... Ts>
 		static SpawnNodeSharedPointer makeListNode(Ts... args) {
@@ -140,6 +190,66 @@ namespace wasp::game::systems {
 			return SpawnNodeSharedPointer{ spawnPosNodePointer };
 		}
 
+		//Returns a spawn node that constructs an entity based on the given spawn
+		//prototype at the position specified by a passed position.
+		static SpawnNodeSharedPointer makeSpawnPosNode(
+			std::shared_ptr<ComponentTupleBase>& spawnPrototype
+		) {
+			SpawnNode* spawnPosNodePointer{
+				new SpawnNodeData<std::shared_ptr<ComponentTupleBase>>{
+					SpawnInstructions::spawnPos,
+					spawnPrototype
+				}
+			};
+			return SpawnNodeSharedPointer{ spawnPosNodePointer };
+		}
+
+		//Returns a spawn node that constructs an entity based on the given spawn
+		//prototype at the position of the spawning entity
+		static SpawnNodeSharedPointer makeSpawnAtPosNode(
+			std::shared_ptr<ComponentTupleBase>& spawnPrototype
+		) {
+			SpawnNode* spawnPosNodePointer{
+				new SpawnNodeData<std::shared_ptr<ComponentTupleBase>>{
+					SpawnInstructions::spawnPos,
+					spawnPrototype
+				}
+			};
+			spawnPosNodePointer->link(makeEntityPositionNode());
+			return SpawnNodeSharedPointer{ spawnPosNodePointer };
+		}
+
+		//Returns a spawn node that constructs an entity based on the given spawn
+		//prototype with a passed position and velocity.
+		static SpawnNodeSharedPointer makeSpawnPosVelNode(
+			std::shared_ptr<ComponentTupleBase>& spawnPrototype
+		) {
+			SpawnNode* spawnPosVelNodePointer{
+				new SpawnNodeData<std::shared_ptr<ComponentTupleBase>>{
+					SpawnInstructions::spawnPosVel,
+					spawnPrototype
+				}
+			};
+			return SpawnNodeSharedPointer{ spawnPosVelNodePointer };
+		}
+
+		//Returns a spawn node that constructs an entity based on the given spawn
+		//prototype with the position and velocity specified by the given nodes.
+		static SpawnNodeSharedPointer makeSpawnPosVelNode(
+			std::shared_ptr<ComponentTupleBase>& spawnPrototype,
+			const SpawnNodeSharedPointer& posNode,
+			const SpawnNodeSharedPointer& velNode
+		) {
+			SpawnNode* spawnPosVelNodePointer{
+				new SpawnNodeData<std::shared_ptr<ComponentTupleBase>>{
+					SpawnInstructions::spawnPosVel,
+					spawnPrototype
+				}
+			};
+			spawnPosVelNodePointer->link(posNode, velNode);
+			return SpawnNodeSharedPointer{ spawnPosVelNodePointer };
+		}
+
 		//Returns a spawn node that passes both a base pos/vel pair and one mirrored
 		//about the given axis to a position/velocity consumer node.
 		static SpawnNodeSharedPointer makeMirrorFormationNode(
@@ -160,6 +270,21 @@ namespace wasp::game::systems {
 			return SpawnNodeSharedPointer{ mirrorFormationNodePointer };
 		}
 
+		//Returns a spawn node that passes both a base pos/vel pair and one mirrored
+		//about the spawning entity to a position/velocity consumer node.
+		static SpawnNodeSharedPointer makeMirrorFormationNode(
+			const SpawnNodeSharedPointer& posNodePointer,
+			const SpawnNodeSharedPointer& velNodePointer,
+			const SpawnNodeSharedPointer& posVelConsumerNodePointer
+		) {
+			return makeMirrorFormationNode(
+				posNodePointer,
+				velNodePointer,
+				makeEntityXNode(),
+				posVelConsumerNodePointer
+			);
+		}
+
 		//Returns a spawn node that passes both a base position and one mirrored about
 		//the given axis to a position consumer node.
 		static SpawnNodeSharedPointer makeMirrorPosFormationNode(
@@ -176,6 +301,88 @@ namespace wasp::game::systems {
 				posConsumerNodePointer
 			);
 			return SpawnNodeSharedPointer{ mirrorPosFormationNodePointer };
+		}
+
+		//Returns a spawn node that passes both a base position and one mirrored about
+		//the spawning entity to a position consumer node.
+		static SpawnNodeSharedPointer makeMirrorPosFormationNode(
+			const SpawnNodeSharedPointer& posNodePointer,
+			const SpawnNodeSharedPointer& posConsumerNodePointer
+		) {
+			return makeMirrorPosFormationNode(
+				posNodePointer,
+				makeEntityXNode(),
+				posConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that passes a velocity arc to a velocity consumer node
+		//based on the provided base velocity, symmetry, and angle offset nodes.
+		static SpawnNodeSharedPointer makeArcFormationNode(
+			const SpawnNodeSharedPointer& baseVelNodePointer,
+			const SpawnNodeSharedPointer& symmetryNodePointer,
+			const SpawnNodeSharedPointer& angleIncrementNodePointer,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			SpawnNode* arcFormationNodePointer{
+				new SpawnNode{ SpawnInstructions::arcFormation }
+			};
+			arcFormationNodePointer->link(
+				baseVelNodePointer,
+				symmetryNodePointer,
+				angleIncrementNodePointer,
+				velConsumerNodePointer
+			);
+			return SpawnNodeSharedPointer{ arcFormationNodePointer };
+		}
+
+		//Returns a spawn node that passes a velocity arc to a velocity consumer node
+		//based on the provided base velocity node, symmetry value, and angle offset 
+		//value.
+		static SpawnNodeSharedPointer makeArcFormationNode(
+			const SpawnNodeSharedPointer& baseVelNodePointer,
+			int symmetry,
+			float angleIncrement,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeArcFormationNode(
+				baseVelNodePointer,
+				makeIntValueSpawnNode(symmetry),
+				makeFloatValueSpawnNode(angleIncrement),
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that passes a velocity arc to a velocity consumer node
+		//based on the provided base velocity, symmetry, and angle values.
+		static SpawnNodeSharedPointer makeArcFormationNode(
+			const Velocity& baseVel,
+			int symmetry,
+			float angleIncrement,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeArcFormationNode(
+				makeVelocityValueSpawnNode(baseVel),
+				symmetry,
+				angleIncrement,
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that passes a velocity arc to a velocity consumer node
+		//based on the provided base velocity, symmetry, and angle values.
+		static SpawnNodeSharedPointer makeArcFormationNode(
+			const math::Vector2& baseVel,
+			int symmetry,
+			float angleIncrement,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeArcFormationNode(
+				makeVelocityValueSpawnNode(baseVel),
+				symmetry,
+				angleIncrement,
+				velConsumerNodePointer
+			);
 		}
 	};
 }

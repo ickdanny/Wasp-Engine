@@ -199,6 +199,7 @@
     <ClCompile Include="_source\Game\Systems\PlayerStateSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\RenderSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\MiscellaneousSystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\RotateSpriteForwardSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\ScriptSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\PlayerSpawnPrograms.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp" />
@@ -285,6 +286,7 @@
     <ClInclude Include="_header\Game\Systems\PlayerStateSystem.h" />
     <ClInclude Include="_header\Game\Systems\QuadTree.h" />
     <ClInclude Include="_header\Game\Systems\MiscellaneousSystem.h" />
+    <ClInclude Include="_header\Game\Systems\RotateSpriteForwardSystem.h" />
     <ClInclude Include="_header\Game\Systems\ScriptSystem.h" />
     <ClInclude Include="_header\Game\Systems\ShotType.h" />
     <ClInclude Include="_header\Game\Systems\ButtonSpriteSystem.h" />

@@ -37,6 +37,7 @@ namespace wasp::math {
 	}
 
 	Angle getAngle(const Vector2& vector) {
-		return Angle{ toDegrees(std::atan2f(vector.x, -vector.y)) };
+		//atan2 takes (y, x) and not (x, y)
+		return Angle{ toDegrees(std::atan2f(-vector.y, vector.x)) };
 	}
 }

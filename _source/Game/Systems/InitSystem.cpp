@@ -14,7 +14,7 @@ namespace wasp::game::systems {
 
 		int getInitPower(const GameState& gameState) {
 			//todo: temp power
-			return 16;
+			return 80;
 
 			if (gameState.gameMode == GameMode::campaign) {
 				return 0;
@@ -473,7 +473,8 @@ namespace wasp::game::systems {
 			dataStorage,
 			L"background_menu_pause", 
 			0, 
-			{ middleX, center.y });
+			{ middleX, center.y }
+		);
 
 		constexpr math::Point2 initPos{ middleX, 100.0f };
 		constexpr math::Vector2 offset{ 0.0f, 30.0f };
@@ -487,6 +488,7 @@ namespace wasp::game::systems {
 					selOffset,
 					0,
 					L"button_resume",
+					//the game cannot be paused during dialogue so this is safe
 					{ MenuCommandSelect::Commands::backTo, SceneNames::game },
 					{ },	//draw order
 					true
@@ -514,7 +516,7 @@ namespace wasp::game::systems {
 		setInitSelectedElement(scene, buttonHandles[0]);
 
 		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
-			{ components::MenuCommand::Commands::navFarDown }
+			{ MenuCommandSelect::Commands::backTo, SceneNames::game }
 		);
 	}
 

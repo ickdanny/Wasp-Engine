@@ -30,14 +30,30 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer spawnSingleSmallBubbleNode;	//uninitialized!
 		SpawnNodeSharedPointer spawnDoubleSmallBubbleNode;	//uninitialized!
 		SpawnNodeSharedPointer spawnTripleSmallBubbleNode;	//uninitialized!
+		SpawnNodeSharedPointer spawnLargeBubbleNode;		//uninitialized!
 		SpawnNodeSharedPointer shotAPowerBucket0Node;		//uninitialized!
 		SpawnNodeSharedPointer shotAPowerBucket1Node;		//uninitialized!
 		SpawnNodeSharedPointer shotAPowerBucket2Node;		//uninitialized!
-
+		SpawnNodeSharedPointer shotAPowerBucket3Node;		//uninitialized!
+		SpawnNodeSharedPointer shotAPowerBucket4Node;		//uninitialized!
+		SpawnNodeSharedPointer shotAPowerBucket5Node;		//uninitialized!
+		SpawnNodeSharedPointer shotAPowerBucket6Node;		//uninitialized!
 		SpawnNodeSharedPointer shotANode;					//uninitialized!
+
+		ComponentTupleSharedPointer iceShardPrototype;		//uninitialized!
+		SpawnNodeSharedPointer spawnSingleIceShardNode;		//uninitialized!
+		SpawnNodeSharedPointer shotBPowerBucket0Node;		//uninitialized!
+		SpawnNodeSharedPointer shotBPowerBucket1Node;		//uninitialized!
+		SpawnNodeSharedPointer shotBPowerBucket2Node;		//uninitialized!
+		SpawnNodeSharedPointer shotBPowerBucket3Node;		//uninitialized!
+		SpawnNodeSharedPointer shotBPowerBucket4Node;		//uninitialized!
+		SpawnNodeSharedPointer shotBPowerBucket5Node;		//uninitialized!
+		SpawnNodeSharedPointer shotBPowerBucket6Node;		//uninitialized!
+		SpawnNodeSharedPointer shotBNode;					//uninitialized!
 
 	public:
 		const SpawnProgram shotA;							//uninitialized!
+		const SpawnProgram shotB;							//uninitialized!
 
 		//Constructors
 		PlayerSpawnPrograms(

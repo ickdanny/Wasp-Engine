@@ -47,6 +47,8 @@ namespace wasp::game::systems {
 			}
 		}
 
+		bool evaluatePredicateNode(NODE_HANDLER_ARGS);	//forward declare
+
 		float evaluateFloatNode(NODE_HANDLER_ARGS) {
 			switch (currentSpawnNodePointer->spawnInstruction) {
 				case components::SpawnInstructions::value: {
@@ -76,6 +78,35 @@ namespace wasp::game::systems {
 						scene.getDataStorage().getComponent<Position>(entityID)
 					};
 					return pos.y;
+				}
+				case components::SpawnInstructions::conditionElse: {
+					//if our predicate is met, evaluate truenode
+					if (evaluatePredicateNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					)) {
+						return evaluateFloatNode(
+							scene,
+							entityID,
+							currentSpawnNodePointer->linkedNodePointers[1],
+							tick,
+							spawnList
+						);
+					}
+					//otherwise, evaluate falseNode
+					else {
+						return evaluateFloatNode(
+							scene,
+							entityID,
+							currentSpawnNodePointer->linkedNodePointers[2],
+							tick,
+							spawnList
+						);
+					}
+					break;
 				}
 				default:
 					throw std::runtime_error{ "not a float instruction!" };
@@ -182,6 +213,35 @@ namespace wasp::game::systems {
 						)->data;
 					return valueArray[static_cast<int>(getDifficulty(scene))];
 				}
+				case components::SpawnInstructions::conditionElse: {
+					//if our predicate is met, evaluate truenode
+					if (evaluatePredicateNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					)) {
+						return evaluateVelocityNode(
+							scene,
+							entityID,
+							currentSpawnNodePointer->linkedNodePointers[1],
+							tick,
+							spawnList
+						);
+					}
+					//otherwise, evaluate falseNode
+					else {
+						return evaluateVelocityNode(
+							scene,
+							entityID,
+							currentSpawnNodePointer->linkedNodePointers[2],
+							tick,
+							spawnList
+						);
+					}
+					break;
+				}
 				default:
 					throw std::runtime_error{ "not a velocity instruction!" };
 			}
@@ -206,6 +266,44 @@ namespace wasp::game::systems {
 					//add position
 					spawnList.emplace_back(
 						componentTupleBaseSharedPtr->addPosition(pos)
+					);
+
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
+				default:
+					throw std::runtime_error{ "cannot pass pos!" };
+			}
+		}
+
+		void runSpawnNodePassingVel(NODE_HANDLER_ARGS, const Velocity& vel) {
+			switch (currentSpawnNodePointer->spawnInstruction) {
+				case components::SpawnInstructions::error:
+					//throw an error
+					throw std::runtime_error{ "spawn program error instruction" };
+				case components::SpawnInstructions::spawnPosVel: {
+					//cast the node data to a ComponentTupleSharedPtr
+					const auto& [componentTupleBaseSharedPtr] =
+						dynamic_cast<
+							const components::SpawnNodeData<
+								std::shared_ptr<ComponentTupleBase>
+							>*
+						>(
+							currentSpawnNodePointer.get()
+						)->data;
+
+					//evaluate pos node
+					math::Point2 pos{ evaluatePointNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+
+					//add position and velocity
+					spawnList.emplace_back(
+						componentTupleBaseSharedPtr->addPosVel(pos, vel)
 					);
 
 					currentSpawnNodePointer = nullptr;
@@ -543,6 +641,55 @@ namespace wasp::game::systems {
 							spawnList,
 							mirrorPos
 						);
+					}
+
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
+				case components::SpawnInstructions::arcFormation: {
+					//get the base velocity
+					Velocity baseVel{ evaluateVelocityNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					int symmetry{ evaluateIntNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					float angleIncrement{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[2],
+						tick,
+						spawnList
+					) };
+					float speed{ baseVel.getMagnitude() };
+					math::Angle baseAngle{ baseVel.getAngle() };
+					math::Angle angle{
+						static_cast<float>(baseAngle) -
+						((symmetry - 1) * angleIncrement / 2.0f)
+					};
+					for (int i{ 0 }; i < symmetry; ++i) {
+						auto velConsumerSharedPointer{
+							currentSpawnNodePointer->linkedNodePointers[3]
+						};
+						while (velConsumerSharedPointer) {
+							runSpawnNodePassingVel(
+								scene,
+								entityID,
+								velConsumerSharedPointer,
+								tick,
+								spawnList,
+								Velocity{ speed, angle }
+							);
+						}
+						angle += angleIncrement;
 					}
 
 					currentSpawnNodePointer = nullptr;

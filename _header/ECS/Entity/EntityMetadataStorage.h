@@ -42,5 +42,9 @@ namespace wasp::ecs::entity {
         EntityMetadata& getMetadata(EntityID entityID);
 
         const EntityMetadata getMetadata(EntityID entityID) const;
+
+    private:
+        //helper functions
+        void resizeIfNecessary(EntityID entityID) const;
     };
 }

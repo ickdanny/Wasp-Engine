@@ -37,9 +37,10 @@ namespace wasp::game::components {
         //formations
         mirrorFormation,    //reflects over y axis 
                             //[posNode, velNode, axisNode, posVelConsumerNode]
-
         mirrorPosFormation, //reflects over y axis; doesn't affect velocity
                             //[posNode, axisNode, posConsumerNode]
+        arcFormation,       //creates an arc with the given symmetry and increment
+                            //[velNode, symmetryNode, incrementNode, velConsumerNode]
         numInstructions
     };
 

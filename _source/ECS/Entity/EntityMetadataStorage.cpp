@@ -1,6 +1,11 @@
 #include "ECS/Entity/EntityMetadataStorage.h"
 
 namespace wasp::ecs::entity {
+
+    namespace {
+        constexpr float resizeRatio{ 1.5f };
+    }
+
     //Constructs an EntityMetadataStorage with the specified number of
     //default initialized entity metadatas
     EntityMetadataStorage::EntityMetadataStorage(std::size_t initCapacity)
@@ -20,6 +25,7 @@ namespace wasp::ecs::entity {
 
     EntityHandle EntityMetadataStorage::createEntity() {
         EntityID entityID{ freeEntityIDStorage.retrieveID() };
+        resizeIfNecessary(entityID);
         auto generation{ entityMetadataList[entityID].getGeneration() };
         return { entityID, generation };
     }
@@ -41,16 +47,20 @@ namespace wasp::ecs::entity {
     }
 
     EntityMetadata& EntityMetadataStorage::getMetadata(EntityID entityID) {
-        if (entityID >= entityMetadataList.size()) {
-            entityMetadataList.resize(entityID + 1);
-        }
+        resizeIfNecessary(entityID);
         return entityMetadataList[entityID];
     }
 
     const EntityMetadata EntityMetadataStorage::getMetadata(EntityID entityID) const {
-        if (entityID >= entityMetadataList.size()) {
-            entityMetadataList.resize(entityID + 1);
-        }
+        resizeIfNecessary(entityID);
         return entityMetadataList[entityID];
+    }
+
+    void EntityMetadataStorage::resizeIfNecessary(EntityID entityID) const {
+        if (entityID >= entityMetadataList.size()) {
+            entityMetadataList.resize(
+                static_cast<EntityID>(entityID * resizeRatio)
+            );
+        }
     }
 }

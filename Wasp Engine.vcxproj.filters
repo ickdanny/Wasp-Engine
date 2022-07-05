@@ -309,6 +309,9 @@
     <ClCompile Include="_source\Game\Systems\WinSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="_source\Game\Systems\RotateSpriteForwardSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Header\windowsInclude.h">
@@ -759,6 +762,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Systems\WinSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\RotateSpriteForwardSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
