@@ -420,6 +420,11 @@ namespace wasp::game::systems {
 		};
 		const auto& gameState{ gameStateChannel.getMessages()[0] };
 
+		//create the prng
+		scene.getChannel(SceneTopics::random).addMessage(
+			config::PrngType{ gameState.prngSeed }
+		);
+
 		auto& dataStorage{ scene.getDataStorage() };
 		addForeground(dataStorage, L"overlay_frame");
 

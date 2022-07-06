@@ -20,6 +20,10 @@ namespace wasp::game::components {
         value,              //returns a stored value
         valueDifficulty,    //returns a stored value based on the difficulty
 
+        add,                //adds the result of evaluating two nodes [node1, node2]
+        uniformRandom,      //returns a uniformly random value
+                            //float: [minNode, maxNode]
+
         //predicates
         tickMod,            //returns (tick + int1) % int2 == 0  [intNode1, intNode2]
         lastTick,           //returns tick == 1
@@ -32,7 +36,11 @@ namespace wasp::game::components {
         //point2
         entityPosition,     //returns the position of the entity
         entityOffset,       //applies an offset to the position of the entity 
-                            //[offsetNode] (Velocity node)
+                            //[offsetNode] (which is a Velocity node)
+
+        //velocity
+        velocityFromPolar,  //returns the result of creating a velocity from its nodes
+                            //[magnitudeNode, angleNode]
 
         //formations
         mirrorFormation,    //reflects over y axis 

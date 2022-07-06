@@ -33,6 +33,11 @@ namespace wasp::game::systems {
 		constexpr int largeMod3{ config::playerShotMaxTick };
 		constexpr int largeMod4{ config::playerShotMaxTick / 2 };
 		constexpr int largeMod5{ config::playerShotMaxTick / 4 };
+
+		//bomb data
+		constexpr float bombHitbox{ 17.0f };
+		constexpr int bombDamage{ 1 };
+		constexpr float bombOutbound{ -50.0f };
 	}
 
 	namespace b {
@@ -55,6 +60,8 @@ namespace wasp::game::systems {
 		resources::BitmapStorage* bitmapStoragePointer
 	)
 		: bitmapStoragePointer{ bitmapStoragePointer }
+
+		//A shot
 		, smallBubblePrototype{
 			EntityBuilder::makePosPrototype(
 				Velocity{ Vector2{ 0.0f, -a::smallSpeed } },
@@ -208,6 +215,25 @@ namespace wasp::game::systems {
 			config::playerShotMaxTick,
 			false
 		}
+
+		//A bomb
+		, bombBubblePrototype{
+			EntityBuilder::makePosVelPrototype(
+				a::bombHitbox,
+				EnemyCollisions::Source{},
+				Damage{ a::bombDamage },
+				Outbound{ a::bombOutbound },
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"bubble_bomb")->d2dBitmap,
+					{},			//offset
+					{0.0f},		//rotation
+					a::opacity
+				},
+				DrawOrder{ config::playerBulletDrawOrder - 10 }
+			).heapClone()
+		}
+
+		//B shot
 		, iceShardPrototype{
 			EntityBuilder::makePosVelPrototype(
 				b::hitbox,

@@ -42,6 +42,23 @@ namespace wasp::game::systems {
 						)->data;
 					return valueArray[static_cast<int>(getDifficulty(scene))];
 				}
+				case components::SpawnInstructions::add: {
+					int a{ evaluateIntNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					int b{ evaluateIntNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					return a + b;
+				}
 				default:
 					throw std::runtime_error{ "not an int instruction!" };
 			}
@@ -67,6 +84,23 @@ namespace wasp::game::systems {
 						)->data;
 					return valueArray[static_cast<int>(getDifficulty(scene))];
 				}
+				case components::SpawnInstructions::add: {
+					float a{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					float b{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					return a + b;
+				}
 				case components::SpawnInstructions::entityX: {
 					math::Point2 pos{
 						scene.getDataStorage().getComponent<Position>(entityID)
@@ -78,6 +112,25 @@ namespace wasp::game::systems {
 						scene.getDataStorage().getComponent<Position>(entityID)
 					};
 					return pos.y;
+				}
+				case components::SpawnInstructions::uniformRandom: {
+					float min{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					float max{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					auto& prng{ scene.getChannel(SceneTopics::random).getMessages()[0] };
+					std::uniform_real_distribution<float> distribution{ min, max };
+					return distribution(prng);
 				}
 				case components::SpawnInstructions::conditionElse: {
 					//if our predicate is met, evaluate truenode
@@ -212,6 +265,40 @@ namespace wasp::game::systems {
 							currentSpawnNodePointer.get()
 						)->data;
 					return valueArray[static_cast<int>(getDifficulty(scene))];
+				}
+				case components::SpawnInstructions::add: {
+					Velocity a{ evaluateVelocityNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					Velocity b{ evaluateVelocityNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					return a + b;
+				}
+				case components::SpawnInstructions::velocityFromPolar: {
+					float magnitude{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					float angle{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					return Velocity{ magnitude, angle };
 				}
 				case components::SpawnInstructions::conditionElse: {
 					//if our predicate is met, evaluate truenode

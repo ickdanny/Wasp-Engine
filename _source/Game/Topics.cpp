@@ -24,6 +24,7 @@ namespace wasp::game {
 	const Topic<std::tuple<ecs::entity::EntityHandle, bool>>
 		SceneTopics::elementSelection{};
 	const Topic<systems::GameBuilderCommands> SceneTopics::gameBuilderCommands{};
+	const Topic<config::PrngType> SceneTopics::random{};
 	const Topic<systems::GameCommands> SceneTopics::gameCommands{};
 	const Topic<std::tuple<ecs::entity::EntityHandle, systems::PlayerStates>> 
 		SceneTopics::playerStateEntry{};

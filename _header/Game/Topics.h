@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Game/Config.h"
 #include "Channel/Topic.h"
 #include "Game/Components/MenuCommand.h"
 #include "Game/Systems/MenuNavigationCommands.h"
@@ -63,6 +64,9 @@ namespace wasp::game {
 		//todo: when we restart campaign, need to set stage back to 1 and prng to clock
 		//todo: have a GameBuilderCommand for reset
 		static const Topic<systems::GameBuilderCommands> gameBuilderCommands;
+
+		//set by InitSystem (if needed); persistent
+		static const Topic<config::PrngType> random;
 
 		//set and cleared by InputParserSystem
 		static const Topic<systems::GameCommands> gameCommands;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <random>
 #include "windowsInclude.h"
 #include "windowsD2DInclude.h"
 #include "windowsDWriteInclude.h"
@@ -36,4 +37,5 @@ namespace wasp::game::config {
 	//game
 	constexpr int updatesPerSecond{ 60 };
 	constexpr int maxUpdatesWithoutFrame{ 5 };
+	using PrngType = std::mt19937;
 }
