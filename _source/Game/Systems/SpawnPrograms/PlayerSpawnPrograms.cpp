@@ -5,6 +5,8 @@ namespace wasp::game::systems {
 	using namespace math;
 	using namespace components;
 
+	using ScriptProgramList = game::ScriptProgramList;
+
 	namespace a {
 		constexpr float opacity{ 0.8f };
 
@@ -36,8 +38,20 @@ namespace wasp::game::systems {
 
 		//bomb data
 		constexpr float bombHitbox{ 17.0f };
-		constexpr int bombDamage{ 1 };
+		constexpr int bombDamage{ 100 };
 		constexpr float bombOutbound{ -50.0f };
+
+		constexpr int bombMod{ 8 };
+		constexpr int bombModAdd{ 3 };
+
+		constexpr float bombMaxSpawnOffsetRadius{ 2.0f };
+
+		constexpr int bombWaitPeriod{ 20 };
+		constexpr int bombSpeedPeriod{ 120 };
+		constexpr float bombMaxSpeed{ 4.0f };
+		constexpr float bombAngleSpread{ 3.0f };
+
+		constexpr float bombGhostSpeed{ 3.0f };
 	}
 
 	namespace b {
@@ -217,10 +231,20 @@ namespace wasp::game::systems {
 		}
 
 		//A bomb
+		, bombBubbleScriptNode{
+			ScriptProgramUtil::makeTimerNode(
+				a::bombWaitPeriod,
+				ScriptProgramUtil::makeShiftSpeedPeriodNode(
+					a::bombMaxSpeed,
+					a::bombSpeedPeriod
+				)
+			)
+		}
 		, bombBubblePrototype{
 			EntityBuilder::makePosVelPrototype(
 				a::bombHitbox,
-				EnemyCollisions::Source{},
+				EnemyCollisions::Source{ components::CollisionCommands::death },
+				BulletCollisions::Source{},
 				Damage{ a::bombDamage },
 				Outbound{ a::bombOutbound },
 				SpriteInstruction{
@@ -229,8 +253,63 @@ namespace wasp::game::systems {
 					{0.0f},		//rotation
 					a::opacity
 				},
+				ScriptProgramList{ 
+					ScriptProgram{ bombBubbleScriptNode} 
+				},
 				DrawOrder{ config::playerBulletDrawOrder - 10 }
 			).heapClone()
+		}
+		, spawnSingleBombBubbleNode{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(a::bombModAdd, a::bombMod),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					bombBubblePrototype,
+					SpawnProgramUtil::makeEntityOffsetNode(
+						SpawnProgramUtil::makeUniformRandomCircleVelocitySpawnNode(
+							0,
+							a::bombMaxSpawnOffsetRadius
+						)
+					),
+					SpawnProgramUtil::makeVelocityFromPolarSpawnNode(
+						SpawnProgramUtil::makeFloatValueSpawnNode(0.0f),
+						SpawnProgramUtil::makeUniformRandomFloatSpawnNode(
+							SpawnProgramUtil::makeFloatValueSpawnNode(
+								90.0f - a::bombAngleSpread
+							),
+							SpawnProgramUtil::makeFloatValueSpawnNode(
+								90.0f + a::bombAngleSpread
+							)
+						)
+					)
+				)
+			)
+		}
+		, bombGhostSpawnProgram{
+			spawnSingleBombBubbleNode,
+			a::bombMod,
+			true
+		}
+		, bombGhostPrototype{
+			EntityBuilder::makeEntity(
+				Outbound{ a::bombOutbound },
+				game::SpawnProgramList{
+					bombGhostSpawnProgram
+				}
+			).heapClone()
+		}
+		, bombANode{
+			SpawnProgramUtil::makeMirrorFormationNode(
+				SpawnProgramUtil::makeEntityPositionNode(),
+				SpawnProgramUtil::makeVelocityValueSpawnNode(
+					Velocity{a::bombGhostSpeed, Angle(0)}
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(bombGhostPrototype)
+			)
+		}
+		, bombA{
+			bombANode,
+			1,
+			false
 		}
 
 		//B shot

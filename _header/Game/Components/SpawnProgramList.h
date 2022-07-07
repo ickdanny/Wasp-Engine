@@ -13,6 +13,7 @@ namespace wasp::game::components {
         condition,          //if statement [predicateNode, trueNode]
         conditionElse,      //if-else statement [predicateNode, trueNode, falseNode]
         playerPowerSplit,   //chooses node based on player power [0Node, 8Node...]
+
         spawn,              //cast the node data to a ComponentTupleBaseSharedPtr
         spawnPos,           //spawn at [posNode]
         spawnPosVel,        //spawn with [posNode, velNode]
@@ -21,6 +22,7 @@ namespace wasp::game::components {
         valueDifficulty,    //returns a stored value based on the difficulty
 
         add,                //adds the result of evaluating two nodes [node1, node2]
+        max,                //returns the max of evaluating two nodes [node1, node2]
         uniformRandom,      //returns a uniformly random value
                             //float: [minNode, maxNode]
 

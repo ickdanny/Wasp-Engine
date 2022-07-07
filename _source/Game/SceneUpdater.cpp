@@ -20,6 +20,7 @@ namespace wasp::game {
 		, buttonSpriteSystem{ &(resourceMasterStoragePointer->bitmapStorage) }
 		, gameBuilderSystem { globalChannelSetPointer }
 		, playerShotSystem{ &spawnPrograms }
+		, playerBombSystem{ &spawnPrograms }
 		, continueSystem{ globalChannelSetPointer }
 
 		, overlaySystem{ &(resourceMasterStoragePointer->bitmapStorage) }

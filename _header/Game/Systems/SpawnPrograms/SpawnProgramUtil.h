@@ -38,6 +38,36 @@ namespace wasp::game::systems {
 			};
 		}
 
+		//Returns a spawn node representing the addition of two given nodes.
+		static SpawnNodeSharedPointer makeAddSpawnNode(
+			const SpawnNodeSharedPointer& nodeA,
+			const SpawnNodeSharedPointer& nodeB
+		) {
+			SpawnNode* addNodePointer{
+				new SpawnNode{ SpawnInstructions::add }
+			};
+			addNodePointer->link(
+				nodeA,
+				nodeB
+			);
+			return SpawnNodeSharedPointer{ addNodePointer };
+		}
+
+		//Returns a spawn node representing the max of two given nodes.
+		static SpawnNodeSharedPointer makeMaxSpawnNode(
+			const SpawnNodeSharedPointer& nodeA,
+			const SpawnNodeSharedPointer& nodeB
+		) {
+			SpawnNode* maxNodePointer{
+				new SpawnNode{ SpawnInstructions::max }
+			};
+			maxNodePointer->link(
+				nodeA,
+				nodeB
+			);
+			return SpawnNodeSharedPointer{ maxNodePointer };
+		}
+
 		//Returns a spawn node representing the given velocity value.
 		static SpawnNodeSharedPointer makeVelocityValueSpawnNode(
 			const Velocity& value
@@ -60,6 +90,59 @@ namespace wasp::game::systems {
 					Velocity{ vector2 }
 				}
 			};
+		}
+
+		//Returns a spawn node representing the velocity specified by the given
+		//magnitude and angle (float) nodes.
+		static SpawnNodeSharedPointer makeVelocityFromPolarSpawnNode(
+			const SpawnNodeSharedPointer& magnitudeNodePointer,
+			const SpawnNodeSharedPointer& angleNodePolar
+		) {
+			SpawnNode* velocityFromPolarNodePointer{
+				new SpawnNode{ SpawnInstructions::velocityFromPolar }
+			};
+			velocityFromPolarNodePointer->link(
+				magnitudeNodePointer,
+				angleNodePolar
+			);
+			return SpawnNodeSharedPointer{ velocityFromPolarNodePointer };
+		}
+
+		//Returns a spawn node representing a uniformly random float.
+		static SpawnNodeSharedPointer makeUniformRandomFloatSpawnNode(
+			const SpawnNodeSharedPointer& minNode,
+			const SpawnNodeSharedPointer& maxNode
+		) {
+			SpawnNode* uniformRandomFloatNode{
+				new SpawnNode{ SpawnInstructions::uniformRandom }
+			};
+			uniformRandomFloatNode->link(minNode, maxNode);
+			return SpawnNodeSharedPointer{ uniformRandomFloatNode };
+		}
+
+		//Returns a spawn node representing a uniformly random velocity in a circle.
+		static SpawnNodeSharedPointer makeUniformRandomCircleVelocitySpawnNode(
+			float minRadius,
+			float maxRadius
+		) {
+			//credit to nubDotDev
+			SpawnNodeSharedPointer uniformRandomFloatNode{
+				makeUniformRandomFloatSpawnNode(
+					makeFloatValueSpawnNode(minRadius),
+					makeFloatValueSpawnNode(maxRadius)
+				)
+			};
+			//calculate radius by taking max of two uniformly random floats
+			SpawnNodeSharedPointer maxNode{
+				makeMaxSpawnNode(
+					uniformRandomFloatNode,
+					uniformRandomFloatNode
+				)
+			};
+			return makeVelocityFromPolarSpawnNode(
+				maxNode,
+				randomAngleNode
+			);
 		}
 
 		//Returns a spawn node representing a tick modulo predicate.
@@ -384,5 +467,8 @@ namespace wasp::game::systems {
 				velConsumerNodePointer
 			);
 		}
+
+		//some useful nodes
+		static const SpawnNodeSharedPointer randomAngleNode;
 	};
 }

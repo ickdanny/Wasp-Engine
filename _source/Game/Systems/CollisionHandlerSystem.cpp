@@ -129,6 +129,7 @@ namespace wasp::game::systems {
 
 		handleCollisions<PlayerCollisions>(scene);
 		handleCollisions<EnemyCollisions>(scene);
+		handleCollisions<BulletCollisions>(scene);
 		handleCollisions<PickupCollisions>(scene);
 	}
 }

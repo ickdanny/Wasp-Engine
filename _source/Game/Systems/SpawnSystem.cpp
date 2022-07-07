@@ -101,6 +101,23 @@ namespace wasp::game::systems {
 					) };
 					return a + b;
 				}
+				case components::SpawnInstructions::max: {
+					float a{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					float b{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					return std::max(a, b);
+				}
 				case components::SpawnInstructions::entityX: {
 					math::Point2 pos{
 						scene.getDataStorage().getComponent<Position>(entityID)

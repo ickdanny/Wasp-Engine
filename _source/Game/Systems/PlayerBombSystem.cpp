@@ -1,5 +1,6 @@
 #include "Game/Systems/PlayerBombSystem.h"
 
+#include "Game/Systems/SpawnPrograms/PlayerSpawnPrograms.h"
 #include "Logging.h"
 
 namespace wasp::game::systems {
@@ -33,8 +34,20 @@ namespace wasp::game::systems {
 		auto& spawnProgramList{ 
 			dataStorage.getComponent<SpawnProgramList>(playerHandle) 
 		};
-
-		//todo: add the bomb spawn to the spawn data
+		if (playerData.shotType == ShotType::shotA) {
+			spawnProgramList.push_back(
+				{ spawnProgramsPointer->playerSpawnPrograms.bombA }
+			);
+		}
+		else if (playerData.shotType == ShotType::shotB) {
+			//todo: bombB
+			spawnProgramList.push_back(
+				{ spawnProgramsPointer->playerSpawnPrograms.bombA }
+			);
+		}
+		else {
+			throw std::runtime_error("unexpected player shot type!");
+		}
 		debug::log("spawn bomb");
 		--playerData.bombs;
 	}

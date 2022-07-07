@@ -57,7 +57,7 @@ namespace wasp::game {
 		systems::PlayerShotSystem playerShotSystem;				//not initialized!
 		systems::CollisionHandlerSystem collisionHandlerSystem{};
 		systems::PlayerStateSystem playerStateSystem{};
-		systems::PlayerBombSystem playerBombSystem{};
+		systems::PlayerBombSystem playerBombSystem;				//not initialized!
 		systems::PlayerDeathDetectorSystem playerDeathDetectorSystem{};
 		systems::ContinueSystem continueSystem;					//not initialized!
 		systems::PlayerRespawnSystem playerRespawnSystem{};

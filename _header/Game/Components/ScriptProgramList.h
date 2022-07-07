@@ -8,23 +8,29 @@
 namespace wasp::game::components {
     enum class ScriptInstructions {
         error,                      //throws an error if reached
+        condition,                  //if statement [predicateNode, trueNode], breaks
+        stallCondition,             //if statement [predicateNode, trueNode], stalls
+        conditionElse,              //if-else statement 
+                                    //[predicateNode, trueNode, falseNode]
+
+        value,                      //returns a stored value, <T, Void>
 
         timer,                      //stalls until a timer has finished <int, ticker>
         removeVisible,              //makes the entity invisible; removes VisibleMarker
         shiftOpacityPeriod,         //Sets opacity to the target value over a period
                                     //of time
-                                    //todo: (target opacity, ticks) 
+                                    //(target opacity, ticks), (increment)
                                     //<std::tuple<float, int>, float>
         shiftScalePeriod,           //Sets scale to the target value over a period
                                     //of time
-                                    //todo: (target scale, ticks)
+                                    //(target scale, ticks), (increment)
                                     //<std::tuple<float, int>, float>
         setSpriteInstruction,       //Sets the sprite instruction component
                                     //<SpriteInstruction, Void>
         setAnimation,               //Sets the animation component, <Animation, Void>
         setDrawOrder,               //Sets the draw order component, <DrawOrder, Void>
 
-        waitForNoSpawns,            //stalls until the entity has no active spawns
+        isSpawning,                 //returns true if entity has active spawns
         
         /*
         public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_FOCUSED = new Instructions<>();
@@ -57,6 +63,7 @@ namespace wasp::game::components {
         boundaryX,                  //stalls until the entity's x coordinate is above
                                     //or below a stored value
                                     //<float, Void> (boundary value)
+
         setCollidable,              //makes the entity collidable; adds CollidableMarker
         removeCollidable,           //makes the entity uncollidable; removes marker
 
@@ -86,57 +93,58 @@ namespace wasp::game::components {
 
         setOutbound,                //sets the entity's outbound <Outbound, Void>
 
-        //todo: slow to halt -> velocity period?
+        shiftSpeedPeriod,           //sets speed to target value over period of time
+                                    //(targetSpeed, ticks), (increment)
+                                    //<std::tuple<float, int>, float>
+        shiftVelocityPeriod,        //sets velocity to target value over period of time,
+                                    //does not turn.
+                                    //(targetVelocity, ticks), (increment)
+                                    //<std::tuple<Velocity, int>, float>
+        shiftVelocityTurnPeriod,    //sets velocity to target value over period of time,
+                                    //turns shortside.
+                                    //(targetVelocity, initAngle, ticks),
+                                    //(magnitudeIncrement, angleIncrement)
+                                    //<std::tuple<Velocity, Angle, int>,
+                                    //  std::tuple<float, float>
+        shiftVelocityTurnLongPeriod,//sets velocity to target value over period of time,
+                                    //turns longside.
+                                    //(targetVelocity, initAngle, ticks),
+                                    //(magnitudeIncrement, angleIncrement)
+                                    //<std::tuple<Velocity, Angle, int>,
+                                    //  std::tuple<float, float>
+        shiftAnglePeriod,           //sets angle to target value over period of time,
+                                    //turning shortside
+                                    //(targetAngle, ticks), (angleIncrement)
+                                    //<std::tuple<Angle, int>, float>
+        shiftAngleLongPeriod,       //sets angle to target value over period of time,
+                                    //turning longside
+                                    //(targetAngle, ticks), (angleIncrement)
+                                    //<std::tuple<Angle, int>, float>
+
         /*
-
-    public static final Instructions<Integer, Double> SLOW_TO_HALT = new Instructions<>();
-    //velocity, ticks
-    public static final Instructions<Tuple2<AbstractVector, Integer>, Double> SPEED_UP_TO_VELOCITY = new Instructions<>();
-    //velocity, initAngle, ticks
-    public static final Instructions<Tuple3<AbstractVector, Angle, Integer>, Tuple2<Double, Double>>
-            SPEED_UP_AND_TURN_TO_VELOCITY = new Instructions<>();
-    public static final Instructions<Tuple3<AbstractVector, Angle, Integer>, Tuple2<Double, Double>>
-            SPEED_UP_AND_TURN_TO_VELOCITY_LONG_ANGLE = new Instructions<>();
-    //velocity, ticks
-    public static final Instructions<Tuple2<AbstractVector, Integer>, Double> SLOW_DOWN_TO_VELOCITY = new Instructions<>();
-    public static final Instructions<Tuple2<AbstractVector, Integer>, Tuple2<Double, Double>>
-            SLOW_DOWN_AND_TURN_TO_VELOCITY = new Instructions<>();
-    public static final Instructions<Tuple2<AbstractVector, Integer>, Tuple2<Double, Double>>
-            SLOW_DOWN_AND_TURN_TO_VELOCITY_LONG_ANGLE = new Instructions<>();
-
-    //angle, ticks
-    public static final Instructions<Tuple2<Angle, Integer>, Double> TURN_TO = new Instructions<>();
-    public static final Instructions<Tuple2<Angle, Integer>, Double> TURN_TO_LONG_ANGLE = new Instructions<>();
-
-    //target speed, acceleration
+            //target speed, acceleration
     public static final Instructions<Tuple2<Double, Double>, Void> ACCELERATE_TO_SPEED = new Instructions<>();
     //target speed, deceleration
     public static final Instructions<Tuple2<Double, Double>, Void> DECELERATE_TO_SPEED = new Instructions<>();
-
     //target position, maximum speed, storing init distance
     public static final Instructions<Tuple2<DoublePoint, Double>, Double> GOTO_DECELERATING = new Instructions<>();
     //bounds, minimum radius, maximum radius, maximum speed, storing target and init distance
     public static final Instructions<Tuple4<AABB, Double, Double, Double>, Tuple2<DoublePoint, Double>>
             BOUND_RADIUS_GOTO_DECELERATING = new Instructions<>();
+             public static final Instructions<Void, Void> FOLLOW_PLAYER = new Instructions<>();
+        */
 
-    public static final Instructions<Void, Void> FOLLOW_PLAYER = new Instructions<>();
+        clearField,                 //clears field of bullets
+        die,                        //triggers entity death
+        removeEntity,               //removes entity entirely, bypassing death system
 
-    public static final Instructions<Void, Void> CLEAR_FIELD = new Instructions<>();
-    public static final Instructions<Void, Void> CLEAR_FIELD_LONG = new Instructions<>();
-
-    public static final Instructions<Void, Void> DIE = new Instructions<>();
-    public static final Instructions<Void, Void> REMOVE_ENTITY = new Instructions<>();
-
-    public static final Instructions<String, Void> START_TRACK = new Instructions<>();
-
-    public static final Instructions<String, Void> SHOW_DIALOGUE = new Instructions<>();
-
-    public static final Instructions<Void, Void> NEXT_STAGE = new Instructions<>();
-
-    public static final Instructions<Void, Void> GAME_OVER = new Instructions<>();
-    public static final Instructions<Void, Void> GAME_WIN = new Instructions<>();
-    */
-
+        startTrack,                 //starts the specified track 
+                                    //<std::wstring, Void> (track id)
+        showDialogue,               //shows a dialogue screen
+                                    //std::wstring, Void> (dialogue id)
+        nextStage,                  //moves onto the next stage
+        gameOver,                   //ends the game (?)
+        gameWin,                    //sends to credits screen
         
         numInstructions
     };
@@ -160,6 +168,7 @@ namespace wasp::game::components {
         //virtual destructor
         virtual ~ScriptNode() = default;
 
+        //pushes back the specified node shared pointers in order.
         template <typename... Ts>
         ScriptNode& link(const ScriptNodeSharedPointer& node, Ts... args) {
             linkedNodePointers.push_back(node);
@@ -191,6 +200,15 @@ namespace wasp::game::components {
         }
 
         ~ScriptNodeData() override = default;
+
+        External* getDataPointer(void* voidPointer) {
+            if (voidPointer) {
+                return reinterpret_cast<External*>(voidPointer);
+            }
+            else {
+                return nullptr;
+            }
+        }
 
     protected:
         void clearData(void* voidPointer) override {

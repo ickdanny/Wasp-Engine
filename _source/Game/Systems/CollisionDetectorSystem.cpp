@@ -97,6 +97,7 @@ namespace wasp::game::systems {
 	void CollisionDetectorSystem::operator()(Scene& scene) {
 		detectCollisions<PlayerCollisions>(scene);
 		detectCollisions<EnemyCollisions>(scene);
+		detectCollisions<BulletCollisions>(scene);
 		detectCollisions<PickupCollisions>(scene);
 	}
 }

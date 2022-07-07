@@ -12,6 +12,8 @@ namespace wasp::game::systems {
 		using Point2 = math::Point2;
 		using Vector2 = math::Vector2;
 
+		using ComponentTupleSharedPointer = std::shared_ptr<ComponentTupleBase>;
+
 		using SpawnInstructions = components::SpawnInstructions;
 		using SpawnNode = components::SpawnNode;
 
@@ -19,8 +21,16 @@ namespace wasp::game::systems {
 		using SpawnNodeData = components::SpawnNodeData<T>;
 		using SpawnProgram = components::SpawnProgram;
 
-		using ComponentTupleSharedPointer = std::shared_ptr<ComponentTupleBase>;
 		using SpawnNodeSharedPointer = std::shared_ptr<SpawnNode>;
+
+		using ScriptInstructions = components::ScriptInstructions;
+		using ScriptNode = components::ScriptNode;
+
+		template <typename Internal, typename External>
+		using ScriptNodeData = components::ScriptNodeData<Internal, External>;
+		using ScriptProgram = components::ScriptProgram;
+
+		using ScriptNodeSharedPointer = std::shared_ptr<ScriptNode>;
 
 		//fields
 		resources::BitmapStorage* bitmapStoragePointer{};
@@ -42,9 +52,14 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer shotANode;					//uninitialized!
 
 		//A bomb
+		ScriptNodeSharedPointer bombBubbleScriptNode;		//uninitialized!
 		ComponentTupleSharedPointer bombBubblePrototype;	//uninitialized!
+		SpawnNodeSharedPointer spawnSingleBombBubbleNode;	//uninitialized!
+		SpawnProgram bombGhostSpawnProgram;					//uninitialized!
+		ComponentTupleSharedPointer bombGhostPrototype;		//uninitialized!
+		SpawnNodeSharedPointer bombANode;					//uninitialized!
 		
-
+		//B shot
 		ComponentTupleSharedPointer iceShardPrototype;		//uninitialized!
 		SpawnNodeSharedPointer spawnSingleIceShardNode;		//uninitialized!
 		SpawnNodeSharedPointer shotBPowerBucket0Node;		//uninitialized!
@@ -56,8 +71,15 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer shotBPowerBucket6Node;		//uninitialized!
 		SpawnNodeSharedPointer shotBNode;					//uninitialized!
 
+		//todo: B bomb
+		ComponentTupleSharedPointer snowflakePrototype;
+		SpawnNodeSharedPointer spawnSingleSnowflakeNode;
+		SpawnNodeSharedPointer bombBNode;
+
+
 	public:
 		const SpawnProgram shotA;							//uninitialized!
+		const SpawnProgram bombA;							//uninitialized!
 		const SpawnProgram shotB;							//uninitialized!
 
 		//Constructors

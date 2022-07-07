@@ -98,6 +98,7 @@ namespace wasp::game {
 
     struct PlayerCollisions : components::CollisionType<PlayerCollisions> {};
     struct EnemyCollisions : components::CollisionType<EnemyCollisions> {};
+    struct BulletCollisions : components::CollisionType<BulletCollisions> {};
     struct PickupCollisions : components::CollisionType<PickupCollisions> {};
 
     struct Hitbox : math::AABB {

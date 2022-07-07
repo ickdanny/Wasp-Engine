@@ -202,6 +202,7 @@
     <ClCompile Include="_source\Game\Systems\RotateSpriteForwardSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\ScriptSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\PlayerSpawnPrograms.cpp" />
+    <ClCompile Include="_source\Game\Systems\SpawnPrograms\SpawnProgramUtil.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SystemUtil.cpp" />
     <ClCompile Include="_source\Game\Systems\VelocitySystem.cpp" />
@@ -298,6 +299,7 @@
     <ClInclude Include="_header\Game\Systems\InputParserSystem.h" />
     <ClInclude Include="_header\Game\Systems\MenuNavigationSystem.h" />
     <ClInclude Include="_header\Game\Systems\RenderSystem.h" />
+    <ClInclude Include="_header\Game\Systems\SpawnPrograms\ScriptProgramUtil.h" />
     <ClInclude Include="_header\Game\Systems\SpawnPrograms\spawnProgramInclude.h" />
     <ClInclude Include="_header\Game\Systems\SpawnPrograms\SpawnPrograms.h" />
     <ClInclude Include="_header\Game\Systems\SpawnPrograms\SpawnProgramUtil.h" />
