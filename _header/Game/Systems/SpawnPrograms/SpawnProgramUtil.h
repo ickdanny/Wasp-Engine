@@ -316,6 +316,24 @@ namespace wasp::game::systems {
 			return SpawnNodeSharedPointer{ spawnPosVelNodePointer };
 		}
 
+
+		//Returns a spawn node that constructs an entity based on the given spawn
+		//prototype with the position specified by the given node and a passed
+		//velocity.
+		static SpawnNodeSharedPointer makeSpawnPosVelNode(
+			std::shared_ptr<ComponentTupleBase>& spawnPrototype,
+			const SpawnNodeSharedPointer& posNode
+		) {
+			SpawnNode* spawnPosVelNodePointer{
+				new SpawnNodeData<std::shared_ptr<ComponentTupleBase>>{
+					SpawnInstructions::spawnPosVel,
+					spawnPrototype
+				}
+			};
+			spawnPosVelNodePointer->link(posNode);
+			return SpawnNodeSharedPointer{ spawnPosVelNodePointer };
+		}
+
 		//Returns a spawn node that constructs an entity based on the given spawn
 		//prototype with the position and velocity specified by the given nodes.
 		static SpawnNodeSharedPointer makeSpawnPosVelNode(
@@ -455,7 +473,7 @@ namespace wasp::game::systems {
 		//Returns a spawn node that passes a velocity arc to a velocity consumer node
 		//based on the provided base velocity, symmetry, and angle values.
 		static SpawnNodeSharedPointer makeArcFormationNode(
-			const math::Vector2& baseVel,
+			const math::Vector2& baseVel,		//vec2 version
 			int symmetry,
 			float angleIncrement,
 			const SpawnNodeSharedPointer& velConsumerNodePointer
@@ -464,6 +482,52 @@ namespace wasp::game::systems {
 				makeVelocityValueSpawnNode(baseVel),
 				symmetry,
 				angleIncrement,
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that passes a velocity ring to a velocity consumer node
+		//based on the provided base velocity and symmetry nodes.
+		static SpawnNodeSharedPointer makeRingFormationNode(
+			const SpawnNodeSharedPointer& baseVelNodePointer,
+			const SpawnNodeSharedPointer& symmetryNodePointer,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			SpawnNode* ringFormationNodePointer{
+				new SpawnNode{ SpawnInstructions::ringFormation }
+			};
+			ringFormationNodePointer->link(
+				baseVelNodePointer,
+				symmetryNodePointer,
+				velConsumerNodePointer
+			);
+			return SpawnNodeSharedPointer{ ringFormationNodePointer };
+		}
+
+		//Returns a spawn node that passes a velocity ring to a velocity consumer node
+		//based on the provided base velocity and symmetry values.
+		static SpawnNodeSharedPointer makeRingFormationNode(
+			const Velocity& baseVel,
+			int symmetry,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeRingFormationNode(
+				makeVelocityValueSpawnNode(baseVel),
+				makeIntValueSpawnNode(symmetry),
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that passes a velocity ring to a velocity consumer node
+		//based on the provided base velocity and symmetry values.
+		static SpawnNodeSharedPointer makeRingFormationNode(
+			const math::Vector2& baseVel,			//vec2 version
+			int symmetry,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeRingFormationNode(
+				makeVelocityValueSpawnNode(baseVel),
+				makeIntValueSpawnNode(symmetry),
 				velConsumerNodePointer
 			);
 		}

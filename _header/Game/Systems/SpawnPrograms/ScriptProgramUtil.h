@@ -16,6 +16,101 @@ namespace wasp::game::systems {
 		using ScriptNodeSharedPointer = std::shared_ptr<ScriptNode>;
 
 	public:
+		//Returns a script node representing an if statement.
+		static ScriptNodeSharedPointer makeIfNode(
+			const ScriptNodeSharedPointer& predicateNodePointer,
+			const ScriptNodeSharedPointer& trueNodePointer
+		) {
+			ScriptNode* ifNodePointer{
+				new ScriptNode{ ScriptInstructions::condition }
+			};
+			ifNodePointer->link(
+				predicateNodePointer,
+				trueNodePointer
+			);
+			return ScriptNodeSharedPointer{ ifNodePointer };
+		}
+
+		//Returns a spawn node representing an if statement for the given predicate.
+		static ScriptNodeSharedPointer makeIfNode(
+			ScriptInstructions predicateInstruction,
+			const ScriptNodeSharedPointer& trueNodePointer
+		) {
+			ScriptNode* ifNodePointer{
+				new ScriptNode{ ScriptInstructions::condition }
+			};
+			ifNodePointer->link(
+				std::make_shared<ScriptNode>(predicateInstruction),
+				trueNodePointer
+			);
+			return ScriptNodeSharedPointer{ ifNodePointer };
+		}
+
+		//Returns a script node representing a stalling if statement.
+		static ScriptNodeSharedPointer makeStallingIfNode(
+			const ScriptNodeSharedPointer& predicateNodePointer,
+			const ScriptNodeSharedPointer& trueNodePointer
+		) {
+			ScriptNode* ifNodePointer{
+				new ScriptNode{ ScriptInstructions::stallCondition }
+			};
+			ifNodePointer->link(
+				predicateNodePointer,
+				trueNodePointer
+			);
+			return ScriptNodeSharedPointer{ ifNodePointer };
+		}
+
+		//Returns a spawn node representing a stalling if statement for the given 
+		//predicate.
+		static ScriptNodeSharedPointer makeStallingIfNode(
+			ScriptInstructions predicateInstruction,
+			const ScriptNodeSharedPointer& trueNodePointer
+		) {
+			ScriptNode* ifNodePointer{
+				new ScriptNode{ ScriptInstructions::stallCondition }
+			};
+			ifNodePointer->link(
+				std::make_shared<ScriptNode>(predicateInstruction),
+				trueNodePointer
+			);
+			return ScriptNodeSharedPointer{ ifNodePointer };
+		}
+
+		//Returns a spawn node representing an if-else statement.
+		static ScriptNodeSharedPointer makeIfElseNode(
+			const ScriptNodeSharedPointer& predicateNodePointer,
+			const ScriptNodeSharedPointer& trueNodePointer,
+			const ScriptNodeSharedPointer& falseNodePointer
+		) {
+			ScriptNode* ifElseNodePointer{
+				new ScriptNode{ ScriptInstructions::conditionElse }
+			};
+			ifElseNodePointer->link(
+				predicateNodePointer,
+				trueNodePointer,
+				falseNodePointer
+			);
+			return ScriptNodeSharedPointer{ ifElseNodePointer };
+		}
+
+		//Returns a spawn node representing an if-else statement for the given 
+		//predicate.
+		static ScriptNodeSharedPointer makeIfElseNode(
+			ScriptInstructions predicateInstruction,
+			const ScriptNodeSharedPointer& trueNodePointer,
+			const ScriptNodeSharedPointer& falseNodePointer
+		) {
+			ScriptNode* ifElseNodePointer{
+				new ScriptNode{ ScriptInstructions::conditionElse }
+			};
+			ifElseNodePointer->link(
+				std::make_shared<ScriptNode>(predicateInstruction),
+				trueNodePointer,
+				falseNodePointer
+			);
+			return ScriptNodeSharedPointer{ ifElseNodePointer };
+		}
 
 		//Returns a script node representing a timer
 		static ScriptNodeSharedPointer makeTimerNode(

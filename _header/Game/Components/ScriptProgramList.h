@@ -31,6 +31,7 @@ namespace wasp::game::components {
         setDrawOrder,               //Sets the draw order component, <DrawOrder, Void>
 
         isSpawning,                 //returns true if entity has active spawns
+        isNotSpawning,              //returns false if entity has active spawns
         
         /*
         public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_FOCUSED = new Instructions<>();

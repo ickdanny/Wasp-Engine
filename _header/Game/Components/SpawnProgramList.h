@@ -51,6 +51,8 @@ namespace wasp::game::components {
                             //[posNode, axisNode, posConsumerNode]
         arcFormation,       //creates an arc with the given symmetry and increment
                             //[velNode, symmetryNode, incrementNode, velConsumerNode]
+        ringFormation,      //creates a ring with the given symmetry
+                            //[velNode, symmetryNode, velConsumerNode]
         numInstructions
     };
 

@@ -30,6 +30,7 @@
 #include "Game/Systems/PauseSystem.h"
 
 #include "Game/Systems/RotateSpriteForwardSystem.h"
+#include "Game/Systems/SpriteSpinSystem.h"
 
 #include "Game/Systems/InboundSystem.h"
 #include "Game/Systems/OutboundSystem.h"
@@ -68,6 +69,7 @@ namespace wasp::game {
 		systems::PauseSystem pauseSystem;						//not initialized!
 
 		systems::RotateSpriteForwardSystem rotateSpriteForwardSystem{};
+		systems::SpriteSpinSystem spriteSpinSystem{};
 
 		systems::InboundSystem inboundSystem{};
 		systems::OutboundSystem outboundSystem{};

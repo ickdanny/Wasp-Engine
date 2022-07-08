@@ -40,9 +40,8 @@ namespace wasp::game::systems {
 			);
 		}
 		else if (playerData.shotType == ShotType::shotB) {
-			//todo: bombB
 			spawnProgramList.push_back(
-				{ spawnProgramsPointer->playerSpawnPrograms.bombA }
+				{ spawnProgramsPointer->playerSpawnPrograms.bombB }
 			);
 		}
 		else {

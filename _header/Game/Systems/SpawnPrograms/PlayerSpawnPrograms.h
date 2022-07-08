@@ -71,16 +71,15 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer shotBPowerBucket6Node;		//uninitialized!
 		SpawnNodeSharedPointer shotBNode;					//uninitialized!
 
-		//todo: B bomb
-		ComponentTupleSharedPointer snowflakePrototype;
-		SpawnNodeSharedPointer spawnSingleSnowflakeNode;
-		SpawnNodeSharedPointer bombBNode;
-
+		//B bomb
+		ComponentTupleSharedPointer snowflakePrototype;		//uninitialized!
+		SpawnNodeSharedPointer bombBNode;					//uninitialized!
 
 	public:
 		const SpawnProgram shotA;							//uninitialized!
 		const SpawnProgram bombA;							//uninitialized!
 		const SpawnProgram shotB;							//uninitialized!
+		const SpawnProgram bombB;							//uninitialized!
 
 		//Constructors
 		PlayerSpawnPrograms(

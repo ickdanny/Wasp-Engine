@@ -60,8 +60,8 @@ namespace wasp::game {
         //gameAnimationSystem = new AnimationSystem(GAME_COMPONENT_TYPES);
 
 		rotateSpriteForwardSystem(scene);
+		spriteSpinSystem(scene);
 
-        //gameConstantSpriteRotationSystem = new ConstantSpriteRotationSystem(GAME_COMPONENT_TYPES);
         //gameSinusoidalSpriteVerticalOffsetSystem = new SinusoidalSpriteVerticalOffsetSystem(GAME_COMPONENT_TYPES);
         //gameScrollingSubImageSystem = new ScrollingSubImageSystem(GAME_COMPONENT_TYPES);
         //gameSpriteSubImageFlagUpdateSystem = new SpriteSubImageFlagUpdateSystem(GAME_COMPONENT_TYPES);

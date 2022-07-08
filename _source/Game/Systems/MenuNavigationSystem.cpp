@@ -174,7 +174,7 @@ namespace wasp::game::systems {
 				return true;
 
 			case MenuCommand::Commands::restartGame:
-				//todo:
+				//todo: restart game
 				break;
 
 			case MenuCommand::Commands::gameOver:

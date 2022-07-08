@@ -460,7 +460,7 @@ namespace wasp::game::systems {
 				config::playerHitbox,
 				PlayerCollisions::Source{},
 				EnemyCollisions::Target{ components::CollisionCommands::damage },
-				Health{ 100 },
+				Health{ 1000 },
 				SpriteInstruction{
 					bitmapStoragePointer->get(L"temp_player")->d2dBitmap
 				},

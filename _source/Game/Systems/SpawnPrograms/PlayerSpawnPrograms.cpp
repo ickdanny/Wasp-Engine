@@ -68,6 +68,17 @@ namespace wasp::game::systems {
 
 		constexpr float unfocusedAngleIncrement{ 7.0f };
 		constexpr float focusedAngleIncrement{ 4.0f };
+
+		//bomb data
+		constexpr float bombHitbox{ 17.0f };
+		constexpr int bombDamage{ 1 };
+		constexpr float bombOutbound{ -50.0f };
+
+		constexpr float bombSpeed{ 1.0f };
+
+		constexpr float bombSpin{ 1.0f };
+		
+		constexpr int bombSymmetry{ 18 };
 	}
 
 	PlayerSpawnPrograms::PlayerSpawnPrograms(
@@ -475,6 +486,40 @@ namespace wasp::game::systems {
 		, shotB{
 			shotBNode,
 			config::playerShotMaxTick,
+			false
+		}
+
+		//B bomb
+		, snowflakePrototype{
+			EntityBuilder::makePosVelPrototype(
+				b::bombHitbox,
+				EnemyCollisions::Source{},
+				BulletCollisions::Source{},
+				Damage{ b::bombDamage },
+				Outbound{ b::bombOutbound },
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"snowflake")->d2dBitmap,
+					{},			//offset
+					{0.0f},		//rotation
+					b::opacity
+				},
+				SpriteSpin{ b::bombSpin },
+				DrawOrder{ config::playerBulletDrawOrder - 10 }
+			).heapClone()
+		}
+		, bombBNode{
+			SpawnProgramUtil::makeRingFormationNode(
+				Vector2{ 0.0f, b::bombSpeed },
+				b::bombSymmetry,
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					snowflakePrototype,
+					SpawnProgramUtil::makeEntityPositionNode()
+				)
+			)
+		}
+		, bombB{
+			bombBNode,
+			1,
 			false
 		}
 		{

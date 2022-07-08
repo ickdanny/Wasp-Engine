@@ -799,6 +799,48 @@ namespace wasp::game::systems {
 					currentSpawnNodePointer = nullptr;
 					break;
 				}
+				case components::SpawnInstructions::ringFormation: {
+					//get the base velocity
+					Velocity baseVel{ evaluateVelocityNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					int symmetry{ evaluateIntNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+
+					float speed{ baseVel.getMagnitude() };
+					math::Angle angle{ baseVel.getAngle() };
+
+					float angleIncrement{ math::fullAngleDivide(symmetry) };
+
+					for (int i{ 0 }; i < symmetry; ++i) {
+						auto velConsumerSharedPointer{
+							currentSpawnNodePointer->linkedNodePointers[2]
+						};
+						while (velConsumerSharedPointer) {
+							runSpawnNodePassingVel(
+								scene,
+								entityID,
+								velConsumerSharedPointer,
+								tick,
+								spawnList,
+								Velocity{ speed, angle }
+							);
+						}
+						angle += angleIncrement;
+					}
+
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
 				default:
 					throw std::runtime_error{ "unknown spawn instruction" };
 			}

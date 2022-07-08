@@ -315,6 +315,9 @@
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\SpawnProgramUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="_source\Game\Systems\SpriteSpinSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Header\windowsInclude.h">
@@ -771,6 +774,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Systems\SpawnPrograms\ScriptProgramUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\SpriteSpinSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

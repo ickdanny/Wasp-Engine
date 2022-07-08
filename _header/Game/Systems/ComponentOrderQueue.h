@@ -12,13 +12,15 @@ namespace wasp::game::systems {
 
 		//inner types
 		struct QueuedOrderBase {
-			virtual ~QueuedOrderBase() = 0;
+			virtual ~QueuedOrderBase() = default;
 			virtual void apply(ecs::DataStorage& dataStorage) = 0;
 		};
 
 		template <typename T>
 		struct QueuedAddComponentOrder : QueuedOrderBase {
 			ecs::AddComponentOrder<T> addComponentOrder;
+
+			~QueuedAddComponentOrder() override = default;
 
 			void apply(ecs::DataStorage& dataStorage) override {
 				dataStorage.addComponent(addComponentOrder);
@@ -29,6 +31,8 @@ namespace wasp::game::systems {
 		struct QueuedSetComponentOrder : QueuedOrderBase {
 			ecs::SetComponentOrder<T> setComponentOrder;
 
+			~QueuedSetComponentOrder() override = default;
+
 			void apply(ecs::DataStorage& dataStorage) override {
 				dataStorage.setComponent(setComponentOrder);
 			}
@@ -38,8 +42,28 @@ namespace wasp::game::systems {
 		struct QueuedRemoveComponentOrder : QueuedOrderBase {
 			ecs::RemoveComponentOrder<T> removeComponentOrder;
 
+			QueuedRemoveComponentOrder(const EntityHandle& entityHandle)
+				: removeComponentOrder{ entityHandle } {
+			}
+
+			~QueuedRemoveComponentOrder() override = default;
+
 			void apply(ecs::DataStorage& dataStorage) override {
 				dataStorage.removeComponent(removeComponentOrder);
+			}
+		};
+
+		struct QueuedRemoveEntityOrder : QueuedOrderBase {
+			ecs::RemoveEntityOrder removeEntityOrder;
+
+			QueuedRemoveEntityOrder(const EntityHandle& entityHandle)
+				: removeEntityOrder{ entityHandle } {
+			}
+
+			~QueuedRemoveEntityOrder() override = default;
+
+			void apply(ecs::DataStorage& dataStorage) override {
+				dataStorage.removeEntity(removeEntityOrder);
 			}
 		};
 
@@ -75,7 +99,17 @@ namespace wasp::game::systems {
 			queuedOrders.emplace_back(
 				std::move(
 					std::unique_ptr<QueuedOrderBase>(
-						new QueuedRemoveComponentOrder<T>(entityHandle)
+						new QueuedRemoveComponentOrder<T>{ entityHandle }
+					)
+				)
+			);
+		}
+
+		void queueRemoveEntity(EntityHandle entityHandle) {
+			queuedOrders.emplace_back(
+				std::move(
+					std::unique_ptr<QueuedOrderBase>(
+						new QueuedRemoveEntityOrder{ entityHandle }
 					)
 				)
 			);

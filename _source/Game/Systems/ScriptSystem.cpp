@@ -35,6 +35,16 @@ namespace wasp::game::systems {
 					}
 					return false;
 				}
+				case ScriptInstructions::isNotSpawning: {
+					const auto& dataStorage{ scene.getDataStorage() };
+					if (dataStorage.containsComponent<SpawnProgramList>(entityID)) {
+						const auto& spawnProgramList{
+							dataStorage.getComponent<SpawnProgramList>(entityID)
+						};
+						return spawnProgramList.size() == 0;
+					}
+					return true;
+				}
 				default:
 					throw std::runtime_error{ "not a predicate instruction!" };
 			}
@@ -198,6 +208,11 @@ namespace wasp::game::systems {
 					else {
 						return false;
 					}
+				}
+				case ScriptInstructions::removeEntity: {
+					componentOrderQueue.queueRemoveEntity(
+						scene.getDataStorage().makeHandle(entityID)
+					);
 				}
 				default:
 					throw std::runtime_error{ "unhandled script instruction!" };

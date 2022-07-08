@@ -49,6 +49,9 @@ namespace wasp::game {
     };
 
     struct RotateSpriteForwardMarker {};
+    struct SpriteSpin {
+        float spin{};
+    };
 
     struct Position : components::TwoFramePosition {
         using components::TwoFramePosition::TwoFramePosition;
@@ -133,6 +136,10 @@ namespace wasp::game {
 
     struct SpawnProgramList : components::SpawnProgramList {
         using components::SpawnProgramList::SpawnProgramList;
+    };
+
+    struct DeathSpawn {
+        SpawnProgramList spawnProgramList{};
     };
 
     struct Inbound {
