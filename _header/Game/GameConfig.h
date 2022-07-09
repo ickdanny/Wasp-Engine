@@ -71,8 +71,12 @@ namespace wasp::game::config {
     public static final int SPECIAL_PLAYER_BULLET_DAMAGE_HIGH = 185;
 
 //PICKUPS
-    public static final double PICKUP_INIT_SPEED_BASE = 3.5;
-    public static final double PICKUP_INIT_SPEED_MULTI = .7;
+    */
+    constexpr float pickupInitSpeedBase{ 3.5f };
+    constexpr float pickupInitSpeedMulti{ .7f };
+
+    /*
+    
     public static final double PICKUP_FINAL_SPEED = -4;
     public static final double PICKUP_DECELERATION = .08;
     public static final double PICKUP_INBOUND = 15;
@@ -125,7 +129,8 @@ namespace wasp::game::config {
 
 	//graphics
 	constexpr int backgroundDrawOrder{ -10000 };
-	constexpr int playerDrawOrder{ 0 };
     constexpr int playerBulletDrawOrder{ -5000 };
+    constexpr int pickupDrawOrder{ -4000 };
+	constexpr int playerDrawOrder{ 0 };
 	constexpr int foregroundDrawOrder{ 10000 };
 }

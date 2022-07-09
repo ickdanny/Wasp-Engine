@@ -209,10 +209,72 @@ namespace wasp::game::systems {
 						return false;
 					}
 				}
+				case ScriptInstructions::shiftSpeedIncrement: {
+					Velocity& velocity{
+						scene.getDataStorage().getComponent<Velocity>(entityID)
+					};
+					float oldMagnitude{ velocity.getMagnitude() };
+
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<
+							std::tuple<float, float>, 
+							utility::Void
+						>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+
+					auto [targetSpeed, increment] = dataNodePointer->internalData;
+
+					bool hasReachedSpeed{ false };
+
+					//if we are at speed already, move to next instruction
+					if (oldMagnitude == targetSpeed) {
+						hasReachedSpeed = true;
+					}
+					else {
+						//increment velocity
+						float newMagnitude{ oldMagnitude + increment };
+
+						//check to see if we have reached target speed
+						if (increment > 0 && newMagnitude > targetSpeed) {
+							hasReachedSpeed = true;
+							velocity.setMagnitude(targetSpeed);
+						}
+						else if (increment < 0 && newMagnitude < targetSpeed) {
+							hasReachedSpeed = true;
+							velocity.setMagnitude(targetSpeed);
+						}
+						else {
+							velocity.setMagnitude(newMagnitude);
+						}
+					}
+					if (hasReachedSpeed) {
+						if (currentScriptNodePointer->linkedNodePointers.size() > 0) {
+							currentScriptNodePointer
+								= dataNodePointer->linkedNodePointers[0];
+						}
+						else {
+							currentScriptNodePointer = nullptr;
+						}
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
 				case ScriptInstructions::removeEntity: {
 					componentOrderQueue.queueRemoveEntity(
 						scene.getDataStorage().makeHandle(entityID)
 					);
+					if (currentScriptNodePointer->linkedNodePointers.size() > 0) {
+						currentScriptNodePointer
+							= currentScriptNodePointer->linkedNodePointers[0];
+					}
+					else {
+						currentScriptNodePointer = nullptr;
+					}
+					return true;
 				}
 				default:
 					throw std::runtime_error{ "unhandled script instruction!" };

@@ -34,6 +34,7 @@ namespace wasp::game::components {
         //float
         entityX,            //returns the x coordinate of the entity
         entityY,            //returns the y coordinate of the entity
+        pickupInitSpeed,    //special function for determining initial speed of pickup
 
         //point2
         entityPosition,     //returns the position of the entity

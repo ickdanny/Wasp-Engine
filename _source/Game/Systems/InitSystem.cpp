@@ -464,6 +464,8 @@ namespace wasp::game::systems {
 				SpriteInstruction{
 					bitmapStoragePointer->get(L"temp_player")->d2dBitmap
 				},
+				DeathCommand{ DeathCommand::Commands::deathSpawn },
+				DeathSpawn{ {spawnProgramsPointer->pickupSpawnPrograms.smallPower} },
 				DrawOrder{ config::playerDrawOrder }
 			).package()
 		);

@@ -245,6 +245,11 @@ namespace wasp::game::systems {
 			return std::make_shared<SpawnNode>(SpawnInstructions::entityY);
 		}
 
+		//Returns a spawn node representing the pickup init speed function
+		static SpawnNodeSharedPointer makePickupInitSpeedNode() {
+			return std::make_shared<SpawnNode>(SpawnInstructions::pickupInitSpeed);
+		}
+
 		//Returns a spawn node representing the current position of the entity plus
 		//an offset given by the velocity-valued offsetNode.
 		static SpawnNodeSharedPointer makeEntityOffsetNode(

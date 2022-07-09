@@ -149,6 +149,18 @@ namespace wasp::game::systems {
 					std::uniform_real_distribution<float> distribution{ min, max };
 					return distribution(prng);
 				}
+				case components::SpawnInstructions::pickupInitSpeed: {
+					math::Point2 pos{
+						scene.getDataStorage().getComponent<Position>(entityID)
+					};
+
+					//higher = lower speed
+					float heightRatio{ 
+						(pos.y - config::gameOffset.y) / config::gameHeight 
+					};
+					float speedMulti{ 1 + (heightRatio * config::pickupInitSpeedMulti) };
+					return config::pickupInitSpeedBase * speedMulti;
+				}
 				case components::SpawnInstructions::conditionElse: {
 					//if our predicate is met, evaluate truenode
 					if (evaluatePredicateNode(

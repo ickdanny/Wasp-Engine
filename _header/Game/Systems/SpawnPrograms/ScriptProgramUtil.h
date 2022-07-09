@@ -132,7 +132,8 @@ namespace wasp::game::systems {
 			return ScriptNodeSharedPointer{ timerNodePointer };
 		}
 
-		//Returns a script node representing a speed shift period.
+		//Returns a script node representing a speed shift period with the given values
+		//of targetSpeed and ticks.
 		static ScriptNodeSharedPointer makeShiftSpeedPeriodNode(
 			float targetSpeed,
 			int ticks,
@@ -148,6 +149,25 @@ namespace wasp::game::systems {
 				shiftSpeedPeriodNodePointer->link(next);
 			}
 			return ScriptNodeSharedPointer{ shiftSpeedPeriodNodePointer };
+		}
+
+		//Returns a script node representing a speed increment shift with the given
+		//values of targetSpeed and increment.
+		static ScriptNodeSharedPointer makeShiftSpeedIncrementNode(
+			float targetSpeed,
+			float increment,
+			ScriptNodeSharedPointer next = nullptr
+		) {
+			ScriptNode* shiftSpeedIncrementNodePointer{
+				new ScriptNodeData<std::tuple<float, float>, utility::Void>{
+					ScriptInstructions::shiftSpeedIncrement,
+					std::tuple{ targetSpeed, increment }
+				}
+			};
+			if (next) {
+				shiftSpeedIncrementNodePointer->link(next);
+			}
+			return ScriptNodeSharedPointer{ shiftSpeedIncrementNodePointer };
 		}
 	};
 }

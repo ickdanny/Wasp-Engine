@@ -122,11 +122,10 @@ namespace wasp::game::components {
                                     //(targetAngle, ticks), (angleIncrement)
                                     //<std::tuple<Angle, int>, float>
 
+        shiftSpeedIncrement,        //sets speed to target value via increment
+                                    //(targetSpeed, increment)
+                                    //<std::tuple<float, float>, Void>
         /*
-            //target speed, acceleration
-    public static final Instructions<Tuple2<Double, Double>, Void> ACCELERATE_TO_SPEED = new Instructions<>();
-    //target speed, deceleration
-    public static final Instructions<Tuple2<Double, Double>, Void> DECELERATE_TO_SPEED = new Instructions<>();
     //target position, maximum speed, storing init distance
     public static final Instructions<Tuple2<DoublePoint, Double>, Double> GOTO_DECELERATING = new Instructions<>();
     //bounds, minimum radius, maximum radius, maximum speed, storing target and init distance
