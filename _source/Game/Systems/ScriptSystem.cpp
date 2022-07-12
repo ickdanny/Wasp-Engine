@@ -50,6 +50,8 @@ namespace wasp::game::systems {
 			}
 		}
 
+		//todo: for external data, clear at the end (in case we loop)
+
 		bool runScriptNode(NODE_HANDLER_ARGS) {
 			switch (currentScriptNodePointer->scriptInstruction) {
 				case ScriptInstructions::error:

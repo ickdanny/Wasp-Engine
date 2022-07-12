@@ -14,7 +14,7 @@ namespace wasp::game::systems {
 
 		int getInitPower(const GameState& gameState) {
 			//todo: temp power
-			return 80;
+			return 40;
 
 			if (gameState.gameMode == GameMode::campaign) {
 				return 0;
@@ -446,6 +446,7 @@ namespace wasp::game::systems {
 				},
 				Inbound{ config::playerInbound },
 				PlayerCollisions::Target{ components::CollisionCommands::player },
+				PickupCollisions::Target{},
 				DeathCommand{ DeathCommand::Commands::playerDeath },
 				SpawnProgramList{}
 				//todo: animation

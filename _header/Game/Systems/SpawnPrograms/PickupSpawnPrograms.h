@@ -41,9 +41,18 @@ namespace wasp::game::systems {
 		//pickups
 		ComponentTupleSharedPointer smallPowerPrototype;	//uninitialized!
 		SpawnNodeSharedPointer spawnSmallPowerNode;			//uninitialized!
+		ComponentTupleSharedPointer largePowerPrototype;	//uninitialized!
+		SpawnNodeSharedPointer spawnLargePowerNode;			//uninitialized!
+		ComponentTupleSharedPointer lifePrototype;			//uninitialized!
+		SpawnNodeSharedPointer spawnLifeNode;				//uninitialized!
+		ComponentTupleSharedPointer bombPrototype;			//uninitialized!
+		SpawnNodeSharedPointer spawnBombNode;				//uninitialized!
 
 	public:
 		const SpawnProgram smallPower;						//uninitialized!
+		const SpawnProgram largePower;						//uninitialized!
+		const SpawnProgram life;							//uninitialized!
+		const SpawnProgram bomb;							//uninitialized!
 
 		//Constructors
 		PickupSpawnPrograms(

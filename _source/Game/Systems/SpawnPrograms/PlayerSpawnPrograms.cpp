@@ -41,8 +41,8 @@ namespace wasp::game::systems {
 		constexpr int bombDamage{ 100 };
 		constexpr float bombOutbound{ -50.0f };
 
-		constexpr int bombMod{ 8 };
-		constexpr int bombModAdd{ 3 };
+		constexpr int bombMod{ 5 };
+		constexpr int bombModAdd{ 2 };
 
 		constexpr float bombMaxSpawnOffsetRadius{ 2.0f };
 

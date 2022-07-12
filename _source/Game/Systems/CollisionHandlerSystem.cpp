@@ -51,7 +51,39 @@ namespace wasp::game::systems {
 			const ecs::entity::EntityHandle& pickupHandle,
 			const ecs::entity::EntityHandle& collidedHandle
 		) {
-			//todo: handle pickups
+			auto& dataStorage{ scene.getDataStorage() };
+
+			auto& playerData{ dataStorage.getComponent<PlayerData>(collidedHandle) };
+			auto& pickupType{ dataStorage.getComponent<PickupType>(pickupHandle).type };
+			switch (pickupType) {
+				case PickupType::Types::life:
+					if (playerData.lives < config::maxLives) {
+						++playerData.lives;
+					}
+					break;
+				case PickupType::Types::bomb:
+					if (playerData.bombs < config::maxBombs) {
+						++playerData.bombs;
+					}
+					break;
+				case PickupType::Types::powerSmall:
+				case PickupType::Types::powerLarge:
+					if (playerData.power < config::maxPower) {
+						int powerGain{ 
+							pickupType == PickupType::Types::powerSmall 
+								? config::smallPowerGain 
+								: config::largePowerGain
+						};
+						playerData.power += powerGain;
+						if (playerData.power >= config::maxPower) {
+							playerData.power = config::maxPower;
+							//todo: max power bullet clear?
+						}
+					}
+			}
+
+			//kill the pickup
+			//handleDeathCommand(scene, pickupHandle);
 		}
 
 		void handleCollisionCommand(

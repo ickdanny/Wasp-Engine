@@ -10,6 +10,7 @@
 #include "Components/DeathCommand.h"
 #include "Components/SpawnProgramList.h"
 #include "Components/ScriptProgramList.h"
+#include "Components/PickupType.h"
 
 namespace wasp::game {
 
@@ -43,6 +44,9 @@ namespace wasp::game {
     struct VisibleMarker {};
     struct SpriteInstruction : graphics::BitmapDrawInstruction {
         using graphics::BitmapDrawInstruction::BitmapDrawInstruction;
+    };
+    struct SubImage : math::Rectangle {
+        using math::Rectangle::Rectangle;
     };
     struct DrawOrder {
         int order{};
@@ -122,6 +126,11 @@ namespace wasp::game {
     struct Damage {
         int value{};
     };
+
+    struct PickupType : components::PickupType {
+        using components::PickupType::PickupType;
+    };
+
     struct DeathCommand : components::DeathCommand {
         using components::DeathCommand::DeathCommand;
 

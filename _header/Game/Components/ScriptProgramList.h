@@ -141,7 +141,7 @@ namespace wasp::game::components {
         startTrack,                 //starts the specified track 
                                     //<std::wstring, Void> (track id)
         showDialogue,               //shows a dialogue screen
-                                    //std::wstring, Void> (dialogue id)
+                                    //<std::wstring, Void> (dialogue id)
         nextStage,                  //moves onto the next stage
         gameOver,                   //ends the game (?)
         gameWin,                    //sends to credits screen

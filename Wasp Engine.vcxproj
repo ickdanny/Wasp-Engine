@@ -261,6 +261,7 @@
     <ClInclude Include="_header\Game\Components\CollisionType.h" />
     <ClInclude Include="_header\Game\Components\DeathCommand.h" />
     <ClInclude Include="_header\Game\Components\MenuCommand.h" />
+    <ClInclude Include="_header\Game\Components\PickupType.h" />
     <ClInclude Include="_header\Game\Components\ScriptProgramList.h" />
     <ClInclude Include="_header\Game\Components\SpawnProgramList.h" />
     <ClInclude Include="_header\Game\Components\TwoFramePosition.h" />

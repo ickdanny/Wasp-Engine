@@ -34,6 +34,9 @@ namespace wasp::game::systems {
 			entityIDList.begin(),
 			entityIDList.end(),
 			[](const IDOrderTuple& a, const IDOrderTuple& b) {
+				if (std::get<1>(a).order == std::get<1>(b).order) {
+					return std::get<0>(a) < std::get<0>(b);
+				}
 				return std::get<1>(a).order < std::get<1>(b).order;
 			}
 		);
@@ -77,10 +80,26 @@ namespace wasp::game::systems {
 					dataStorage.getComponent<Velocity>(entityID)
 				};
 				const auto& lerpPosition{ position + velocity * deltaTime };
-				drawSprite(lerpPosition, spriteInstruction);
+				if (dataStorage.containsComponent<SubImage>(entityID)) {
+					const auto& subImage{
+						dataStorage.getComponent<SubImage>(entityID)
+					};
+					drawSprite(lerpPosition, spriteInstruction, subImage);
+				}
+				else {
+					drawSprite(lerpPosition, spriteInstruction);
+				}
 			}
 			else {
-				drawSprite(position, spriteInstruction);
+				if (dataStorage.containsComponent<SubImage>(entityID)) {
+					const auto& subImage{
+						dataStorage.getComponent<SubImage>(entityID)
+					};
+					drawSprite(position, spriteInstruction, subImage);
+				}
+				else {
+					drawSprite(position, spriteInstruction);
+				}
 			}
 		}
 	}
@@ -90,5 +109,13 @@ namespace wasp::game::systems {
 		const SpriteInstruction& drawInstruction
 	) {
 		windowPainterPointer->drawBitmap(position, drawInstruction);
+	}
+
+	void RenderSystem::drawSprite(
+		const Position& position,
+		const SpriteInstruction& drawInstruction,
+		const SubImage& subImage
+	) {
+		windowPainterPointer->drawSubBitmap(position, drawInstruction, subImage);
 	}
 }

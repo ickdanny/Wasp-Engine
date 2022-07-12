@@ -28,7 +28,10 @@ namespace wasp::game::systems {
 		);
 		void handlePlayerDeath(Scene& scene, const EntityHandle& playerHandle);
 		void handleBossDeath(Scene& scene, const EntityHandle& bossHandle);
-		void handleDeathSpawn(Scene& scene, const EntityHandle& entityHandle);
-		
+		void handleDeathSpawn(
+			Scene& scene,
+			const EntityHandle& entityHandle,
+			bool removeEntity
+		);
 	};
 }

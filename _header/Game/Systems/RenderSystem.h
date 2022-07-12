@@ -8,7 +8,8 @@ namespace wasp::game::systems {
 	class RenderSystem {
 	private:
 		//typedefs
-		using IDOrderTuple = std::tuple<ecs::entity::EntityID, DrawOrder>;
+		using EntityID = ecs::entity::EntityID;
+		using IDOrderTuple = std::tuple<EntityID, DrawOrder>;
 
 		//fields
 		window::WindowPainter* windowPainterPointer{};
@@ -32,6 +33,12 @@ namespace wasp::game::systems {
 		void drawSprite(
 			const Position& position,
 			const SpriteInstruction& drawInstruction
+		);
+
+		void drawSprite(
+			const Position& position,
+			const SpriteInstruction& drawInstruction,
+			const SubImage& subImage
 		);
 	};
 }

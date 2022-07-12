@@ -75,6 +75,13 @@ namespace wasp::game::systems {
 		ComponentTupleSharedPointer snowflakePrototype;		//uninitialized!
 		SpawnNodeSharedPointer bombBNode;					//uninitialized!
 
+		//death
+		ComponentTupleSharedPointer clearPrototype;			//uninitialized!
+		//todo: implement player death spawns
+		SpawnNodeSharedPointer spawnClearNode;				//uninitialized!
+		SpawnNodeSharedPointer spawnPowerNode;				//uninitialized!
+		SpawnNodeSharedPointer deathSpawnNode;				//uninitialized!
+
 	public:
 		const SpawnProgram shotA;							//uninitialized!
 		const SpawnProgram bombA;							//uninitialized!

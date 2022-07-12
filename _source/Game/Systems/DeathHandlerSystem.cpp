@@ -7,6 +7,29 @@
 
 namespace wasp::game::systems {
 
+	namespace {
+
+		//utility for player death
+		constexpr int lossRatio{ 4 };
+		constexpr int minLoss{ 4 };
+		constexpr int maxLoss{ 10 };
+
+		int powerLoss(int initPower) {
+			if (initPower <= minLoss) {
+				return initPower;
+			}
+
+			int loss{ initPower / lossRatio };
+			if (loss < minLoss) {
+				loss = minLoss;
+			}
+			else if (loss > maxLoss) {
+				loss = maxLoss;
+			}
+			return loss;
+		}
+	}
+
 	DeathHandlerSystem::DeathHandlerSystem()
 		: ghostProgram{
 			ScriptProgramUtil::makeStallingIfNode(
@@ -51,7 +74,7 @@ namespace wasp::game::systems {
 				handleBossDeath(scene, entityHandle);
 				break;
 			case DeathCommand::Commands::deathSpawn:
-				handleDeathSpawn(scene, entityHandle);
+				handleDeathSpawn(scene, entityHandle, true);
 				break;
 		}
 	}
@@ -60,8 +83,20 @@ namespace wasp::game::systems {
 		Scene& scene,
 		const EntityHandle& playerHandle
 	) {
-		//todo: handle player death
-		debug::log("player death");
+		auto& dataStorage{ scene.getDataStorage() };
+
+		//remove spawn component
+		dataStorage.removeComponent<SpawnProgramList>(playerHandle);
+
+		//spawn blocker + pickups
+		handleDeathSpawn(scene, playerHandle, false);
+		//todo: add death spawn for player
+
+		//remove power
+		PlayerData& playerData{
+			dataStorage.getComponent<PlayerData>(playerHandle)
+		};
+		playerData.power -= powerLoss(playerData.power);
 	}
 
 	void DeathHandlerSystem::handleBossDeath(
@@ -73,7 +108,8 @@ namespace wasp::game::systems {
 
 	void DeathHandlerSystem::handleDeathSpawn(
 		Scene& scene,
-		const EntityHandle& entityHandle
+		const EntityHandle& entityHandle,
+		bool removeEntity
 	) {
 		auto& dataStorage{ scene.getDataStorage() };
 		if (dataStorage.containsComponent<DeathSpawn>(entityHandle)) {
@@ -104,7 +140,9 @@ namespace wasp::game::systems {
 				dataStorage.addEntity(ghostTuple.package());
 			}
 		}
-		dataStorage.removeEntity(entityHandle);
+		if (removeEntity) {
+			dataStorage.removeEntity(entityHandle);
+		}
 	}
 
 	

@@ -75,6 +75,9 @@ namespace wasp::game::config {
     constexpr float pickupInitSpeedBase{ 3.5f };
     constexpr float pickupInitSpeedMulti{ .7f };
 
+    constexpr int smallPowerGain{ 1 };
+    constexpr int largePowerGain{ 5 };
+
     /*
     
     public static final double PICKUP_FINAL_SPEED = -4;
