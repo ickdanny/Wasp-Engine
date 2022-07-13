@@ -174,8 +174,8 @@ namespace wasp::game::systems {
 				return true;
 
 			case MenuCommand::Commands::restartGame:
-				//todo: restart game
-				break;
+				handleRestartGameCommand(scene);
+				return false;
 
 			case MenuCommand::Commands::gameOver:
 				handleGameOverCommand();
@@ -202,9 +202,18 @@ namespace wasp::game::systems {
 	) {
 		const auto& [sceneName, gameBuilderCommand] 
 			= std::get<std::tuple<SceneNames, GameBuilderCommands>>(menuCommand.data);
+		auto& sceneEntryChannel{
+			globalChannelSetPointer->getChannel(GlobalTopics::sceneEntry)
+		};
+
 		//push a scene entry message
-		globalChannelSetPointer->getChannel(GlobalTopics::sceneEntry)
-			.addMessage(sceneName);
+		sceneEntryChannel.addMessage(sceneName);
+
+		//push a load screen message if we are going to game
+		if (sceneName == SceneNames::game) {
+			sceneEntryChannel.addMessage(SceneNames::load);
+		}
+
 		//push a game builder message if necessary
 		if (gameBuilderCommand != GameBuilderCommands::none) {
 			scene.getChannel(SceneTopics::gameBuilderCommands)
@@ -230,7 +239,7 @@ namespace wasp::game::systems {
 		globalChannelSetPointer->getChannel(GlobalTopics::writeSettingsFlag)
 			.addMessage();
 	}
-	void MenuNavigationSystem::handleRestartGameCommand() {
+	void MenuNavigationSystem::handleRestartGameCommand(Scene& scene) {
 		handleStopMusic();
 		
 		//send us back to the correct menu
@@ -257,10 +266,16 @@ namespace wasp::game::systems {
 			backTo
 		);
 
-		//then, immediately pop up a new game
-		globalChannelSetPointer->getChannel(GlobalTopics::sceneEntry)
-			.addMessage(SceneNames::game);
-		//todo: also need to go to loading screen... eventually
+		//have GameBuilderSystem reset the game state
+		scene.getChannel(SceneTopics::gameBuilderCommands)
+			.addMessage(GameBuilderCommands::reset);
+
+		//then, immediately pop up a new game and loading screen
+		auto& sceneEntryChannel{
+			globalChannelSetPointer->getChannel(GlobalTopics::sceneEntry)
+		};
+		sceneEntryChannel.addMessage(SceneNames::game);
+		sceneEntryChannel.addMessage(SceneNames::load);
 	}
 	void MenuNavigationSystem::handleToggleSoundCommand() {
 		globalChannelSetPointer->getChannel(GlobalTopics::toggleSoundFlag).addMessage();

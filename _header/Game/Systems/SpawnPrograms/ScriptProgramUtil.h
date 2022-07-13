@@ -16,6 +16,20 @@ namespace wasp::game::systems {
 		using ScriptNodeSharedPointer = std::shared_ptr<ScriptNode>;
 
 	public:
+
+		//Returns a script node representing a velocity value.
+		static ScriptNodeSharedPointer makeVelocityValueNode(
+			const Velocity& velocity
+		) {
+			ScriptNode* velocityValuePointer{
+				new ScriptNodeData<Velocity, utility::Void>{
+					ScriptInstructions::value,
+					velocity
+				}
+			};
+			return ScriptNodeSharedPointer{ velocityValuePointer };
+		}
+
 		//Returns a script node representing an if statement.
 		static ScriptNodeSharedPointer makeIfNode(
 			const ScriptNodeSharedPointer& predicateNodePointer,
@@ -168,6 +182,49 @@ namespace wasp::game::systems {
 				shiftSpeedIncrementNodePointer->link(next);
 			}
 			return ScriptNodeSharedPointer{ shiftSpeedIncrementNodePointer };
+		}
+
+		//Returns a script node representing a set velocity order.
+		static ScriptNodeSharedPointer makeSetVelocityNode(
+			ScriptNodeSharedPointer velocityNode,
+			ScriptNodeSharedPointer next = nullptr
+		) {
+			ScriptNode* setVelocityNode{
+				new ScriptNode{
+					ScriptInstructions::setVelocity,
+				}
+			};
+			setVelocityNode->link(velocityNode);
+			if (next) {
+				setVelocityNode->link(next);
+			}
+			return ScriptNodeSharedPointer{ setVelocityNode };
+		}
+
+		//Returns a script node representing a set velocity order to the specified
+		//velocity.
+		static ScriptNodeSharedPointer makeSetVelocityNode(
+			const Velocity& velocity,
+			ScriptNodeSharedPointer next = nullptr
+		) {
+			ScriptNode* setVelocityNode{
+				new ScriptNode{
+					ScriptInstructions::setVelocity,
+				}
+			};
+			setVelocityNode->link(makeVelocityValueNode(velocity));
+			if (next) {
+				setVelocityNode->link(next);
+			}
+			return ScriptNodeSharedPointer{ setVelocityNode };
+		}
+
+		//Returns a script node that removes the entity.
+		static ScriptNodeSharedPointer makeRemoveEntityNode() {
+			ScriptNode* removeEntityNodePointer{
+				new ScriptNode{ ScriptInstructions::removeEntity }
+			};
+			return ScriptNodeSharedPointer{ removeEntityNodePointer };
 		}
 	};
 }

@@ -72,6 +72,10 @@ namespace wasp::game::systems {
 				gameStatePointer->stage = 5;
 				finalizeGameState(gameStatePointer);
 				break;
+			case GameBuilderCommands::reset:
+				//reset stage to 1 if needed and reset prng
+				finalizeGameState(gameStatePointer);
+				break;
 			case GameBuilderCommands::none:
 				throw std::runtime_error{ "'none' in handleGameBuilderCommand" };
 			default:

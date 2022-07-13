@@ -4,7 +4,7 @@
 
 namespace wasp::game::systems {
 
-	//queues up add, set, and remove component orders
+	//queues up add, set, and remove component orders, as well as removeEntity
 	class ComponentOrderQueue {
 	private:
 		//typedefs
@@ -20,6 +20,13 @@ namespace wasp::game::systems {
 		struct QueuedAddComponentOrder : QueuedOrderBase {
 			ecs::AddComponentOrder<T> addComponentOrder;
 
+			QueuedAddComponentOrder(
+				const EntityHandle& entityHandle,
+				const T& component
+			)
+				: addComponentOrder{ entityHandle, component } {
+			}
+
 			~QueuedAddComponentOrder() override = default;
 
 			void apply(ecs::DataStorage& dataStorage) override {
@@ -30,6 +37,13 @@ namespace wasp::game::systems {
 		template <typename T>
 		struct QueuedSetComponentOrder : QueuedOrderBase {
 			ecs::SetComponentOrder<T> setComponentOrder;
+
+			QueuedSetComponentOrder(
+				const EntityHandle& entityHandle,
+				const T& component
+			)
+				: setComponentOrder{ entityHandle, component } {
+			}
 
 			~QueuedSetComponentOrder() override = default;
 
@@ -76,9 +90,9 @@ namespace wasp::game::systems {
 		void queueAddComponent(EntityHandle entityHandle, const T& component) {
 			queuedOrders.emplace_back(
 				std::move(
-					std::unique_ptr<QueuedOrderBase>(
+					std::unique_ptr<QueuedOrderBase>{
 						new QueuedAddComponentOrder{ {entityHandle, component} }
-					)
+					}
 				)
 			);
 		}
@@ -87,9 +101,9 @@ namespace wasp::game::systems {
 		void queueSetComponent(EntityHandle entityHandle, const T& component) {
 			queuedOrders.emplace_back(
 				std::move(
-					std::unique_ptr<QueuedOrderBase>(
-						new QueuedAddComponentOrder{ {entityHandle, component} }
-					)
+					std::unique_ptr<QueuedOrderBase>{
+						new QueuedSetComponentOrder<T>{ entityHandle, component }
+					}
 				)
 			);
 		}
@@ -98,9 +112,9 @@ namespace wasp::game::systems {
 		void queueRemoveComponent(EntityHandle entityHandle) {
 			queuedOrders.emplace_back(
 				std::move(
-					std::unique_ptr<QueuedOrderBase>(
+					std::unique_ptr<QueuedOrderBase>{
 						new QueuedRemoveComponentOrder<T>{ entityHandle }
-					)
+					}
 				)
 			);
 		}
@@ -108,9 +122,9 @@ namespace wasp::game::systems {
 		void queueRemoveEntity(EntityHandle entityHandle) {
 			queuedOrders.emplace_back(
 				std::move(
-					std::unique_ptr<QueuedOrderBase>(
+					std::unique_ptr<QueuedOrderBase>{
 						new QueuedRemoveEntityOrder{ entityHandle }
-					)
+					}
 				)
 			);
 		}

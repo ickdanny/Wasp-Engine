@@ -81,6 +81,17 @@ namespace wasp::game::systems {
 		constexpr int bombSymmetry{ 18 };
 	}
 
+	namespace death {
+		constexpr int clearLifetime{ 60 };
+
+		constexpr int numSmallPickups{ 4 };
+		constexpr float pickupInbound{ 15.0f };
+		constexpr float pickupYHigh{ 50.0f };
+		constexpr int pickupAirTime{ 50 };
+
+		constexpr float velocityScale{ 1.0f / pickupAirTime };
+	}
+
 	PlayerSpawnPrograms::PlayerSpawnPrograms(
 		resources::BitmapStorage* bitmapStoragePointer
 	)
@@ -124,7 +135,7 @@ namespace wasp::game::systems {
 		, spawnDoubleSmallBubbleNode{
 			SpawnProgramUtil::makeMirrorPosFormationNode(
 				SpawnProgramUtil::makeEntityOffsetNode(
-					SpawnProgramUtil::makeVelocityValueSpawnNode(
+					SpawnProgramUtil::makeVelocityValueNode(
 						math::Vector2{ a::smallSpacing / 2.0f, 0.0f }
 					)
 				),
@@ -137,7 +148,7 @@ namespace wasp::game::systems {
 				spawnSingleSmallBubbleNode,
 				SpawnProgramUtil::makeMirrorPosFormationNode(
 					SpawnProgramUtil::makeEntityOffsetNode(
-						SpawnProgramUtil::makeVelocityValueSpawnNode(
+						SpawnProgramUtil::makeVelocityValueNode(
 							math::Vector2{ a::smallSpacing, 0.0f }
 						)
 					),
@@ -150,15 +161,15 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeMirrorFormationNode(
 				//pos
 				SpawnProgramUtil::makeEntityOffsetNode(
-					SpawnProgramUtil::makeVelocityValueSpawnNode(a::largeOffset)
+					SpawnProgramUtil::makeVelocityValueNode(a::largeOffset)
 				),
 				//vel
 				SpawnProgramUtil::makeIfElseNode(
 					SpawnInstructions::isPlayerFocused,
-					SpawnProgramUtil::makeVelocityValueSpawnNode(
+					SpawnProgramUtil::makeVelocityValueNode(
 						Velocity{ a::largeSpeed, a::focusedLargeAngle }
 					),
-					SpawnProgramUtil::makeVelocityValueSpawnNode(
+					SpawnProgramUtil::makeVelocityValueNode(
 						Velocity{ a::largeSpeed, a::unfocusedLargeAngle }
 					)
 				),
@@ -235,11 +246,7 @@ namespace wasp::game::systems {
 				shotAPowerBucket6Node
 			)
 		}
-		, shotA{
-			shotANode,
-			config::playerShotMaxTick,
-			false
-		}
+		, shotA{ shotANode, config::playerShotMaxTick, false }
 
 		//A bomb
 		, bombBubbleScriptNode{
@@ -276,18 +283,18 @@ namespace wasp::game::systems {
 				SpawnProgramUtil::makeSpawnPosVelNode(
 					bombBubblePrototype,
 					SpawnProgramUtil::makeEntityOffsetNode(
-						SpawnProgramUtil::makeUniformRandomCircleVelocitySpawnNode(
+						SpawnProgramUtil::makeUniformRandomCircleVelocityNode(
 							0,
 							a::bombMaxSpawnOffsetRadius
 						)
 					),
-					SpawnProgramUtil::makeVelocityFromPolarSpawnNode(
-						SpawnProgramUtil::makeFloatValueSpawnNode(0.0f),
-						SpawnProgramUtil::makeUniformRandomFloatSpawnNode(
-							SpawnProgramUtil::makeFloatValueSpawnNode(
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeFloatValueNode(0.0f),
+						SpawnProgramUtil::makeUniformRandomFloatNode(
+							SpawnProgramUtil::makeFloatValueNode(
 								90.0f - a::bombAngleSpread
 							),
-							SpawnProgramUtil::makeFloatValueSpawnNode(
+							SpawnProgramUtil::makeFloatValueNode(
 								90.0f + a::bombAngleSpread
 							)
 						)
@@ -311,17 +318,13 @@ namespace wasp::game::systems {
 		, bombANode{
 			SpawnProgramUtil::makeMirrorFormationNode(
 				SpawnProgramUtil::makeEntityPositionNode(),
-				SpawnProgramUtil::makeVelocityValueSpawnNode(
+				SpawnProgramUtil::makeVelocityValueNode(
 					Velocity{a::bombGhostSpeed, Angle(0)}
 				),
 				SpawnProgramUtil::makeSpawnPosVelNode(bombGhostPrototype)
 			)
 		}
-		, bombA{
-			bombANode,
-			1,
-			false
-		}
+		, bombA{ bombANode, 1, false }
 
 		//B shot
 		, iceShardPrototype{
@@ -344,7 +347,7 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeSpawnPosVelNode(
 				iceShardPrototype,
 				SpawnProgramUtil::makeEntityPositionNode(),
-				SpawnProgramUtil::makeVelocityValueSpawnNode(
+				SpawnProgramUtil::makeVelocityValueNode(
 					Vector2{ 0.0f, -b::speed }
 				)
 			)
@@ -365,16 +368,16 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeIfNode(
 				SpawnProgramUtil::makeTickModNode(0, b::mod1),
 				SpawnProgramUtil::makeArcFormationNode(
-					SpawnProgramUtil::makeVelocityValueSpawnNode(	//baseVel
+					SpawnProgramUtil::makeVelocityValueNode(	//baseVel
 						Vector2{ 0.0f, -b::speed }
 					),
-					SpawnProgramUtil::makeIntValueSpawnNode(2),		//symmetry
+					SpawnProgramUtil::makeIntValueNode(2),		//symmetry
 					SpawnProgramUtil::makeIfElseNode(				//angleIncrement
 						SpawnInstructions::isPlayerFocused,
-						SpawnProgramUtil::makeFloatValueSpawnNode(
+						SpawnProgramUtil::makeFloatValueNode(
 							b::focusedAngleIncrement
 						),
-						SpawnProgramUtil::makeFloatValueSpawnNode(
+						SpawnProgramUtil::makeFloatValueNode(
 							b::unfocusedAngleIncrement
 						)
 					),
@@ -387,16 +390,16 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeIfNode(
 				SpawnProgramUtil::makeTickModNode(0, b::mod1),
 				SpawnProgramUtil::makeArcFormationNode(
-					SpawnProgramUtil::makeVelocityValueSpawnNode(	//baseVel
+					SpawnProgramUtil::makeVelocityValueNode(	//baseVel
 						Vector2{ 0.0f, -b::speed }
 					),
-					SpawnProgramUtil::makeIntValueSpawnNode(3),		//symmetry
+					SpawnProgramUtil::makeIntValueNode(3),		//symmetry
 					SpawnProgramUtil::makeIfElseNode(				//angleIncrement
 						SpawnInstructions::isPlayerFocused,
-						SpawnProgramUtil::makeFloatValueSpawnNode(
+						SpawnProgramUtil::makeFloatValueNode(
 							b::focusedAngleIncrement
 						),
-						SpawnProgramUtil::makeFloatValueSpawnNode(
+						SpawnProgramUtil::makeFloatValueNode(
 							b::unfocusedAngleIncrement
 						)
 					),
@@ -409,16 +412,16 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeIfNode(
 				SpawnProgramUtil::makeTickModNode(0, b::mod1),
 				SpawnProgramUtil::makeArcFormationNode(
-					SpawnProgramUtil::makeVelocityValueSpawnNode(	//baseVel
+					SpawnProgramUtil::makeVelocityValueNode(	//baseVel
 						Vector2{ 0.0f, -b::speed }
 					),
-					SpawnProgramUtil::makeIntValueSpawnNode(4),		//symmetry
+					SpawnProgramUtil::makeIntValueNode(4),		//symmetry
 					SpawnProgramUtil::makeIfElseNode(				//angleIncrement
 						SpawnInstructions::isPlayerFocused,
-						SpawnProgramUtil::makeFloatValueSpawnNode(
+						SpawnProgramUtil::makeFloatValueNode(
 							b::focusedAngleIncrement
 						),
-						SpawnProgramUtil::makeFloatValueSpawnNode(
+						SpawnProgramUtil::makeFloatValueNode(
 							b::unfocusedAngleIncrement
 						)
 					),
@@ -431,16 +434,16 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeIfNode(
 				SpawnProgramUtil::makeTickModNode(0, b::mod1),
 				SpawnProgramUtil::makeArcFormationNode(
-					SpawnProgramUtil::makeVelocityValueSpawnNode(	//baseVel
+					SpawnProgramUtil::makeVelocityValueNode(	//baseVel
 						Vector2{ 0.0f, -b::speed }
 					),
-					SpawnProgramUtil::makeIntValueSpawnNode(5),		//symmetry
+					SpawnProgramUtil::makeIntValueNode(5),		//symmetry
 					SpawnProgramUtil::makeIfElseNode(				//angleIncrement
 						SpawnInstructions::isPlayerFocused,
-						SpawnProgramUtil::makeFloatValueSpawnNode(
+						SpawnProgramUtil::makeFloatValueNode(
 							b::focusedAngleIncrement
 						),
-						SpawnProgramUtil::makeFloatValueSpawnNode(
+						SpawnProgramUtil::makeFloatValueNode(
 							b::unfocusedAngleIncrement
 						)
 					),
@@ -453,16 +456,16 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeIfNode(
 				SpawnProgramUtil::makeTickModNode(0, b::mod1),
 				SpawnProgramUtil::makeArcFormationNode(
-					SpawnProgramUtil::makeVelocityValueSpawnNode(	//baseVel
+					SpawnProgramUtil::makeVelocityValueNode(	//baseVel
 						Vector2{ 0.0f, -b::speed }
 					),
-					SpawnProgramUtil::makeIntValueSpawnNode(6),		//symmetry
+					SpawnProgramUtil::makeIntValueNode(6),		//symmetry
 					SpawnProgramUtil::makeIfElseNode(				//angleIncrement
 						SpawnInstructions::isPlayerFocused,
-						SpawnProgramUtil::makeFloatValueSpawnNode(
+						SpawnProgramUtil::makeFloatValueNode(
 							b::focusedAngleIncrement
 						),
-						SpawnProgramUtil::makeFloatValueSpawnNode(
+						SpawnProgramUtil::makeFloatValueNode(
 							b::unfocusedAngleIncrement
 						)
 					),
@@ -483,11 +486,7 @@ namespace wasp::game::systems {
 				shotBPowerBucket6Node
 			)
 		}
-		, shotB{
-			shotBNode,
-			config::playerShotMaxTick,
-			false
-		}
+		, shotB{ shotBNode, config::playerShotMaxTick, false }
 
 		//B bomb
 		, snowflakePrototype{
@@ -517,11 +516,109 @@ namespace wasp::game::systems {
 				)
 			)
 		}
-		, bombB{
-			bombBNode,
-			1,
-			false
+		, bombB{ bombBNode, 1, false }
+		
+		//death
+		, clearScriptNode{
+			ScriptProgramUtil::makeTimerNode(
+				death::clearLifetime,
+				ScriptProgramUtil::makeRemoveEntityNode()
+			)
 		}
+		, clearPrototype{
+			EntityBuilder::makeStationaryCollidable(
+				Point2{ 
+					config::gameWidth / 2, 
+					config::gameHeight / 2 
+				} + config::gameOffset,
+				AABB{ config::gameWidth / 2, config::gameHeight / 2},
+				PlayerCollisions::Target{ components::CollisionCommands::player },
+				ScriptProgramList{ clearScriptNode }
+			).heapClone()
+		}
+		, spawnClearNode{
+			SpawnProgramUtil::makeSpawnNode(clearPrototype)
+		}
+		, powerScriptNode{
+			ScriptProgramUtil::makeTimerNode(
+				death::pickupAirTime,
+				ScriptProgramUtil::makeSetVelocityNode(
+					Velocity{ config::pickupFinalSpeed, Angle{ 90 } }
+				)
+			)
+		}
+		, smallPowerPrototype{ 
+			EntityBuilder::makePosVelPrototype(
+				config::smallPickupHitbox,
+				PickupCollisions::Source{ components::CollisionCommands::pickup },
+				game::PickupType{ components::PickupType::Types::powerSmall },
+				Outbound{ config::pickupOutbound },
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"power_small")->d2dBitmap,
+				},
+				ScriptProgramList{ powerScriptNode },
+				DrawOrder{ config::pickupDrawOrder }
+			).heapClone()
+		}
+		, largePowerPrototype{ 
+			EntityBuilder::makePosVelPrototype(
+				config::largePickupHitbox,
+				PickupCollisions::Source{ components::CollisionCommands::pickup },
+				game::PickupType{ components::PickupType::Types::powerLarge },
+				Outbound{ config::pickupOutbound },
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"power_large")->d2dBitmap,
+				},
+				ScriptProgramList{ powerScriptNode },
+				DrawOrder{ config::pickupDrawOrder + 1 }
+			).heapClone() 
+		}
+		, spawnPowerNode{
+			SpawnProgramUtil::makeListNode(
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					largePowerPrototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeMultiplyNode(
+						SpawnProgramUtil::makeVelocityToPointNode(
+							SpawnProgramUtil::makeEntityPositionNode(),
+							SpawnProgramUtil::makeUniformRandomRectanglePointNode(
+								death::pickupInbound + config::gameOffset.x,
+								config::gameWidth - death::pickupInbound 
+									+ config::gameOffset.x,
+								death::pickupInbound + config::gameOffset.y,
+								death::pickupYHigh + config::gameOffset.y
+							)
+						),
+						SpawnProgramUtil::makeFloatValueNode(death::velocityScale)
+					)
+				),
+				SpawnProgramUtil::makeRepeatNode(
+					death::numSmallPickups,
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						smallPowerPrototype,
+						SpawnProgramUtil::makeEntityPositionNode(),
+						SpawnProgramUtil::makeMultiplyNode(
+							SpawnProgramUtil::makeVelocityToPointNode(
+								SpawnProgramUtil::makeEntityPositionNode(),
+								SpawnProgramUtil::makeUniformRandomRectanglePointNode(
+									death::pickupInbound + config::gameOffset.x,
+									config::gameWidth - death::pickupInbound
+										+ config::gameOffset.x,
+									death::pickupInbound + config::gameOffset.y,
+									death::pickupYHigh + config::gameOffset.y
+								)
+							),
+							SpawnProgramUtil::makeFloatValueNode(death::velocityScale)
+						)
+					)
+				)
+			)
+		}
+		, deathSpawnNode{
+			SpawnProgramUtil::makeListNode(spawnClearNode, spawnPowerNode)
+		}
+		, death{ deathSpawnNode, 1, false }
+
 		{
 		}
 }

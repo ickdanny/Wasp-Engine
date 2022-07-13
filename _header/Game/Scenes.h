@@ -12,6 +12,7 @@ namespace wasp::game{
 		stage,
 		music,
 		options,
+		load,
 		game,
 		dialogue,
 		pause,

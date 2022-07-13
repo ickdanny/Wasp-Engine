@@ -5,7 +5,6 @@
 namespace wasp::game::systems {
 
 	void ContinueSystem::operator()(Scene& scene) {
-		//todo: the continue menu sends us directly back to menu
 
 		auto& dataStorage{ scene.getDataStorage() };
 
@@ -55,13 +54,14 @@ namespace wasp::game::systems {
 								{ playerHandle, config::deathPeriod - 2 }
 							);
 						}
-						//if continues <= 0, this system does nothing
+						//if continues <= 0 this system does nothing; see gameOverSystem
 					}
 				}
 			}
 		}
 	}
 
+	//Handles the return from the continue menu
 	void ContinueSystem::handleContinue(
 		Scene& scene,
 		const EntityHandle& playerHandle

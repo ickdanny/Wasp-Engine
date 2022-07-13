@@ -19,7 +19,7 @@ namespace wasp::game::systems {
 
 	public:
 		//Returns a spawn node representing the given int value.
-		static SpawnNodeSharedPointer makeIntValueSpawnNode(int value) {
+		static SpawnNodeSharedPointer makeIntValueNode(int value) {
 			return SpawnNodeSharedPointer{
 				new SpawnNodeData<int>{
 					SpawnInstructions::value,
@@ -29,7 +29,7 @@ namespace wasp::game::systems {
 		}
 
 		//Returns a spawn node representing the given float value.
-		static SpawnNodeSharedPointer makeFloatValueSpawnNode(float value) {
+		static SpawnNodeSharedPointer makeFloatValueNode(float value) {
 			return SpawnNodeSharedPointer{
 				new SpawnNodeData<float>{
 					SpawnInstructions::value,
@@ -39,7 +39,7 @@ namespace wasp::game::systems {
 		}
 
 		//Returns a spawn node representing the addition of two given nodes.
-		static SpawnNodeSharedPointer makeAddSpawnNode(
+		static SpawnNodeSharedPointer makeAddNode(
 			const SpawnNodeSharedPointer& nodeA,
 			const SpawnNodeSharedPointer& nodeB
 		) {
@@ -53,8 +53,23 @@ namespace wasp::game::systems {
 			return SpawnNodeSharedPointer{ addNodePointer };
 		}
 
+		//Returns a spawn node representing the multiplication of two given nodes.
+		static SpawnNodeSharedPointer makeMultiplyNode(
+			const SpawnNodeSharedPointer& nodeA,
+			const SpawnNodeSharedPointer& nodeB
+		) {
+			SpawnNode* multiplyNodePointer{
+				new SpawnNode{ SpawnInstructions::multiply }
+			};
+			multiplyNodePointer->link(
+				nodeA,
+				nodeB
+			);
+			return SpawnNodeSharedPointer{ multiplyNodePointer };
+		}
+
 		//Returns a spawn node representing the max of two given nodes.
-		static SpawnNodeSharedPointer makeMaxSpawnNode(
+		static SpawnNodeSharedPointer makeMaxNode(
 			const SpawnNodeSharedPointer& nodeA,
 			const SpawnNodeSharedPointer& nodeB
 		) {
@@ -69,7 +84,7 @@ namespace wasp::game::systems {
 		}
 
 		//Returns a spawn node representing the given velocity value.
-		static SpawnNodeSharedPointer makeVelocityValueSpawnNode(
+		static SpawnNodeSharedPointer makeVelocityValueNode(
 			const Velocity& value
 		) {
 			return SpawnNodeSharedPointer{
@@ -81,7 +96,7 @@ namespace wasp::game::systems {
 		}
 
 		//Returns a spawn node representing the velocity specified by the given vector.
-		static SpawnNodeSharedPointer makeVelocityValueSpawnNode(
+		static SpawnNodeSharedPointer makeVelocityValueNode(
 			const math::Vector2& vector2
 		) {
 			return SpawnNodeSharedPointer{
@@ -94,22 +109,54 @@ namespace wasp::game::systems {
 
 		//Returns a spawn node representing the velocity specified by the given
 		//magnitude and angle (float) nodes.
-		static SpawnNodeSharedPointer makeVelocityFromPolarSpawnNode(
+		static SpawnNodeSharedPointer makeVelocityFromPolarNode(
 			const SpawnNodeSharedPointer& magnitudeNodePointer,
-			const SpawnNodeSharedPointer& angleNodePolar
+			const SpawnNodeSharedPointer& angleNodePointer
 		) {
 			SpawnNode* velocityFromPolarNodePointer{
 				new SpawnNode{ SpawnInstructions::velocityFromPolar }
 			};
 			velocityFromPolarNodePointer->link(
 				magnitudeNodePointer,
-				angleNodePolar
+				angleNodePointer
 			);
 			return SpawnNodeSharedPointer{ velocityFromPolarNodePointer };
 		}
 
+		//Returns a spawn node representing the velocity required to get from
+		//point A to point B.
+		static SpawnNodeSharedPointer makeVelocityToPointNode(
+			const SpawnNodeSharedPointer& pointANodePointer,
+			const SpawnNodeSharedPointer& pointBNodePointer
+		) {
+			SpawnNode* velocityToPointNodePointer{
+				new SpawnNode{ SpawnInstructions::velocityToPoint }
+			};
+			velocityToPointNodePointer->link(
+				pointANodePointer,
+				pointBNodePointer
+			);
+			return SpawnNodeSharedPointer{ velocityToPointNodePointer };
+		}
+
+		//Returns a spawn node representing the point specified by the given
+		//x and y (float) nodes.
+		static SpawnNodeSharedPointer makePointFromFloatsNode(
+			const SpawnNodeSharedPointer& xNodePointer,
+			const SpawnNodeSharedPointer& yNodePointer
+		) {
+			SpawnNode* pointFromFloatsNodePointer{
+				new SpawnNode{ SpawnInstructions::pointFromFloats }
+			};
+			pointFromFloatsNodePointer->link(
+				xNodePointer,
+				yNodePointer
+			);
+			return SpawnNodeSharedPointer{ pointFromFloatsNodePointer };
+		}
+
 		//Returns a spawn node representing a uniformly random float.
-		static SpawnNodeSharedPointer makeUniformRandomFloatSpawnNode(
+		static SpawnNodeSharedPointer makeUniformRandomFloatNode(
 			const SpawnNodeSharedPointer& minNode,
 			const SpawnNodeSharedPointer& maxNode
 		) {
@@ -121,27 +168,52 @@ namespace wasp::game::systems {
 		}
 
 		//Returns a spawn node representing a uniformly random velocity in a circle.
-		static SpawnNodeSharedPointer makeUniformRandomCircleVelocitySpawnNode(
+		static SpawnNodeSharedPointer makeUniformRandomCircleVelocityNode(
 			float minRadius,
 			float maxRadius
 		) {
 			//credit to nubDotDev
 			SpawnNodeSharedPointer uniformRandomFloatNode{
-				makeUniformRandomFloatSpawnNode(
-					makeFloatValueSpawnNode(minRadius),
-					makeFloatValueSpawnNode(maxRadius)
+				makeUniformRandomFloatNode(
+					makeFloatValueNode(minRadius),
+					makeFloatValueNode(maxRadius)
 				)
 			};
 			//calculate radius by taking max of two uniformly random floats
 			SpawnNodeSharedPointer maxNode{
-				makeMaxSpawnNode(
+				makeMaxNode(
 					uniformRandomFloatNode,
 					uniformRandomFloatNode
 				)
 			};
-			return makeVelocityFromPolarSpawnNode(
+			return makeVelocityFromPolarNode(
 				maxNode,
 				randomAngleNode
+			);
+		}
+
+		//Returns a spawn node representing a uniformly random point in a rectangle.
+		static SpawnNodeSharedPointer makeUniformRandomRectanglePointNode(
+			float xLow,
+			float xHigh,
+			float yLow,
+			float yHigh
+		) {
+			SpawnNodeSharedPointer xNode{
+				makeUniformRandomFloatNode(
+					makeFloatValueNode(xLow),
+					makeFloatValueNode(xHigh)
+				)
+			};
+			SpawnNodeSharedPointer yNode{
+				makeUniformRandomFloatNode(
+					makeFloatValueNode(yLow),
+					makeFloatValueNode(yHigh)
+				)
+			};
+			return makePointFromFloatsNode(
+				xNode,
+				yNode
 			);
 		}
 
@@ -151,8 +223,8 @@ namespace wasp::game::systems {
 				new SpawnNode{ SpawnInstructions::tickMod }
 			};
 			tickModNodePointer->link(
-				makeIntValueSpawnNode(add),
-				makeIntValueSpawnNode(mod)
+				makeIntValueNode(add),
+				makeIntValueNode(mod)
 			);
 			return SpawnNodeSharedPointer{ tickModNodePointer };
 		}
@@ -230,6 +302,31 @@ namespace wasp::game::systems {
 			return SpawnNodeSharedPointer{ listNodePointer };
 		}
 
+		//Returns a spawn node representing repeating a node n times, where n is given
+		//by a specified int node.
+		static SpawnNodeSharedPointer makeRepeatNode(
+			const SpawnNodeSharedPointer& indexNodePointer,
+			const SpawnNodeSharedPointer& bodyNodePointer
+		) {
+			SpawnNode* repeatNodePointer{ new SpawnNode{ SpawnInstructions::repeat } };
+			repeatNodePointer->link(indexNodePointer, bodyNodePointer);
+			return SpawnNodeSharedPointer{ repeatNodePointer };
+		}
+
+		//Returns a spawn node representing repeating a node n times, where n is given
+		//by value.
+		static SpawnNodeSharedPointer makeRepeatNode(
+			int n,
+			const SpawnNodeSharedPointer& bodyNodePointer
+		) {
+			SpawnNode* repeatNodePointer{ new SpawnNode{ SpawnInstructions::repeat } };
+			repeatNodePointer->link(
+				makeIntValueNode(n), 
+				bodyNodePointer
+			);
+			return SpawnNodeSharedPointer{ repeatNodePointer };
+		}
+
 		//Returns a spawn node representing the current position of the entity.
 		static SpawnNodeSharedPointer makeEntityPositionNode() {
 			return std::make_shared<SpawnNode>(SpawnInstructions::entityPosition);
@@ -260,6 +357,20 @@ namespace wasp::game::systems {
 			};
 			entityOffsetNodePointer->link(offsetNode);
 			return SpawnNodeSharedPointer{ entityOffsetNodePointer };
+		}
+
+		//Returns a spawn node that constructs an entity based on the given spawn
+		//prototype.
+		static SpawnNodeSharedPointer makeSpawnNode(
+			std::shared_ptr<ComponentTupleBase>& spawnPrototype
+		) {
+			SpawnNode* spawnNodePointer{
+				new SpawnNodeData<std::shared_ptr<ComponentTupleBase>>{
+					SpawnInstructions::spawn,
+					spawnPrototype
+				}
+			};
+			return SpawnNodeSharedPointer{ spawnNodePointer };
 		}
 
 		//Returns a spawn node that constructs an entity based on the given spawn
@@ -453,8 +564,8 @@ namespace wasp::game::systems {
 		) {
 			return makeArcFormationNode(
 				baseVelNodePointer,
-				makeIntValueSpawnNode(symmetry),
-				makeFloatValueSpawnNode(angleIncrement),
+				makeIntValueNode(symmetry),
+				makeFloatValueNode(angleIncrement),
 				velConsumerNodePointer
 			);
 		}
@@ -468,7 +579,7 @@ namespace wasp::game::systems {
 			const SpawnNodeSharedPointer& velConsumerNodePointer
 		) {
 			return makeArcFormationNode(
-				makeVelocityValueSpawnNode(baseVel),
+				makeVelocityValueNode(baseVel),
 				symmetry,
 				angleIncrement,
 				velConsumerNodePointer
@@ -484,7 +595,7 @@ namespace wasp::game::systems {
 			const SpawnNodeSharedPointer& velConsumerNodePointer
 		) {
 			return makeArcFormationNode(
-				makeVelocityValueSpawnNode(baseVel),
+				makeVelocityValueNode(baseVel),
 				symmetry,
 				angleIncrement,
 				velConsumerNodePointer
@@ -517,8 +628,8 @@ namespace wasp::game::systems {
 			const SpawnNodeSharedPointer& velConsumerNodePointer
 		) {
 			return makeRingFormationNode(
-				makeVelocityValueSpawnNode(baseVel),
-				makeIntValueSpawnNode(symmetry),
+				makeVelocityValueNode(baseVel),
+				makeIntValueNode(symmetry),
 				velConsumerNodePointer
 			);
 		}
@@ -531,8 +642,8 @@ namespace wasp::game::systems {
 			const SpawnNodeSharedPointer& velConsumerNodePointer
 		) {
 			return makeRingFormationNode(
-				makeVelocityValueSpawnNode(baseVel),
-				makeIntValueSpawnNode(symmetry),
+				makeVelocityValueNode(baseVel),
+				makeIntValueNode(symmetry),
 				velConsumerNodePointer
 			);
 		}

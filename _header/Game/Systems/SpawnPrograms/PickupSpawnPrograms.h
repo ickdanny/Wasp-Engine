@@ -48,11 +48,17 @@ namespace wasp::game::systems {
 		ComponentTupleSharedPointer bombPrototype;			//uninitialized!
 		SpawnNodeSharedPointer spawnBombNode;				//uninitialized!
 
+		//clear for max power
+		ScriptNodeSharedPointer clearScriptNode;			//uninitialized!
+		ComponentTupleSharedPointer clearPrototype;			//uninitialized!
+		SpawnNodeSharedPointer spawnClearNode;				//uninitialized!
+
 	public:
 		const SpawnProgram smallPower;						//uninitialized!
 		const SpawnProgram largePower;						//uninitialized!
 		const SpawnProgram life;							//uninitialized!
 		const SpawnProgram bomb;							//uninitialized!
+		const SpawnProgram clear;							//uninitialized!
 
 		//Constructors
 		PickupSpawnPrograms(

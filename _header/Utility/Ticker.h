@@ -13,7 +13,11 @@ namespace wasp::utility {
         Ticker(int maxTick, bool looping) 
             : tick{ maxTick }
             , maxTick{ maxTick }
-            , looping{ looping } {
+            , looping{ looping } 
+        {
+            if (maxTick < 0) {
+                throw std::runtime_error{ "maxTick < 0!" };
+            }
         }
 
         //Returns <= 0 if over

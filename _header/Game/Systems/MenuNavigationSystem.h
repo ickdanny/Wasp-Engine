@@ -108,7 +108,7 @@ namespace wasp::game::systems {
 
         void handleToggleSoundCommand();
         void handleToggleFullscreenCommand();
-        void handleRestartGameCommand();
+        void handleRestartGameCommand(Scene& scene);
         void handleGameOverCommand();
         void handleExitCommand();
 

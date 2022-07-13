@@ -76,9 +76,12 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer bombBNode;					//uninitialized!
 
 		//death
+		ScriptNodeSharedPointer clearScriptNode;			//uninitialized!
 		ComponentTupleSharedPointer clearPrototype;			//uninitialized!
-		//todo: implement player death spawns
 		SpawnNodeSharedPointer spawnClearNode;				//uninitialized!
+		ScriptNodeSharedPointer powerScriptNode;			//uninitialized!
+		ComponentTupleSharedPointer smallPowerPrototype;	//uninitialized!
+		ComponentTupleSharedPointer largePowerPrototype;	//uninitialized!
 		SpawnNodeSharedPointer spawnPowerNode;				//uninitialized!
 		SpawnNodeSharedPointer deathSpawnNode;				//uninitialized!
 
@@ -87,6 +90,7 @@ namespace wasp::game::systems {
 		const SpawnProgram bombA;							//uninitialized!
 		const SpawnProgram shotB;							//uninitialized!
 		const SpawnProgram bombB;							//uninitialized!
+		const SpawnProgram death;							//uninitialized!
 
 		//Constructors
 		PlayerSpawnPrograms(

@@ -19,7 +19,9 @@ namespace wasp::game {
 		, menuNavigationSystem{ globalChannelSetPointer }
 		, buttonSpriteSystem{ &(resourceMasterStoragePointer->bitmapStorage) }
 		, gameBuilderSystem { globalChannelSetPointer }
+		, loadSystem{ globalChannelSetPointer }
 		, playerShotSystem{ &spawnPrograms }
+		, collisionHandlerSystem{ &spawnPrograms }
 		, playerBombSystem{ &spawnPrograms }
 		, continueSystem{ globalChannelSetPointer }
 
@@ -37,6 +39,7 @@ namespace wasp::game {
 		menuNavigationSystem(scene);
 		buttonSpriteSystem(scene);
 		gameBuilderSystem(scene);
+		loadSystem(scene);
 		velocitySystem(scene);
 		scriptSystem(scene);
 		collisionDetectorSystem(scene);

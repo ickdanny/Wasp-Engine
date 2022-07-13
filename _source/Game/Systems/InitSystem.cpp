@@ -12,6 +12,9 @@ namespace wasp::game::systems {
 			config::graphicsHeight / 2
 		};
 
+		//middle X for scenes that overlay on top of the game screen
+		constexpr float middleX{ 100.0f };
+
 		int getInitPower(const GameState& gameState) {
 			//todo: temp power
 			return 40;
@@ -67,6 +70,9 @@ namespace wasp::game::systems {
 				break;
 			case SceneNames::options:
 				initOptionsMenu(scene);
+				break;
+			case SceneNames::load:
+				initLoad(scene);
 				break;
 			case SceneNames::game:
 				initGame(scene);
@@ -414,6 +420,17 @@ namespace wasp::game::systems {
 		);
 	}
 
+	void InitSystem::initLoad(Scene& scene) const {
+		auto& dataStorage{ scene.getDataStorage() };
+
+		addBackground(
+			dataStorage,
+			L"background_load",
+			0,
+			{ middleX, center.y }
+		);
+	}
+
 	void InitSystem::initGame(Scene& scene) const {
 		const auto& gameStateChannel{ 
 			globalChannelSetPointer->getChannel(GlobalTopics::gameState) 
@@ -428,6 +445,7 @@ namespace wasp::game::systems {
 		auto& dataStorage{ scene.getDataStorage() };
 		addForeground(dataStorage, L"overlay_frame");
 
+		//adding the player
 		dataStorage.addEntity(
 			EntityBuilder::makeStationaryCollidable(
 				config::playerSpawn,
@@ -448,7 +466,8 @@ namespace wasp::game::systems {
 				PlayerCollisions::Target{ components::CollisionCommands::player },
 				PickupCollisions::Target{},
 				DeathCommand{ DeathCommand::Commands::playerDeath },
-				SpawnProgramList{}
+				SpawnProgramList{},
+				DeathSpawn{ {spawnProgramsPointer->playerSpawnPrograms.death} }
 				//todo: animation
 			).package()
 		);
@@ -459,12 +478,13 @@ namespace wasp::game::systems {
 				Position{ config::gameWidth / 2.0f, config::gameHeight / 2.0f } 
 					+ config::gameOffset,
 				config::playerHitbox,
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"wisp")->d2dBitmap
+				},
+				SpriteSpin{ -1.5f },
 				PlayerCollisions::Source{},
 				EnemyCollisions::Target{ components::CollisionCommands::damage },
 				Health{ 1000 },
-				SpriteInstruction{
-					bitmapStoragePointer->get(L"temp_player")->d2dBitmap
-				},
 				DeathCommand{ DeathCommand::Commands::deathSpawn },
 				DeathSpawn{ {spawnProgramsPointer->pickupSpawnPrograms.smallPower} },
 				DrawOrder{ config::playerDrawOrder }
@@ -474,8 +494,6 @@ namespace wasp::game::systems {
 
 	void InitSystem::initPauseMenu(Scene& scene) const {
 		auto& dataStorage{ scene.getDataStorage() };
-
-		constexpr float middleX = 100.0f;
 
 		addBackground(
 			dataStorage,
@@ -530,8 +548,6 @@ namespace wasp::game::systems {
 
 	void InitSystem::initContinueMenu(Scene& scene) const {
 		auto& dataStorage{ scene.getDataStorage() };
-
-		constexpr float middleX = 100.0f;
 
 		addBackground(
 			dataStorage,

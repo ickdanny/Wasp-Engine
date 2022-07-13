@@ -78,7 +78,8 @@ namespace wasp::game::components {
         addSpawn,                   //adds a spawn to the entity, <SpawnProgram, Void>
         clearSpawn,                 //clears the entity's spawns
 
-        setVelocity,                //sets the entity's velocity, <Velocity, Void>
+        setVelocity,                //sets the entity's velocity, <Void, Void>
+                                    //[velocityNode, nextNode]
         setVelocityToPlayer,        //sets the entity's velocity in the direction of
                                     //the player
                                     //<float, Void> (speed)
@@ -178,7 +179,6 @@ namespace wasp::game::components {
             return *this;
         }
 
-    protected:
         virtual void clearData(void* voidPointer) {}
 
         friend struct ScriptProgram;
@@ -210,7 +210,6 @@ namespace wasp::game::components {
             }
         }
 
-    protected:
         void clearData(void* voidPointer) override {
             if (voidPointer) {
                 delete reinterpret_cast<External*>(voidPointer);

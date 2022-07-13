@@ -11,7 +11,7 @@ namespace wasp::game::systems {
 			};
 			for (const auto& [playerHandle, playerState]
 				: playerStateEntryChannel.getMessages()
-				) {
+			) {
 				if (playerState == PlayerStates::respawnInvulnerable) {
 					reactivate(scene, playerHandle);
 				}
@@ -23,8 +23,9 @@ namespace wasp::game::systems {
 		Scene& scene, 
 		const EntityHandle& playerHandle
 	) {
-		//reactivate player by adding a spawn program list
+		//reactivate player by adding a spawn program list and pickup collision
 		auto& dataStorage{ scene.getDataStorage() };
 		dataStorage.addComponent<SpawnProgramList>({ playerHandle, {} });
+		dataStorage.addComponent<PickupCollisions::Target>({ playerHandle, {} });
 	}
 }

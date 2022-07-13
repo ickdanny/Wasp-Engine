@@ -12,6 +12,7 @@
 #include "Game/Systems/MenuNavigationSystem.h"
 #include "Game/Systems/ButtonSpriteSystem.h"
 #include "Game/Systems/GameBuilderSystem.h"
+#include "Game/Systems/LoadSystem.h"
 #include "Game/Systems/VelocitySystem.h"
 #include "Game/Systems/ScriptSystem.h"
 #include "Game/Systems/CollisionDetectorSystem.h"
@@ -51,12 +52,13 @@ namespace wasp::game {
 		systems::MenuNavigationSystem menuNavigationSystem;		//not initialized!
 		systems::ButtonSpriteSystem buttonSpriteSystem;			//not initialized!
 		systems::GameBuilderSystem gameBuilderSystem;			//not initialized!
+		systems::LoadSystem loadSystem;							//not initialized!
 		systems::VelocitySystem velocitySystem{};
 		systems::ScriptSystem scriptSystem{};
 		systems::CollisionDetectorSystem collisionDetectorSystem{};
 		systems::PlayerMovementSystem playerMovementSystem{};
 		systems::PlayerShotSystem playerShotSystem;				//not initialized!
-		systems::CollisionHandlerSystem collisionHandlerSystem{};
+		systems::CollisionHandlerSystem collisionHandlerSystem;	//not initialized!
 		systems::PlayerStateSystem playerStateSystem{};
 		systems::PlayerBombSystem playerBombSystem;				//not initialized!
 		systems::PlayerDeathDetectorSystem playerDeathDetectorSystem{};

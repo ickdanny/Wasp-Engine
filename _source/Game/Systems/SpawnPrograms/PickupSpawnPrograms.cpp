@@ -8,12 +8,8 @@ namespace wasp::game::systems {
 	using ScriptProgramList = game::ScriptProgramList;
 
 	namespace {
-		constexpr float smallHitbox{ 8.0f };
-		constexpr float largeHitbox{ 12.0f };
-
-		constexpr float finalSpeed{ -2.0f };
 		constexpr float deceleration{ -0.07f };
-		constexpr float outbound{ -100.0f };
+		constexpr int clearLifetime{ 5 };
 	}
 
 	PickupSpawnPrograms::PickupSpawnPrograms(
@@ -23,7 +19,7 @@ namespace wasp::game::systems {
 
 		, pickupScriptNode{
 			ScriptProgramUtil::makeShiftSpeedIncrementNode(
-				finalSpeed, 
+				config::pickupFinalSpeed, 
 				deceleration
 			)
 		}
@@ -31,10 +27,10 @@ namespace wasp::game::systems {
 		//small power
 		, smallPowerPrototype{
 			EntityBuilder::makePosVelPrototype(
-				smallHitbox,
+				config::smallPickupHitbox,
 				PickupCollisions::Source{ components::CollisionCommands::pickup },
 				game::PickupType{ components::PickupType::Types::powerSmall },
-				Outbound{ outbound },
+				Outbound{ config::pickupOutbound },
 				SpriteInstruction{
 					bitmapStoragePointer->get(L"power_small")->d2dBitmap,
 				},
@@ -46,25 +42,21 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeSpawnPosVelNode(
 				smallPowerPrototype,
 				SpawnProgramUtil::makeEntityPositionNode(),
-				SpawnProgramUtil::makeVelocityFromPolarSpawnNode(
+				SpawnProgramUtil::makeVelocityFromPolarNode(
 					SpawnProgramUtil::makePickupInitSpeedNode(),
-					SpawnProgramUtil::makeFloatValueSpawnNode(90.0f)
+					SpawnProgramUtil::makeFloatValueNode(90.0f)
 				)
 			)
 		}
-		, smallPower{
-			spawnSmallPowerNode,
-			1,
-			false
-		}
+		, smallPower{ spawnSmallPowerNode, 1, false }
 
 		//large power
 		, largePowerPrototype{
 			EntityBuilder::makePosVelPrototype(
-				smallHitbox,
+				config::largePickupHitbox,
 				PickupCollisions::Source{ components::CollisionCommands::pickup },
 				game::PickupType{ components::PickupType::Types::powerLarge },
-				Outbound{ outbound },
+				Outbound{ config::pickupOutbound },
 				SpriteInstruction{
 					bitmapStoragePointer->get(L"power_large")->d2dBitmap,
 				},
@@ -76,25 +68,21 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeSpawnPosVelNode(
 				largePowerPrototype,
 				SpawnProgramUtil::makeEntityPositionNode(),
-				SpawnProgramUtil::makeVelocityFromPolarSpawnNode(
+				SpawnProgramUtil::makeVelocityFromPolarNode(
 					SpawnProgramUtil::makePickupInitSpeedNode(),
-					SpawnProgramUtil::makeFloatValueSpawnNode(90.0f)
+					SpawnProgramUtil::makeFloatValueNode(90.0f)
 				)
 			)
 		}
-		, largePower{
-			spawnLargePowerNode,
-			1,
-			false
-		}
+		, largePower{ spawnLargePowerNode, 1, false }
 
 		//life
 		, lifePrototype{
 			EntityBuilder::makePosVelPrototype(
-				smallHitbox,
+				config::largePickupHitbox,
 				PickupCollisions::Source{ components::CollisionCommands::pickup },
 				game::PickupType{ components::PickupType::Types::life },
-				Outbound{ outbound },
+				Outbound{ config::pickupOutbound },
 				SpriteInstruction{
 					bitmapStoragePointer->get(L"life")->d2dBitmap,
 				},
@@ -106,25 +94,21 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeSpawnPosVelNode(
 				lifePrototype,
 				SpawnProgramUtil::makeEntityPositionNode(),
-				SpawnProgramUtil::makeVelocityFromPolarSpawnNode(
+				SpawnProgramUtil::makeVelocityFromPolarNode(
 					SpawnProgramUtil::makePickupInitSpeedNode(),
-					SpawnProgramUtil::makeFloatValueSpawnNode(90.0f)
+					SpawnProgramUtil::makeFloatValueNode(90.0f)
 				)
 			)
 		}
-		, life{
-			spawnLifeNode,
-			1,
-			false
-		}
+		, life{ spawnLifeNode, 1, false }
 
 		//bomb
 		, bombPrototype{
 			EntityBuilder::makePosVelPrototype(
-				smallHitbox,
+				config::largePickupHitbox,
 				PickupCollisions::Source{ components::CollisionCommands::pickup },
 				game::PickupType{ components::PickupType::Types::bomb },
-				Outbound{ outbound },
+				Outbound{ config::pickupOutbound },
 				SpriteInstruction{
 					bitmapStoragePointer->get(L"bomb")->d2dBitmap,
 				},
@@ -136,17 +120,36 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeSpawnPosVelNode(
 				bombPrototype,
 				SpawnProgramUtil::makeEntityPositionNode(),
-				SpawnProgramUtil::makeVelocityFromPolarSpawnNode(
+				SpawnProgramUtil::makeVelocityFromPolarNode(
 					SpawnProgramUtil::makePickupInitSpeedNode(),
-					SpawnProgramUtil::makeFloatValueSpawnNode(90.0f)
+					SpawnProgramUtil::makeFloatValueNode(90.0f)
 				)
 			)
 		}
-		, bomb{
-			spawnBombNode,
-			1,
-			false
+		, bomb{ spawnBombNode, 1, false }
+
+		//clear for max power
+		, clearScriptNode{
+			ScriptProgramUtil::makeTimerNode(
+				clearLifetime,
+				ScriptProgramUtil::makeRemoveEntityNode()
+			)
 		}
+		, clearPrototype{
+			EntityBuilder::makeStationaryCollidable(
+				Point2{
+					config::gameWidth / 2,
+					config::gameHeight / 2
+				} + config::gameOffset,
+				AABB{ config::gameWidth / 2, config::gameHeight / 2},
+				PlayerCollisions::Target{ components::CollisionCommands::player },
+				ScriptProgramList{ clearScriptNode }
+			).heapClone()
+		}
+		, spawnClearNode{
+			SpawnProgramUtil::makeSpawnNode(clearPrototype)
+		}
+		, clear{ spawnClearNode, 1, false }
 	{
 
 	}

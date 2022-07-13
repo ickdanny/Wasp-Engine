@@ -85,12 +85,12 @@ namespace wasp::game::systems {
 	) {
 		auto& dataStorage{ scene.getDataStorage() };
 
-		//remove spawn component
+		//remove spawn component and pickup collision
 		dataStorage.removeComponent<SpawnProgramList>(playerHandle);
+		dataStorage.removeComponent<PickupCollisions::Target>(playerHandle);
 
 		//spawn blocker + pickups
 		handleDeathSpawn(scene, playerHandle, false);
-		//todo: add death spawn for player
 
 		//remove power
 		PlayerData& playerData{

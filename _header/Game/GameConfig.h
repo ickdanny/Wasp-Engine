@@ -40,7 +40,7 @@ namespace wasp::game::config {
 
     constexpr int initLives{ 2 };
     constexpr int initBombs{ 2 };
-    constexpr int initContinues{ 3 };
+    constexpr int initContinues{ 2 };
 
     constexpr int maxLives{ 6 };
     constexpr int maxBombs{ maxLives };
@@ -50,53 +50,23 @@ namespace wasp::game::config {
     constexpr int continueLives{ 2 };
     constexpr int respawnBombs{ 2 };
 
-    //player shot
     constexpr int playerShotMaxTick{ 40 };
 
-    /*
-    //PLAYER SHOT
-    public static final double BASIC_PLAYER_BULLET_SPEED = 16.5;
-    public static final AABB BASIC_PLAYER_BULLET_HITBOX = new AABB(25);
-    public static final int BASIC_PLAYER_BULLET_DAMAGE = 100;
-
-    public static final double BASIC_PLAYER_BULLET_ANGLE_ADD = -5;
-
-    public static final AABB SPECIAL_PLAYER_BULLET_HITBOX = new AABB(35);
-    public static final double SPECIAL_PLAYER_BULLET_SPEED_NORMAL = 15;
-    public static final double SPECIAL_PLAYER_BULLET_SPEED_MEDIUM = 18;
-    public static final double SPECIAL_PLAYER_BULLET_SPEED_HIGH = 22;
-
-    public static final int SPECIAL_PLAYER_BULLET_DAMAGE_NORMAL = 150;
-    public static final int SPECIAL_PLAYER_BULLET_DAMAGE_MEDIUM = 165;
-    public static final int SPECIAL_PLAYER_BULLET_DAMAGE_HIGH = 185;
-
-//PICKUPS
-    */
+    //pickups
     constexpr float pickupInitSpeedBase{ 3.5f };
     constexpr float pickupInitSpeedMulti{ .7f };
+
+    constexpr float pickupFinalSpeed{ -1.7f };
+
+    constexpr float smallPickupHitbox{ 8.0f };
+    constexpr float largePickupHitbox{ 12.0f };
+
+    constexpr float pickupOutbound{ -100.0f };
 
     constexpr int smallPowerGain{ 1 };
     constexpr int largePowerGain{ 5 };
 
     /*
-    
-    public static final double PICKUP_FINAL_SPEED = -4;
-    public static final double PICKUP_DECELERATION = .08;
-    public static final double PICKUP_INBOUND = 15;
-
-    public static final int NUM_SMALL_PLAYER_PICKUPS = 4;
-    public static final double PLAYER_PICKUP_INBOUND = 30;
-    public static final double PLAYER_PICKUP_Y_HIGH = 100;
-    public static final int PLAYER_PICKUP_AIR_TIME = 60;
-
-    private static final double LARGE_PICKUP_HITBOX_RADIUS = 25;
-    public static final AABB LARGE_PICKUP_HITBOX = new AABB(LARGE_PICKUP_HITBOX_RADIUS);
-    public static final AABB SMALL_PICKUP_HITBOX = new AABB(LARGE_PICKUP_HITBOX_RADIUS * 4/5);
-
-    public static final int LARGE_POWER_GAIN = 8;
-    public static final int SMALL_POWER_GAIN = 1;
-
-    public static final double PICKUP_OUTBOUND = -100;
 
 //PROJECTILES
     public static final double NORMAL_OUTBOUND = -20;

@@ -272,6 +272,23 @@ namespace wasp::game::systems {
 					) };
 					return basePos + offset;
 				}
+				case components::SpawnInstructions::pointFromFloats: {
+					float x{ evaluateFloatNode(
+							scene,
+							entityID,
+							currentSpawnNodePointer->linkedNodePointers[0],
+							tick,
+							spawnList
+					) };
+					float y{ evaluateFloatNode(
+							scene,
+							entityID,
+							currentSpawnNodePointer->linkedNodePointers[1],
+							tick,
+							spawnList
+					) };
+					return math::Point2{ x, y };
+				}
 				default:
 					throw std::runtime_error{ "not a point instruction!" };
 			}
@@ -312,6 +329,23 @@ namespace wasp::game::systems {
 					) };
 					return a + b;
 				}
+				case components::SpawnInstructions::multiply: {
+					Velocity a{ evaluateVelocityNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					float b{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					return a * b;
+				}
 				case components::SpawnInstructions::velocityFromPolar: {
 					float magnitude{ evaluateFloatNode(
 						scene,
@@ -328,6 +362,23 @@ namespace wasp::game::systems {
 						spawnList
 					) };
 					return Velocity{ magnitude, angle };
+				}
+				case components::SpawnInstructions::velocityToPoint: {
+					math::Point2 a{ evaluatePointNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					math::Point2 b{ evaluatePointNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+					) };
+					return math::vectorFromAToB(a, b);
 				}
 				case components::SpawnInstructions::conditionElse: {
 					//if our predicate is met, evaluate truenode
@@ -472,6 +523,31 @@ namespace wasp::game::systems {
 					for (auto linkedNodeSharedPointer	//intentional copy
 						: currentSpawnNodePointer->linkedNodePointers
 					) {
+						while (linkedNodeSharedPointer) {
+							runSpawnNode(
+								scene,
+								entityID,
+								linkedNodeSharedPointer,
+								tick,
+								spawnList
+							);
+						}
+					}
+					currentSpawnNodePointer = nullptr;
+					break;
+				}
+				case components::SpawnInstructions::repeat: {
+					int times{ evaluateIntNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+					) };
+					for (int i{ 0 }; i < times; ++i) {
+						auto linkedNodeSharedPointer{	//intentional copy
+							currentSpawnNodePointer->linkedNodePointers[1]
+						};
 						while (linkedNodeSharedPointer) {
 							runSpawnNode(
 								scene,

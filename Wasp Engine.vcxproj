@@ -186,6 +186,7 @@
     <ClCompile Include="_source\Game\Systems\InboundSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\InitSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\InputParserSystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\LoadSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\MenuNavigationSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\OutboundSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\OverlaySystem.cpp" />
@@ -278,6 +279,7 @@
     <ClInclude Include="_header\Game\Systems\GameOverSystem.h" />
     <ClInclude Include="_header\Game\Systems\InboundSystem.h" />
     <ClInclude Include="_header\Game\Systems\ComponentOrderQueue.h" />
+    <ClInclude Include="_header\Game\Systems\LoadSystem.h" />
     <ClInclude Include="_header\Game\Systems\OutboundSystem.h" />
     <ClInclude Include="_header\Game\Systems\PauseSystem.h" />
     <ClInclude Include="_header\Game\Systems\PlayerBombSystem.h" />

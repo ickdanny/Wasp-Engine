@@ -61,8 +61,6 @@ namespace wasp::game {
 			elementSelection;
 
 		//set by MenuNavigationSystem, cleared by GameBuilderSystem
-		//todo: when we restart campaign, need to set stage back to 1 and prng to clock
-		//todo: have a GameBuilderCommand for reset
 		static const Topic<systems::GameBuilderCommands> gameBuilderCommands;
 
 		//set by InitSystem (if needed); persistent

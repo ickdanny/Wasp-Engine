@@ -132,6 +132,7 @@ namespace wasp::ecs::component {
         //modifiers
         template <typename T>
         ComponentSet addComponent() const {
+            makePresentTypeIndices();   //make sure our state is good for cloning
             const std::size_t index{ ComponentIndexer::getIndex<T>() };
             //if we need to add a component
             if (!bitset[index]) {
@@ -153,7 +154,7 @@ namespace wasp::ecs::component {
                 ComponentSet toRet{};
                 toRet.bitset = bitset;
                 toRet.bitset.reset(index);
-                //type indices gets lazy initialized
+                toRet.makePresentTypeIndices();
                 return toRet;
             }
             //otherwise return ourselves
@@ -165,6 +166,7 @@ namespace wasp::ecs::component {
             if (sizeof...(Ts) <= 0) {
                 throw std::runtime_error{ "zero type parameters!" };
             }
+            makePresentTypeIndices();   //make sure our state is good for cloning
             std::vector<std::size_t> indicesToAdd{};
             (indicesToAdd.push_back(ComponentIndexer.getIndex<Ts>), ...);
             ComponentSet toRet{ *this };
@@ -192,7 +194,7 @@ namespace wasp::ecs::component {
                     toRet.bitset.reset(index);
                 }
             }
-            //type indices gets lazy initialized
+            toRet.makePresentTypeIndices();
             return toRet;
         }
 

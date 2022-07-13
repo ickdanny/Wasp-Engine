@@ -321,6 +321,9 @@
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\PickupSpawnPrograms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="_source\Game\Systems\LoadSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Header\windowsInclude.h">
@@ -786,6 +789,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Components\PickupType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\LoadSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

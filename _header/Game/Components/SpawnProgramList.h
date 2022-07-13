@@ -10,6 +10,7 @@ namespace wasp::game::components {
     enum class SpawnInstructions {
         error,              //throws an error if reached
         list,               //sequential list of instructions [node1, node2...]
+        repeat,             //repeats instruction n times, [indexNode, repeatNode]
         condition,          //if statement [predicateNode, trueNode]
         conditionElse,      //if-else statement [predicateNode, trueNode, falseNode]
         playerPowerSplit,   //chooses node based on player power [0Node, 8Node...]
@@ -22,6 +23,8 @@ namespace wasp::game::components {
         valueDifficulty,    //returns a stored value based on the difficulty
 
         add,                //adds the result of evaluating two nodes [node1, node2]
+        multiply,           //multiplies the result of evaluating two nodes
+                            //Velocity: [velocityNode, scalarNode]
         max,                //returns the max of evaluating two nodes [node1, node2]
         uniformRandom,      //returns a uniformly random value
                             //float: [minNode, maxNode]
@@ -40,10 +43,14 @@ namespace wasp::game::components {
         entityPosition,     //returns the position of the entity
         entityOffset,       //applies an offset to the position of the entity 
                             //[offsetNode] (which is a Velocity node)
+        pointFromFloats,    //returns the result of creating a point from its nodes
+                            //[xNode, yNode]
 
         //velocity
         velocityFromPolar,  //returns the result of creating a velocity from its nodes
                             //[magnitudeNode, angleNode]
+        velocityToPoint,    //returns the velocity needed to get from point A to B
+                            //[pointANode, pointBNode]
 
         //formations
         mirrorFormation,    //reflects over y axis 

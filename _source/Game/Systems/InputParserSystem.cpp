@@ -18,6 +18,7 @@ namespace wasp::game::systems {
 			case SceneNames::game:
 				parseGameInput(scene);
 				break;
+			case SceneNames::load:
 			case SceneNames::credits:
 				return;
 			default:

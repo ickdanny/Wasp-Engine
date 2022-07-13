@@ -66,6 +66,14 @@ namespace wasp::game {
 		);
 
 		sceneStorage.makeScene(
+			SceneNames::load,		//name
+			3,						//initEntityCapacity
+			20,						//initComponentCapacity
+			renderTransparency,		//transparency
+			false					//refresh
+		);
+
+		sceneStorage.makeScene(
 			SceneNames::game,		//name
 			1000,					//initEntityCapacity
 			50,						//initComponentCapacity

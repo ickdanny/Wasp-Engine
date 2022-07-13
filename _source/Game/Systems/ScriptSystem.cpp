@@ -16,6 +16,34 @@ namespace wasp::game::systems {
 
 	namespace {
 
+		void clearExternalDataForNode(
+			std::shared_ptr<ScriptNode>& currentScriptNodePointer,
+			std::unordered_map<ScriptNode*, void*>& externalData
+		) {
+			if (externalData.find(currentScriptNodePointer.get())
+				!= externalData.end()
+			) {
+				currentScriptNodePointer->clearData(
+					externalData[currentScriptNodePointer.get()]
+				);
+				externalData.erase(currentScriptNodePointer.get());
+			}
+		}
+
+		//goes to the node specified by nextIndex if it exists
+		void gotoNextNode(
+			std::shared_ptr<ScriptNode>& currentScriptNodePointer,
+			std::size_t nextIndex
+		) {
+			if (currentScriptNodePointer->linkedNodePointers.size() > nextIndex) {
+				currentScriptNodePointer
+					= currentScriptNodePointer->linkedNodePointers[nextIndex];
+			}
+			else {
+				currentScriptNodePointer = nullptr;
+			}
+		}
+
 		#define NODE_HANDLER_ARGS \
 			Scene& scene, \
 			EntityID entityID, \
@@ -50,7 +78,20 @@ namespace wasp::game::systems {
 			}
 		}
 
-		//todo: for external data, clear at the end (in case we loop)
+		Velocity evaluateVelocityNode(NODE_HANDLER_ARGS) {
+			switch (currentScriptNodePointer->scriptInstruction) {
+				case ScriptInstructions::value: {
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<Velocity, utility::Void>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+					return dataNodePointer->internalData;
+				}
+				default:
+					throw std::runtime_error{ "not a velocity instruction!" };
+			}
+		}
 
 		bool runScriptNode(NODE_HANDLER_ARGS) {
 			switch (currentScriptNodePointer->scriptInstruction) {
@@ -128,14 +169,10 @@ namespace wasp::game::systems {
 							externalData[currentScriptNodePointer.get()]
 						)
 					};
+					//move on to next node if present
 					if (ticker.stepAndGetTick() <= 0) {
-						if (currentScriptNodePointer->linkedNodePointers.size() > 0) {
-							currentScriptNodePointer
-								= dataNodePointer->linkedNodePointers[0];
-						}
-						else {
-							currentScriptNodePointer = nullptr;
-						}
+						clearExternalDataForNode(currentScriptNodePointer, externalData);
+						gotoNextNode(currentScriptNodePointer, 0);
 						return true;
 					}
 					else {
@@ -197,14 +234,10 @@ namespace wasp::game::systems {
 							velocity.setMagnitude(newMagnitude);
 						}
 					}
+					//move on to next node if present
 					if (hasReachedSpeed) {
-						if (currentScriptNodePointer->linkedNodePointers.size() > 0) {
-							currentScriptNodePointer
-								= dataNodePointer->linkedNodePointers[0];
-						}
-						else {
-							currentScriptNodePointer = nullptr;
-						}
+						clearExternalDataForNode(currentScriptNodePointer, externalData);
+						gotoNextNode(currentScriptNodePointer, 0);
 						return true;
 					}
 					else {
@@ -251,31 +284,41 @@ namespace wasp::game::systems {
 							velocity.setMagnitude(newMagnitude);
 						}
 					}
+					//move on to next node if present
 					if (hasReachedSpeed) {
-						if (currentScriptNodePointer->linkedNodePointers.size() > 0) {
-							currentScriptNodePointer
-								= dataNodePointer->linkedNodePointers[0];
-						}
-						else {
-							currentScriptNodePointer = nullptr;
-						}
+						clearExternalDataForNode(currentScriptNodePointer, externalData);
+						gotoNextNode(currentScriptNodePointer, 0);
 						return true;
 					}
 					else {
 						return false;
 					}
 				}
+				case ScriptInstructions::setVelocity: {
+					Velocity velocity{
+						evaluateVelocityNode(
+							scene,
+							entityID,
+							currentScriptNodePointer->linkedNodePointers[0],
+							externalData,
+							componentOrderQueue
+						)
+					};
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueSetComponent<Velocity>(
+						entityHandle, 
+						velocity
+					);
+					gotoNextNode(currentScriptNodePointer, 1);
+					return true;
+				}
 				case ScriptInstructions::removeEntity: {
 					componentOrderQueue.queueRemoveEntity(
 						scene.getDataStorage().makeHandle(entityID)
 					);
-					if (currentScriptNodePointer->linkedNodePointers.size() > 0) {
-						currentScriptNodePointer
-							= currentScriptNodePointer->linkedNodePointers[0];
-					}
-					else {
-						currentScriptNodePointer = nullptr;
-					}
+					gotoNextNode(currentScriptNodePointer, 0);
 					return true;
 				}
 				default:

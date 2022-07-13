@@ -47,6 +47,7 @@ namespace wasp::game::systems {
 		void initStageMenu(Scene& scene) const;
 		void initOptionsMenu(Scene& scene) const;
 		void initContinueMenu(Scene& scene) const;
+		void initLoad(Scene& scene) const;
 
 		void initGame(Scene& scene) const;
 		void initPauseMenu(Scene& scene) const;
