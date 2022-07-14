@@ -83,6 +83,14 @@ namespace wasp::game::systems {
 			return SpawnNodeSharedPointer{ maxNodePointer };
 		}
 
+		//Returns a spawn node representing the angle from the entity to the player.
+		static SpawnNodeSharedPointer makeAngleToPlayerNode() {
+			SpawnNode* angleToPlayerNodePointer{
+				new SpawnNode{ SpawnInstructions::angleToPlayer }
+			};
+			return SpawnNodeSharedPointer{ angleToPlayerNodePointer };
+		}
+
 		//Returns a spawn node representing the given velocity value.
 		static SpawnNodeSharedPointer makeVelocityValueNode(
 			const Velocity& value
@@ -615,6 +623,24 @@ namespace wasp::game::systems {
 			ringFormationNodePointer->link(
 				baseVelNodePointer,
 				symmetryNodePointer,
+				velConsumerNodePointer
+			);
+			return SpawnNodeSharedPointer{ ringFormationNodePointer };
+		}
+
+		//Returns a spawn node that passes a velocity ring to a velocity consumer node
+		//based on the provided base velocity node and symmetry value.
+		static SpawnNodeSharedPointer makeRingFormationNode(
+			const SpawnNodeSharedPointer& baseVelNodePointer,
+			int symmetry,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			SpawnNode* ringFormationNodePointer{
+				new SpawnNode{ SpawnInstructions::ringFormation }
+			};
+			ringFormationNodePointer->link(
+				baseVelNodePointer,
+				makeIntValueNode(symmetry),
 				velConsumerNodePointer
 			);
 			return SpawnNodeSharedPointer{ ringFormationNodePointer };

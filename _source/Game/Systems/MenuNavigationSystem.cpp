@@ -222,14 +222,15 @@ namespace wasp::game::systems {
 	}
 
 	void MenuNavigationSystem::handleBackToCommand(const MenuCommand& menuCommand) {
-		globalChannelSetPointer->getChannel(GlobalTopics::sceneExitTo)
-			.addMessage(
-				std::get<0>(
-					std::get<std::tuple<SceneNames, GameBuilderCommands>>(
-						menuCommand.data
-					)
+		SceneNames backTo{
+			std::get<0>(
+				std::get<std::tuple<SceneNames, GameBuilderCommands>>(
+					menuCommand.data
 				)
-			);
+			)
+		};
+		globalChannelSetPointer->getChannel(GlobalTopics::sceneExitTo)
+			.addMessage(backTo);
 	}
 	void MenuNavigationSystem::handleStartTrack(const std::wstring& trackName) {
 		globalChannelSetPointer->getChannel(GlobalTopics::startMusic)
@@ -287,6 +288,7 @@ namespace wasp::game::systems {
 
 	void MenuNavigationSystem::handleGameOverCommand() {
 		handleStopMusic();
+		handleStartTrack(L"01");
 
 		//send us back to the correct menu
 		auto& gameStateChannel{

@@ -160,6 +160,8 @@ namespace wasp::game::systems {
 		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
 			{ components::MenuCommand::Commands::navFarDown }
 		);
+
+		globalChannelSetPointer->getChannel(GlobalTopics::startMusic).addMessage(L"01");
 	}
 
 	void InitSystem::initDifficultyMenu(Scene& scene) const {
@@ -487,9 +489,34 @@ namespace wasp::game::systems {
 				Health{ 1000 },
 				DeathCommand{ DeathCommand::Commands::deathSpawn },
 				DeathSpawn{ {spawnProgramsPointer->pickupSpawnPrograms.smallPower} },
-				DrawOrder{ config::playerDrawOrder }
+				DrawOrder{ config::playerDrawOrder },
+				SpawnProgramList{ spawnProgramsPointer->enemySpawnPrograms.s1d1 }
 			).package()
 		);
+
+		//starting stage track
+		std::wstring trackName;
+		switch (gameState.stage) {
+			case 1:
+				trackName = L"02";
+				break;
+			case 2:
+				trackName = L"04";
+				break;
+			case 3:
+				trackName = L"06";
+				break;
+			case 4: 
+				trackName = L"08";
+				break;
+			case 5:
+				trackName = L"10";
+				break;
+			default:
+				throw std::runtime_error{ "unexpected default case reached!" };
+		}
+		globalChannelSetPointer->getChannel(GlobalTopics::startMusic)
+			.addMessage(trackName);
 	}
 
 	void InitSystem::initPauseMenu(Scene& scene) const {

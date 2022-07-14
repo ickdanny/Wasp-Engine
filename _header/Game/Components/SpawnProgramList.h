@@ -38,6 +38,7 @@ namespace wasp::game::components {
         entityX,            //returns the x coordinate of the entity
         entityY,            //returns the y coordinate of the entity
         pickupInitSpeed,    //special function for determining initial speed of pickup
+        angleToPlayer,      //returns the angle from the entity to the player
 
         //point2
         entityPosition,     //returns the position of the entity
@@ -48,7 +49,7 @@ namespace wasp::game::components {
 
         //velocity
         velocityFromPolar,  //returns the result of creating a velocity from its nodes
-                            //[magnitudeNode, angleNode]
+                            //[magnitudeNode, angleNode] (float nodes)
         velocityToPoint,    //returns the velocity needed to get from point A to B
                             //[pointANode, pointBNode]
 

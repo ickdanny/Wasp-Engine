@@ -202,6 +202,7 @@
     <ClCompile Include="_source\Game\Systems\MiscellaneousSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\RotateSpriteForwardSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\ScriptSystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\SpawnPrograms\EnemySpawnPrograms.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\PickupSpawnPrograms.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\PlayerSpawnPrograms.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\SpawnProgramUtil.cpp" />
@@ -304,6 +305,7 @@
     <ClInclude Include="_header\Game\Systems\InputParserSystem.h" />
     <ClInclude Include="_header\Game\Systems\MenuNavigationSystem.h" />
     <ClInclude Include="_header\Game\Systems\RenderSystem.h" />
+    <ClInclude Include="_header\Game\Systems\SpawnPrograms\EnemySpawnPrograms.h" />
     <ClInclude Include="_header\Game\Systems\SpawnPrograms\PickupSpawnPrograms.h" />
     <ClInclude Include="_header\Game\Systems\SpawnPrograms\ScriptProgramUtil.h" />
     <ClInclude Include="_header\Game\Systems\SpawnPrograms\spawnProgramInclude.h" />

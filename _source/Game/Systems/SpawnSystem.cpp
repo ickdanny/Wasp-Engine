@@ -161,6 +161,34 @@ namespace wasp::game::systems {
 					float speedMulti{ 1 + (heightRatio * config::pickupInitSpeedMulti) };
 					return config::pickupInitSpeedBase * speedMulti;
 				}
+				case components::SpawnInstructions::angleToPlayer: {
+					math::Point2 pos{
+						scene.getDataStorage().getComponent<Position>(entityID)
+					};
+
+					//get the iterator for players
+					static const Topic<ecs::component::Group*> 
+						playerGroupPointerStorageTopic{};
+
+					auto playerGroupPointer{
+						getGroupPointer<PlayerData, Position>(
+							scene,
+							playerGroupPointerStorageTopic
+						)
+					};
+					auto playerGroupIterator{
+						playerGroupPointer->groupIterator<Position>()
+					};
+
+					if (playerGroupIterator.isValid()) {
+						//just grab the first player
+						const auto [playerPos] = *playerGroupIterator;
+						return math::getAngleFromAToB(pos, playerPos);
+					}
+					else {
+						return 0.0f;
+					}
+				}
 				case components::SpawnInstructions::conditionElse: {
 					//if our predicate is met, evaluate truenode
 					if (evaluatePredicateNode(
