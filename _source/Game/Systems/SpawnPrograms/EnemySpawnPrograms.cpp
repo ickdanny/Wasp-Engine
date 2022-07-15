@@ -9,6 +9,13 @@ namespace wasp::game::systems {
 		constexpr float sharpHitbox{ 5.0f };
 		constexpr float outbound{ -20.0f };
 
+		constexpr float spawnOut{ 20.0f };
+		constexpr float topOut{ -spawnOut + config::gameOffset.y };
+		constexpr float leftOut{ -spawnOut + config::gameOffset.x };
+		constexpr float rightOut{ config::gameWidth + spawnOut + config::gameOffset.x };
+
+		constexpr float enemyOut{ -30.0f };
+
 	#define BASIC_BULLET_ARGS(hitbox, outbound, spriteName, drawOrderOffset) \
 		hitbox, \
 		PlayerCollisions::Source{ components::CollisionCommands::death }, \
@@ -31,7 +38,23 @@ namespace wasp::game::systems {
 		}, \
 		DrawOrder{ config::enemyBulletDrawOrder + drawOrderOffset }, \
 		RotateSpriteForwardMarker{}
-	}
+
+	#define WISP_ARGS(health, deathSpawnNode) \
+		Hitbox{ 12.0f }, \
+		SpriteInstruction{ \
+			bitmapStoragePointer->get(L"wisp")->d2dBitmap \
+		}, \
+		SpriteSpin{ -1.5f }, \
+		PlayerCollisions::Source{}, \
+		EnemyCollisions::Target{ components::CollisionCommands::damage }, \
+		Health{ health }, \
+		Outbound{ enemyOut }, \
+		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
+		DeathSpawn{ {deathSpawnNode} }, \
+		DrawOrder{ config::enemyDrawOrder }
+
+
+	}	//end of anonymous namespace
 
 	EnemySpawnPrograms::EnemySpawnPrograms(
 		resources::BitmapStorage* bitmapStoragePointer
@@ -291,13 +314,34 @@ namespace wasp::game::systems {
 				),
 				18,
 				SpawnProgramUtil::makeSpawnPosVelNode(
-					largeCyanPrototype,
+					sharpCyanPrototype,
 					SpawnProgramUtil::makeEntityPositionNode()
 				)
 			)
 		}
-
 		, s1d1{ s1d1Node, 1, false }
+		, s1e1Prototype{
+			EntityBuilder::makeLinearCollidable(
+				{50.0f, topOut}, 
+				{1.0f, -90.0f}, 
+				WISP_ARGS(100, s1d1),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveTurningProgram(
+						50,
+						50,
+						20,
+						s1d1,
+						50,
+						{ 1.0f, -45.0f},
+						-90.0f,
+						100
+					)
+				}
+			).heapClone()
+		}
+		, s1e1Node{ SpawnProgramUtil::makeSpawnNode(s1e1Prototype) }
+		, s1e1{ s1e1Node, 1, false }
+		
 
 		{
 		}

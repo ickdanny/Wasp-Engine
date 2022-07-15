@@ -31,6 +31,10 @@ namespace wasp::utility {
             return toRet;
         }
 
+        int getTick() {
+            return tick;
+        }
+
         void setLooping(bool looping) {
             this->looping = looping;
         }

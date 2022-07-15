@@ -47,7 +47,6 @@ namespace wasp::game::systems {
 		else {
 			throw std::runtime_error("unexpected player shot type!");
 		}
-		debug::log("spawn bomb");
 		--playerData.bombs;
 	}
 }

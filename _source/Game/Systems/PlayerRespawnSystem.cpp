@@ -46,7 +46,5 @@ namespace wasp::game::systems {
 			//continues get used up in the ContinueSystem
 			playerData.lives = config::continueLives;
 		}
-
-		debug::log("respawning");
 	}
 }

@@ -16,6 +16,8 @@ namespace wasp::game::systems {
 
 	namespace {
 
+		constexpr float angleEquivalenceEpsilon{ .01f };
+
 		void clearExternalDataForNode(
 			std::shared_ptr<ScriptNode>& currentScriptNodePointer,
 			std::unordered_map<ScriptNode*, void*>& externalData
@@ -179,6 +181,167 @@ namespace wasp::game::systems {
 						return false;
 					}
 				}
+				case ScriptInstructions::removeVisible: {
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueRemoveComponent<VisibleMarker>(
+						entityHandle
+					);
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::setSpriteInstruction: {
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<SpriteInstruction, utility::Void>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueSetComponent<SpriteInstruction>(
+						entityHandle,
+						dataNodePointer->internalData
+					);
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::setCollidable: {
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueSetComponent<CollidableMarker>(
+						entityHandle, {}
+					);
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::removeCollidable: {
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueRemoveComponent<CollidableMarker>(
+						entityHandle
+						);
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::setHealth: {
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<int, utility::Void>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueSetComponent<Health>(
+						entityHandle, { dataNodePointer->internalData }
+					);
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::removeHealth: {
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueRemoveComponent<Health>(
+						entityHandle
+						);
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::setDamage: {
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<int, utility::Void>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueSetComponent<Damage>(
+						entityHandle, { dataNodePointer->internalData }
+					);
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::removeDamage: {
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueRemoveComponent<Damage>(
+						entityHandle
+						);
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::addSpawn: {
+					if (scene.getDataStorage()
+						.containsComponent<SpawnProgramList>(entityID)
+					) {
+						auto dataNodePointer{
+							dynamic_cast<
+								ScriptNodeData<components::SpawnProgram, utility::Void>*
+							>(
+								currentScriptNodePointer.get()
+							)
+						};
+						scene.getDataStorage().getComponent<SpawnProgramList>(entityID)
+							.push_back(dataNodePointer->internalData);
+						gotoNextNode(currentScriptNodePointer, 0);
+						return true;
+					}
+					//else fallthrough to setSpawn
+				}
+				case ScriptInstructions::setSpawn: {
+					auto dataNodePointer{
+						dynamic_cast<
+							ScriptNodeData<components::SpawnProgram, utility::Void>*
+						>(
+							currentScriptNodePointer.get()
+						)
+					};
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueSetComponent<SpawnProgramList>(
+						entityHandle, { dataNodePointer->internalData }
+					);
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::clearSpawn: {
+					if (scene.getDataStorage()
+						.containsComponent<SpawnProgramList>(entityID)
+					) {
+						scene.getDataStorage().getComponent<SpawnProgramList>(entityID)
+							.clear();
+					}
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::setVelocity: {
+					Velocity velocity{
+						evaluateVelocityNode(
+							scene,
+							entityID,
+							currentScriptNodePointer->linkedNodePointers[0],
+							externalData,
+							componentOrderQueue
+						)
+					};
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueSetComponent<Velocity>(
+						entityHandle,
+						velocity
+						);
+					gotoNextNode(currentScriptNodePointer, 1);
+					return true;
+				}
 				case ScriptInstructions::shiftSpeedPeriod: {
 					Velocity& velocity{
 						scene.getDataStorage().getComponent<Velocity>(entityID)
@@ -191,7 +354,7 @@ namespace wasp::game::systems {
 						)
 					};
 
-					auto [targetSpeed, ticks] = dataNodePointer->internalData;
+					const auto [targetSpeed, ticks] = dataNodePointer->internalData;
 
 					bool hasReachedSpeed{ false };
 
@@ -236,6 +399,303 @@ namespace wasp::game::systems {
 					}
 					//move on to next node if present
 					if (hasReachedSpeed) {
+						clearExternalDataForNode(currentScriptNodePointer, externalData);
+						gotoNextNode(currentScriptNodePointer, 0);
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				case ScriptInstructions::shiftVelocityPeriod: {
+					Velocity& velocity{
+						scene.getDataStorage().getComponent<Velocity>(entityID)
+					};
+					float oldMagnitude{ velocity.getMagnitude() };
+
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<std::tuple<Velocity, int>, float>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+
+					const auto [targetVelocity, ticks] = dataNodePointer->internalData;
+					float targetSpeed{ targetVelocity.getMagnitude() };
+
+					//do not turn; set our angle to target angle
+					if (externalData.find(currentScriptNodePointer.get())
+						== externalData.end()
+					) {
+						velocity.setAngle(targetVelocity.getAngle());
+					}
+
+					bool hasReachedSpeed{ false };
+
+					//if we are at speed already, move to next instruction
+					if (oldMagnitude == targetSpeed) {
+						hasReachedSpeed = true;
+					}
+					else {
+						//retrieve or create increment
+						float increment{};
+						if (externalData.find(currentScriptNodePointer.get())
+							!= externalData.end()
+							) {
+							increment = *dataNodePointer->getDataPointer(
+								externalData[currentScriptNodePointer.get()]
+							);
+						}
+						else {
+							float magnitudeDiff{ targetSpeed - oldMagnitude };
+							increment = ticks > 0
+								? magnitudeDiff / static_cast<float>(ticks)
+								: magnitudeDiff;
+							externalData[currentScriptNodePointer.get()]
+								= new float{ increment };
+						}
+
+						//increment velocity
+						float newMagnitude{ oldMagnitude + increment };
+
+						//check to see if we have reached target speed
+						if (increment > 0 && newMagnitude > targetSpeed) {
+							hasReachedSpeed = true;
+							velocity.setMagnitude(targetSpeed);
+						}
+						else if (increment < 0 && newMagnitude < targetSpeed) {
+							hasReachedSpeed = true;
+							velocity.setMagnitude(targetSpeed);
+						}
+						else {
+							velocity.setMagnitude(newMagnitude);
+						}
+					}
+					//move on to next node if present
+					if (hasReachedSpeed) {
+						clearExternalDataForNode(currentScriptNodePointer, externalData);
+						gotoNextNode(currentScriptNodePointer, 0);
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				case ScriptInstructions::shiftVelocityTurnPeriod: {
+					Velocity& velocity{
+						scene.getDataStorage().getComponent<Velocity>(entityID)
+					};
+					float oldMagnitude{ velocity.getMagnitude() };
+					auto oldAngle{ velocity.getAngle() };
+
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<
+							std::tuple<Velocity, math::Angle, int>, 
+							std::tuple<float, float>
+						>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+
+					const auto [targetVelocity, initAngle, ticks] 
+						= dataNodePointer->internalData;
+					const float targetSpeed{ targetVelocity.getMagnitude() };
+					const auto targetAngle{ targetVelocity.getAngle() };
+
+					bool hasReachedSpeed{ false };
+					bool hasReachedAngle{ false };
+
+					if (oldMagnitude == targetSpeed) {
+						hasReachedSpeed = true;
+					}
+					if (oldAngle == targetAngle) {
+						hasReachedAngle = true;
+					}
+
+					if(!hasReachedSpeed || !hasReachedAngle) {
+						//retrieve or create increment
+						float speedIncrement{};
+						float angleIncrement{};
+						if (externalData.find(currentScriptNodePointer.get())
+							!= externalData.end()
+						) {
+							auto [storedSpeedIncrement, storedAngleIncrement] 
+								= *dataNodePointer->getDataPointer(
+									externalData[currentScriptNodePointer.get()]
+								);
+							speedIncrement = storedSpeedIncrement;
+							angleIncrement = storedAngleIncrement;
+						}
+						else {
+							//create and store increments
+							float magnitudeDiff{ targetSpeed - oldMagnitude };
+							speedIncrement = ticks > 0
+								? magnitudeDiff / static_cast<float>(ticks)
+								: magnitudeDiff;
+
+							float angleDiff{ targetAngle.smallerDifference(initAngle) };
+							angleIncrement = ticks > 0
+								? angleDiff / static_cast<float>(ticks)
+								: angleDiff;
+
+							externalData[currentScriptNodePointer.get()]
+								= new std::tuple<float, float>{ 
+									speedIncrement, 
+									angleIncrement 
+								};
+						}
+
+						if (!hasReachedSpeed) {
+							//increment speed
+							float newMagnitude{ oldMagnitude + speedIncrement };
+
+							//check to see if we have reached target speed
+							if (speedIncrement > 0 && newMagnitude > targetSpeed) {
+								hasReachedSpeed = true;
+								velocity.setMagnitude(targetSpeed);
+							}
+							else if (speedIncrement < 0 && newMagnitude < targetSpeed) {
+								speedIncrement = true;
+								velocity.setMagnitude(targetSpeed);
+							}
+							else {
+								velocity.setMagnitude(newMagnitude);
+							}
+						}
+
+						if (!hasReachedAngle) {
+							//increment angle
+							math::Angle newAngle{
+								static_cast<float>(oldAngle) + angleIncrement
+							};
+
+							//check to see if we have reached target angle
+							if (
+								std::abs(static_cast<float>(
+									targetAngle.smallerDifference(newAngle)
+									)) <= angleEquivalenceEpsilon
+								) {
+								hasReachedAngle = true;
+								velocity.setAngle(targetAngle);
+							}
+							else {
+								velocity.setAngle(newAngle);
+							}
+						}
+					}
+					//move on to next node if present
+					if (hasReachedSpeed && hasReachedAngle) {
+						clearExternalDataForNode(currentScriptNodePointer, externalData);
+						gotoNextNode(currentScriptNodePointer, 0);
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				case ScriptInstructions::shiftVelocityTurnLongPeriod: {
+					Velocity& velocity{
+						scene.getDataStorage().getComponent<Velocity>(entityID)
+					};
+					float oldMagnitude{ velocity.getMagnitude() };
+					auto oldAngle{ velocity.getAngle() };
+
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<
+							std::tuple<Velocity, math::Angle, int>,
+							std::tuple<float, float>
+						>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+
+					const auto [targetVelocity, initAngle, ticks]
+						= dataNodePointer->internalData;
+					const float targetSpeed{ targetVelocity.getMagnitude() };
+					const auto targetAngle{ targetVelocity.getAngle() };
+
+					bool hasReachedSpeed{ false };
+					bool hasReachedAngle{ false };
+
+					if (oldMagnitude == targetSpeed) {
+						hasReachedSpeed = true;
+					}
+					if (oldAngle == targetAngle) {
+						hasReachedAngle = true;
+					}
+
+					if (!hasReachedSpeed || !hasReachedAngle) {
+						//retrieve or create increment
+						float speedIncrement{};
+						float angleIncrement{};
+						if (externalData.find(currentScriptNodePointer.get())
+							!= externalData.end()
+							) {
+							auto [storedSpeedIncrement, storedAngleIncrement]
+								= *dataNodePointer->getDataPointer(
+									externalData[currentScriptNodePointer.get()]
+								);
+							speedIncrement = storedSpeedIncrement;
+							angleIncrement = storedAngleIncrement;
+						}
+						else {
+							//create and store increments
+							float magnitudeDiff{ targetSpeed - oldMagnitude };
+							speedIncrement = ticks > 0
+								? magnitudeDiff / static_cast<float>(ticks)
+								: magnitudeDiff;
+
+							float angleDiff{ targetAngle.largerDifference(initAngle) };
+							angleIncrement = ticks > 0
+								? angleDiff / static_cast<float>(ticks)
+								: angleDiff;
+
+							externalData[currentScriptNodePointer.get()]
+								= new std::tuple<float, float>{
+									speedIncrement,
+									angleIncrement
+							};
+						}
+
+						if (!hasReachedSpeed) {
+							//increment speed
+							float newMagnitude{ oldMagnitude + speedIncrement };
+
+							//check to see if we have reached target speed
+							if (speedIncrement > 0 && newMagnitude > targetSpeed) {
+								hasReachedSpeed = true;
+								velocity.setMagnitude(targetSpeed);
+							}
+							else if (speedIncrement < 0 && newMagnitude < targetSpeed) {
+								speedIncrement = true;
+								velocity.setMagnitude(targetSpeed);
+							}
+							else {
+								velocity.setMagnitude(newMagnitude);
+							}
+						}
+
+						if (!hasReachedAngle) {
+							//increment angle
+							math::Angle newAngle{
+								static_cast<float>(oldAngle) + angleIncrement
+							};
+
+							//check to see if we have reached target angle
+							if (
+								std::abs(static_cast<float>(
+									targetAngle.smallerDifference(newAngle)
+									)) <= angleEquivalenceEpsilon
+								) {
+								hasReachedAngle = true;
+								velocity.setAngle(targetAngle);
+							}
+							else {
+								velocity.setAngle(newAngle);
+							}
+						}
+					}
+					//move on to next node if present
+					if (hasReachedSpeed && hasReachedAngle) {
 						clearExternalDataForNode(currentScriptNodePointer, externalData);
 						gotoNextNode(currentScriptNodePointer, 0);
 						return true;
@@ -294,26 +754,7 @@ namespace wasp::game::systems {
 						return false;
 					}
 				}
-				case ScriptInstructions::setVelocity: {
-					Velocity velocity{
-						evaluateVelocityNode(
-							scene,
-							entityID,
-							currentScriptNodePointer->linkedNodePointers[0],
-							externalData,
-							componentOrderQueue
-						)
-					};
-					EntityHandle entityHandle{
-						scene.getDataStorage().makeHandle(entityID)
-					};
-					componentOrderQueue.queueSetComponent<Velocity>(
-						entityHandle, 
-						velocity
-					);
-					gotoNextNode(currentScriptNodePointer, 1);
-					return true;
-				}
+				
 				case ScriptInstructions::removeEntity: {
 					componentOrderQueue.queueRemoveEntity(
 						scene.getDataStorage().makeHandle(entityID)

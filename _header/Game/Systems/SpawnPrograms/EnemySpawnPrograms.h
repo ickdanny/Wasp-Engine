@@ -68,16 +68,20 @@ namespace wasp::game::systems {
 		//naming convention:
 		//s		- stage 
 		//n		- stage number
-		//x		- type (d-danmaku)
+		//x		- type (d-danmaku, e-enemy)
 		//n		- id number
 		
 
 		// STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 //
 
 		SpawnNodeSharedPointer s1d1Node;						//uninitialized!
+		SpawnProgram s1d1;										//uninitialized!
+		ComponentTupleSharedPointer s1e1Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s1e1Node;						//uninitialized!
+
 	public:
 
-		SpawnProgram s1d1;								//uninitialized!
+		SpawnProgram s1e1;										//uninitialized!
 
 		//Constructors
 		EnemySpawnPrograms(resources::BitmapStorage* bitmapStoragePointer);

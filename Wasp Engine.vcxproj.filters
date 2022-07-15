@@ -327,6 +327,9 @@
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\EnemySpawnPrograms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="_source\Game\Systems\SpawnPrograms\ScriptProgramUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Header\windowsInclude.h">

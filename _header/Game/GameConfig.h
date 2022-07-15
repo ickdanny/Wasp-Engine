@@ -103,7 +103,8 @@ namespace wasp::game::config {
 	//graphics
 	constexpr int backgroundDrawOrder{ -10000 };
     constexpr int playerBulletDrawOrder{ -5000 };
-    constexpr int pickupDrawOrder{ -4000 };
+    constexpr int enemyDrawOrder{ -4000 };
+    constexpr int pickupDrawOrder{ -3000 };
 	constexpr int playerDrawOrder{ 0 };
     constexpr int enemyBulletDrawOrder{ 1000 };
 	constexpr int foregroundDrawOrder{ 10000 };

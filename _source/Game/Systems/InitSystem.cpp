@@ -490,7 +490,7 @@ namespace wasp::game::systems {
 				DeathCommand{ DeathCommand::Commands::deathSpawn },
 				DeathSpawn{ {spawnProgramsPointer->pickupSpawnPrograms.smallPower} },
 				DrawOrder{ config::playerDrawOrder },
-				SpawnProgramList{ spawnProgramsPointer->enemySpawnPrograms.s1d1 }
+				SpawnProgramList{ spawnProgramsPointer->enemySpawnPrograms.s1e1 }
 			).package()
 		);
 

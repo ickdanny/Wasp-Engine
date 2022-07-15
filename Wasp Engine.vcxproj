@@ -205,6 +205,7 @@
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\EnemySpawnPrograms.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\PickupSpawnPrograms.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\PlayerSpawnPrograms.cpp" />
+    <ClCompile Include="_source\Game\Systems\SpawnPrograms\ScriptProgramUtil.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnPrograms\SpawnProgramUtil.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SpriteSpinSystem.cpp" />

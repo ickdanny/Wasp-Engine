@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Logging.h"
+
 namespace wasp::game::components {
     enum class ScriptInstructions {
         error,                      //throws an error if reached
@@ -154,7 +156,6 @@ namespace wasp::game::components {
     private:
         //typedefs
         using ScriptNodeSharedPointer = std::shared_ptr<ScriptNode>;
-        using OldToNewMapType = std::unordered_map<ScriptNode*, ScriptNode*>;
 
     public:
         //fields
@@ -180,6 +181,10 @@ namespace wasp::game::components {
         }
 
         virtual void clearData(void* voidPointer) {}
+
+        //makes a copy of the data held in the given void* and returns a new void* to
+        //the copy
+        virtual void* copyData(void* sourcePointer) { return nullptr; }
 
         friend struct ScriptProgram;
     };
@@ -215,6 +220,17 @@ namespace wasp::game::components {
                 delete reinterpret_cast<External*>(voidPointer);
             }
         }
+
+        void* copyData(void* sourcePointer) override {
+            if (sourcePointer) {
+                External* externalPointer{ reinterpret_cast<External*>(sourcePointer) };
+                External* copyPointer{ new External{ *externalPointer} };
+                return copyPointer;
+            }
+            else {
+                return nullptr;
+            }
+        }
     };
 
     struct ScriptProgram {
@@ -229,11 +245,60 @@ namespace wasp::game::components {
             : currentNodePointer { currentNodePointer } {
         }
 
+        //Copies a script program, including the contents of it's external data
+        ScriptProgram(const ScriptProgram& toCopy)
+            : currentNodePointer{ toCopy.currentNodePointer } 
+        {
+            for (auto [scriptNodePointer, sourcePointer] : toCopy.externalData) {
+                externalData[scriptNodePointer] 
+                    = scriptNodePointer->copyData(sourcePointer);
+            }
+        }
+
+        //Moves a script program, taking the contents of it's external data
+        ScriptProgram(ScriptProgram&& toMove)
+            : currentNodePointer{ std::move(toMove.currentNodePointer) }
+        {
+            for (auto [scriptNodePointer, voidPointer] : toMove.externalData) {
+                externalData[scriptNodePointer] = voidPointer;
+            }
+            toMove.externalData.clear();
+        }
+
+        //Copy assignment operator, copies external data
+        ScriptProgram& operator=(const ScriptProgram& toCopy) {
+            clearExternalData();
+            currentNodePointer = toCopy.currentNodePointer;
+            for (auto [scriptNodePointer, sourcePointer] : toCopy.externalData) {
+                externalData[scriptNodePointer]
+                    = scriptNodePointer->copyData(sourcePointer);
+            }
+            return *this;
+        }
+
+        //Move assignment operator, takes contents of external data
+        ScriptProgram& operator=(ScriptProgram&& toMove) noexcept {
+            clearExternalData();
+            currentNodePointer = toMove.currentNodePointer;
+            for (auto [scriptNodePointer, voidPointer] : toMove.externalData) {
+                externalData[scriptNodePointer] = voidPointer;
+            }
+            toMove.externalData.clear();
+            return *this;
+        }
+
         //clears the external data
         ~ScriptProgram() {
+            clearExternalData();
+        }
+
+    private:
+        //helper function
+        void clearExternalData() {
             for (auto [scriptNodePointer, voidPointer] : externalData) {
                 scriptNodePointer->clearData(voidPointer);
             }
+            externalData.clear();
         }
     };
 
