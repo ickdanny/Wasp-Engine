@@ -1,6 +1,6 @@
 #include "Game/Systems/PlayerShotSystem.h"
 
-#include "Game/Systems/SpawnPrograms/PlayerSpawnPrograms.h"
+#include "Game/Systems/Programs/PlayerPrograms.h"
 
 namespace wasp::game::systems {
 
@@ -51,12 +51,12 @@ namespace wasp::game::systems {
 			if (!isPlayerAlreadyShooting) {
 				if (playerData.shotType == ShotType::shotA) {
 					spawnProgramList.push_back(
-						{ spawnProgramsPointer->playerSpawnPrograms.shotA }
+						{ programsPointer->playerPrograms.shotASpawnProgram }
 					);
 				}
 				else if (playerData.shotType == ShotType::shotB) {
 					spawnProgramList.push_back(
-						{ spawnProgramsPointer->playerSpawnPrograms.shotB }
+						{ programsPointer->playerPrograms.shotBSpawnProgram }
 					);
 				}
 				else {

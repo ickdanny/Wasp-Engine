@@ -4,7 +4,7 @@
 #include "Input/IKeyInputTable.h"
 #include "Game/Scenes.h"
 
-#include "Game/Systems/SpawnPrograms/SpawnPrograms.h"
+#include "Game/Systems/Programs/Programs.h"
 
 #include "Game/Systems/InitSystem.h"
 #include "Game/Systems/MiscellaneousSystem.h"
@@ -30,6 +30,7 @@
 #include "Game/Systems/OverlaySystem.h"
 #include "Game/Systems/PauseSystem.h"
 
+#include "Game/Systems/AnimationSystem.h"
 #include "Game/Systems/RotateSpriteForwardSystem.h"
 #include "Game/Systems/SpriteSpinSystem.h"
 
@@ -43,7 +44,7 @@ namespace wasp::game {
 	class SceneUpdater {
 	private:
 		//fields
-		systems::SpawnPrograms spawnPrograms;					//not initialized!
+		systems::Programs programs;								//not initialized!
 
 		//systems
 		systems::InitSystem initSystem;							//not initialized!
@@ -66,10 +67,11 @@ namespace wasp::game {
 		systems::PlayerRespawnSystem playerRespawnSystem{};
 		systems::PlayerReactivateSystem playerReactivateSystem{};
 		systems::DeathHandlerSystem deathHandlerSystem{};
-		systems::SpawnSystem spawnSystem{};
+		systems::SpawnSystem spawnSystem;						//not initialized!
 		systems::OverlaySystem overlaySystem;					//not initialized!
 		systems::PauseSystem pauseSystem;						//not initialized!
 
+		systems::AnimationSystem animationSystem;				//not initialized!
 		systems::RotateSpriteForwardSystem rotateSpriteForwardSystem{};
 		systems::SpriteSpinSystem spriteSpinSystem{};
 

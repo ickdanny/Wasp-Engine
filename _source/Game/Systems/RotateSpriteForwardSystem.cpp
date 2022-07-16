@@ -20,7 +20,7 @@ namespace wasp::game::systems {
 		while (groupIterator.isValid()) {
 			auto [spriteInstruction, velocity] = *groupIterator;
 
-			Angle angle{ -static_cast<float>(velocity.getAngle()) + 90.0f };
+			Angle angle{ -static_cast<float>(velocity.getAngle()) - 90.0f };
 			if (spriteInstruction.getRotation() != angle) {
 				spriteInstruction.setRotation(angle);
 			}

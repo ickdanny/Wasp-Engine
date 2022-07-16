@@ -1,7 +1,7 @@
 #include "Game/Systems/DeathHandlerSystem.h"
 
 #include "Game/Systems/EntityBuilder.h"
-#include "Game/Systems/SpawnPrograms/ScriptProgramUtil.h"
+#include "Game/Systems/Programs/ScriptProgramUtil.h"
 
 #include "Logging.h"
 

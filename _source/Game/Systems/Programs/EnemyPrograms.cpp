@@ -1,4 +1,4 @@
-#include "Game/Systems/SpawnPrograms/EnemySpawnPrograms.h"
+#include "Game/Systems/Programs/EnemyPrograms.h"
 
 namespace wasp::game::systems {
 
@@ -44,7 +44,7 @@ namespace wasp::game::systems {
 		SpriteInstruction{ \
 			bitmapStoragePointer->get(L"wisp")->d2dBitmap \
 		}, \
-		SpriteSpin{ -1.5f }, \
+		SpriteSpin{ -2.25f }, \
 		PlayerCollisions::Source{}, \
 		EnemyCollisions::Target{ components::CollisionCommands::damage }, \
 		Health{ health }, \
@@ -53,13 +53,30 @@ namespace wasp::game::systems {
 		DeathSpawn{ {deathSpawnNode} }, \
 		DrawOrder{ config::enemyDrawOrder }
 
+	#define BAT_ARGS(health, deathSpawnNode) \
+		Hitbox{ 11.0f }, \
+		SpriteInstruction{ \
+			bitmapStoragePointer->get(L"bat_1")->d2dBitmap \
+		}, \
+		AnimationList{ { L"bat_1", L"bat_2" }, 10 }, \
+		RotateSpriteForwardMarker{}, \
+		PlayerCollisions::Source{}, \
+		EnemyCollisions::Target{ components::CollisionCommands::damage }, \
+		Health{ health }, \
+		Outbound{ enemyOut }, \
+		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
+		DeathSpawn{ {deathSpawnNode} }, \
+		DrawOrder{ config::enemyDrawOrder + 1 }
+
 
 	}	//end of anonymous namespace
 
-	EnemySpawnPrograms::EnemySpawnPrograms(
-		resources::BitmapStorage* bitmapStoragePointer
+	EnemyPrograms::EnemyPrograms(
+		resources::BitmapStorage* bitmapStoragePointer,
+		PickupPrograms const* pickupProgramsPointer
 	)
 		: bitmapStoragePointer{ bitmapStoragePointer }
+		, pickupProgramsPointer{ pickupProgramsPointer }
 
 		//prototypes
 
@@ -312,7 +329,7 @@ namespace wasp::game::systems {
 					SpawnProgramUtil::makeFloatValueNode(1.0f),
 					SpawnProgramUtil::makeAngleToPlayerNode()
 				),
-				18,
+				{ 6, 12, 18, 24 },
 				SpawnProgramUtil::makeSpawnPosVelNode(
 					sharpCyanPrototype,
 					SpawnProgramUtil::makeEntityPositionNode()
@@ -322,17 +339,17 @@ namespace wasp::game::systems {
 		, s1d1{ s1d1Node, 1, false }
 		, s1e1Prototype{
 			EntityBuilder::makeLinearCollidable(
-				{50.0f, topOut}, 
-				{1.0f, -90.0f}, 
-				WISP_ARGS(100, s1d1),
+				{40.0f + config::gameOffset.x, topOut}, 
+				{1.5f, -90.0f}, 
+				WISP_ARGS(100, pickupProgramsPointer->smallPowerSpawnProgram),
 				ScriptProgramList{
 					ScriptProgramUtil::makeShootOnceAndLeaveTurningProgram(
-						50,
-						50,
 						20,
+						25,
+						5,
 						s1d1,
-						50,
-						{ 1.0f, -45.0f},
+						20,
+						{ 1.5f, -25.0f},
 						-90.0f,
 						100
 					)
@@ -341,7 +358,76 @@ namespace wasp::game::systems {
 		}
 		, s1e1Node{ SpawnProgramUtil::makeSpawnNode(s1e1Prototype) }
 		, s1e1{ s1e1Node, 1, false }
+		, s1e2Prototype{
+			EntityBuilder::makeLinearCollidable(
+				{config::gameWidth - 40.0f + config::gameOffset.x, topOut}, 
+				{1.5f, -90.0f}, 
+				WISP_ARGS(150, pickupProgramsPointer->smallPowerSpawnProgram),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveTurningProgram(
+						20,
+						25,
+						5,
+						s1d1,
+						20,
+						{ 1.5f, 180.0f + 25.0f },
+						-90.0f,
+						100
+					)
+				}
+			).heapClone()
+		}
+		, s1e2Node{ SpawnProgramUtil::makeSpawnNode(s1e2Prototype) }
+		, s1e2{ s1e2Node, 1, false }
+		, s1d3Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(
+					SpawnProgramUtil::makeEntityUniformRandomIntNode(
+						SpawnProgramUtil::makeIntValueNode(0),
+						SpawnProgramUtil::makeIntValueDiffNode({ 300, 200, 100, 50 })
+					),
+					{ 300, 200, 100, 50 }
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					smallAzurePrototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeFloatValueDiffNode(
+							{1.5f, 1.8f, 2.1f, 2.5f}
+						),
+						SpawnProgramUtil::makeAngleToPlayerNode()
+					)
+				)
+			)
+		}
+		, s1d3{ s1d3Node, 1000, true }
+		, s1e3Prototype{
+			EntityBuilder::makePosVelPrototype(
+				BAT_ARGS(20, pickupProgramsPointer->smallPowerSpawnProgram),
+				SpawnProgramList{ s1d3 }
+			).heapClone()
+		}
+		, s1e3Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, 18),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s1e3Prototype,
+					SpawnProgramUtil::makePointValueNode({ leftOut, 30.0f }),
+					SpawnProgramUtil::makeVelocityValueNode(Velocity{ 2.0f, -15.0f })
+				)
+			)
+		}
+		, s1e3{ s1e3Node, 290, false }
+
 		
+		, stage1ScriptProgram{
+			ScriptProgramUtil::makeTimerNode(130,
+			ScriptProgramUtil::makeSetSpawnNode(s1e1,
+			ScriptProgramUtil::makeTimerNode(330,
+			ScriptProgramUtil::makeSetSpawnNode(s1e2,
+			ScriptProgramUtil::makeTimerNode(200,
+			ScriptProgramUtil::makeAddSpawnNode(s1e3))))))
+		}
 
 		{
 		}

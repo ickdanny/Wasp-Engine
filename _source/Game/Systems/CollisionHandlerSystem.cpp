@@ -4,8 +4,8 @@
 
 namespace wasp::game::systems {
 
-	CollisionHandlerSystem::CollisionHandlerSystem(SpawnPrograms* spawnProgramsPointer)
-		: spawnProgramsPointer{ spawnProgramsPointer } {
+	CollisionHandlerSystem::CollisionHandlerSystem(Programs* programsPointer)
+		: programsPointer{ programsPointer } {
 	}
 
 	void CollisionHandlerSystem::operator()(Scene& scene) {
@@ -88,7 +88,7 @@ namespace wasp::game::systems {
 						dataStorage.addComponent<DeathSpawn>({
 							pickupHandle,
 							{ SpawnProgramList{ 
-								spawnProgramsPointer->pickupSpawnPrograms.clear
+								programsPointer->pickupPrograms.maxPowerClearSpawnProgram
 							}}
 						});
 					}

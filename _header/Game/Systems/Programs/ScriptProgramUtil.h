@@ -74,6 +74,12 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next = nullptr
 		);
 
+		//Returns a script node representing an add spawn command.
+		static ScriptNodeSharedPointer makeAddSpawnNode(
+			const components::SpawnProgram& spawnProgram,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
 		//Returns a script node representing a speed shift period with the given values
 		//of targetSpeed and ticks.
 		static ScriptNodeSharedPointer makeShiftSpeedPeriodNode(

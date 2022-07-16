@@ -28,11 +28,15 @@ namespace wasp::game::components {
         max,                //returns the max of evaluating two nodes [node1, node2]
         uniformRandom,      //returns a uniformly random value
                             //float: [minNode, maxNode]
+        entityUniformRandom,//returns a uniformly random value generated from entityID
+                            //int: [minNode, maxNode]
 
         //predicates
         tickMod,            //returns (tick + int1) % int2 == 0  [intNode1, intNode2]
         lastTick,           //returns tick == 1
         isPlayerFocused,    //returns true if the focus gameCommand is found
+        isDifficulty,       //returns true if the difficulty >= the stored Difficulty
+        chance,             //returns true based on rng, [probabilityNode] (float)
 
         //float
         entityX,            //returns the x coordinate of the entity

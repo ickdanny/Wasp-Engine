@@ -1,6 +1,6 @@
 #include "Game/Systems/PlayerBombSystem.h"
 
-#include "Game/Systems/SpawnPrograms/PlayerSpawnPrograms.h"
+#include "Game/Systems/Programs/PlayerPrograms.h"
 #include "Logging.h"
 
 namespace wasp::game::systems {
@@ -36,12 +36,12 @@ namespace wasp::game::systems {
 		};
 		if (playerData.shotType == ShotType::shotA) {
 			spawnProgramList.push_back(
-				{ spawnProgramsPointer->playerSpawnPrograms.bombA }
+				{ programsPointer->playerPrograms.bombASpawnProgram }
 			);
 		}
 		else if (playerData.shotType == ShotType::shotB) {
 			spawnProgramList.push_back(
-				{ spawnProgramsPointer->playerSpawnPrograms.bombB }
+				{ programsPointer->playerPrograms.bombBSpawnProgram }
 			);
 		}
 		else {

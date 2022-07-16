@@ -8,25 +8,26 @@ namespace wasp::game {
 		input::IKeyInputTable* keyInputTablePointer,
 		channel::ChannelSet* globalChannelSetPointer
 	)
-		: spawnPrograms{ &(resourceMasterStoragePointer->bitmapStorage) }
+		: programs{ &(resourceMasterStoragePointer->bitmapStorage) }
 
 		, initSystem{ 
 			globalChannelSetPointer, 
 			&(resourceMasterStoragePointer->bitmapStorage),
-			&spawnPrograms
+			&programs
 		}
 		, inputParserSystem{ keyInputTablePointer }
 		, menuNavigationSystem{ globalChannelSetPointer }
 		, buttonSpriteSystem{ &(resourceMasterStoragePointer->bitmapStorage) }
 		, gameBuilderSystem { globalChannelSetPointer }
 		, loadSystem{ globalChannelSetPointer }
-		, playerShotSystem{ &spawnPrograms }
-		, collisionHandlerSystem{ &spawnPrograms }
-		, playerBombSystem{ &spawnPrograms }
+		, playerShotSystem{ &programs }
+		, collisionHandlerSystem{ &programs }
+		, playerBombSystem{ &programs }
 		, continueSystem{ globalChannelSetPointer }
-
+		, spawnSystem{ globalChannelSetPointer }
 		, overlaySystem{ &(resourceMasterStoragePointer->bitmapStorage) }
 		, pauseSystem{ globalChannelSetPointer }
+		, animationSystem{ &(resourceMasterStoragePointer->bitmapStorage) }
 
 		, gameOverSystem{ globalChannelSetPointer }
 		, winSystem{ globalChannelSetPointer } {
@@ -60,8 +61,7 @@ namespace wasp::game {
         //gameDialogueScreenEntrySystem = new DialogueScreenEntrySystem();
         //gameNextStageEntrySystem = new NextStageEntrySystem();
         //
-        //gameAnimationSystem = new AnimationSystem(GAME_COMPONENT_TYPES);
-
+		animationSystem(scene);
 		rotateSpriteForwardSystem(scene);
 		spriteSpinSystem(scene);
 
@@ -74,6 +74,6 @@ namespace wasp::game {
         inboundSystem(scene);
         outboundSystem(scene);
 		gameOverSystem(scene);
-		winSystem(scene);
+		winSystem(scene);//todo: should win handle next stage and credits?
 	}
 }

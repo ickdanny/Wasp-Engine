@@ -1,10 +1,10 @@
 #pragma once
 
-#include "spawnProgramInclude.h"
+#include "programInclude.h"
 
 namespace wasp::game::systems {
 
-	class PlayerSpawnPrograms {
+	class PlayerPrograms {
 	private:
 		//typedefs
 		SPAWN_PROGRAM_TYPEDEFS
@@ -63,13 +63,13 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer deathSpawnNode;				//uninitialized!
 
 	public:
-		const SpawnProgram shotA;							//uninitialized!
-		const SpawnProgram bombA;							//uninitialized!
-		const SpawnProgram shotB;							//uninitialized!
-		const SpawnProgram bombB;							//uninitialized!
-		const SpawnProgram death;							//uninitialized!
+		const SpawnProgram shotASpawnProgram;				//uninitialized!
+		const SpawnProgram bombASpawnProgram;				//uninitialized!
+		const SpawnProgram shotBSpawnProgram;				//uninitialized!
+		const SpawnProgram bombBSpawnProgram;				//uninitialized!
+		const SpawnProgram deathSpawnProgram;				//uninitialized!
 
 		//Constructors
-		PlayerSpawnPrograms(resources::BitmapStorage* bitmapStoragePointer);
+		PlayerPrograms(resources::BitmapStorage* bitmapStoragePointer);
 	};
 }

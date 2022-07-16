@@ -16,9 +16,6 @@ namespace wasp::game::systems {
 		constexpr float middleX{ 100.0f };
 
 		int getInitPower(const GameState& gameState) {
-			//todo: temp power
-			return 40;
-
 			if (gameState.gameMode == GameMode::campaign) {
 				return 0;
 			}
@@ -469,28 +466,28 @@ namespace wasp::game::systems {
 				PickupCollisions::Target{},
 				DeathCommand{ DeathCommand::Commands::playerDeath },
 				SpawnProgramList{},
-				DeathSpawn{ {spawnProgramsPointer->playerSpawnPrograms.death} }
+				DeathSpawn{ { programsPointer->playerPrograms.deathSpawnProgram } }
 				//todo: animation
 			).package()
 		);
 
-		//todo: temp dummy
+		//adding the spawner
+		components::ScriptProgram const* scriptProgramPointer{};
+		switch (gameState.stage) {
+			case 1:
+				scriptProgramPointer
+					= &programsPointer->enemyPrograms.stage1ScriptProgram;
+				break;
+			default:
+				throw std::runtime_error{ "no stage script!" };
+		}
+
 		dataStorage.addEntity(
-			EntityBuilder::makeStationaryCollidable(
-				Position{ config::gameWidth / 2.0f, config::gameHeight / 2.0f } 
-					+ config::gameOffset,
-				config::playerHitbox,
-				SpriteInstruction{
-					bitmapStoragePointer->get(L"wisp")->d2dBitmap
+			EntityBuilder::makeEntity(
+				ScriptProgramList{ 
+					{ *scriptProgramPointer }
 				},
-				SpriteSpin{ -1.5f },
-				PlayerCollisions::Source{},
-				EnemyCollisions::Target{ components::CollisionCommands::damage },
-				Health{ 1000 },
-				DeathCommand{ DeathCommand::Commands::deathSpawn },
-				DeathSpawn{ {spawnProgramsPointer->pickupSpawnPrograms.smallPower} },
-				DrawOrder{ config::playerDrawOrder },
-				SpawnProgramList{ spawnProgramsPointer->enemySpawnPrograms.s1e1 }
+				SpawnProgramList{ }
 			).package()
 		);
 

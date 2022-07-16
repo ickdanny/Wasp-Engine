@@ -1,7 +1,7 @@
 #pragma once
 
 #include "systemInclude.h"
-#include "SpawnPrograms/SpawnPrograms.h"
+#include "Programs/Programs.h"
 
 namespace wasp::game::systems {
 
@@ -12,10 +12,10 @@ namespace wasp::game::systems {
 		using CollisionCommands = components::CollisionCommands;
 
 		//fields
-		SpawnPrograms* spawnProgramsPointer{};
+		Programs* programsPointer{};
 
 	public:
-		CollisionHandlerSystem(SpawnPrograms* spawnProgramsPointer);
+		CollisionHandlerSystem(Programs* programsPointer);
 		void operator()(Scene& scene);
 
 	private:

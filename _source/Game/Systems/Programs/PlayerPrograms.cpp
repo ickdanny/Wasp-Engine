@@ -1,4 +1,4 @@
-#include "Game/Systems/SpawnPrograms/PlayerSpawnPrograms.h"
+#include "Game/Systems/Programs/PlayerPrograms.h"
 
 namespace wasp::game::systems {
 
@@ -92,7 +92,7 @@ namespace wasp::game::systems {
 		constexpr float velocityScale{ 1.0f / pickupAirTime };
 	}
 
-	PlayerSpawnPrograms::PlayerSpawnPrograms(
+	PlayerPrograms::PlayerPrograms(
 		resources::BitmapStorage* bitmapStoragePointer
 	)
 		: bitmapStoragePointer{ bitmapStoragePointer }
@@ -246,7 +246,7 @@ namespace wasp::game::systems {
 				shotAPowerBucket6Node
 			)
 		}
-		, shotA{ shotANode, config::playerShotMaxTick, false }
+		, shotASpawnProgram{ shotANode, config::playerShotMaxTick, false }
 
 		//A bomb
 		, bombBubbleScriptNode{
@@ -324,7 +324,7 @@ namespace wasp::game::systems {
 				SpawnProgramUtil::makeSpawnPosVelNode(bombGhostPrototype)
 			)
 		}
-		, bombA{ bombANode, 1, false }
+		, bombASpawnProgram{ bombANode, 1, false }
 
 		//B shot
 		, iceShardPrototype{
@@ -486,7 +486,7 @@ namespace wasp::game::systems {
 				shotBPowerBucket6Node
 			)
 		}
-		, shotB{ shotBNode, config::playerShotMaxTick, false }
+		, shotBSpawnProgram{ shotBNode, config::playerShotMaxTick, false }
 
 		//B bomb
 		, snowflakePrototype{
@@ -516,7 +516,7 @@ namespace wasp::game::systems {
 				)
 			)
 		}
-		, bombB{ bombBNode, 1, false }
+		, bombBSpawnProgram{ bombBNode, 1, false }
 		
 		//death
 		, clearScriptNode{
@@ -617,7 +617,7 @@ namespace wasp::game::systems {
 		, deathSpawnNode{
 			SpawnProgramUtil::makeListNode(spawnClearNode, spawnPowerNode)
 		}
-		, death{ deathSpawnNode, 1, false }
+		, deathSpawnProgram{ deathSpawnNode, 1, false }
 
 		{
 		}

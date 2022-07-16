@@ -5,6 +5,7 @@
 #include "Components/MenuCommand.h"
 #include "Components/ButtonData.h"
 #include "Graphics/BitmapDrawInstruction.h"
+#include "Components/AnimationList.h"
 #include "Components/PlayerData.h"
 #include "Components/CollisionType.h"
 #include "Components/DeathCommand.h"
@@ -55,6 +56,10 @@ namespace wasp::game {
     struct RotateSpriteForwardMarker {};
     struct SpriteSpin {
         float spin{};
+    };
+
+    struct AnimationList : components::AnimationList {
+        using components::AnimationList::AnimationList;
     };
 
     struct Position : components::TwoFramePosition {

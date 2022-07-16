@@ -1,4 +1,4 @@
-#include "Game/Systems/SpawnPrograms/ScriptProgramUtil.h"
+#include "Game/Systems/Programs/ScriptProgramUtil.h"
 
 namespace wasp::game::systems {
 
@@ -135,6 +135,22 @@ namespace wasp::game::systems {
 			setSpawnNodePointer->link(next);
 		}
 		return ScriptNodeSharedPointer{ setSpawnNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeAddSpawnNode(
+		const components::SpawnProgram& spawnProgram,
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* addSpawnNodePointer{
+			new ScriptNodeData<components::SpawnProgram, utility::Void>{
+				ScriptInstructions::addSpawn,
+				spawnProgram
+			}
+		};
+		if (next) {
+			addSpawnNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ addSpawnNodePointer };
 	}
 
 	ScriptProgramUtil::ScriptNodeSharedPointer 
@@ -321,7 +337,7 @@ namespace wasp::game::systems {
 			makeShiftSpeedPeriodNode(0.0f, slowDuration,
 			makeTimerNode(preTimer,
 			makeSetSpawnNode(spawnProgram,
-			makeTimerNode(200,
+			makeTimerNode(2,
 			makeStallingIfNode(ScriptInstructions::isNotSpawning,
 			makeTimerNode(postTimer,
 			makeShiftVelocityTurnPeriodNode(finalVelocity, initAngle, speedDuration

@@ -1,16 +1,18 @@
 #pragma once
 
-#include "spawnProgramInclude.h"
+#include "programInclude.h"
+#include "PickupPrograms.h"
 
 namespace wasp::game::systems {
 
-	class EnemySpawnPrograms {
+	class EnemyPrograms {
 	private:
 		//typedefs
 		SPAWN_PROGRAM_TYPEDEFS
 
 		//fields
 		resources::BitmapStorage* bitmapStoragePointer{};
+		PickupPrograms const* pickupProgramsPointer{};
 
 		//prototypes
 		ComponentTupleSharedPointer smallRedPrototype;			//uninitialized!
@@ -74,16 +76,40 @@ namespace wasp::game::systems {
 
 		// STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 //
 
+			//wave 1: 2 wisps on either side, ring of sharp cyans
 		SpawnNodeSharedPointer s1d1Node;						//uninitialized!
 		SpawnProgram s1d1;										//uninitialized!
+
+				//first wisp on the left
 		ComponentTupleSharedPointer s1e1Prototype;				//uninitialized!
 		SpawnNodeSharedPointer s1e1Node;						//uninitialized!
-
-	public:
-
 		SpawnProgram s1e1;										//uninitialized!
 
+				//second wisp on the right
+		ComponentTupleSharedPointer s1e2Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s1e2Node;						//uninitialized!
+		SpawnProgram s1e2;										//uninitialized!
+
+			//wave 2: bats from the left, shooting small bullets
+		SpawnNodeSharedPointer s1d3Node;						//uninitialized!
+		SpawnProgram s1d3;										//uninitialized!
+
+		ComponentTupleSharedPointer s1e3Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s1e3Node;						//uninitialized!
+		SpawnProgram s1e3;										//uninitialized!
+
+			//wave 3: 2 wisps from the right, alternating spirals
+		//todo:
+		
+		
+	public:
+
+		ScriptProgram stage1ScriptProgram;						//uninitialized!
+
 		//Constructors
-		EnemySpawnPrograms(resources::BitmapStorage* bitmapStoragePointer);
+		EnemyPrograms(
+			resources::BitmapStorage* bitmapStoragePointer,
+			PickupPrograms const* pickupProgramsPointer
+		);
 	};
 }

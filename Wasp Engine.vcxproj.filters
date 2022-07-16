@@ -303,7 +303,7 @@
     <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\Systems\SpawnPrograms\PlayerSpawnPrograms.cpp">
+    <ClCompile Include="_source\Game\Systems\Programs\PlayerPrograms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="_source\Game\Systems\WinSystem.cpp">
@@ -312,22 +312,25 @@
     <ClCompile Include="_source\Game\Systems\RotateSpriteForwardSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\Systems\SpawnPrograms\SpawnProgramUtil.cpp">
+    <ClCompile Include="_source\Game\Systems\Programs\SpawnProgramUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="_source\Game\Systems\SpriteSpinSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\Systems\SpawnPrograms\PickupSpawnPrograms.cpp">
+    <ClCompile Include="_source\Game\Systems\Programs\PickupPrograms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="_source\Game\Systems\LoadSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\Systems\SpawnPrograms\EnemySpawnPrograms.cpp">
+    <ClCompile Include="_source\Game\Systems\Programs\EnemyPrograms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_source\Game\Systems\SpawnPrograms\ScriptProgramUtil.cpp">
+    <ClCompile Include="_source\Game\Systems\Programs\ScriptProgramUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_source\Game\Systems\AnimationSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -761,16 +764,16 @@
     <ClInclude Include="_header\Game\Systems\SpawnSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Systems\SpawnPrograms\PlayerSpawnPrograms.h">
+    <ClInclude Include="_header\Game\Systems\Programs\PlayerPrograms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Systems\SpawnPrograms\SpawnProgramUtil.h">
+    <ClInclude Include="_header\Game\Systems\Programs\SpawnProgramUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Systems\SpawnPrograms\spawnProgramInclude.h">
+    <ClInclude Include="_header\Game\Systems\Programs\programInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Systems\SpawnPrograms\SpawnPrograms.h">
+    <ClInclude Include="_header\Game\Systems\Programs\Programs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Components\ScriptProgramList.h">
@@ -785,13 +788,13 @@
     <ClInclude Include="_header\Game\Systems\RotateSpriteForwardSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Systems\SpawnPrograms\ScriptProgramUtil.h">
+    <ClInclude Include="_header\Game\Systems\Programs\ScriptProgramUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Systems\SpriteSpinSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Systems\SpawnPrograms\PickupSpawnPrograms.h">
+    <ClInclude Include="_header\Game\Systems\Programs\PickupPrograms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="_header\Game\Components\PickupType.h">
@@ -800,7 +803,13 @@
     <ClInclude Include="_header\Game\Systems\LoadSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_header\Game\Systems\SpawnPrograms\EnemySpawnPrograms.h">
+    <ClInclude Include="_header\Game\Systems\Programs\EnemyPrograms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Components\AnimationList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_header\Game\Systems\AnimationSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

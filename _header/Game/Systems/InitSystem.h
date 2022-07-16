@@ -3,7 +3,7 @@
 #include "systemInclude.h"
 #include "Game/Resources/BitmapStorage.h"
 #include "Game/Systems/EntityBuilder.h"
-#include "Game/Systems/SpawnPrograms/SpawnPrograms.h"
+#include "Game/Systems/Programs/Programs.h"
 
 namespace wasp::game::systems {
 
@@ -23,17 +23,17 @@ namespace wasp::game::systems {
 		//fields
 		channel::ChannelSet* globalChannelSetPointer{};
 		resources::BitmapStorage* bitmapStoragePointer{};
-		SpawnPrograms* spawnProgramsPointer{};
+		Programs* programsPointer{};
 
 	public:
 		InitSystem(
 			channel::ChannelSet* globalChannelSetPointer, 
 			resources::BitmapStorage* bitmapStoragePointer,
-			SpawnPrograms* spawnProgramsPointer
+			Programs* programsPointer
 		)
 			: globalChannelSetPointer{ globalChannelSetPointer }
 			, bitmapStoragePointer { bitmapStoragePointer } 
-			, spawnProgramsPointer{ spawnProgramsPointer } {
+			, programsPointer{ programsPointer } {
 		}
 
 		void operator()(Scene& scene) const;

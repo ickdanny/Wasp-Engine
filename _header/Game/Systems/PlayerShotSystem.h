@@ -2,18 +2,18 @@
 
 #include "systemInclude.h"
 
-#include "Game/Systems/SpawnPrograms/SpawnPrograms.h"
+#include "Game/Systems/Programs/Programs.h"
 
 namespace wasp::game::systems {
 
 	class PlayerShotSystem {
 	private:
 		//fields
-		SpawnPrograms* spawnProgramsPointer{};
+		Programs* programsPointer{};
 
 	public:
-		PlayerShotSystem(SpawnPrograms* spawnProgramsPointer)
-			: spawnProgramsPointer{ spawnProgramsPointer } {
+		PlayerShotSystem(Programs* programsPointer)
+			: programsPointer{ programsPointer } {
 		}
 
 		void operator()(Scene& scene);

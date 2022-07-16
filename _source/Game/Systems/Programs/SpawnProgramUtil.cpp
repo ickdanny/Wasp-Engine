@@ -1,4 +1,4 @@
-#include "Game/Systems/SpawnPrograms/SpawnProgramUtil.h"
+#include "Game/Systems/Programs/SpawnProgramUtil.h"
 
 namespace wasp::game::systems {
 	const std::shared_ptr<components::SpawnNode> SpawnProgramUtil::randomAngleNode{

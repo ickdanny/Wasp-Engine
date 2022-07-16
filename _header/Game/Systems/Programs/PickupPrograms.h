@@ -1,10 +1,10 @@
 #pragma once
 
-#include "spawnProgramInclude.h"
+#include "programInclude.h"
 
 namespace wasp::game::systems {
 
-	class PickupSpawnPrograms {
+	class PickupPrograms {
 	private:
 		//typedefs
 		SPAWN_PROGRAM_TYPEDEFS
@@ -26,20 +26,18 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer spawnBombNode;				//uninitialized!
 
 		//clear for max power
-		ScriptNodeSharedPointer clearScriptNode;			//uninitialized!
-		ComponentTupleSharedPointer clearPrototype;			//uninitialized!
-		SpawnNodeSharedPointer spawnClearNode;				//uninitialized!
+		ScriptNodeSharedPointer maxPowerClearScriptNode;	//uninitialized!
+		ComponentTupleSharedPointer maxPowerClearPrototype;	//uninitialized!
+		SpawnNodeSharedPointer spawnMaxPowerClearNode;		//uninitialized!
 
 	public:
-		const SpawnProgram smallPower;						//uninitialized!
-		const SpawnProgram largePower;						//uninitialized!
-		const SpawnProgram life;							//uninitialized!
-		const SpawnProgram bomb;							//uninitialized!
-		const SpawnProgram clear;							//uninitialized!
+		const SpawnProgram smallPowerSpawnProgram;			//uninitialized!
+		const SpawnProgram largePowerSpawnProgram;			//uninitialized!
+		const SpawnProgram lifeSpawnProgram;				//uninitialized!
+		const SpawnProgram bombSpawnProgram;				//uninitialized!
+		const SpawnProgram maxPowerClearSpawnProgram;		//uninitialized!
 
 		//Constructors
-		PickupSpawnPrograms(
-			resources::BitmapStorage* bitmapStoragePointer
-		);
+		PickupPrograms(resources::BitmapStorage* bitmapStoragePointer);
 	};
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include "Game/Systems/systemInclude.h"
 #include "Game/Systems/EntityBuilder.h"
 
@@ -34,6 +36,30 @@ namespace wasp::game::systems {
 				new SpawnNodeData<float>{
 					SpawnInstructions::value,
 					value
+				}
+			};
+		}
+
+		//Returns a spawn node representing a difficulty based int value.
+		static SpawnNodeSharedPointer makeIntValueDiffNode(
+			const std::array<int, 4> values
+		) {
+			return SpawnNodeSharedPointer{
+				new SpawnNodeData<std::array<int, 4>>{
+					SpawnInstructions::valueDifficulty,
+					values
+				}
+			};
+		}
+
+		//Returns a spawn node representing a difficulty based float value.
+		static SpawnNodeSharedPointer makeFloatValueDiffNode(
+			const std::array<float, 4> values
+		) {
+			return SpawnNodeSharedPointer{
+				new SpawnNodeData<std::array<float, 4>>{
+					SpawnInstructions::valueDifficulty,
+					values
 				}
 			};
 		}
@@ -103,6 +129,16 @@ namespace wasp::game::systems {
 			};
 		}
 
+		//Returns a spawn node representing the given point value.
+		static SpawnNodeSharedPointer makePointValueNode(const math::Point2& value) {
+			return SpawnNodeSharedPointer{
+				new SpawnNodeData<math::Point2>{
+					SpawnInstructions::value,
+					value
+				}
+			};
+		}
+
 		//Returns a spawn node representing the velocity specified by the given vector.
 		static SpawnNodeSharedPointer makeVelocityValueNode(
 			const math::Vector2& vector2
@@ -163,16 +199,39 @@ namespace wasp::game::systems {
 			return SpawnNodeSharedPointer{ pointFromFloatsNodePointer };
 		}
 
-		//Returns a spawn node representing a uniformly random float.
+		//Returns a spawn node representing a uniformly random float and the given
+		//bound nodes.
 		static SpawnNodeSharedPointer makeUniformRandomFloatNode(
 			const SpawnNodeSharedPointer& minNode,
 			const SpawnNodeSharedPointer& maxNode
 		) {
-			SpawnNode* uniformRandomFloatNode{
+			SpawnNode* uniformRandomFloatNodePointer{
 				new SpawnNode{ SpawnInstructions::uniformRandom }
 			};
-			uniformRandomFloatNode->link(minNode, maxNode);
-			return SpawnNodeSharedPointer{ uniformRandomFloatNode };
+			uniformRandomFloatNodePointer->link(minNode, maxNode);
+			return SpawnNodeSharedPointer{ uniformRandomFloatNodePointer };
+		}
+
+		//Returns a spawn node representing a uniformly random int based on entityID
+		//and the given bound nodes.
+		static SpawnNodeSharedPointer makeEntityUniformRandomIntNode(
+			const SpawnNodeSharedPointer& minNode,
+			const SpawnNodeSharedPointer& maxNode
+		) {
+			SpawnNode* entityUniformRandomIntNodePointer{
+				new SpawnNode{ SpawnInstructions::entityUniformRandom }
+			};
+			entityUniformRandomIntNodePointer->link(minNode, maxNode);
+			return SpawnNodeSharedPointer{ entityUniformRandomIntNodePointer };
+		}
+
+		//Returns a spawn node representing a uniformly random int based on entityID
+		//and the given bound values.
+		static SpawnNodeSharedPointer makeEntityUniformRandomIntNode(int min, int max) {
+			return makeEntityUniformRandomIntNode(
+				makeIntValueNode(min),
+				makeIntValueNode(max)
+			);
 		}
 
 		//Returns a spawn node representing a uniformly random velocity in a circle.
@@ -233,6 +292,54 @@ namespace wasp::game::systems {
 			tickModNodePointer->link(
 				makeIntValueNode(add),
 				makeIntValueNode(mod)
+			);
+			return SpawnNodeSharedPointer{ tickModNodePointer };
+		}
+
+		//Returns a spawn node representing a tick modulo predicate for the given
+		//values depending on difficulty.
+		static SpawnNodeSharedPointer makeTickModNode(
+			int add, 
+			const std::array<int, 4>& mods
+		) {
+			SpawnNode* tickModNodePointer{
+				new SpawnNode{ SpawnInstructions::tickMod }
+			};
+			tickModNodePointer->link(
+				makeIntValueNode(add),
+				makeIntValueDiffNode(mods)
+			);
+			return SpawnNodeSharedPointer{ tickModNodePointer };
+		}
+
+		//Returns a spawn node representing a tick modulo predicate with the given add
+		//node.
+		static SpawnNodeSharedPointer makeTickModNode(
+			const SpawnNodeSharedPointer& addNode, 
+			int mod
+		) {
+			SpawnNode* tickModNodePointer{
+				new SpawnNode{ SpawnInstructions::tickMod }
+			};
+			tickModNodePointer->link(
+				addNode,
+				makeIntValueNode(mod)
+			);
+			return SpawnNodeSharedPointer{ tickModNodePointer };
+		}
+
+		//Returns a spawn node representing a tick modulo predicate for the given
+		//values depending on difficulty.
+		static SpawnNodeSharedPointer makeTickModNode(
+			const SpawnNodeSharedPointer& addNode,
+			const std::array<int, 4>& mods
+		) {
+			SpawnNode* tickModNodePointer{
+				new SpawnNode{ SpawnInstructions::tickMod }
+			};
+			tickModNodePointer->link(
+				addNode,
+				makeIntValueDiffNode(mods)
 			);
 			return SpawnNodeSharedPointer{ tickModNodePointer };
 		}
@@ -300,6 +407,36 @@ namespace wasp::game::systems {
 				falseNodePointer
 			);
 			return SpawnNodeSharedPointer{ ifElseNodePointer };
+		}
+
+		//Returns a spawn node representing whether or not the difficulty is more than
+		//or equal to the given value
+		static SpawnNodeSharedPointer makeIsDifficultyNode(Difficulty difficulty) {
+			SpawnNode* isDifficultyNodePointer{
+				new SpawnNodeData<Difficulty>{
+					SpawnInstructions::isDifficulty,
+					difficulty
+				}
+			};
+			return SpawnNodeSharedPointer{ isDifficultyNodePointer };
+		}
+
+		//Returns a spawn node representing a random chance to be true based on the
+		//given probability node (float from 0-1).
+		static SpawnNodeSharedPointer makeChanceNode(
+			const SpawnNodeSharedPointer& probabilityNodePointer
+		) {
+			SpawnNode* chanceNodePointer{
+				new SpawnNode{ SpawnInstructions::chance }
+			};
+			chanceNodePointer->link(probabilityNodePointer);
+			return SpawnNodeSharedPointer{ chanceNodePointer };
+		}
+
+		//Returns a spawn node representing a random chance to be true based on the
+		//given probability value (float from 0-1)
+		static SpawnNodeSharedPointer makeChanceNode(float probability) {
+			return makeChanceNode(makeFloatValueNode(probability));
 		}
 
 		//Returns a spawn node representing a sequential list of instructions.
@@ -641,6 +778,24 @@ namespace wasp::game::systems {
 			ringFormationNodePointer->link(
 				baseVelNodePointer,
 				makeIntValueNode(symmetry),
+				velConsumerNodePointer
+			);
+			return SpawnNodeSharedPointer{ ringFormationNodePointer };
+		}
+
+		//Returns a spawn node that passes a velocity ring to a velocity consumer node
+		//based on the provided base velocity node and difficulty based symmetry.
+		static SpawnNodeSharedPointer makeRingFormationNode(
+			const SpawnNodeSharedPointer& baseVelNodePointer,
+			const std::array<int, 4> symmetries,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			SpawnNode* ringFormationNodePointer{
+				new SpawnNode{ SpawnInstructions::ringFormation }
+			};
+			ringFormationNodePointer->link(
+				baseVelNodePointer,
+				makeIntValueDiffNode(symmetries),
 				velConsumerNodePointer
 			);
 			return SpawnNodeSharedPointer{ ringFormationNodePointer };

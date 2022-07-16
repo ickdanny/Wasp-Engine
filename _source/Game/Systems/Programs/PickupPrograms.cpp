@@ -1,4 +1,4 @@
-#include "Game/Systems/SpawnPrograms/PickupSpawnPrograms.h"
+#include "Game/Systems/Programs/PickupPrograms.h"
 
 namespace wasp::game::systems {
 
@@ -12,7 +12,7 @@ namespace wasp::game::systems {
 		constexpr int clearLifetime{ 5 };
 	}
 
-	PickupSpawnPrograms::PickupSpawnPrograms(
+	PickupPrograms::PickupPrograms(
 		resources::BitmapStorage* bitmapStoragePointer
 	)
 		: bitmapStoragePointer{ bitmapStoragePointer }
@@ -48,7 +48,7 @@ namespace wasp::game::systems {
 				)
 			)
 		}
-		, smallPower{ spawnSmallPowerNode, 1, false }
+		, smallPowerSpawnProgram{ spawnSmallPowerNode, 1, false }
 
 		//large power
 		, largePowerPrototype{
@@ -74,7 +74,7 @@ namespace wasp::game::systems {
 				)
 			)
 		}
-		, largePower{ spawnLargePowerNode, 1, false }
+		, largePowerSpawnProgram{ spawnLargePowerNode, 1, false }
 
 		//life
 		, lifePrototype{
@@ -100,7 +100,7 @@ namespace wasp::game::systems {
 				)
 			)
 		}
-		, life{ spawnLifeNode, 1, false }
+		, lifeSpawnProgram{ spawnLifeNode, 1, false }
 
 		//bomb
 		, bombPrototype{
@@ -126,16 +126,16 @@ namespace wasp::game::systems {
 				)
 			)
 		}
-		, bomb{ spawnBombNode, 1, false }
+		, bombSpawnProgram{ spawnBombNode, 1, false }
 
 		//clear for max power
-		, clearScriptNode{
+		, maxPowerClearScriptNode{
 			ScriptProgramUtil::makeTimerNode(
 				clearLifetime,
 				ScriptProgramUtil::makeRemoveEntityNode()
 			)
 		}
-		, clearPrototype{
+		, maxPowerClearPrototype{
 			EntityBuilder::makeStationaryCollidable(
 				Point2{
 					config::gameWidth / 2,
@@ -143,13 +143,13 @@ namespace wasp::game::systems {
 				} + config::gameOffset,
 				AABB{ config::gameWidth / 2, config::gameHeight / 2},
 				PlayerCollisions::Target{ components::CollisionCommands::player },
-				ScriptProgramList{ clearScriptNode }
+				ScriptProgramList{ maxPowerClearScriptNode }
 			).heapClone()
 		}
-		, spawnClearNode{
-			SpawnProgramUtil::makeSpawnNode(clearPrototype)
+		, spawnMaxPowerClearNode{
+			SpawnProgramUtil::makeSpawnNode(maxPowerClearPrototype)
 		}
-		, clear{ spawnClearNode, 1, false }
+		, maxPowerClearSpawnProgram{ spawnMaxPowerClearNode, 1, false }
 	{
 
 	}

@@ -2,7 +2,7 @@
 
 #include "systemInclude.h"
 
-#include "Game/Systems/SpawnPrograms/SpawnPrograms.h"
+#include "Game/Systems/Programs/Programs.h"
 
 namespace wasp::game::systems {
 
@@ -12,11 +12,11 @@ namespace wasp::game::systems {
 		using EntityHandle = ecs::entity::EntityHandle;
 
 		//fields
-		SpawnPrograms* spawnProgramsPointer{};
+		Programs* programsPointer{};
 
 	public:
-		PlayerBombSystem(SpawnPrograms* spawnProgramsPointer)
-			: spawnProgramsPointer{ spawnProgramsPointer } {
+		PlayerBombSystem(Programs* programsPointer)
+			: programsPointer{ programsPointer } {
 		}
 
 		void operator()(Scene& scene);
