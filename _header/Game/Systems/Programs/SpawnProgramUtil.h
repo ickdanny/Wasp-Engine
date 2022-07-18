@@ -234,6 +234,31 @@ namespace wasp::game::systems {
 			);
 		}
 
+		//Returns a spawn node representing a uniformly random float based on entityID
+		//and the given bound nodes.
+		static SpawnNodeSharedPointer makeEntityUniformRandomFloatNode(
+			const SpawnNodeSharedPointer& minNode,
+			const SpawnNodeSharedPointer& maxNode
+		) {
+			SpawnNode* entityUniformRandomFloatNodePointer{
+				new SpawnNode{ SpawnInstructions::entityUniformRandom }
+			};
+			entityUniformRandomFloatNodePointer->link(minNode, maxNode);
+			return SpawnNodeSharedPointer{ entityUniformRandomFloatNodePointer };
+		}
+
+		//Returns a spawn node representing a uniformly random float based on entityID
+		//and the given bound values.
+		static SpawnNodeSharedPointer makeEntityUniformRandomFloatNode(
+			float min, 
+			float max
+		) {
+			return makeEntityUniformRandomFloatNode(
+				makeFloatValueNode(min),
+				makeFloatValueNode(max)
+			);
+		}
+
 		//Returns a spawn node representing a uniformly random velocity in a circle.
 		static SpawnNodeSharedPointer makeUniformRandomCircleVelocityNode(
 			float minRadius,
@@ -829,7 +854,188 @@ namespace wasp::game::systems {
 			);
 		}
 
+		//Returns a spawn node that represents a spiral based on the given nodes.
+		static SpawnNodeSharedPointer makeSpiralNode(
+			const SpawnNodeSharedPointer& maxTickNodePointer,
+			const SpawnNodeSharedPointer& baseAngleNodePointer,
+			const SpawnNodeSharedPointer& angularVelocityNodePointer
+		) {
+			SpawnNode* spiralNodePointer{
+				new SpawnNode{ SpawnInstructions::spiral }
+			};
+			spiralNodePointer->link(
+				maxTickNodePointer,
+				baseAngleNodePointer,
+				angularVelocityNodePointer
+			);
+			return SpawnNodeSharedPointer{ spiralNodePointer };
+		}
+
+		//Returns a spawn node that represents a spiral based on the given values.
+		static SpawnNodeSharedPointer makeSpiralNode(
+			int maxTick,
+			float baseAngle,
+			float angularVelocity
+		) {
+			return makeSpiralNode(
+				makeIntValueNode(maxTick),
+				makeFloatValueNode(baseAngle),
+				makeFloatValueNode(angularVelocity)
+			);
+		}
+
+		//Returns a spawn node that passes a velocity column to a velocity consumer
+		//node based on the given velocity, count, and increment nodes
+		static SpawnNodeSharedPointer makeColumnFormationNode(
+			const SpawnNodeSharedPointer& baseVelNodePointer,
+			const SpawnNodeSharedPointer& countNodePointer,
+			const SpawnNodeSharedPointer& incrementNodePointer,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			SpawnNode* columnFormationNodePointer{
+				new SpawnNode{ SpawnInstructions::columnFormation }
+			};
+			columnFormationNodePointer->link(
+				baseVelNodePointer,
+				countNodePointer,
+				incrementNodePointer,
+				velConsumerNodePointer
+			);
+			return SpawnNodeSharedPointer{ columnFormationNodePointer };
+		}
+
+		//Returns a spawn node that passes a velocity column to a velocity consumer
+		//node based on the given velocity and increment nodes, as well as the given
+		//count value.
+		static SpawnNodeSharedPointer makeColumnFormationNode(
+			const SpawnNodeSharedPointer& baseVelNodePointer,
+			int count,
+			const SpawnNodeSharedPointer& incrementNodePointer,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeColumnFormationNode(
+				baseVelNodePointer,
+				makeIntValueNode(count),
+				incrementNodePointer,
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that passes a velocity column to a velocity consumer
+		//node based on the given velocity node, as well as the given count and
+		//increment values.
+		static SpawnNodeSharedPointer makeColumnFormationNode(
+			const SpawnNodeSharedPointer& baseVelNodePointer,
+			int count,
+			float increment,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeColumnFormationNode(
+				baseVelNodePointer,
+				makeIntValueNode(count),
+				makeFloatValueNode(increment),
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that passes a velocity column to a velocity consumer
+		//node based on the given velocity node, as well as the given difficulty based
+		//count and increment values.
+		static SpawnNodeSharedPointer makeColumnFormationNode(
+			const SpawnNodeSharedPointer& baseVelNodePointer,
+			const std::array<int, 4>& counts,
+			const std::array<float, 4>& increments,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeColumnFormationNode(
+				baseVelNodePointer,
+				makeIntValueDiffNode(counts),
+				makeFloatValueDiffNode(increments),
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that, receiving a velocity, passes a velocity column 
+		//to a velocity consumer node based on the given count and increment nodes.
+		static SpawnNodeSharedPointer makeColumnFormationNode(
+			const SpawnNodeSharedPointer& countNodePointer,
+			const SpawnNodeSharedPointer& incrementNodePointer,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			SpawnNode* columnFormationNodePointer{
+				new SpawnNode{ SpawnInstructions::columnFormation }
+			};
+			columnFormationNodePointer->link(
+				countNodePointer,
+				incrementNodePointer,
+				velConsumerNodePointer
+			);
+			return SpawnNodeSharedPointer{ columnFormationNodePointer };
+		}
+
+		//Returns a spawn node that, receiving a velocity, passes a velocity column 
+		//to a velocity consumer node based on the given increment node and the given
+		//count value.
+		static SpawnNodeSharedPointer makeColumnFormationNode(
+			int count,
+			const SpawnNodeSharedPointer& incrementNodePointer,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeColumnFormationNode(
+				makeIntValueNode(count),
+				incrementNodePointer,
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that, receiving a velocity, passes a velocity column 
+		//to a velocity consumer node based on the given count and increment values.
+		static SpawnNodeSharedPointer makeColumnFormationNode(
+			int count,
+			float increment,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeColumnFormationNode(
+				makeIntValueNode(count),
+				makeFloatValueNode(increment),
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that, receiving a velocity, passes a velocity column 
+		//to a velocity consumer node based on the given difficulty based
+		//count and increment values.
+		static SpawnNodeSharedPointer makeColumnFormationNode(
+			const std::array<int, 4>& counts,
+			const std::array<float, 4>& increments,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeColumnFormationNode(
+				makeIntValueDiffNode(counts),
+				makeFloatValueDiffNode(increments),
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that, receiving a velocity, passes a velocity column 
+		//to a velocity consumer node based on the given difficulty based
+		//count values and single increment value.
+		static SpawnNodeSharedPointer makeColumnFormationNode(
+			const std::array<int, 4>& counts,
+			float increment,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeColumnFormationNode(
+				makeIntValueDiffNode(counts),
+				makeFloatValueNode(increment),
+				velConsumerNodePointer
+			);
+		}
+
+		
+
 		//some useful nodes
 		static const SpawnNodeSharedPointer randomAngleNode;
+		static const SpawnNodeSharedPointer entityRandomAngleNode;
 	};
 }

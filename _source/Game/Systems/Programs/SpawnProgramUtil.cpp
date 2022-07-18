@@ -7,4 +7,11 @@ namespace wasp::game::systems {
 				makeFloatValueNode(360.0f)
 		)
 	};
+
+	const std::shared_ptr<components::SpawnNode> SpawnProgramUtil::entityRandomAngleNode{
+		makeEntityUniformRandomFloatNode(
+				makeFloatValueNode(0.0f),
+				makeFloatValueNode(360.0f)
+		)
+	};
 }

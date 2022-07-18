@@ -46,25 +46,24 @@ namespace wasp::game::components {
     public static final Instructions<Void, Void> WAIT_UNTIL_BOSS_DEATH = new Instructions<>();
     public static final Instructions<Void, Void> WAIT_UNTIL_DIALOGUE_OVER = new Instructions<>();
     */
-        
-        //todo: how do these work? maybe same as inbound/outbound? ie relative to edge
-        boundaryYLow,               //stalls until the entity's y coordinate is below
-                                    //a stored value
+
+        boundaryYLow,               //returns true if the entity's y coordinate is below
+                                    //a stored value.
                                     //<float, Void> (boundary value)
-        boundaryYHigh,              //stalls until the entity's y coordinate is above
-                                    //a stored value
+        boundaryYHigh,              //returns true if the entity's y coordinate is above
+                                    //a stored value.
                                     //<float, Void> (boundary value)
-        boundaryXLow,               //stalls until the entity's x coordinate is below
-                                    //a stored value
+        boundaryXLow,               //returns true if the entity's x coordinate is below
+                                    //a stored value.
                                     //<float, Void> (boundary value)
-        boundaryXHigh,              //stalls until the entity's x coordinate is above
-                                    //a stored value
+        boundaryXHigh,              //returns true if the entity's x coordinate is above
+                                    //a stored value.
                                     //<float, Void> (boundary value)
-        boundaryY,                  //stalls until the entity's y coordinate is above
-                                    //or below a stored value
+        boundaryY,                  //returns true if the entity's y coordinate is above
+                                    //or below a stored value.
                                     //<float, Void> (boundary value)
-        boundaryX,                  //stalls until the entity's x coordinate is above
-                                    //or below a stored value
+        boundaryX,                  //returns true if the entity's x coordinate is above
+                                    //or below a stored value.
                                     //<float, Void> (boundary value)
 
         setCollidable,              //makes the entity collidable; adds CollidableMarker
@@ -118,12 +117,12 @@ namespace wasp::game::components {
                                     //  std::tuple<float, float>
         shiftAnglePeriod,           //sets angle to target value over period of time,
                                     //turning shortside
-                                    //(targetAngle, ticks), (angleIncrement)
-                                    //<std::tuple<Angle, int>, float>
+                                    //(targetAngle, initAngle, ticks), (angleIncrement)
+                                    //<std::tuple<Angle, Angle, int>, float>
         shiftAngleLongPeriod,       //sets angle to target value over period of time,
                                     //turning longside
-                                    //(targetAngle, ticks), (angleIncrement)
-                                    //<std::tuple<Angle, int>, float>
+                                    //(targetAngle, initAngle, ticks), (angleIncrement)
+                                    //<std::tuple<Angle, Angle, int>, float>
 
         shiftSpeedIncrement,        //sets speed to target value via increment
                                     //(targetSpeed, increment)
@@ -256,7 +255,7 @@ namespace wasp::game::components {
         }
 
         //Moves a script program, taking the contents of it's external data
-        ScriptProgram(ScriptProgram&& toMove)
+        ScriptProgram(ScriptProgram&& toMove) noexcept
             : currentNodePointer{ std::move(toMove.currentNodePointer) }
         {
             for (auto [scriptNodePointer, voidPointer] : toMove.externalData) {

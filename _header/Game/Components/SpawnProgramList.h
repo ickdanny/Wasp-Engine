@@ -43,6 +43,8 @@ namespace wasp::game::components {
         entityY,            //returns the y coordinate of the entity
         pickupInitSpeed,    //special function for determining initial speed of pickup
         angleToPlayer,      //returns the angle from the entity to the player
+        spiral,             //returns the angle to make a spiral in time
+                            //[maxTickNode, baseAngleNode, angularVelNode]
 
         //point2
         entityPosition,     //returns the position of the entity
@@ -66,6 +68,10 @@ namespace wasp::game::components {
                             //[velNode, symmetryNode, incrementNode, velConsumerNode]
         ringFormation,      //creates a ring with the given symmetry
                             //[velNode, symmetryNode, velConsumerNode]
+        columnFormation,    //creates a column with the given count and increment
+                            //[velNode, countNode, incrementNode, velConsumerNode]
+                            //if vel is being passed, no vel node
+                            //[countNode, incrementNode, velConsumerNode]
         numInstructions
     };
 

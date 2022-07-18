@@ -32,6 +32,9 @@ namespace wasp::game::systems {
 
 	public:
 		const SpawnProgram smallPowerSpawnProgram;			//uninitialized!
+		const SpawnProgram smallPowerHalfSpawnProgram;		//uninitialized!
+		const SpawnProgram smallPowerThirdSpawnProgram;		//uninitialized!
+		const SpawnProgram smallPowerFourthSpawnProgram;	//uninitialized!
 		const SpawnProgram largePowerSpawnProgram;			//uninitialized!
 		const SpawnProgram lifeSpawnProgram;				//uninitialized!
 		const SpawnProgram bombSpawnProgram;				//uninitialized!

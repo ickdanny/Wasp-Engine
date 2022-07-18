@@ -22,6 +22,16 @@ namespace wasp::game::systems {
 			const Velocity& velocity
 		);
 
+		//Returns a spawn node representing a boundary predicate for the given 
+		//value.
+
+		static ScriptNodeSharedPointer makeBoundaryYLowNode(float boundary);
+		static ScriptNodeSharedPointer makeBoundaryYHighNode(float boundary);
+		static ScriptNodeSharedPointer makeBoundaryXLowNode(float boundary);
+		static ScriptNodeSharedPointer makeBoundaryXHighNode(float boundary);
+		static ScriptNodeSharedPointer makeBoundaryYNode(float boundary);
+		static ScriptNodeSharedPointer makeBoundaryXNode(float boundary);
+
 		//Returns a script node representing an if statement.
 		static ScriptNodeSharedPointer makeIfNode(
 			const ScriptNodeSharedPointer& predicateNodePointer,
@@ -68,6 +78,12 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next = nullptr
 		);
 
+		//Returns a script node representing a set health command.
+		static ScriptNodeSharedPointer makeSetHealthNode(
+			int health,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
 		//Returns a script node representing a set spawn command.
 		static ScriptNodeSharedPointer makeSetSpawnNode(
 			const components::SpawnProgram& spawnProgram,
@@ -77,6 +93,11 @@ namespace wasp::game::systems {
 		//Returns a script node representing an add spawn command.
 		static ScriptNodeSharedPointer makeAddSpawnNode(
 			const components::SpawnProgram& spawnProgram,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a script node representing a clear spawn command
+		static ScriptNodeSharedPointer makeClearSpawnNode(
 			ScriptNodeSharedPointer next = nullptr
 		);
 
@@ -100,7 +121,7 @@ namespace wasp::game::systems {
 		//with the given values of targetVelocity, initAngle, and ticks
 		static ScriptNodeSharedPointer makeShiftVelocityTurnPeriodNode(
 			const Velocity& targetVelocity,
-			const math::Angle initAngle,
+			const math::Angle& initAngle,
 			int ticks,
 			ScriptNodeSharedPointer next = nullptr
 		);
@@ -109,7 +130,25 @@ namespace wasp::game::systems {
 		//with the given values of targetVelocity, initAngle, and ticks
 		static ScriptNodeSharedPointer makeShiftVelocityTurnLongPeriodNode(
 			const Velocity& targetVelocity,
-			const math::Angle initAngle,
+			const math::Angle& initAngle,
+			int ticks,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a script node reprsenting a short turn period with the given values
+		//of targetAngle, initAngle, and ticks.
+		static ScriptNodeSharedPointer makeShiftAnglePeriodNode(
+			const math::Angle& targetAngle,
+			const math::Angle& initAngle,
+			int ticks,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a script node reprsenting a long turn period with the given values
+		//of targetAngle, initAngle, and ticks.
+		static ScriptNodeSharedPointer makeShiftAngleLongPeriodNode(
+			const math::Angle& targetAngle,
+			const math::Angle& initAngle,
 			int ticks,
 			ScriptNodeSharedPointer next = nullptr
 		);
@@ -145,7 +184,8 @@ namespace wasp::game::systems {
 			const components::SpawnProgram& spawnProgram,
 			int postTimer,
 			const Velocity& finalVelocity,
-			int speedDuration
+			int speedDuration,
+			ScriptNodeSharedPointer next = nullptr
 		);
 
 		static ScriptProgram makeShootOnceAndLeaveTurningProgram(
@@ -156,7 +196,17 @@ namespace wasp::game::systems {
 			int postTimer,
 			const Velocity& finalVelocity,
 			const math::Angle& initAngle,
-			int speedDuration
+			int speedDuration,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		static ScriptProgram makeTurnEntryAndShootProgram(
+			int preSlowTimer,
+			int slowDuration,
+			const Velocity& finalVelocity,
+			const math::Angle& initAngle,
+			const components::SpawnProgram& spawnProgram,
+			ScriptNodeSharedPointer next = nullptr
 		);
 	};
 }

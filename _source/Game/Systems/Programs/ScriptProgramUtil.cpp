@@ -14,6 +14,78 @@ namespace wasp::game::systems {
 		return ScriptNodeSharedPointer{ velocityValuePointer };
 	}
 
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBoundaryYLowNode(
+		float boundary
+	){
+		ScriptNode* boundaryNodePointer{
+			new ScriptNodeData<float, utility::Void>{
+				ScriptInstructions::boundaryYLow,
+				boundary
+			}
+		};
+		return ScriptNodeSharedPointer{ boundaryNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBoundaryYHighNode(
+		float boundary
+	) {
+		ScriptNode* boundaryNodePointer{
+			new ScriptNodeData<float, utility::Void>{
+				ScriptInstructions::boundaryYHigh,
+				boundary
+			}
+		};
+		return ScriptNodeSharedPointer{ boundaryNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBoundaryXLowNode(
+		float boundary
+	) {
+		ScriptNode* boundaryNodePointer{
+			new ScriptNodeData<float, utility::Void>{
+				ScriptInstructions::boundaryXLow,
+				boundary
+			}
+		};
+		return ScriptNodeSharedPointer{ boundaryNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBoundaryXHighNode(
+		float boundary
+	) {
+		ScriptNode* boundaryNodePointer{
+			new ScriptNodeData<float, utility::Void>{
+				ScriptInstructions::boundaryXHigh,
+				boundary
+			}
+		};
+		return ScriptNodeSharedPointer{ boundaryNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBoundaryYNode(
+		float boundary
+	) {
+		ScriptNode* boundaryNodePointer{
+			new ScriptNodeData<float, utility::Void>{
+				ScriptInstructions::boundaryY,
+				boundary
+			}
+		};
+		return ScriptNodeSharedPointer{ boundaryNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBoundaryXNode(
+		float boundary
+	) {
+		ScriptNode* boundaryNodePointer{
+			new ScriptNodeData<float, utility::Void>{
+				ScriptInstructions::boundaryX,
+				boundary
+			}
+		};
+		return ScriptNodeSharedPointer{ boundaryNodePointer };
+	}
+
 	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeIfNode(
 		const ScriptNodeSharedPointer& predicateNodePointer,
 		const ScriptNodeSharedPointer& trueNodePointer
@@ -121,6 +193,22 @@ namespace wasp::game::systems {
 		return ScriptNodeSharedPointer{ timerNodePointer };
 	}
 
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeSetHealthNode(
+		int health,
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* setHealthNodePointer{
+			new ScriptNodeData<int, utility::Void>{
+				ScriptInstructions::setHealth,
+				health
+			}
+		};
+		if (next) {
+			setHealthNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ setHealthNodePointer };
+	}
+
 	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeSetSpawnNode(
 		const components::SpawnProgram& spawnProgram,
 		ScriptNodeSharedPointer next
@@ -151,6 +239,18 @@ namespace wasp::game::systems {
 			addSpawnNodePointer->link(next);
 		}
 		return ScriptNodeSharedPointer{ addSpawnNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeClearSpawnNode(
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* clearSpawnNodePointer{
+			new ScriptNode{ ScriptInstructions::clearSpawn }
+		};
+		if (next) {
+			clearSpawnNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ clearSpawnNodePointer };
 	}
 
 	ScriptProgramUtil::ScriptNodeSharedPointer 
@@ -195,7 +295,7 @@ namespace wasp::game::systems {
 		ScriptProgramUtil::makeShiftVelocityTurnPeriodNode
 	(
 		const Velocity& targetVelocity,
-		const math::Angle initAngle,
+		const math::Angle& initAngle,
 		int ticks,
 		ScriptNodeSharedPointer next
 	) {
@@ -218,7 +318,7 @@ namespace wasp::game::systems {
 		ScriptProgramUtil::makeShiftVelocityTurnLongPeriodNode
 	(
 		const Velocity& targetVelocity,
-		const math::Angle initAngle,
+		const math::Angle& initAngle,
 		int ticks,
 		ScriptNodeSharedPointer next
 	) {
@@ -235,6 +335,46 @@ namespace wasp::game::systems {
 			shiftVelocityTurnLongPeriodNodePointer->link(next);
 		}
 		return ScriptNodeSharedPointer{ shiftVelocityTurnLongPeriodNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer
+		ScriptProgramUtil::makeShiftAnglePeriodNode
+		(
+			const math::Angle& targetAngle,
+			const math::Angle& initAngle,
+			int ticks,
+			ScriptNodeSharedPointer next
+		) {
+		ScriptNode* shiftAnglePeriodNodePointer{
+			new ScriptNodeData<std::tuple<math::Angle, math::Angle, int>, float>{
+				ScriptInstructions::shiftAnglePeriod,
+				std::tuple{ targetAngle, initAngle, ticks }
+			}
+		};
+		if (next) {
+			shiftAnglePeriodNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ shiftAnglePeriodNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer
+		ScriptProgramUtil::makeShiftAngleLongPeriodNode
+		(
+			const math::Angle& targetAngle,
+			const math::Angle& initAngle,
+			int ticks,
+			ScriptNodeSharedPointer next
+		) {
+		ScriptNode* shiftAngleLongPeriodNodePointer{
+			new ScriptNodeData<std::tuple<math::Angle, math::Angle, int>, float>{
+				ScriptInstructions::shiftAngleLongPeriod,
+				std::tuple{ targetAngle, initAngle, ticks }
+			}
+		};
+		if (next) {
+			shiftAngleLongPeriodNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ shiftAngleLongPeriodNodePointer };
 	}
 
 	ScriptProgramUtil::ScriptNodeSharedPointer 
@@ -305,7 +445,8 @@ namespace wasp::game::systems {
 		const components::SpawnProgram& spawnProgram,
 		int postTimer,
 		const Velocity& finalVelocity,
-		int speedDuration
+		int speedDuration,
+		ScriptNodeSharedPointer next
 	) {
 		return {
 			makeTimerNode(preSlowTimer,
@@ -315,7 +456,7 @@ namespace wasp::game::systems {
 			makeTimerNode(2,
 			makeStallingIfNode(ScriptInstructions::isNotSpawning,
 			makeTimerNode(postTimer,
-			makeShiftVelocityPeriodNode(finalVelocity, speedDuration
+			makeShiftVelocityPeriodNode(finalVelocity, speedDuration, next
 			))))))))
 		};
 	}
@@ -330,7 +471,8 @@ namespace wasp::game::systems {
 		int postTimer,
 		const Velocity& finalVelocity,
 		const math::Angle& initAngle,
-		int speedDuration
+		int speedDuration,
+		ScriptNodeSharedPointer next
 	) {
 		return {
 			makeTimerNode(preSlowTimer,
@@ -340,8 +482,23 @@ namespace wasp::game::systems {
 			makeTimerNode(2,
 			makeStallingIfNode(ScriptInstructions::isNotSpawning,
 			makeTimerNode(postTimer,
-			makeShiftVelocityTurnPeriodNode(finalVelocity, initAngle, speedDuration
+			makeShiftVelocityTurnPeriodNode(finalVelocity, initAngle, speedDuration, next
 			))))))))
+		};
+	}
+
+	ScriptProgramUtil::ScriptProgram ScriptProgramUtil::makeTurnEntryAndShootProgram(
+		int preSlowTimer,
+		int slowDuration,
+		const Velocity& finalVelocity,
+		const math::Angle& initAngle,
+		const components::SpawnProgram& spawnProgram,
+		ScriptNodeSharedPointer next
+	) {
+		return {
+			makeTimerNode(preSlowTimer,
+			makeShiftVelocityTurnPeriodNode(finalVelocity, initAngle, slowDuration,
+			makeSetSpawnNode(spawnProgram, next)))
 		};
 	}
 }

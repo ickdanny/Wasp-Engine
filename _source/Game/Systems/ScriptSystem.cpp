@@ -16,7 +16,7 @@ namespace wasp::game::systems {
 
 	namespace {
 
-		constexpr float angleEquivalenceEpsilon{ .01f };
+		constexpr float angleEquivalenceEpsilon{ .05f };
 
 		void clearExternalDataForNode(
 			std::shared_ptr<ScriptNode>& currentScriptNodePointer,
@@ -74,6 +74,90 @@ namespace wasp::game::systems {
 						return spawnProgramList.size() == 0;
 					}
 					return true;
+				}
+				case ScriptInstructions::boundaryYLow: {
+					const auto& dataStorage{ scene.getDataStorage() };
+					if (dataStorage.containsComponent<Position>(entityID)) {
+						auto& position{ dataStorage.getComponent<Position>(entityID) };
+						auto dataNodePointer{
+							dynamic_cast<ScriptNodeData<float, utility::Void>*>(
+								currentScriptNodePointer.get()
+							)
+						};
+						float boundary{ dataNodePointer->internalData };
+						return position.y < boundary;
+					}
+					return false;
+				}
+				case ScriptInstructions::boundaryYHigh: {
+					const auto& dataStorage{ scene.getDataStorage() };
+					if (dataStorage.containsComponent<Position>(entityID)) {
+						auto& position{ dataStorage.getComponent<Position>(entityID) };
+						auto dataNodePointer{
+							dynamic_cast<ScriptNodeData<float, utility::Void>*>(
+								currentScriptNodePointer.get()
+							)
+						};
+						float boundary{ dataNodePointer->internalData };
+						return position.y > boundary;
+					}
+					return false;
+				}
+				case ScriptInstructions::boundaryXLow: {
+					const auto& dataStorage{ scene.getDataStorage() };
+					if (dataStorage.containsComponent<Position>(entityID)) {
+						auto& position{ dataStorage.getComponent<Position>(entityID) };
+						auto dataNodePointer{
+							dynamic_cast<ScriptNodeData<float, utility::Void>*>(
+								currentScriptNodePointer.get()
+							)
+						};
+						float boundary{ dataNodePointer->internalData };
+						return position.x < boundary;
+					}
+					return false;
+				}
+				case ScriptInstructions::boundaryXHigh: {
+					const auto& dataStorage{ scene.getDataStorage() };
+					if (dataStorage.containsComponent<Position>(entityID)) {
+						auto& position{ dataStorage.getComponent<Position>(entityID) };
+						auto dataNodePointer{
+							dynamic_cast<ScriptNodeData<float, utility::Void>*>(
+								currentScriptNodePointer.get()
+							)
+						};
+						float boundary{ dataNodePointer->internalData };
+						return position.x > boundary;
+					}
+					return false;
+				}
+				case ScriptInstructions::boundaryY: {
+					const auto& dataStorage{ scene.getDataStorage() };
+					if (dataStorage.containsComponent<Position>(entityID)) {
+						auto& position{ dataStorage.getComponent<Position>(entityID) };
+						auto dataNodePointer{
+							dynamic_cast<ScriptNodeData<float, utility::Void>*>(
+								currentScriptNodePointer.get()
+							)
+						};
+						float boundary{ dataNodePointer->internalData };
+						return position.y > boundary || position.y < boundary;
+					}
+					return false;
+				}
+				case ScriptInstructions::boundaryX: {
+					const auto& dataStorage{ scene.getDataStorage() };
+					if (dataStorage.containsComponent<Position>(entityID)) {
+						auto& position{ dataStorage.getComponent<Position>(entityID) };
+						auto dataNodePointer{
+							dynamic_cast<ScriptNodeData<float, utility::Void>*>(
+								currentScriptNodePointer.get()
+							)
+						};
+						float boundary{ dataNodePointer->internalData };
+						return position.x > boundary || position.x < boundary;
+					}
+					return false;
 				}
 				default:
 					throw std::runtime_error{ "not a predicate instruction!" };
@@ -526,6 +610,8 @@ namespace wasp::game::systems {
 							angleIncrement = storedAngleIncrement;
 						}
 						else {
+							//make sure old angle and init angle are the same
+							oldAngle = initAngle;
 							//create and store increments
 							float magnitudeDiff{ targetSpeed - oldMagnitude };
 							speedIncrement = ticks > 0
@@ -569,11 +655,13 @@ namespace wasp::game::systems {
 							};
 
 							//check to see if we have reached target angle
-							if (
+							float angleDiff{
 								std::abs(static_cast<float>(
 									targetAngle.smallerDifference(newAngle)
-									)) <= angleEquivalenceEpsilon
-								) {
+								))
+							};
+							debug::log(std::to_string(angleDiff));
+							if (angleDiff <= angleEquivalenceEpsilon) {
 								hasReachedAngle = true;
 								velocity.setAngle(targetAngle);
 							}
@@ -638,6 +726,8 @@ namespace wasp::game::systems {
 							angleIncrement = storedAngleIncrement;
 						}
 						else {
+							//make sure old angle and init angle are the same
+							oldAngle = initAngle;
 							//create and store increments
 							float magnitudeDiff{ targetSpeed - oldMagnitude };
 							speedIncrement = ticks > 0
@@ -681,11 +771,12 @@ namespace wasp::game::systems {
 							};
 
 							//check to see if we have reached target angle
-							if (
+							float angleDiff{
 								std::abs(static_cast<float>(
 									targetAngle.smallerDifference(newAngle)
-									)) <= angleEquivalenceEpsilon
-								) {
+								))
+							};
+							if (angleDiff <= angleEquivalenceEpsilon) {
 								hasReachedAngle = true;
 								velocity.setAngle(targetAngle);
 							}
@@ -696,6 +787,170 @@ namespace wasp::game::systems {
 					}
 					//move on to next node if present
 					if (hasReachedSpeed && hasReachedAngle) {
+						clearExternalDataForNode(currentScriptNodePointer, externalData);
+						gotoNextNode(currentScriptNodePointer, 0);
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				case ScriptInstructions::shiftAnglePeriod: {
+					Velocity& velocity{
+						scene.getDataStorage().getComponent<Velocity>(entityID)
+					};
+					auto oldAngle{ velocity.getAngle() };
+
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<
+							std::tuple<math::Angle, math::Angle, int>,
+							float
+						>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+
+					const auto [targetAngle, initAngle, ticks]
+						= dataNodePointer->internalData;
+
+					bool hasReachedAngle{ false };
+
+					if (oldAngle == targetAngle) {
+						hasReachedAngle = true;
+					}
+
+					if (!hasReachedAngle) {
+						//retrieve or create increment
+						float angleIncrement{};
+						if (externalData.find(currentScriptNodePointer.get())
+							!= externalData.end()
+						) {
+							float storedAngleIncrement{
+								*dataNodePointer->getDataPointer(
+									externalData[currentScriptNodePointer.get()]
+								)
+							};
+							angleIncrement = storedAngleIncrement;
+						}
+						else {
+							//make sure old angle and init angle are the same
+							oldAngle = initAngle;
+
+							//create and store increments
+							float angleDiff{ targetAngle.smallerDifference(initAngle) };
+							angleIncrement = ticks > 0
+								? angleDiff / static_cast<float>(ticks)
+								: angleDiff;
+
+							externalData[currentScriptNodePointer.get()]
+								= new float{ angleIncrement };
+						}
+
+						//increment angle
+						math::Angle newAngle{
+							static_cast<float>(oldAngle) + angleIncrement
+						};
+
+						//check to see if we have reached target angle
+						float angleDiff{
+							std::abs(static_cast<float>(
+								targetAngle.smallerDifference(newAngle)
+							))
+						};
+						debug::log(std::to_string(angleDiff));
+						if (angleDiff <= angleEquivalenceEpsilon) {
+							hasReachedAngle = true;
+							velocity.setAngle(targetAngle);
+						}
+						else {
+							velocity.setAngle(newAngle);
+						}
+					}
+
+					//move on to next node if present
+					if (hasReachedAngle) {
+						clearExternalDataForNode(currentScriptNodePointer, externalData);
+						gotoNextNode(currentScriptNodePointer, 0);
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				case ScriptInstructions::shiftAngleLongPeriod: {
+					Velocity& velocity{
+						scene.getDataStorage().getComponent<Velocity>(entityID)
+					};
+					auto oldAngle{ velocity.getAngle() };
+
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<
+							std::tuple<math::Angle, math::Angle, int>,
+							float
+						>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+
+					const auto [targetAngle, initAngle, ticks]
+						= dataNodePointer->internalData;
+
+					bool hasReachedAngle{ false };
+
+					if (oldAngle == targetAngle) {
+						hasReachedAngle = true;
+					}
+
+					if (!hasReachedAngle) {
+						//retrieve or create increment
+						float angleIncrement{};
+						if (externalData.find(currentScriptNodePointer.get())
+							!= externalData.end()
+							) {
+							float storedAngleIncrement{
+								*dataNodePointer->getDataPointer(
+									externalData[currentScriptNodePointer.get()]
+								)
+							};
+							angleIncrement = storedAngleIncrement;
+						}
+						else {
+							//make sure old angle and init angle are the same
+							oldAngle = initAngle;
+
+							//create and store increments
+							float angleDiff{ targetAngle.largerDifference(initAngle) };
+							angleIncrement = ticks > 0
+								? angleDiff / static_cast<float>(ticks)
+								: angleDiff;
+
+							externalData[currentScriptNodePointer.get()]
+								= new float{ angleIncrement };
+						}
+
+						//increment angle
+						math::Angle newAngle{
+							static_cast<float>(oldAngle) + angleIncrement
+						};
+
+						//check to see if we have reached target angle
+						float angleDiff{
+							std::abs(static_cast<float>(
+								targetAngle.smallerDifference(newAngle)
+							))
+						};
+						debug::log(std::to_string(angleDiff));
+						if (angleDiff <= angleEquivalenceEpsilon) {
+							hasReachedAngle = true;
+							velocity.setAngle(targetAngle);
+						}
+						else {
+							velocity.setAngle(newAngle);
+						}
+					}
+
+					//move on to next node if present
+					if (hasReachedAngle) {
 						clearExternalDataForNode(currentScriptNodePointer, externalData);
 						gotoNextNode(currentScriptNodePointer, 0);
 						return true;

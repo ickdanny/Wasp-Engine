@@ -31,10 +31,6 @@ namespace wasp::game::systems {
         }
         for (auto& removeEntityOrder : removeEntityOrders) {
             dataStorage.removeEntity(removeEntityOrder);
-            debug::log(
-                "removed entity "
-                + std::to_string(removeEntityOrder.entityHandle.entityID)
-            );
         }
     }
 }

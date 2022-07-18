@@ -49,6 +49,30 @@ namespace wasp::game::systems {
 			)
 		}
 		, smallPowerSpawnProgram{ spawnSmallPowerNode, 1, false }
+		, smallPowerHalfSpawnProgram{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeChanceNode(1.0f / 2.0f),
+				spawnSmallPowerNode
+			),
+			1,
+			false
+		}
+		, smallPowerThirdSpawnProgram{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeChanceNode(1.0f / 3.0f),
+				spawnSmallPowerNode
+			),
+			1,
+			false
+		}
+		, smallPowerFourthSpawnProgram{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeChanceNode(1.0f / 4.0f),
+				spawnSmallPowerNode
+			),
+			1,
+			false
+		}
 
 		//large power
 		, largePowerPrototype{

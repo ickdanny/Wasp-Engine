@@ -504,6 +504,50 @@ namespace wasp::game::systems {
 				currentSpawnNodePointer = nullptr;
 				break;
 			}
+			case SpawnInstructions::columnFormation: {
+				Velocity baseVel{ evaluateVelocityNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+				int count{ evaluateIntNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[1],
+					tick,
+					spawnList
+				) };
+				float increment{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[2],
+					tick,
+					spawnList
+				) };
+
+				Velocity velocity{ baseVel };
+				for (int i{ 0 }; i < count; ++i) {
+					auto velConsumerSharedPointer{
+						currentSpawnNodePointer->linkedNodePointers[3]
+					};
+					while (velConsumerSharedPointer) {
+						runSpawnNodePassingVel(
+							scene,
+							entityID,
+							velConsumerSharedPointer,
+							tick,
+							spawnList,
+							velocity
+						);
+					}
+					velocity.setMagnitude(velocity.getMagnitude() + increment);
+				}
+				
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
 			default:
 				throw std::runtime_error{ "unknown spawn instruction" };
 		}
@@ -570,6 +614,43 @@ namespace wasp::game::systems {
 				spawnList.emplace_back(
 					componentTupleBaseSharedPtr->addPosVel(pos, vel)
 				);
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
+			case SpawnInstructions::columnFormation: {
+				int count{ evaluateIntNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+				float increment{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[1],
+					tick,
+					spawnList
+				) };
+
+				Velocity velocity{ vel };
+				for (int i{ 0 }; i < count; ++i) {
+					auto velConsumerSharedPointer{
+						currentSpawnNodePointer->linkedNodePointers[2]
+					};
+					while (velConsumerSharedPointer) {
+						runSpawnNodePassingVel(
+							scene,
+							entityID,
+							velConsumerSharedPointer,
+							tick,
+							spawnList,
+							velocity
+						);
+					}
+					velocity.setMagnitude(velocity.getMagnitude() + increment);
+				}
 
 				currentSpawnNodePointer = nullptr;
 				break;
@@ -761,6 +842,33 @@ namespace wasp::game::systems {
 				std::uniform_real_distribution<float> distribution{ min, max };
 				return distribution(prng);
 			}
+			case SpawnInstructions::entityUniformRandom: {
+				float min{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+				float max{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[1],
+					tick,
+					spawnList
+				) };
+
+				//make a prng based on entityID
+				config::PrngType prng{ entityID };
+				std::uniform_real_distribution<float> distribution{ min, max };
+
+				//roll it a couple times to make it more random
+				#pragma warning(suppress : 4834)	//suppress no discard
+				distribution(prng);
+				#pragma warning(suppress : 4834)	//suppress no discard
+				distribution(prng);
+				return distribution(prng);
+			}
 			case SpawnInstructions::pickupInitSpeed: {
 				math::Point2 pos{
 					scene.getDataStorage().getComponent<Position>(entityID)
@@ -800,6 +908,31 @@ namespace wasp::game::systems {
 				else {
 					return 0.0f;
 				}
+			}
+			case SpawnInstructions::spiral: {
+				int maxTick{ evaluateIntNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+				float baseAngle{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[1],
+					tick,
+					spawnList
+				) };
+				float angularVelocity{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[2],
+					tick,
+					spawnList
+				) };
+				int tickFromZero{ maxTick - tick };
+				return baseAngle + (static_cast<float>(tickFromZero) * angularVelocity);
 			}
 			case SpawnInstructions::conditionElse: {
 				//if our predicate is met, evaluate truenode
