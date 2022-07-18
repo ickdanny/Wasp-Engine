@@ -79,25 +79,32 @@ namespace wasp::game::config {
     public static final AABB SMALL_ENEMY_HITBOX = new AABB(10);
     public static final AABB LARGE_ENEMY_HITBOX = new AABB(15);
 
-//BOSSES
-    public static final double BOSS_Y = 150;
-    public static final DoublePoint BOSS_MIDPOINT = new DoublePoint(WIDTH/2d, BOSS_Y);
-    public static final double BOSS_SPEED = 4d;
+    */
 
-    public static final double BOSS_INBOUND = 60;
-    public static final double BOSS_MAX_Y = HEIGHT * .28;
-    public static final AABB BOSS_BOUNDS = new AABB(BOSS_INBOUND, WIDTH - BOSS_INBOUND, BOSS_INBOUND, BOSS_MAX_Y);
-    public static final double BOSS_GOTO_RADIUS_MIN = 60;
-    public static final double BOSS_GOTO_RADIUS_MAX = 120;
-    public static final double BOSS_GOTO_SPEED = 2d;
+    //bosses
+    constexpr float bossY{ 60.0f };
+    constexpr math::Point2 bossMidpoint{ 
+        (config::gameWidth / 2.0f) + config::gameOffset.x, bossY 
+    };
+    constexpr float bossSpeed{ 2.0f };
 
+    constexpr float bossInbound{ 30.0f };
+    constexpr float bossMaxY{ (config::gameHeight * 0.28f) + config::gameOffset.y };
+    constexpr math::AABB bossBounds{
+        bossInbound + config::gameOffset.x,
+        config::gameWidth - bossInbound + config::gameOffset.x,
+        bossInbound + config::gameOffset.x,
+        bossMaxY
+    };
+    constexpr float bossGotoRadiusMin{ 30.0f };
+    constexpr float bossGotoRadiusMax{ 60.0f };
+    constexpr float bossGotoSpeed{ 1.0f };
+
+    constexpr float bossHitbox{ 13.0f };
 
 //ENEMY PROJECTILES
+    /*
     public static final int ENEMY_BULLET_COLLIDABLE_TIME = 2;
-
-    public static final AABB SMALL_BULLET_HITBOX = new AABB(2.7);
-    public static final AABB MEDIUM_BULLET_HITBOX = new AABB(6.3);
-    public static final AABB LARGE_BULLET_HITBOX = new AABB(15.7);
     */
 
 	//graphics

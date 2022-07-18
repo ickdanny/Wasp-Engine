@@ -46,6 +46,7 @@ namespace wasp::game::components {
     public static final Instructions<Void, Void> WAIT_UNTIL_BOSS_DEATH = new Instructions<>();
     public static final Instructions<Void, Void> WAIT_UNTIL_DIALOGUE_OVER = new Instructions<>();
     */
+        isDialogueOver,             //returns true if a dialogue ended this tick
 
         boundaryYLow,               //returns true if the entity's y coordinate is below
                                     //a stored value.
@@ -92,6 +93,7 @@ namespace wasp::game::components {
         //public static final Instructions<Void, Void> REMOVE_VELOCITY
 
         setInbound,                 //sets the entity's inbound <Inbound, Void>
+                                    //<float, Void> (inbound)
         removeInbound,              //removes the entity's inbound component
 
         setOutbound,                //sets the entity's outbound <Outbound, Void>
@@ -127,9 +129,11 @@ namespace wasp::game::components {
         shiftSpeedIncrement,        //sets speed to target value via increment
                                     //(targetSpeed, increment)
                                     //<std::tuple<float, float>, Void>
+
+        gotoDecelerating,           //goes to the specified point while decelerating
+                                    //(targetPosition, maxSpeed), (initDistance)
+                                    //<std::tuple<Point2, float>, float>
         /*
-    //target position, maximum speed, storing init distance
-    public static final Instructions<Tuple2<DoublePoint, Double>, Double> GOTO_DECELERATING = new Instructions<>();
     //bounds, minimum radius, maximum radius, maximum speed, storing target and init distance
     public static final Instructions<Tuple4<AABB, Double, Double, Double>, Tuple2<DoublePoint, Double>>
             BOUND_RADIUS_GOTO_DECELERATING = new Instructions<>();

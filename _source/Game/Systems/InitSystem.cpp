@@ -451,7 +451,8 @@ namespace wasp::game::systems {
 				config::playerHitbox,
 				Velocity{},
 				SpriteInstruction{
-					bitmapStoragePointer->get(L"temp_player")->d2dBitmap
+					bitmapStoragePointer->get(L"p_idle_1")->d2dBitmap,
+					math::Vector2{ 0.0f, 4.0f }			//offset
 				},
 				DrawOrder{ config::playerDrawOrder },
 				PlayerData{
@@ -466,8 +467,40 @@ namespace wasp::game::systems {
 				PickupCollisions::Target{},
 				DeathCommand{ DeathCommand::Commands::playerDeath },
 				SpawnProgramList{},
-				DeathSpawn{ { programsPointer->playerPrograms.deathSpawnProgram } }
-				//todo: animation
+				DeathSpawn{ { programsPointer->playerPrograms.deathSpawnProgram } },
+				AnimationList{ 
+					{
+						components::Animation{ {
+							L"p_left_1", L"p_left_2", L"p_left_3", L"p_left_4"
+						} },
+						components::Animation{ {
+							L"p_left_t_3"
+						} },
+						components::Animation{ {
+							L"p_left_t_2"
+						} },
+						components::Animation{ {
+							L"p_left_t_1"
+						} },
+						components::Animation{ {
+							L"p_idle_1", L"p_idle_2", L"p_idle_3", L"p_idle_4"
+						} },
+						components::Animation{ {
+							L"p_right_t_1"
+						} },
+						components::Animation{ {
+							L"p_right_t_2"
+						} },
+						components::Animation{ {
+							L"p_right_t_3"
+						} },
+						components::Animation{ {
+							L"p_right_1", L"p_right_2", L"p_right_3", L"p_right_4"
+						} }
+					},
+					4,	//idle index
+					4	//ticks
+				}
 			).package()
 		);
 

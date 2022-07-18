@@ -72,9 +72,19 @@ namespace wasp::game::systems {
 			const ScriptNodeSharedPointer& falseNodePointer
 		);
 
-		//Returns a script node representing a timer
+		//Returns a script node representing a timer.
 		static ScriptNodeSharedPointer makeTimerNode(
 			int timer,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a script node representing a set collidable command.
+		static ScriptNodeSharedPointer makeSetCollidableNode(
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a script node representing a remove collidable command.
+		static ScriptNodeSharedPointer makeRemoveCollidableNode(
 			ScriptNodeSharedPointer next = nullptr
 		);
 
@@ -96,8 +106,19 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next = nullptr
 		);
 
-		//Returns a script node representing a clear spawn command
+		//Returns a script node representing a clear spawn command.
 		static ScriptNodeSharedPointer makeClearSpawnNode(
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a script node representing a set inbound command.
+		static ScriptNodeSharedPointer makeSetInboundNode(
+			float inbound,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a script node representing a remove inbound command.
+		static ScriptNodeSharedPointer makeRemoveInboundNode(
 			ScriptNodeSharedPointer next = nullptr
 		);
 
@@ -206,6 +227,27 @@ namespace wasp::game::systems {
 			const Velocity& finalVelocity,
 			const math::Angle& initAngle,
 			const components::SpawnProgram& spawnProgram,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//boss stuff
+
+		static ScriptNodeSharedPointer makeGotoDeceleratingNode(
+			const math::Point2& targetPos,
+			float maxSpeed,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		static ScriptNodeSharedPointer makeShowDialogueNode(
+			const std::wstring& dialogueID,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		static ScriptNodeSharedPointer makeIsDialogueOverNode();
+
+		static ScriptNodeSharedPointer makeBossEntryNode(
+			int preTimer,
+			const std::wstring& dialogueID,
 			ScriptNodeSharedPointer next = nullptr
 		);
 	};

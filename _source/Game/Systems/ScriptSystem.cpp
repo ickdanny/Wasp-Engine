@@ -17,6 +17,27 @@ namespace wasp::game::systems {
 	namespace {
 
 		constexpr float angleEquivalenceEpsilon{ .05f };
+		constexpr float pointEquivalenceEpsilon{ .1f };
+
+		constexpr float gotoDeceleratingExponentBase{ 2.0f };
+		constexpr float gotoDeceleratingHorizontalShift{ 0.1f };
+		constexpr float gotoDeceleratingHorizontalStretch{ 7.0f };
+
+		float calculateGotoDeceleratingSpeed(
+			float currentDistance, 
+			float initDistance,
+			float maxSpeed
+		) {
+			float distanceRatio{ currentDistance - initDistance };
+			float exponent{			//a linear function based on distanceRatio; mx+b
+				(gotoDeceleratingHorizontalStretch * distanceRatio) +
+				gotoDeceleratingHorizontalShift
+			};
+			float speedMulti{
+				1.0f - (1.0f / std::powf(gotoDeceleratingExponentBase, exponent))
+			};
+			return maxSpeed * speedMulti;
+		}
 
 		void clearExternalDataForNode(
 			std::shared_ptr<ScriptNode>& currentScriptNodePointer,
@@ -422,8 +443,35 @@ namespace wasp::game::systems {
 					componentOrderQueue.queueSetComponent<Velocity>(
 						entityHandle,
 						velocity
-						);
+					);
 					gotoNextNode(currentScriptNodePointer, 1);
+					return true;
+				}
+				case ScriptInstructions::setInbound: {
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<float, utility::Void>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+					float inbound{ dataNodePointer->internalData };
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueSetComponent<Inbound>(
+						entityHandle,
+						Inbound{ inbound }
+					);
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
+				}
+				case ScriptInstructions::removeInbound: {
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					componentOrderQueue.queueRemoveComponent<Inbound>(
+						entityHandle
+					);
+					gotoNextNode(currentScriptNodePointer, 0);
 					return true;
 				}
 				case ScriptInstructions::shiftSpeedPeriod: {
@@ -1009,13 +1057,92 @@ namespace wasp::game::systems {
 						return false;
 					}
 				}
-				
+				case ScriptInstructions::gotoDecelerating: {
+					auto& dataStorage{ scene.getDataStorage() };
+					auto& position{ 
+						dataStorage.getComponent<Position>(entityID) 
+					};
+
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<
+							std::tuple<math::Point2, float>,
+							float
+						>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+
+					auto& [targetPos, maxSpeed] = dataNodePointer->internalData;
+
+					bool hasReachedPos{ false };
+
+					//test if we have already reached our target position
+					float currentDistance{ math::distanceFromAToB(position, targetPos) };
+					if (currentDistance < pointEquivalenceEpsilon) {
+						position = targetPos;
+						hasReachedPos = true;
+					}
+					else {
+						//set or retrieve our initial distance
+						float initDistance{};
+						if (externalData.find(currentScriptNodePointer.get())
+							!= externalData.end()
+						) {
+							float storedInitDistance{
+								*dataNodePointer->getDataPointer(
+									externalData[currentScriptNodePointer.get()]
+								)
+							};
+							initDistance = storedInitDistance;
+						}
+						else {
+							//create and store init dist
+							initDistance = currentDistance;
+							externalData[currentScriptNodePointer.get()]
+								= new float{ initDistance };
+						}
+						const auto& angle{ math::getAngleFromAToB(position, targetPos) };
+						float speed{ calculateGotoDeceleratingSpeed(
+							currentDistance,
+							initDistance,
+							maxSpeed
+						) };
+
+						//alter velocity
+						if (dataStorage.containsComponent<Velocity>(entityID)) {
+							auto& velocity{
+								dataStorage.getComponent<Velocity>(entityID)
+							};
+							velocity = Velocity{ speed, angle };
+						}
+						else {
+							EntityHandle handle{ dataStorage.makeHandle(entityID) };
+							componentOrderQueue.queueSetComponent(
+								handle,
+								Velocity{ speed, angle }
+							);
+						}
+					}
+					//move on to next node if present
+					if (hasReachedPos) {
+						clearExternalDataForNode(currentScriptNodePointer, externalData);
+						gotoNextNode(currentScriptNodePointer, 0);
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
 				case ScriptInstructions::removeEntity: {
 					componentOrderQueue.queueRemoveEntity(
 						scene.getDataStorage().makeHandle(entityID)
 					);
 					gotoNextNode(currentScriptNodePointer, 0);
 					return true;
+				}
+				case ScriptInstructions::showDialogue: {
+					debug::log("need to implement show dialogue!");
+					return false;
 				}
 				default:
 					throw std::runtime_error{ "unhandled script instruction!" };

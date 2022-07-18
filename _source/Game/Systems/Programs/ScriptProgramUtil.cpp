@@ -193,6 +193,31 @@ namespace wasp::game::systems {
 		return ScriptNodeSharedPointer{ timerNodePointer };
 	}
 
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeSetCollidableNode(
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* setCollidableNodePointer{
+			new ScriptNode{ ScriptInstructions::setCollidable }
+		};
+		if (next) {
+			setCollidableNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ setCollidableNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer 
+		ScriptProgramUtil::makeRemoveCollidableNode(
+			ScriptNodeSharedPointer next
+	) {
+		ScriptNode* removeCollidableNodePointer{
+			new ScriptNode{ ScriptInstructions::removeCollidable }
+		};
+		if (next) {
+			removeCollidableNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ removeCollidableNodePointer };
+	}
+
 	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeSetHealthNode(
 		int health,
 		ScriptNodeSharedPointer next
@@ -251,6 +276,34 @@ namespace wasp::game::systems {
 			clearSpawnNodePointer->link(next);
 		}
 		return ScriptNodeSharedPointer{ clearSpawnNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeSetInboundNode(
+		float inbound,
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* setInboundNodePointer{
+			new ScriptNodeData<float, utility::Void>{
+				ScriptInstructions::setInbound,
+				inbound
+			}
+		};
+		if (next) {
+			setInboundNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ setInboundNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeRemoveInboundNode(
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* removeInboundNodePointer{
+			new ScriptNode{ ScriptInstructions::removeInbound }
+		};
+		if (next) {
+			removeInboundNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ removeInboundNodePointer };
 	}
 
 	ScriptProgramUtil::ScriptNodeSharedPointer 
@@ -416,16 +469,16 @@ namespace wasp::game::systems {
 		const Velocity& velocity,
 		ScriptNodeSharedPointer next
 	) {
-		ScriptNode* setVelocityNode{
+		ScriptNode* setVelocityNodePointer{
 			new ScriptNode{
 				ScriptInstructions::setVelocity,
 			}
 		};
-		setVelocityNode->link(makeVelocityValueNode(velocity));
+		setVelocityNodePointer->link(makeVelocityValueNode(velocity));
 		if (next) {
-			setVelocityNode->link(next);
+			setVelocityNodePointer->link(next);
 		}
-		return ScriptNodeSharedPointer{ setVelocityNode };
+		return ScriptNodeSharedPointer{ setVelocityNodePointer };
 	}
 
 	ScriptProgramUtil::ScriptNodeSharedPointer 
@@ -499,6 +552,69 @@ namespace wasp::game::systems {
 			makeTimerNode(preSlowTimer,
 			makeShiftVelocityTurnPeriodNode(finalVelocity, initAngle, slowDuration,
 			makeSetSpawnNode(spawnProgram, next)))
+		};
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer 
+		ScriptProgramUtil::makeGotoDeceleratingNode
+	(
+		const math::Point2& targetPos,
+		float maxSpeed,
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* gotoDeceleratingNodePointer{
+			new ScriptNodeData<std::tuple<math::Point2, float>, float>{
+				ScriptInstructions::gotoDecelerating,
+				{ targetPos, maxSpeed }
+			}
+		};
+		if (next) {
+			gotoDeceleratingNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ gotoDeceleratingNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeShowDialogueNode(
+		const std::wstring& dialogueID,
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* showDialogueNodePointer{
+			new ScriptNodeData<std::wstring, utility::Void>{
+				ScriptInstructions::showDialogue,
+				dialogueID
+			}
+		};
+		if (next) {
+			showDialogueNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ showDialogueNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer 
+		ScriptProgramUtil::makeIsDialogueOverNode() 
+	{
+		ScriptNode* isDialogueOverNodePointer{
+			new ScriptNode{
+				ScriptInstructions::isDialogueOver
+			}
+		};
+		return ScriptNodeSharedPointer{ isDialogueOverNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBossEntryNode(
+		int preTimer,
+		const std::wstring& dialogueID,
+		ScriptNodeSharedPointer next
+	) {
+		return{
+			makeGotoDeceleratingNode(config::bossMidpoint, config::bossSpeed,
+			makeSetInboundNode(config::bossInbound,
+			makeTimerNode(preTimer,
+			makeShowDialogueNode(dialogueID,
+			makeStallingIfNode(
+				makeIsDialogueOverNode(),
+				makeSetCollidableNode(next)
+			)))))
 		};
 	}
 }
