@@ -174,6 +174,50 @@ namespace wasp::game::systems {
 		return ScriptNodeSharedPointer{ ifElseNodePointer };
 	}
 
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeRoutineNode(
+		const ScriptNodeSharedPointer& scriptBaseNodePointer,
+		const ScriptNodeSharedPointer& predicateNodePointer,
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* routineNodePointer{
+			new ScriptNodeData<utility::Void, ScriptProgram>{ 
+				ScriptInstructions::routine,
+				{}
+			}
+		};
+		routineNodePointer->link(
+			scriptBaseNodePointer,
+			predicateNodePointer
+		);
+		if (next) {
+			routineNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ routineNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeRoutineNode(
+		const ScriptNodeSharedPointer& scriptBaseNodePointer,
+		ScriptInstructions predicateInstruction,
+		ScriptNodeSharedPointer next
+	) {
+		return makeRoutineNode(
+			scriptBaseNodePointer,
+			std::make_shared<ScriptNode>(predicateInstruction),
+			next
+		);
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeRoutineNode(
+		const ScriptNodeSharedPointer& scriptBaseNodePointer,
+		ScriptNodeSharedPointer next
+	) {
+		return makeRoutineNode(
+			scriptBaseNodePointer,
+			nullptr,
+			next
+		);
+	}
+
 	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeTimerNode(
 		int timer,
 		ScriptNodeSharedPointer next
@@ -574,6 +618,30 @@ namespace wasp::game::systems {
 		return ScriptNodeSharedPointer{ gotoDeceleratingNodePointer };
 	}
 
+	ScriptProgramUtil::ScriptNodeSharedPointer
+		ScriptProgramUtil::makeBoundRadiusGotoDeceleratingNode
+		(
+			const math::AABB bounds,
+			float minRadius,
+			float maxRadius,
+			float maxSpeed,
+			ScriptNodeSharedPointer next
+		) {
+		ScriptNode* boundRadiusGotoDeceleratingNodePointer{
+			new ScriptNodeData<
+				std::tuple<math::AABB, float, float, float>,
+				std::tuple<math::Point2, float>
+			>{
+				ScriptInstructions::boundRadiusGotoDecelerating,
+				{ bounds, minRadius, maxRadius, maxSpeed }
+			}
+		};
+		if (next) {
+			boundRadiusGotoDeceleratingNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ boundRadiusGotoDeceleratingNodePointer };
+	}
+
 	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeShowDialogueNode(
 		const std::wstring& dialogueID,
 		ScriptNodeSharedPointer next
@@ -601,6 +669,15 @@ namespace wasp::game::systems {
 		return ScriptNodeSharedPointer{ isDialogueOverNodePointer };
 	}
 
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeIsBossDeadNode() {
+		ScriptNode* isBossDeadNodePointer{
+			new ScriptNode{
+				ScriptInstructions::isBossDead
+			}
+		};
+		return ScriptNodeSharedPointer{ isBossDeadNodePointer };
+	}
+
 	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBossEntryNode(
 		int preTimer,
 		const std::wstring& dialogueID,
@@ -616,5 +693,77 @@ namespace wasp::game::systems {
 				makeSetCollidableNode(next)
 			)))))
 		};
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer 
+		ScriptProgramUtil::makeBossAttackAndMoveNode
+	(
+		const components::SpawnProgram& spawnProgram,
+		int preTimer,
+		int postTimer,
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNodeSharedPointer scriptBaseNodePointer{
+			makeSetSpawnNode(spawnProgram)
+		};
+		scriptBaseNodePointer->link(
+			makeTimerNode(preTimer,
+			makeBoundRadiusGotoDeceleratingNode(
+				config::bossBounds,
+				config::bossGotoRadiusMin,
+				config::bossGotoRadiusMax,
+				config::bossGotoSpeed,
+			makeStallingIfNode(
+				ScriptInstructions::isNotSpawning,
+				makeTimerNode(postTimer,
+				makeSetVelocityNode(Velocity{},
+				scriptBaseNodePointer
+				))
+			)))
+		);
+		return{
+			makeRoutineNode(
+				scriptBaseNodePointer,
+				makeIsBossDeadNode(),		//routine breaks when boss dies
+				next
+			)
+		};
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBossMoveNode (
+		int preTimer,
+		int postTimer,
+		float speed,
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNodeSharedPointer scriptBaseNodePointer{
+			makeTimerNode(preTimer)
+		};
+		scriptBaseNodePointer->link(
+			makeBoundRadiusGotoDeceleratingNode(
+				config::bossBounds,
+				config::bossGotoRadiusMin,
+				config::bossGotoRadiusMax,
+				speed,
+			makeTimerNode(postTimer,
+			makeSetVelocityNode(Velocity{},
+			scriptBaseNodePointer
+			)))
+		);
+		return{
+			makeRoutineNode(
+				scriptBaseNodePointer,
+				makeIsBossDeadNode(),		//routine breaks when boss dies
+				next
+			)
+		};
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBossMoveNode(
+		int preTimer,
+		int postTimer,
+		ScriptNodeSharedPointer next
+	) {
+		return makeBossMoveNode(preTimer, postTimer, config::bossGotoSpeed, next);
 	}
 }

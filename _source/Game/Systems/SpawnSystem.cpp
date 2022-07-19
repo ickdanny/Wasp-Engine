@@ -655,6 +655,66 @@ namespace wasp::game::systems {
 				currentSpawnNodePointer = nullptr;
 				break;
 			}
+			case SpawnInstructions::mirrorFormation: {
+				//get the base position
+				math::Point2 basePos{ evaluatePointNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+				//get the axis of symmetry (x coordinate to reflect around)
+				float axis{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[1],
+					tick,
+					spawnList
+				) };
+
+				//in point slope form, our new X n follows the equation
+				// n - a = -(o - a)
+				// where a is our axis and o is the old X
+				math::Point2 mirrorPos{ -basePos.x + (2 * axis), basePos.y };
+				Velocity mirrorVel{
+					vel.getMagnitude(),
+					vel.getAngle().flipY()
+				};
+
+				//pass both normal and reflected pos/vel pairs
+				auto posVelConsumerSharedPointer{
+					currentSpawnNodePointer->linkedNodePointers[2]
+				};
+				while (posVelConsumerSharedPointer) {
+					runSpawnNodePassingPosVel(
+						scene,
+						entityID,
+						posVelConsumerSharedPointer,
+						tick,
+						spawnList,
+						basePos,
+						vel
+					);
+				}
+				posVelConsumerSharedPointer =
+					currentSpawnNodePointer->linkedNodePointers[2];
+				while (posVelConsumerSharedPointer) {
+					runSpawnNodePassingPosVel(
+						scene,
+						entityID,
+						posVelConsumerSharedPointer,
+						tick,
+						spawnList,
+						mirrorPos,
+						mirrorVel
+					);
+				}
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
+
 			default:
 				throw std::runtime_error{ "cannot pass pos!" };
 		}
@@ -683,6 +743,57 @@ namespace wasp::game::systems {
 				spawnList.emplace_back(
 					componentTupleBaseSharedPtr->addPosVel(pos, vel)
 				);
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
+			case SpawnInstructions::mirrorFormation: {
+				//get the axis of symmetry (x coordinate to reflect around)
+				float axis{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+
+				//in point slope form, our new X n follows the equation
+				// n - a = -(o - a)
+				// where a is our axis and o is the old X
+				math::Point2 mirrorPos{ -pos.x + (2 * axis), pos.y };
+				Velocity mirrorVel{
+					vel.getMagnitude(),
+					vel.getAngle().flipY()
+				};
+
+				//pass both normal and reflected pos/vel pairs
+				auto posVelConsumerSharedPointer{
+					currentSpawnNodePointer->linkedNodePointers[1]
+				};
+				while (posVelConsumerSharedPointer) {
+					runSpawnNodePassingPosVel(
+						scene,
+						entityID,
+						posVelConsumerSharedPointer,
+						tick,
+						spawnList,
+						pos,
+						vel
+					);
+				}
+				posVelConsumerSharedPointer =
+					currentSpawnNodePointer->linkedNodePointers[1];
+				while (posVelConsumerSharedPointer) {
+					runSpawnNodePassingPosVel(
+						scene,
+						entityID,
+						posVelConsumerSharedPointer,
+						tick,
+						spawnList,
+						mirrorPos,
+						mirrorVel
+					);
+				}
 
 				currentSpawnNodePointer = nullptr;
 				break;

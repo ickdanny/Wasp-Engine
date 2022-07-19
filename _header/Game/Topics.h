@@ -80,8 +80,7 @@ namespace wasp::game {
 		//cleared by MiscellaneousSystem
 		static const Topic<EntityHandle> deaths;
 
-		//todo: not cleared!
-		//set by DeathHandlerSystem
+		//set by DeathHandlerSystem, cleared by ScriptSystem (boss's program)
 		static const Topic<EntityHandle> bossDeaths;
 
 		//set by ContinueSystem and PauseSystem, cleared by MiscellaneousSystem

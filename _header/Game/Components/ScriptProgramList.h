@@ -14,6 +14,9 @@ namespace wasp::game::components {
         stallCondition,             //if statement [predicateNode, trueNode], stalls
         conditionElse,              //if-else statement 
                                     //[predicateNode, trueNode, falseNode]
+        routine,                    //runs a script    (predicate and next optional)
+                                    //[scriptBaseNode, predicateNode, nextNode]
+                                    //<Void, ScriptProgram>
 
         value,                      //returns a stored value, <T, Void>
 
@@ -34,6 +37,8 @@ namespace wasp::game::components {
 
         isSpawning,                 //returns true if entity has active spawns
         isNotSpawning,              //returns false if entity has active spawns
+
+        isBossDead,                 //returns true if the boss died
         
         /*
         public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_FOCUSED = new Instructions<>();
@@ -43,7 +48,6 @@ namespace wasp::game::components {
     public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_DEAD = new Instructions<>();
     public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_RESPAWNING = new Instructions<>();
     public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_RESPAWN_INVULNERABLE = new Instructions<>();
-    public static final Instructions<Void, Void> WAIT_UNTIL_BOSS_DEATH = new Instructions<>();
     public static final Instructions<Void, Void> WAIT_UNTIL_DIALOGUE_OVER = new Instructions<>();
     */
         isDialogueOver,             //returns true if a dialogue ended this tick
@@ -133,14 +137,12 @@ namespace wasp::game::components {
         gotoDecelerating,           //goes to the specified point while decelerating
                                     //(targetPosition, maxSpeed), (initDistance)
                                     //<std::tuple<Point2, float>, float>
-        /*
-    //bounds, minimum radius, maximum radius, maximum speed, storing target and init distance
-    public static final Instructions<Tuple4<AABB, Double, Double, Double>, Tuple2<DoublePoint, Double>>
-            BOUND_RADIUS_GOTO_DECELERATING = new Instructions<>();
-             public static final Instructions<Void, Void> FOLLOW_PLAYER = new Instructions<>();
-        */
-
-        clearField,                 //clears field of bullets
+        boundRadiusGotoDecelerating,//goes to a random point within the specified bound
+                                    //while decelerating
+                                    //(bounds, minRad, maxRad, maxSpeed)
+                                    //<std::tuple<AABB, float, float, float>, 
+                                    //  (target, initDist)
+                                    //  std::tuple<Point2, float>
         die,                        //triggers entity death
         removeEntity,               //removes entity entirely, bypassing death system
 

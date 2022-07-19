@@ -67,6 +67,13 @@ namespace wasp::game::systems {
 		ComponentTupleSharedPointer sharpMagentaPrototype;		//uninitialized!
 		ComponentTupleSharedPointer sharpRosePrototype;			//uninitialized!
 
+		//clear for bosses
+		ScriptNodeSharedPointer fieldClearScriptNode;			//uninitialized!
+		ComponentTupleSharedPointer fieldClearPrototype;		//uninitialized!
+		SpawnNodeSharedPointer fieldClearNode;					//uninitialized!
+
+		SpawnProgram fieldClearProgram;							//uninitialized!
+
 		//naming convention:
 		//s		- stage 
 		//1-5	- stage number
@@ -198,7 +205,16 @@ namespace wasp::game::systems {
 			//wave 16: bats from right
 		SpawnNodeSharedPointer s1e16Node;						//uninitialized!
 		SpawnProgram s1e16;
-		
+
+		// BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // 
+
+		//6-symmetry counter spiral
+		SpawnNodeSharedPointer b1d1Node;						//uninitialized!
+		SpawnProgram b1d1;										//uninitialized!
+
+		ComponentTupleSharedPointer b1e1Prototype;	//the boss	//uninitialized!
+		SpawnNodeSharedPointer b1e1Node;						//uninitialized!
+		SpawnProgram b1e1;										//uninitialized!
 	public:
 
 		ScriptProgram stage1ScriptProgram;						//uninitialized!
