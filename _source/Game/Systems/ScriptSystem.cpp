@@ -11,6 +11,7 @@ namespace wasp::game::systems {
 
 	using ScriptInstructions = components::ScriptInstructions;
 	using ScriptNode = components::ScriptNode;
+	using ScriptProgram = components::ScriptProgram;
 	template <typename Internal, typename External>
 	using ScriptNodeData = components::ScriptNodeData<Internal, External>;
 
@@ -28,7 +29,7 @@ namespace wasp::game::systems {
 			float initDistance,
 			float maxSpeed
 		) {
-			float distanceRatio{ currentDistance - initDistance };
+			float distanceRatio{ currentDistance / initDistance };
 			float exponent{			//a linear function based on distanceRatio; mx+b
 				(gotoDeceleratingHorizontalStretch * distanceRatio) +
 				gotoDeceleratingHorizontalShift
@@ -94,6 +95,17 @@ namespace wasp::game::systems {
 						};
 						return spawnProgramList.size() == 0;
 					}
+					return true;
+				}
+				case ScriptInstructions::isBossDead: {
+					if (scene.getChannel(SceneTopics::bossDeaths).hasMessages()) {
+						scene.getChannel(SceneTopics::bossDeaths).clear();
+						return true;
+					}
+					return false;
+				}
+				case ScriptInstructions::isDialogueOver: {
+					//todo: is dialogue over script instruction
 					return true;
 				}
 				case ScriptInstructions::boundaryYLow: {
@@ -256,6 +268,76 @@ namespace wasp::game::systems {
 							= currentScriptNodePointer->linkedNodePointers[2];
 					}
 					return true;
+				}
+				case ScriptInstructions::routine: {
+					auto& scriptBaseNodePointer {
+						currentScriptNodePointer->linkedNodePointers[0]
+					};
+					if (currentScriptNodePointer->linkedNodePointers.size() > 1) {
+						//there is a predicate
+						auto& predicateNodePointer {
+							currentScriptNodePointer->linkedNodePointers[1]
+						};
+						if (predicateNodePointer && evaluatePredicateNode(
+							scene,
+							entityID,
+							predicateNodePointer,
+							externalData,
+							componentOrderQueue
+						)) {
+							//if the predicate is true, we need to move on
+							clearExternalDataForNode(
+								currentScriptNodePointer, 
+								externalData
+							);
+							gotoNextNode(currentScriptNodePointer, 2);
+							return true;
+						}
+					}
+					//grab our stored script program
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<utility::Void, ScriptProgram>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+					if (externalData.find(currentScriptNodePointer.get())
+						== externalData.end()
+					) {
+						//initialize our temporary ScriptProgram if necessary
+						externalData[currentScriptNodePointer.get()]
+							= new ScriptProgram{ scriptBaseNodePointer };
+					}
+
+					auto& scriptProgram{ 
+						*dataNodePointer->getDataPointer(
+							externalData[currentScriptNodePointer.get()]
+						)
+					};
+					//run our routine
+					while (scriptProgram.currentNodePointer) {
+						if (!runScriptNode(
+							scene,
+							entityID,
+							scriptProgram.currentNodePointer,
+							scriptProgram.externalData,
+							componentOrderQueue
+						)) {
+							break;
+						}
+					}
+					if (!scriptProgram.currentNodePointer) {
+						//our routine is over
+						clearExternalDataForNode(
+							currentScriptNodePointer,
+							externalData
+						);
+						gotoNextNode(currentScriptNodePointer, 2);
+						return true;
+					}
+					else {
+						//our routine is not over, just stalled
+						return false;
+					}
 				}
 				case ScriptInstructions::timer: {
 					auto dataNodePointer{
@@ -708,7 +790,6 @@ namespace wasp::game::systems {
 									targetAngle.smallerDifference(newAngle)
 								))
 							};
-							debug::log(std::to_string(angleDiff));
 							if (angleDiff <= angleEquivalenceEpsilon) {
 								hasReachedAngle = true;
 								velocity.setAngle(targetAngle);
@@ -905,7 +986,6 @@ namespace wasp::game::systems {
 								targetAngle.smallerDifference(newAngle)
 							))
 						};
-						debug::log(std::to_string(angleDiff));
 						if (angleDiff <= angleEquivalenceEpsilon) {
 							hasReachedAngle = true;
 							velocity.setAngle(targetAngle);
@@ -987,7 +1067,6 @@ namespace wasp::game::systems {
 								targetAngle.smallerDifference(newAngle)
 							))
 						};
-						debug::log(std::to_string(angleDiff));
 						if (angleDiff <= angleEquivalenceEpsilon) {
 							hasReachedAngle = true;
 							velocity.setAngle(targetAngle);
@@ -1123,8 +1202,135 @@ namespace wasp::game::systems {
 							);
 						}
 					}
-					//move on to next node if present
 					if (hasReachedPos) {
+						//first, clear velocity
+						if (dataStorage.containsComponent<Velocity>(entityID)) {
+							auto& velocity{
+								dataStorage.getComponent<Velocity>(entityID)
+							};
+							velocity = Velocity{};
+						}
+						//then, move on to next node if present
+						clearExternalDataForNode(currentScriptNodePointer, externalData);
+						gotoNextNode(currentScriptNodePointer, 0);
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				case ScriptInstructions::boundRadiusGotoDecelerating: {
+					auto& dataStorage{ scene.getDataStorage() };
+					auto& position{
+						dataStorage.getComponent<Position>(entityID)
+					};
+
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<
+							std::tuple<math::AABB, float, float, float>,
+							std::tuple<math::Point2, float>
+						>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+
+					auto& [bounds, minRadius, maxRadius, maxSpeed] = 
+						dataNodePointer->internalData;
+
+					//set or retrieve our target and initDist
+					math::Point2 targetPos{};
+					float initDistance{};
+
+					if (externalData.find(currentScriptNodePointer.get())
+						!= externalData.end()
+					) {
+						auto& [storedTargetPos, storedInitDistance] =
+							*dataNodePointer->getDataPointer(
+								externalData[currentScriptNodePointer.get()]
+							);
+						targetPos = storedTargetPos;
+						initDistance = storedInitDistance;
+					}
+					else {
+						config::PrngType& prng{
+							scene.getChannel(SceneTopics::random).getMessages()[0]
+						};
+						std::uniform_real_distribution<float> radiusDistribution{
+							minRadius, maxRadius
+						};
+						static std::uniform_real_distribution<float> angleDistribution{
+							0.0f, 360.0f
+						};
+						//create and store target pos and init dist
+						//nubDotDev's algorithm, take max of 2 random for radius
+						do {
+							float radius{
+								std::max(
+									radiusDistribution(prng),
+									radiusDistribution(prng)
+								)
+							};
+							math::Angle angle{
+									angleDistribution(prng)
+							};
+							targetPos = position + Velocity{ radius, angle };
+						} while (!math::isPointWithinAABB(targetPos, bounds));
+
+						float currentDistance{ 
+							math::distanceFromAToB(position, targetPos) 
+						};
+
+						initDistance = currentDistance;
+						externalData[currentScriptNodePointer.get()]
+							= new std::tuple<math::Point2, float>{ 
+								targetPos, 
+								initDistance 
+							};
+
+					}
+
+					bool hasReachedPos{ false };
+
+					//test if we have already reached our target position
+					float currentDistance{	//recalculating it here but whatever
+						math::distanceFromAToB(position, targetPos)
+					};
+					if (currentDistance < pointEquivalenceEpsilon) {
+						position = targetPos;
+						hasReachedPos = true;
+					}
+					else {						
+						const auto& angle{ math::getAngleFromAToB(position, targetPos) };
+						float speed{ calculateGotoDeceleratingSpeed(
+							currentDistance,
+							initDistance,
+							maxSpeed
+						) };
+
+						//alter velocity
+						if (dataStorage.containsComponent<Velocity>(entityID)) {
+							auto& velocity{
+								dataStorage.getComponent<Velocity>(entityID)
+							};
+							velocity = Velocity{ speed, angle };
+						}
+						else {
+							EntityHandle handle{ dataStorage.makeHandle(entityID) };
+							componentOrderQueue.queueSetComponent(
+								handle,
+								Velocity{ speed, angle }
+							);
+						}
+					}
+					if (hasReachedPos) {
+						//first, clear velocity
+						if (dataStorage.containsComponent<Velocity>(entityID)) {
+							auto& velocity{
+								dataStorage.getComponent<Velocity>(entityID)
+							};
+							velocity = Velocity{};
+						}
+						//then, move on to next node if present
 						clearExternalDataForNode(currentScriptNodePointer, externalData);
 						gotoNextNode(currentScriptNodePointer, 0);
 						return true;
@@ -1142,7 +1348,8 @@ namespace wasp::game::systems {
 				}
 				case ScriptInstructions::showDialogue: {
 					debug::log("need to implement show dialogue!");
-					return false;
+					gotoNextNode(currentScriptNodePointer, 0);
+					return true;
 				}
 				default:
 					throw std::runtime_error{ "unhandled script instruction!" };

@@ -72,6 +72,27 @@ namespace wasp::game::systems {
 			const ScriptNodeSharedPointer& falseNodePointer
 		);
 
+		//Returns a spawn node representing a routine with the given base and predicate.
+		static ScriptNodeSharedPointer makeRoutineNode(
+			const ScriptNodeSharedPointer& scriptBaseNodePointer,
+			const ScriptNodeSharedPointer& predicateNodePointer,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a spawn node representing a routine with the given base and predicate.
+		static ScriptNodeSharedPointer makeRoutineNode(
+			const ScriptNodeSharedPointer& scriptBaseNodePointer,
+			ScriptInstructions predicateInstruction,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a spawn node representing a routine with the given base and no
+		//predicate.
+		static ScriptNodeSharedPointer makeRoutineNode(
+			const ScriptNodeSharedPointer& scriptBaseNodePointer,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
 		//Returns a script node representing a timer.
 		static ScriptNodeSharedPointer makeTimerNode(
 			int timer,
@@ -198,6 +219,8 @@ namespace wasp::game::systems {
 		//Returns a script node that removes the entity.
 		static ScriptNodeSharedPointer makeRemoveEntityNode();
 
+		//Returns a program where the entity shoots its attack once and leaves
+		//in a line.
 		static ScriptProgram makeShootOnceAndLeaveProgram(
 			int preSlowTimer,
 			int slowDuration,
@@ -209,6 +232,8 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next = nullptr
 		);
 
+		//Returns a program where the entity shoots its attack once and leaves
+		//turning short side.
 		static ScriptProgram makeShootOnceAndLeaveTurningProgram(
 			int preSlowTimer,
 			int slowDuration,
@@ -221,6 +246,8 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next = nullptr
 		);
 
+		//Returns a program where the entity shoots its attack once and leaves
+		//turning long side.
 		static ScriptProgram makeTurnEntryAndShootProgram(
 			int preSlowTimer,
 			int slowDuration,
@@ -232,23 +259,108 @@ namespace wasp::game::systems {
 
 		//boss stuff
 
+		//Returns a script node that has the entity go to the specified point while
+		//decelerating.
 		static ScriptNodeSharedPointer makeGotoDeceleratingNode(
 			const math::Point2& targetPos,
 			float maxSpeed,
 			ScriptNodeSharedPointer next = nullptr
 		);
 
+		//Returns a script node that has the entity go to a randomly chosen node
+		//within the given bounds while decelerating.
+		static ScriptNodeSharedPointer makeBoundRadiusGotoDeceleratingNode(
+			const math::AABB bounds,
+			float minRadius,
+			float maxRadius,
+			float maxSpeed,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a script node that tells the scene manager to pop up a specific
+		//dialogue scene.
 		static ScriptNodeSharedPointer makeShowDialogueNode(
 			const std::wstring& dialogueID,
 			ScriptNodeSharedPointer next = nullptr
 		);
 
+		//Returns a predicate that returns true when the dialogue is over.
 		static ScriptNodeSharedPointer makeIsDialogueOverNode();
 
+		//Returns a predicate that returns true when a boss death is detected.
+		static ScriptNodeSharedPointer makeIsBossDeadNode();
+
+		//Returns a script node that represents a boss's entry routine.
 		static ScriptNodeSharedPointer makeBossEntryNode(
 			int preTimer,
 			const std::wstring& dialogueID,
 			ScriptNodeSharedPointer next = nullptr
 		);
+
+		//Returns a routine for an attack/move phase
+		static ScriptNodeSharedPointer makeBossAttackAndMoveNode(
+			const components::SpawnProgram& spawnProgram,
+			int preTimer,
+			int postTimer,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a routine for a move phase where attack is looping
+		static ScriptNodeSharedPointer makeBossMoveNode(
+			int preTimer,
+			int postTimer,
+			float speed,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a routine for a move phase where attack is looping
+		static ScriptNodeSharedPointer makeBossMoveNode(
+			int preTimer,
+			int postTimer,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		/*
+		//post timer must be long enough
+    public static InstructionList makeStrictBossMoveProgram(int preTimer, int postTimer, double speed) {
+        return ProgramBuilder.linearLink(
+                new InstructionNode<>(TIMER, preTimer)
+        ).linkAppend(
+                ProgramBuilder.linearLink(
+                        new InstructionNode<>(BOUND_RADIUS_GOTO_DECELERATING, new Tuple4<>(
+                                BOSS_BOUNDS,
+                                BOSS_GOTO_RADIUS_MIN,
+                                BOSS_GOTO_RADIUS_MAX,
+                                speed
+                        ))
+                ).linkInject(
+                        ProgramBuilder.linearLink(
+                                new InstructionNode<>(TIMER, postTimer),
+                                new InstructionNode<>(SET_VELOCITY, new PolarVector(0, 0))
+                        )
+                )
+        ).linkBackToFront();
+    }
+
+    public static InstructionList makeStrictBossMoveProgramNoLoop(int preTimer, int postTimer, double speed) {
+        return ProgramBuilder.linearLink(
+                new InstructionNode<>(TIMER, preTimer)
+        ).linkAppend(
+                ProgramBuilder.linearLink(
+                        new InstructionNode<>(BOUND_RADIUS_GOTO_DECELERATING, new Tuple4<>(
+                                BOSS_BOUNDS,
+                                BOSS_GOTO_RADIUS_MIN,
+                                BOSS_GOTO_RADIUS_MAX,
+                                speed
+                        ))
+                ).linkInject(
+                        ProgramBuilder.linearLink(
+                                new InstructionNode<>(TIMER, postTimer),
+                                new InstructionNode<>(SET_VELOCITY, new PolarVector(0, 0))
+                        )
+                )
+        );
+    }
+	*/
 	};
 }

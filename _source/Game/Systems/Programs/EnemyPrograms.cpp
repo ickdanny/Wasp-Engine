@@ -6,7 +6,7 @@ namespace wasp::game::systems {
 		constexpr float smallHitbox{ 3.0f };
 		constexpr float mediumHitbox{ 6.25f };
 		constexpr float largeHitbox{ 12.0f };
-		constexpr float sharpHitbox{ 4.5f };
+		constexpr float sharpHitbox{ 4.0f };
 		constexpr float outbound{ -20.0f };
 
 		constexpr float spawnOut{ 20.0f };
@@ -15,6 +15,8 @@ namespace wasp::game::systems {
 		constexpr float rightOut{ config::gameWidth + spawnOut + config::gameOffset.x };
 
 		constexpr float enemyOut{ -30.0f };
+
+		constexpr int fieldClearLifetime{ 30 };
 
 	#define BASIC_BULLET_ARGS(hitbox, outbound, spriteName, drawOrderOffset) \
 		hitbox, \
@@ -68,6 +70,17 @@ namespace wasp::game::systems {
 		DeathSpawn{ {deathSpawnNode} }, \
 		DrawOrder{ config::enemyDrawOrder + 1 }
 
+	//remember to use makeLinearUncollidable()
+	#define BOSS_ARGS \
+		Position{ (config::gameWidth / 2.0f) + config::gameOffset.x, topOut }, \
+		Velocity{ math::Vector2{ 0.0f, config::bossSpeed } }, \
+		Hitbox{ config::bossHitbox }, \
+		PlayerCollisions::Source{}, \
+		EnemyCollisions::Target{ components::CollisionCommands::damage }, \
+		Health{ 10000 }, \
+		DeathCommand{ DeathCommand::Commands::bossDeath }, \
+		DeathSpawn{ { fieldClearProgram } }, \
+		DrawOrder{ config::enemyDrawOrder + 10 }
 
 	}	//end of anonymous namespace
 
@@ -320,6 +333,29 @@ namespace wasp::game::systems {
 				SHARP_BULLET_ARGS(sharpHitbox, outbound, L"sharp_rose", -50)
 			).heapClone()
 		}
+
+		//field clear
+		, fieldClearScriptNode{
+			ScriptProgramUtil::makeTimerNode(
+				fieldClearLifetime,
+				ScriptProgramUtil::makeRemoveEntityNode()
+			)
+		}
+		, fieldClearPrototype{
+			EntityBuilder::makeStationaryCollidable(
+				Point2{
+					config::gameWidth / 2,
+					config::gameHeight / 2
+				} + config::gameOffset,
+				AABB{ config::gameWidth / 2, config::gameHeight / 2},
+				PlayerCollisions::Target{ components::CollisionCommands::player },
+				ScriptProgramList{ fieldClearScriptNode }
+			).heapClone()
+		}
+		, fieldClearNode{
+			SpawnProgramUtil::makeSpawnNode(fieldClearPrototype)
+		}
+		, fieldClearProgram{ fieldClearNode, 1, false }
 
 		// STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 //
 
@@ -1083,8 +1119,87 @@ namespace wasp::game::systems {
 		}
 		, s1e16{ s1e16Node, 140, false }
 
+			//BOSS 1
+
+			//attack 1, 6-symmetry counter spiral
+		, b1d1Node{
+			SpawnProgramUtil::makeListNode(
+				SpawnProgramUtil::makeIfNode(
+					SpawnProgramUtil::makeTickModNode(0, {30, 20, 15, 10}),
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(0.75f),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(2400),
+								SpawnProgramUtil::makeFloatValueNode(0),
+								SpawnProgramUtil::makeFloatValueNode(1.2125f)
+							)
+						),
+						6,	//symmetry
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							sharpMagentaPrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
+						)
+					)
+				),
+				SpawnProgramUtil::makeIfNode(
+					SpawnProgramUtil::makeTickModNode(0, {30, 20, 15, 10}),
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(0.75f),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(2400),
+								SpawnProgramUtil::makeFloatValueNode(0),
+								SpawnProgramUtil::makeFloatValueNode(-1.2125f)
+							)
+						),
+						6,	//symmetry
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							sharpCyanPrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
+						)
+					)
+				)
+			)
+		}
+		, b1d1{ b1d1Node, 2400, true }
+
+		, b1e1Prototype{
+			EntityBuilder::makeLinearUncollidable(
+				BOSS_ARGS,
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"p_idle_1")->d2dBitmap,
+					math::Vector2{ 0.0f, 4.0f }			//offset
+				},
+				DrawOrder{ config::playerDrawOrder },
+				AnimationList{ 
+					{
+						components::Animation{ {
+							L"b1_idle_1", L"b1_idle_2", L"b1_idle_3", L"b1_idle_4"
+						} }
+					},
+					0,	//idle index
+					4	//ticks
+				},
+				ScriptProgramList{
+					ScriptProgramUtil::makeBossEntryNode(
+						120,
+						L"fake dialogue",
+					ScriptProgramUtil::makeSetHealthNode(2000,
+					ScriptProgramUtil::makeSetSpawnNode(b1d1,
+					ScriptProgramUtil::makeBossMoveNode(90, 90)
+					)))
+				}
+			).heapClone()
+		}
+		, b1e1Node{
+			SpawnProgramUtil::makeSpawnNode(b1e1Prototype)
+		}
+		, b1e1{ b1e1Node, 1, false }
+
 		
 		, stage1ScriptProgram{
+					/*
 			ScriptProgramUtil::makeTimerNode(130,
 			ScriptProgramUtil::makeSetSpawnNode(s1e1a,
 			ScriptProgramUtil::makeTimerNode(330,
@@ -1124,6 +1239,8 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeTimerNode(100,
 			ScriptProgramUtil::makeAddSpawnNode(s1e16
 			))))))))))))))))))))))))))))))))))))))
+			*/
+			ScriptProgramUtil::makeSetSpawnNode(b1e1)
 		}
 
 		{

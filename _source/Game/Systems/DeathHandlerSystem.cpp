@@ -72,10 +72,13 @@ namespace wasp::game::systems {
 				break;
 			case DeathCommand::Commands::bossDeath:
 				handleBossDeath(scene, entityHandle);
+				handleDeathSpawn(scene, entityHandle, false);
 				break;
 			case DeathCommand::Commands::deathSpawn:
 				handleDeathSpawn(scene, entityHandle, true);
 				break;
+			default:
+				throw std::runtime_error{ "unexpected default case" };
 		}
 	}
 
