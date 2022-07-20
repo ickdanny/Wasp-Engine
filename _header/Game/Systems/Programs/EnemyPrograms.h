@@ -208,9 +208,22 @@ namespace wasp::game::systems {
 
 		// BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // 
 
-		//6-symmetry counter spiral
+		//1 6-symmetry counter spiral
 		SpawnNodeSharedPointer b1d1Node;						//uninitialized!
 		SpawnProgram b1d1;										//uninitialized!
+
+		//2 rain + large aimed
+		SpawnNodeSharedPointer b1d2Node;						//uninitialized!
+		SpawnProgram b1d2;										//uninitialized!
+
+		//3 3-symmetry 2-symmetry spirals
+		SpawnNodeSharedPointer b1d3Node;						//uninitialized!
+		SpawnProgram b1d3;										//uninitialized!
+
+		//4 snowflakes
+		ComponentTupleSharedPointer b1d4Prototype;				//uninitialized!
+		SpawnNodeSharedPointer b1d4Node;						//uninitialized!
+		SpawnProgram b1d4;
 
 		ComponentTupleSharedPointer b1e1Prototype;	//the boss	//uninitialized!
 		SpawnNodeSharedPointer b1e1Node;						//uninitialized!
@@ -218,6 +231,10 @@ namespace wasp::game::systems {
 	public:
 
 		ScriptProgram stage1ScriptProgram;						//uninitialized!
+		ScriptProgram stage2ScriptProgram;						//uninitialized!
+		//ScriptProgram stage3ScriptProgram;						//uninitialized!
+		//ScriptProgram stage4ScriptProgram;						//uninitialized!
+		//ScriptProgram stage5ScriptProgram;						//uninitialized!
 
 		//Constructors
 		EnemyPrograms(

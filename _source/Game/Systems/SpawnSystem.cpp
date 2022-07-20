@@ -221,6 +221,93 @@ namespace wasp::game::systems {
 					currentSpawnNodePointer->linkedNodePointers[bucket];
 				break;
 			}
+			case SpawnInstructions::entityPosition: {
+				math::Point2 pos{
+					scene.getDataStorage().getComponent<Position>(entityID)
+				};
+
+				auto posConsumerSharedPointer{
+					currentSpawnNodePointer->linkedNodePointers[0]
+				};
+				while (posConsumerSharedPointer) {
+					runSpawnNodePassingPos(
+						scene,
+						entityID,
+						posConsumerSharedPointer,
+						tick,
+						spawnList,
+						pos
+					);
+				}
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
+			case SpawnInstructions::entityOffset: {
+				math::Point2 basePos{
+					scene.getDataStorage().getComponent<Position>(entityID)
+				};
+				Velocity offset{ evaluateVelocityNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+
+				math::Point2 pos{ basePos + offset };
+				
+				auto posConsumerSharedPointer{
+					currentSpawnNodePointer->linkedNodePointers[1]
+				};
+				while (posConsumerSharedPointer) {
+					runSpawnNodePassingPos(
+						scene,
+						entityID,
+						posConsumerSharedPointer,
+						tick,
+						spawnList,
+						pos
+					);
+				}
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
+			case SpawnInstructions::pointFromFloats: {
+				float x{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[0],
+						tick,
+						spawnList
+				) };
+				float y{ evaluateFloatNode(
+						scene,
+						entityID,
+						currentSpawnNodePointer->linkedNodePointers[1],
+						tick,
+						spawnList
+				) };
+				math::Point2 pos{ x, y };
+
+				auto posConsumerSharedPointer{
+					currentSpawnNodePointer->linkedNodePointers[2]
+				};
+				while (posConsumerSharedPointer) {
+					runSpawnNodePassingPos(
+						scene,
+						entityID,
+						posConsumerSharedPointer,
+						tick,
+						spawnList,
+						pos
+					);
+				}
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
 			case SpawnInstructions::spawn: {
 				//cast the node data to a ComponentTupleSharedPtr and add to our list
 				const auto& [componentTupleBaseSharedPtr] =
@@ -580,6 +667,49 @@ namespace wasp::game::systems {
 				currentSpawnNodePointer = nullptr;
 				break;
 			}
+			case SpawnInstructions::ringFormation: {
+				//get the base velocity
+				Velocity baseVel{ evaluateVelocityNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+				int symmetry{ evaluateIntNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[1],
+					tick,
+					spawnList
+				) };
+
+				float speed{ baseVel.getMagnitude() };
+				math::Angle angle{ baseVel.getAngle() };
+
+				float angleIncrement{ math::fullAngleDivide(symmetry) };
+
+				for (int i{ 0 }; i < symmetry; ++i) {
+					auto velConsumerSharedPointer{
+						currentSpawnNodePointer->linkedNodePointers[2]
+					};
+					while (velConsumerSharedPointer) {
+						runSpawnNodePassingPosVel(
+							scene,
+							entityID,
+							velConsumerSharedPointer,
+							tick,
+							spawnList,
+							pos,
+							Velocity{ speed, angle }
+						);
+					}
+					angle += angleIncrement;
+				}
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
 			default:
 				throw std::runtime_error{ "cannot pass pos!" };
 		}
@@ -594,12 +724,12 @@ namespace wasp::game::systems {
 				//cast the node data to a ComponentTupleSharedPtr
 				const auto& [componentTupleBaseSharedPtr] =
 					dynamic_cast<
-					const SpawnNodeData<
-					std::shared_ptr<ComponentTupleBase>
-					>*
+						const SpawnNodeData<
+							std::shared_ptr<ComponentTupleBase>
+						>*
 					>(
 						currentSpawnNodePointer.get()
-						)->data;
+					)->data;
 
 				//evaluate pos node
 				math::Point2 pos{ evaluatePointNode(
@@ -614,6 +744,29 @@ namespace wasp::game::systems {
 				spawnList.emplace_back(
 					componentTupleBaseSharedPtr->addPosVel(pos, vel)
 				);
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
+			case SpawnInstructions::entityOffset: {
+				math::Point2 basePos{
+					scene.getDataStorage().getComponent<Position>(entityID)
+				};
+				math::Point2 pos{ basePos + vel };
+
+				auto posConsumerSharedPointer{
+					currentSpawnNodePointer->linkedNodePointers[0]
+				};
+				while (posConsumerSharedPointer) {
+					runSpawnNodePassingPos(
+						scene,
+						entityID,
+						posConsumerSharedPointer,
+						tick,
+						spawnList,
+						pos
+					);
+				}
 
 				currentSpawnNodePointer = nullptr;
 				break;
@@ -1099,7 +1252,7 @@ namespace wasp::game::systems {
 				);
 				return (tick + add) % mod == 0;
 			}
-			case SpawnInstructions::lastTick: {
+			case SpawnInstructions::isLastTick: {
 				//returns true if this is the last tick of the SpawnProgram
 				return tick == 1;
 			}

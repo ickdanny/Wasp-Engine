@@ -33,7 +33,7 @@ namespace wasp::game::components {
 
         //predicates
         tickMod,            //returns (tick + int1) % int2 == 0  [intNode1, intNode2]
-        lastTick,           //returns tick == 1
+        isLastTick,         //returns tick == 1
         isPlayerFocused,    //returns true if the focus gameCommand is found
         isDifficulty,       //returns true if the difficulty >= the stored Difficulty
         chance,             //returns true based on rng, [probabilityNode] (float)
@@ -48,10 +48,18 @@ namespace wasp::game::components {
 
         //point2
         entityPosition,     //returns the position of the entity
+                            //if run as a point provider,
+                            //[posConsumerNode]
         entityOffset,       //applies an offset to the position of the entity 
                             //[offsetNode] (which is a Velocity node)
+                            //can also be run as a velocity -> point converter
+                            //[posConsumerNode]
+                            //can also be run as a point generator to pass
+                            //[offsetNode, posConsumerNode]
         pointFromFloats,    //returns the result of creating a point from its nodes
                             //[xNode, yNode]
+                            //if run as a point provider,
+                            //[xNode, yNode, posConsumerNode]
 
         //velocity
         velocityFromPolar,  //returns the result of creating a velocity from its nodes

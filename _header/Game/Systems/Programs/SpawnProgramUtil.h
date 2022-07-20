@@ -212,6 +212,18 @@ namespace wasp::game::systems {
 			return SpawnNodeSharedPointer{ uniformRandomFloatNodePointer };
 		}
 
+		//Returns a spawn node representing a uniformly random float and the given
+		//bound values.
+		static SpawnNodeSharedPointer makeUniformRandomFloatNode(
+			float min,
+			float max
+		) {
+			return makeUniformRandomFloatNode(
+				makeFloatValueNode(min),
+				makeFloatValueNode(max)
+			);
+		}
+
 		//Returns a spawn node representing a uniformly random int based on entityID
 		//and the given bound nodes.
 		static SpawnNodeSharedPointer makeEntityUniformRandomIntNode(
@@ -259,16 +271,17 @@ namespace wasp::game::systems {
 			);
 		}
 
-		//Returns a spawn node representing a uniformly random velocity in a circle.
+		//Returns a spawn node representing a uniformly random velocity in a circle
+		//based on the given float nodes for min and max radius.
 		static SpawnNodeSharedPointer makeUniformRandomCircleVelocityNode(
-			float minRadius,
-			float maxRadius
+			const SpawnNodeSharedPointer& minRadiusNode,
+			const SpawnNodeSharedPointer& maxRadiusNode
 		) {
 			//credit to nubDotDev
 			SpawnNodeSharedPointer uniformRandomFloatNode{
 				makeUniformRandomFloatNode(
-					makeFloatValueNode(minRadius),
-					makeFloatValueNode(maxRadius)
+					minRadiusNode,
+					maxRadiusNode
 				)
 			};
 			//calculate radius by taking max of two uniformly random floats
@@ -281,6 +294,18 @@ namespace wasp::game::systems {
 			return makeVelocityFromPolarNode(
 				maxNode,
 				randomAngleNode
+			);
+		}
+
+		//Returns a spawn node representing a uniformly random velocity in a circle
+		//based on the given float values for min and max radius.
+		static SpawnNodeSharedPointer makeUniformRandomCircleVelocityNode(
+			float minRadius,
+			float maxRadius
+		) {
+			return makeUniformRandomCircleVelocityNode(
+				makeFloatValueNode(minRadius),
+				makeFloatValueNode(maxRadius)
 			);
 		}
 
@@ -367,6 +392,14 @@ namespace wasp::game::systems {
 				makeIntValueDiffNode(mods)
 			);
 			return SpawnNodeSharedPointer{ tickModNodePointer };
+		}
+
+		//Returns a spawn node representing tick == 1 predicate.
+		static SpawnNodeSharedPointer makeIsLastTickNode() {
+			SpawnNode* isLastTickNodePointer{
+				new SpawnNode{ SpawnInstructions::isLastTick }
+			};
+			return SpawnNodeSharedPointer{ isLastTickNodePointer };
 		}
 
 		//Returns a spawn node representing an if statement.
@@ -519,6 +552,8 @@ namespace wasp::game::systems {
 
 		//Returns a spawn node representing the current position of the entity plus
 		//an offset given by the velocity-valued offsetNode.
+		//Alternatively, can be used as a velocity consumer which forwards to
+		//a position consumer.
 		static SpawnNodeSharedPointer makeEntityOffsetNode(
 			const SpawnNodeSharedPointer& offsetNode
 		) {
@@ -526,6 +561,20 @@ namespace wasp::game::systems {
 				new SpawnNode{SpawnInstructions::entityOffset}
 			};
 			entityOffsetNodePointer->link(offsetNode);
+			return SpawnNodeSharedPointer{ entityOffsetNodePointer };
+		}
+
+		//Returns a spawn node which takes the current position of the entity plus
+		//an offset given by the velocity-valued offsetNode, and passes it to the
+		//given posConsumerNode.
+		static SpawnNodeSharedPointer makeEntityOffsetNode(
+			const SpawnNodeSharedPointer& offsetNode,
+			const SpawnNodeSharedPointer& posConsumerNode
+		) {
+			SpawnNode* entityOffsetNodePointer{
+				new SpawnNode{SpawnInstructions::entityOffset}
+			};
+			entityOffsetNodePointer->link(offsetNode, posConsumerNode);
 			return SpawnNodeSharedPointer{ entityOffsetNodePointer };
 		}
 
@@ -1036,6 +1085,7 @@ namespace wasp::game::systems {
 
 		//some useful nodes
 		static const SpawnNodeSharedPointer randomAngleNode;
+		static const SpawnNodeSharedPointer randomTopOutPointNode;
 		static const SpawnNodeSharedPointer entityRandomAngleNode;
 	};
 }

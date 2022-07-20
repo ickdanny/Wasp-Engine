@@ -165,9 +165,9 @@ namespace wasp::game::systems {
 		auto& dataStorage{ scene.getDataStorage() };
 		addBackground(dataStorage, L"background_menu_difficulty");
 
-		constexpr math::Point2 initPos{ center.x, 80.0f };
+		constexpr math::Point2 initPos{ center.x, 85.0f };
 		constexpr math::Vector2 offset{ 0.0f, 40.0f };
-		constexpr math::Vector2 selOffset{ 0.0f, -2.0f };
+		constexpr math::Vector2 selOffset{ 0.0f, -1.0f };
 
 		auto buttonHandles{
 			dataStorage.addEntities(
@@ -295,9 +295,9 @@ namespace wasp::game::systems {
 		auto& dataStorage{ scene.getDataStorage() };
 		addBackground(dataStorage, L"background_menu_stage");
 
-		constexpr math::Point2 initPos{ center.x, 70.0f };
-		constexpr math::Vector2 offset{ 0.0f, 35.0f };
-		constexpr math::Vector2 selOffset{ 0.0f, -2.0f };
+		constexpr math::Point2 initPos{ center.x, 78.0f };
+		constexpr math::Vector2 offset{ 0.0f, 31.0f };
+		constexpr math::Vector2 selOffset{ 0.0f, -1.0f };
 
 		auto buttonHandles{
 			dataStorage.addEntities(
@@ -510,6 +510,10 @@ namespace wasp::game::systems {
 			case 1:
 				scriptProgramPointer
 					= &programsPointer->enemyPrograms.stage1ScriptProgram;
+				break;
+			case 2:
+				scriptProgramPointer
+					= &programsPointer->enemyPrograms.stage2ScriptProgram;
 				break;
 			default:
 				throw std::runtime_error{ "no stage script!" };

@@ -8,6 +8,16 @@ namespace wasp::game::systems {
 		)
 	};
 
+	const std::shared_ptr<components::SpawnNode> SpawnProgramUtil::randomTopOutPointNode{
+		makePointFromFloatsNode(
+			makeUniformRandomFloatNode(
+				makeFloatValueNode(config::leftOut),
+				makeFloatValueNode(config::rightOut)
+			),
+			makeFloatValueNode(config::topOut)
+		)
+	};
+
 	const std::shared_ptr<components::SpawnNode> SpawnProgramUtil::entityRandomAngleNode{
 		makeEntityUniformRandomFloatNode(
 				makeFloatValueNode(0.0f),

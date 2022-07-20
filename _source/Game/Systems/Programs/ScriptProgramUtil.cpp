@@ -695,6 +695,30 @@ namespace wasp::game::systems {
 		};
 	}
 
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBossResetNode(
+		int postTimer,
+		ScriptNodeSharedPointer next
+	) {
+		return{
+			makeSetVelocityNode(Velocity{},
+			makeClearSpawnNode(
+			makeTimerNode(postTimer, next)))
+		};
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBossResetMidNode(
+		int postTimer,
+		ScriptNodeSharedPointer next
+	) {
+		return{
+			makeSetVelocityNode(Velocity{},
+			makeClearSpawnNode(
+			makeGotoDeceleratingNode(config::bossMidpoint, config::bossSpeed, 
+			makeTimerNode(postTimer, next
+			))))
+		};
+	}
+
 	ScriptProgramUtil::ScriptNodeSharedPointer 
 		ScriptProgramUtil::makeBossAttackAndMoveNode
 	(

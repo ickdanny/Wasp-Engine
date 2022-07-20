@@ -71,22 +71,20 @@ namespace wasp::game::config {
 //PROJECTILES
     public static final double NORMAL_OUTBOUND = -20;
     public static final double LARGE_OUTBOUND = -50;
-
-//ENEMIES
-    public static final double ENEMY_OUTBOUND = -50;
-    public static final double ENEMY_SPAWN_INBOUND = 30;
-
-    public static final AABB SMALL_ENEMY_HITBOX = new AABB(10);
-    public static final AABB LARGE_ENEMY_HITBOX = new AABB(15);
-
     */
+
+    //enemies
+    constexpr float spawnOut{ 20.0f };
+    constexpr float topOut{ -spawnOut + config::gameOffset.y };
+    constexpr float leftOut{ -spawnOut + config::gameOffset.x };
+    constexpr float rightOut{ config::gameWidth + spawnOut + config::gameOffset.x };
 
     //bosses
     constexpr float bossY{ 60.0f };
     constexpr math::Point2 bossMidpoint{ 
         (config::gameWidth / 2.0f) + config::gameOffset.x, bossY 
     };
-    constexpr float bossSpeed{ 2.0f };
+    constexpr float bossSpeed{ 1.5f };
 
     constexpr float bossInbound{ 30.0f };
     constexpr float bossMaxY{ (config::gameHeight * 0.28f) + config::gameOffset.y };

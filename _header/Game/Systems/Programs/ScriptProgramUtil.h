@@ -297,6 +297,18 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next = nullptr
 		);
 
+		//Returns a script node for resetting a boss after death.
+		static ScriptNodeSharedPointer makeBossResetNode(
+			int postTimer,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a script node for resetting a boss after death, having her go to mid.
+		static ScriptNodeSharedPointer makeBossResetMidNode(
+			int postTimer,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
 		//Returns a routine for an attack/move phase
 		static ScriptNodeSharedPointer makeBossAttackAndMoveNode(
 			const components::SpawnProgram& spawnProgram,

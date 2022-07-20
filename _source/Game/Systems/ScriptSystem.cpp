@@ -18,7 +18,7 @@ namespace wasp::game::systems {
 	namespace {
 
 		constexpr float angleEquivalenceEpsilon{ .05f };
-		constexpr float pointEquivalenceEpsilon{ .1f };
+		constexpr float pointEquivalenceEpsilon{ .2f };
 
 		constexpr float gotoDeceleratingExponentBase{ 2.0f };
 		constexpr float gotoDeceleratingHorizontalShift{ 0.1f };
@@ -213,6 +213,9 @@ namespace wasp::game::systems {
 		}
 
 		bool runScriptNode(NODE_HANDLER_ARGS) {
+			debug::log(
+				std::to_string(static_cast<int>(
+					currentScriptNodePointer->scriptInstruction)));
 			switch (currentScriptNodePointer->scriptInstruction) {
 				case ScriptInstructions::error:
 					throw std::runtime_error{ "error script instruction" };
