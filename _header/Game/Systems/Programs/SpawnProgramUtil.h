@@ -933,6 +933,36 @@ namespace wasp::game::systems {
 			);
 		}
 
+		//Returns a spawn node that represents a whip based on the given nodes.
+		static SpawnNodeSharedPointer makeWhipNode(
+			const SpawnNodeSharedPointer& maxTickNodePointer,
+			const SpawnNodeSharedPointer& speedLowNodePointer,
+			const SpawnNodeSharedPointer& speedHighNodePointer
+		) {
+			SpawnNode* whipNodePointer{
+				new SpawnNode{ SpawnInstructions::whip }
+			};
+			whipNodePointer->link(
+				maxTickNodePointer,
+				speedLowNodePointer,
+				speedHighNodePointer
+			);
+			return SpawnNodeSharedPointer{ whipNodePointer };
+		}
+
+		//Returns a spawn node that represents a whip based on the given values.
+		static SpawnNodeSharedPointer makeWhipNode(
+			int maxTick,
+			float speedLow,
+			float speedHigh
+		) {
+			return makeWhipNode(
+				makeIntValueNode(maxTick),
+				makeFloatValueNode(speedLow),
+				makeFloatValueNode(speedHigh)
+			);
+		}
+
 		//Returns a spawn node that passes a velocity column to a velocity consumer
 		//node based on the given velocity, count, and increment nodes
 		static SpawnNodeSharedPointer makeColumnFormationNode(

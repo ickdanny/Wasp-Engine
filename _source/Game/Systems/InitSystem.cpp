@@ -91,8 +91,8 @@ namespace wasp::game::systems {
 		auto& dataStorage{ scene.getDataStorage() };
 		addBackground(dataStorage, L"background_menu_main");
 
-		constexpr math::Point2 initPos{ 200.0f, 130.0f };
-		constexpr math::Vector2 offset{ -10.0f, 20.0f };
+		constexpr math::Point2 initPos{ 280.0f, 150.0f };
+		constexpr math::Vector2 offset{ -10.0f, 18.0f };
 		constexpr math::Vector2 selOffset{ 2.0f, -2.0f };
 
 		auto buttonHandles{ 

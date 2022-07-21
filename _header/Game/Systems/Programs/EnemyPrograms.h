@@ -228,6 +228,30 @@ namespace wasp::game::systems {
 		ComponentTupleSharedPointer b1e1Prototype;	//the boss	//uninitialized!
 		SpawnNodeSharedPointer b1e1Node;						//uninitialized!
 		SpawnProgram b1e1;										//uninitialized!
+
+
+		// STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 //
+
+			//wave 1: mid wisp whip ring
+		SpawnNodeSharedPointer s2d1Node;						//uninitialized!
+		SpawnProgram s2d1;										//uninitialized!
+
+		ComponentTupleSharedPointer s2e1Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s2e1Node;						//uninitialized!
+		SpawnProgram s2e1;										//uninitialized!
+
+			//wave 2: wisp on the left 
+		SpawnNodeSharedPointer s2e2Node;						//uninitialized!
+		SpawnProgram s2e2;										//uninitialized!
+
+			//wave 3: flames from the right
+		SpawnNodeSharedPointer s2d3Node;						//uninitialized!
+		SpawnProgram s2d3;
+
+		ComponentTupleSharedPointer s2e3Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s2e3Node;						//uninitialized!
+		SpawnProgram s2e3;										//uninitialized!
+
 	public:
 
 		ScriptProgram stage1ScriptProgram;						//uninitialized!

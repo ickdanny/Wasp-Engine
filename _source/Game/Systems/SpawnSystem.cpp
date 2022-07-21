@@ -1198,6 +1198,33 @@ namespace wasp::game::systems {
 				int tickFromZero{ maxTick - tick };
 				return baseAngle + (static_cast<float>(tickFromZero) * angularVelocity);
 			}
+			case SpawnInstructions::whip: {
+				int maxTick{ evaluateIntNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+				float speedLow{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[1],
+					tick,
+					spawnList
+				) };
+				float speedHigh{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[2],
+					tick,
+					spawnList
+				) };
+				int tickFromZero{ maxTick - tick };
+				float tickRatio{ static_cast<float>(tickFromZero) / maxTick };
+				float speedDifference{ speedHigh - speedLow };
+				return speedLow + (tickRatio * speedDifference);
+			}
 			case SpawnInstructions::conditionElse: {
 				//if our predicate is met, evaluate truenode
 				if (evaluatePredicateNode(

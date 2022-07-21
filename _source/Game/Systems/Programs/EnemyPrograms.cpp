@@ -65,6 +65,20 @@ namespace wasp::game::systems {
 		DeathSpawn{ {deathSpawnNode} }, \
 		DrawOrder{ config::enemyDrawOrder + 1 }
 
+	#define FLAME_ARGS(health, deathSpawnNode) \
+		Hitbox{ 10.0f }, \
+		SpriteInstruction{ \
+			bitmapStoragePointer->get(L"flame_1")->d2dBitmap \
+		}, \
+		AnimationList{ { L"flame_1", L"flame_2", L"flame_3", L"flame_4" }, 6 }, \
+		PlayerCollisions::Source{}, \
+		EnemyCollisions::Target{ components::CollisionCommands::damage }, \
+		Health{ health }, \
+		Outbound{ enemyOut }, \
+		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
+		DeathSpawn{ {deathSpawnNode} }, \
+		DrawOrder{ config::enemyDrawOrder + 2 }
+
 	//remember to use makeLinearUncollidable()
 	#define BOSS_ARGS \
 		Position{ (config::gameWidth / 2.0f) + config::gameOffset.x, config::topOut }, \
@@ -1419,15 +1433,124 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeAddSpawnNode(s1e16,
 			ScriptProgramUtil::makeTimerNode(200,
 			ScriptProgramUtil::makeAddSpawnNode(b1e1,
+			ScriptProgramUtil::makeTimerNode(1000,
 			ScriptProgramUtil::makeRemoveEntityNode(
-			)))))))))))))))))))))))))))))))))))))))))
+			))))))))))))))))))))))))))))))))))))))))))
 		}
 
 		// STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 //
 
-		, stage2ScriptProgram{
-			ScriptProgramUtil::makeRemoveEntityNode(
+			//wave 1
+		, s2d1Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, { 1, 2, 3, 4 }),
+				SpawnProgramUtil::makeRingFormationNode(
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeWhipNode(42, 0.4f, 3.5f),
+						SpawnProgramUtil::makeAngleToPlayerNode()
+					),
+					{ 14, 20, 26, 30 },
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						mediumBluePrototype,
+						SpawnProgramUtil::makeEntityPositionNode()
+					)
+				)
 			)
+		}
+		, s2d1{ s2d1Node, 42, false }
+		, s2e1Prototype{
+			EntityBuilder::makePosPrototype( 
+				{ 1.5f, -90.0f }, 
+				WISP_ARGS(500, pickupProgramsPointer->smallPowerSpawnProgram),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
+						20,
+						30,
+						5,
+						s2d1,
+						50,
+						{ 1.0f, 90.0f},
+						100
+					)
+				}
+			).heapClone()
+		}
+		, s2e1Node{ 
+			SpawnProgramUtil::makeSpawnPosNode(
+				s2e1Prototype,
+				SpawnProgramUtil::makePointValueNode(
+					{ (config::gameWidth / 2.0f) + config::gameOffset.x, config::topOut}
+				) 
+			)
+		}
+		, s2e1{ s2e1Node, 1, false }
+
+			//wave 2
+		, s2e2Node{ 
+			SpawnProgramUtil::makeSpawnPosNode(
+				s2e1Prototype,
+				SpawnProgramUtil::makePointValueNode({ 35.0f, config::topOut }) 
+			)
+		}
+		, s2e2{ s2e2Node, 1, false }
+
+			//wave 3
+		, s2d3Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(
+					SpawnProgramUtil::makeEntityUniformRandomIntNode(
+						SpawnProgramUtil::makeIntValueNode(0),
+						SpawnProgramUtil::makeIntValueDiffNode({ 170, 130, 100, 70 })
+					),
+					{ 170, 130, 100, 70 }
+				),
+				SpawnProgramUtil::makeArcFormationNode(
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeFloatValueNode(0.9f),
+						SpawnProgramUtil::makeAngleToPlayerNode()
+					),
+					SpawnProgramUtil::makeIntValueDiffNode({ 3, 3, 5, 5 }),
+					SpawnProgramUtil::makeFloatValueNode(12.0f),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						smallBluePrototype,
+						SpawnProgramUtil::makeEntityPositionNode()
+					)
+				)
+			)
+		}
+		, s2d3{ s2d3Node, 1000, true }
+
+		, s2e3Prototype{
+			EntityBuilder::makePosVelPrototype(
+				FLAME_ARGS(30, pickupProgramsPointer->smallPowerThirdSpawnProgram),
+				SpawnProgramList{ s2d3 }
+			).heapClone()
+		}
+		, s2e3Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, 14),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s2e3Prototype,
+					SpawnProgramUtil::makePointValueNode({ config::rightOut, 35.0f }),
+					SpawnProgramUtil::makeVelocityValueNode(Velocity{ 1.8f, 188.0f })
+				)
+			)
+		}
+		, s2e3{ s2e3Node, 290, false }
+
+
+
+		, stage2ScriptProgram{
+			ScriptProgramUtil::makeTimerNode(290,
+			ScriptProgramUtil::makeSetSpawnNode(s2e1,
+			ScriptProgramUtil::makeTimerNode(220,
+			ScriptProgramUtil::makeAddSpawnNode(s2e2,
+			ScriptProgramUtil::makeTimerNode(250,
+			ScriptProgramUtil::makeAddSpawnNode(s2e3,
+
+			ScriptProgramUtil::makeTimerNode(1000,
+			ScriptProgramUtil::makeRemoveEntityNode(
+			))))))))
 		}
 
 

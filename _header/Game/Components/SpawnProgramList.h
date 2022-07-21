@@ -45,6 +45,8 @@ namespace wasp::game::components {
         angleToPlayer,      //returns the angle from the entity to the player
         spiral,             //returns the angle to make a spiral in time
                             //[maxTickNode, baseAngleNode, angularVelNode]
+        whip,               //returns the speed to make a whip in time
+                            //[maxTickNode, speedLowNode, speedHighNode]
 
         //point2
         entityPosition,     //returns the position of the entity
