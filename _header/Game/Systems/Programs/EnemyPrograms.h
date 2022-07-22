@@ -244,13 +244,65 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer s2e2Node;						//uninitialized!
 		SpawnProgram s2e2;										//uninitialized!
 
-			//wave 3: flames from the right
-		SpawnNodeSharedPointer s2d3Node;						//uninitialized!
-		SpawnProgram s2d3;
+			//wave 3: flames from both sides
+		SpawnNodeSharedPointer s2d3aNode;						//uninitialized!
+		SpawnProgram s2d3a;										//uninitialized!
+		ComponentTupleSharedPointer s2e3aPrototype;				//uninitialized!
 
-		ComponentTupleSharedPointer s2e3Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s2d3bNode;						//uninitialized!
+		SpawnProgram s2d3b;										//uninitialized!
+		ComponentTupleSharedPointer s2e3bPrototype;				//uninitialized!
+
 		SpawnNodeSharedPointer s2e3Node;						//uninitialized!
+
 		SpawnProgram s2e3;										//uninitialized!
+
+			//wave 4: wisp to the right, spiral 
+		SpawnNodeSharedPointer s2d4Node;						//uninitialized!
+		SpawnProgram s2d4;										//uninitialized!
+		
+		ComponentTupleSharedPointer s2e4Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s2e4Node;						//uninitialized!
+		SpawnProgram s2e4;										//uninitialized!
+			
+			//wave 5: shell chain
+		SpawnNodeSharedPointer s2d5Node;						//uninitialized!
+		SpawnProgram s2d5;										//uninitialized!
+
+		ComponentTupleSharedPointer s2e5Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s2e5Node;						//uninitialized!
+		SpawnProgram s2e5;										//uninitialized!
+
+			//wave 6: other side shell chain + wisp
+		ComponentTupleSharedPointer s2e6aPrototype;				//uninitialized!
+		SpawnNodeSharedPointer s2e6aNode;						//uninitialized!
+		SpawnProgram s2e6a;										//uninitialized!
+
+				//wisp
+		SpawnNodeSharedPointer s2d6bNode;						//uninitialized!
+		SpawnProgram s2d6b;										//uninitialized!
+
+		ComponentTupleSharedPointer s2e6bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer s2e6bNode;						//uninitialized!
+		SpawnProgram s2e6b;										//uninitialized!
+
+			//wave 7: flames again
+		SpawnNodeSharedPointer s2e7Node;						//uninitialized!
+		SpawnProgram s2e7;										//uninitialized!
+
+			//wave 8: wisp whip rings
+		SpawnNodeSharedPointer s2d8Node;						//uninitialized!
+		SpawnProgram s2d8;										//uninitialized!
+
+		ComponentTupleSharedPointer s2e8Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s2e8aNode;						//uninitialized!
+		SpawnProgram s2e8a;										//uninitialized!
+
+		SpawnNodeSharedPointer s2e8bNode;						//uninitialized!
+		SpawnProgram s2e8b;										//uninitialized!
+
+		SpawnNodeSharedPointer s2e8cNode;						//uninitialized!
+		SpawnProgram s2e8c;										//uninitialized!
 
 	public:
 

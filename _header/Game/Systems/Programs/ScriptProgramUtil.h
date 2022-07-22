@@ -29,8 +29,6 @@ namespace wasp::game::systems {
 		static ScriptNodeSharedPointer makeBoundaryYHighNode(float boundary);
 		static ScriptNodeSharedPointer makeBoundaryXLowNode(float boundary);
 		static ScriptNodeSharedPointer makeBoundaryXHighNode(float boundary);
-		static ScriptNodeSharedPointer makeBoundaryYNode(float boundary);
-		static ScriptNodeSharedPointer makeBoundaryXNode(float boundary);
 
 		//Returns a script node representing an if statement.
 		static ScriptNodeSharedPointer makeIfNode(

@@ -164,34 +164,6 @@ namespace wasp::game::systems {
 					}
 					return false;
 				}
-				case ScriptInstructions::boundaryY: {
-					const auto& dataStorage{ scene.getDataStorage() };
-					if (dataStorage.containsComponent<Position>(entityID)) {
-						auto& position{ dataStorage.getComponent<Position>(entityID) };
-						auto dataNodePointer{
-							dynamic_cast<ScriptNodeData<float, utility::Void>*>(
-								currentScriptNodePointer.get()
-							)
-						};
-						float boundary{ dataNodePointer->internalData };
-						return position.y > boundary || position.y < boundary;
-					}
-					return false;
-				}
-				case ScriptInstructions::boundaryX: {
-					const auto& dataStorage{ scene.getDataStorage() };
-					if (dataStorage.containsComponent<Position>(entityID)) {
-						auto& position{ dataStorage.getComponent<Position>(entityID) };
-						auto dataNodePointer{
-							dynamic_cast<ScriptNodeData<float, utility::Void>*>(
-								currentScriptNodePointer.get()
-							)
-						};
-						float boundary{ dataNodePointer->internalData };
-						return position.x > boundary || position.x < boundary;
-					}
-					return false;
-				}
 				default:
 					throw std::runtime_error{ "not a predicate instruction!" };
 			}

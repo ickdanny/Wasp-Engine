@@ -62,30 +62,6 @@ namespace wasp::game::systems {
 		return ScriptNodeSharedPointer{ boundaryNodePointer };
 	}
 
-	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBoundaryYNode(
-		float boundary
-	) {
-		ScriptNode* boundaryNodePointer{
-			new ScriptNodeData<float, utility::Void>{
-				ScriptInstructions::boundaryY,
-				boundary
-			}
-		};
-		return ScriptNodeSharedPointer{ boundaryNodePointer };
-	}
-
-	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBoundaryXNode(
-		float boundary
-	) {
-		ScriptNode* boundaryNodePointer{
-			new ScriptNodeData<float, utility::Void>{
-				ScriptInstructions::boundaryX,
-				boundary
-			}
-		};
-		return ScriptNodeSharedPointer{ boundaryNodePointer };
-	}
-
 	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeIfNode(
 		const ScriptNodeSharedPointer& predicateNodePointer,
 		const ScriptNodeSharedPointer& trueNodePointer

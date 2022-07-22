@@ -64,12 +64,6 @@ namespace wasp::game::components {
         boundaryXHigh,              //returns true if the entity's x coordinate is above
                                     //a stored value.
                                     //<float, Void> (boundary value)
-        boundaryY,                  //returns true if the entity's y coordinate is above
-                                    //or below a stored value.
-                                    //<float, Void> (boundary value)
-        boundaryX,                  //returns true if the entity's x coordinate is above
-                                    //or below a stored value.
-                                    //<float, Void> (boundary value)
 
         setCollidable,              //makes the entity collidable; adds CollidableMarker
         removeCollidable,           //makes the entity uncollidable; removes marker
