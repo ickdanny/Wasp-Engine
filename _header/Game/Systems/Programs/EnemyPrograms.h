@@ -278,7 +278,7 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer s2e6aNode;						//uninitialized!
 		SpawnProgram s2e6a;										//uninitialized!
 
-				//wisp
+				//wisp w/ whip spiral
 		SpawnNodeSharedPointer s2d6bNode;						//uninitialized!
 		SpawnProgram s2d6b;										//uninitialized!
 
@@ -303,6 +303,43 @@ namespace wasp::game::systems {
 
 		SpawnNodeSharedPointer s2e8cNode;						//uninitialized!
 		SpawnProgram s2e8c;										//uninitialized!
+
+			//wave 9: double spiral from 2 sides
+		SpawnNodeSharedPointer s2d9aNode;						//uninitialized!
+		SpawnProgram s2d9a;										//uninitialized!
+		SpawnNodeSharedPointer s2d9bNode;						//uninitialized!
+		SpawnProgram s2d9b;										//uninitialized!
+
+		ComponentTupleSharedPointer s2e9aPrototype;				//uninitialized!
+		ComponentTupleSharedPointer s2e9bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer s2e9Node;						//uninitialized!
+		SpawnProgram s2e9;										//uninitialized!
+
+			//wave 10: flames with slow barrage; yellow and green
+		SpawnNodeSharedPointer s2d10aNode;						//uninitialized!
+		SpawnProgram s2d10a;									//uninitialized!
+		SpawnNodeSharedPointer s2d10bNode;						//uninitialized!
+		SpawnProgram s2d10b;									//uninitialized!
+
+		ComponentTupleSharedPointer s2e10aPrototype;			//uninitialized!
+		ComponentTupleSharedPointer s2e10bPrototype;			//uninitialized!
+		SpawnNodeSharedPointer s2e10Node;						//uninitialized!
+		SpawnProgram s2e10;										//uninitialized!
+
+			//wave 10: shells down sides and out
+		ComponentTupleSharedPointer s2e11aPrototype;			//uninitialized!
+		ComponentTupleSharedPointer s2e11bPrototype;			//uninitialized!
+		SpawnNodeSharedPointer s2e11Node;						//uninitialized!
+		SpawnProgram s2e11;										//uninitialized!
+
+			//wave 11: double spiral wisp super fast
+		SpawnNodeSharedPointer s2d12Node;						//uninitialized!
+		SpawnProgram s2d12;										//uninitialized!
+
+		ComponentTupleSharedPointer s2e12Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s2e12Node;						//uninitialized!
+		SpawnProgram s2e12;										//uninitialized!
+
 
 	public:
 
