@@ -235,8 +235,8 @@ namespace wasp::game::systems {
 		auto& dataStorage{ scene.getDataStorage() };
 		addBackground(dataStorage, L"background_menu_shot");
 
-		constexpr float y{ 130.0f };
-		constexpr float xOffset{ 120.0f };
+		constexpr float y{ 202.0f };
+		constexpr float xOffset{ 64.0f };
 
 		SceneNames nextScene;
 

@@ -1366,7 +1366,7 @@ namespace wasp::game::systems {
 			EntityBuilder::makeLinearUncollidable(
 				BOSS_ARGS,
 				SpriteInstruction{
-					bitmapStoragePointer->get(L"p_idle_1")->d2dBitmap,
+					bitmapStoragePointer->get(L"b1_idle_1")->d2dBitmap,
 					math::Vector2{ 0.0f, 4.0f }			//offset
 				},
 				DrawOrder{ config::playerDrawOrder },
@@ -2231,9 +2231,249 @@ namespace wasp::game::systems {
 		}
 		, s2e12{ s2e12Node, 1, false }
 
+		// BOSS 2 // BOSS 2 // BOSS 2 // BOSS 2 // BOSS 2 // BOSS 2 // BOSS 2 // BOSS 2 
+
+			//1 arrows / slow medium
+		, b2d1aPrototype{
+			EntityBuilder::makePosVelPrototype(
+				SHARP_BULLET_ARGS(sharpHitbox, outbound, L"sharp_orange", 50),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(
+						0.0f,
+						50,
+						ScriptProgramUtil::makeShiftSpeedPeriodNode(
+							7.0f,
+							5
+						)
+					)
+				}
+			).heapClone()
+		}
+		, b2d1aNode{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, { 5, 3, 2, 1 }),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					b2d1aPrototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeFloatValueNode(2.0f),
+						SpawnProgramUtil::randomAngleNode
+					)
+				)
+			)
+		}
+		, b2d1a{ b2d1aNode, 100, false }
+
+		, b2d1bNode{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, 25),
+				SpawnProgramUtil::makeRingFormationNode(
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeFloatValueNode(0.6f),
+						SpawnProgramUtil::makeAngleToPlayerNode()
+					),
+					SpawnProgramUtil::makeIntValueDiffNode({ 10, 14, 17, 20 }),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						mediumVioletPrototype,
+						SpawnProgramUtil::makeEntityPositionNode()
+					)
+				)
+			)
+		}
+		, b2d1b{ b2d1bNode, 50, false }
+
+			//2 bullets that spawn horizontal sharps
+				//spawned
+		, b2d2aPrototype{
+			EntityBuilder::makePosVelPrototype(
+				SHARP_BULLET_ARGS(sharpHitbox, outbound, L"sharp_violet", 50),
+				ScriptProgramList{
+					ScriptProgramUtil::makeTimerNode(110,
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(
+						0.776f,
+						30
+					))
+				}
+			).heapClone()
+		}
+		, b2d2aNode{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(12, { 40, 30, 20, 13 }),
+				SpawnProgramUtil::makeMirrorFormationNode(
+					SpawnProgramUtil::makeEntityOffsetNode(
+						SpawnProgramUtil::makeVelocityValueNode(Vector2{ 5.0f, 0.0f })
+					),
+					SpawnProgramUtil::makeVelocityValueNode(Velocity{ 0.0f, 0.0f }),
+					SpawnProgramUtil::makeSpawnPosVelNode(b2d2aPrototype)
+				)
+			)
+		}
+		, b2d2a{ b2d2aNode, 3000, true }
+
+				//spawner
+		, b2d2bPrototype{
+			EntityBuilder::makePosVelPrototype(
+				//for this specific danmaku, large is drawn over sharp
+				BASIC_BULLET_ARGS(largeHitbox, outbound, L"large_rose", 100),
+				SpawnProgramList{ b2d2a }
+			).heapClone()
+		}
+		, b2d2bNode{
+			SpawnProgramUtil::makeRingFormationNode(
+				SpawnProgramUtil::makeVelocityFromPolarNode(
+					SpawnProgramUtil::makeFloatValueNode(1.85f),
+					SpawnProgramUtil::randomAngleNode
+				),
+				SpawnProgramUtil::makeIntValueDiffNode({ 10, 12, 14, 16 }),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					b2d2bPrototype,
+					SpawnProgramUtil::makeEntityPositionNode()
+				)
+			)
+		}
+		, b2d2b{ b2d2bNode, 1, false }
+
+			//3 fast spiral, 2 directions
+		, b2d3aPrototype{
+			EntityBuilder::makePosVelPrototype(
+				SHARP_BULLET_ARGS(sharpHitbox, outbound, L"sharp_red", 50),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(
+						0.0f,
+						50,
+						ScriptProgramUtil::makeShiftSpeedPeriodNode(
+							7.0f,
+							5
+						)
+					)
+				}
+			).heapClone()
+		}
+		, b2d3bPrototype{
+			EntityBuilder::makePosVelPrototype(
+				SHARP_BULLET_ARGS(sharpHitbox, outbound, L"sharp_blue", 50),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(
+						0.0f,
+						50,
+						ScriptProgramUtil::makeShiftSpeedPeriodNode(
+							7.0f,
+							5
+						)
+					)
+				}
+			).heapClone()
+		}
+		#define TICKMOD 5
+		#define INIT_VEL 1.4f
+		#define A_VEL 0.5f
+		, b2d3aNode{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, TICKMOD),
+				SpawnProgramUtil::makeRingFormationNode(
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeFloatValueNode(INIT_VEL),
+						SpawnProgramUtil::makeSpiralNode(40, 12.4f, A_VEL)
+					),
+					SpawnProgramUtil::makeIntValueDiffNode({ 10, 13, 16, 19 }),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						b2d3aPrototype,
+						SpawnProgramUtil::makeEntityPositionNode()
+					)
+				)
+			)
+		}
+		, b2d3a{ b2d3aNode, 40, false }
+		, b2d3bNode{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, TICKMOD),
+				SpawnProgramUtil::makeRingFormationNode(
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeFloatValueNode(INIT_VEL),
+						SpawnProgramUtil::makeSpiralNode(40, 155.4f, -A_VEL)
+					),
+					SpawnProgramUtil::makeIntValueDiffNode({ 10, 13, 16, 19 }),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						b2d3bPrototype,
+						SpawnProgramUtil::makeEntityPositionNode()
+					)
+				)
+			)
+		}
+		, b2d3b{ b2d3bNode, 40, false }
+		#undef TICKMOD
+		#undef INIT_VEL
+		#undef A_VEL
+
+		, b2d3ActScriptEnd{
+			ScriptProgramUtil::makeAddSpawnNode(b2d3b)
+		}
+		, b2d3ActScriptStart{
+			ScriptProgramUtil::makeAddSpawnNode(b2d3a,
+			ScriptProgramUtil::makeStallingIfNode(
+				ScriptInstructions::isNotSpawning,
+				ScriptProgramUtil::makeTimerNode(25,
+				b2d3ActScriptEnd
+			))
+		)}
+
+		, b2e1Prototype{
+			EntityBuilder::makeLinearUncollidable(
+				BOSS_ARGS,
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"b2_idle_1")->d2dBitmap,
+					math::Vector2{ 0.0f, 4.0f }			//offset
+				},
+				DrawOrder{ config::playerDrawOrder },
+				AnimationList{ 
+					{
+						components::Animation{ {
+							L"b2_idle_1", L"b2_idle_2", L"b2_idle_3", L"b2_idle_4"
+						} }
+					},
+					0,	//idle index
+					4	//ticks
+				},
+				ScriptProgramList{
+					ScriptProgramUtil::makeBossEntryNode(120, L"fake dialogue",
+					ScriptProgramUtil::makeSetHealthNode(40,
+					ScriptProgramUtil::makeDoubleBossAttackAndMoveNode(
+						b2d1a,
+						30, 
+						30,
+						b2d1b,
+						10,
+						60,
+					ScriptProgramUtil::makeBossResetNode(90,
+					ScriptProgramUtil::makeSetHealthNode(42,
+					ScriptProgramUtil::makeBossAttackAndMoveNode(
+						b2d2b,
+						40,
+						150,
+					ScriptProgramUtil::makeBossResetMidNode(90,
+					ScriptProgramUtil::makeSetHealthNode(4000,
+					ScriptProgramUtil::makeBossActAndMoveNode(
+						10,
+						30,
+						b2d3ActScriptStart,
+						b2d3ActScriptEnd,
+					ScriptProgramUtil::makeBossResetMidNode(90,
+					ScriptProgramUtil::makeSetHealthNode(2300,
+					ScriptProgramUtil::makeAddSpawnNode(b1d4))
+					)
+					)))))))))
+				}
+			).heapClone()
+		}
+		, b2e1Node{
+			SpawnProgramUtil::makeSpawnNode(b2e1Prototype)
+		}
+		, b2e1{ b2e1Node, 1, false }
 
 
 		, stage2ScriptProgram{
+			ScriptProgramUtil::makeSetSpawnNode(b2e1)
+					/*
 			ScriptProgramUtil::makeTimerNode(290,
 			ScriptProgramUtil::makeSetSpawnNode(s2e1,
 			ScriptProgramUtil::makeTimerNode(220,
@@ -2268,6 +2508,8 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeTimerNode(1070,
 			ScriptProgramUtil::makeRemoveEntityNode(
 			))))))))))))))))))))))))))))))))
+
+			*/
 		}
 
 

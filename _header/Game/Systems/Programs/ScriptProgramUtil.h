@@ -315,6 +315,17 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next = nullptr
 		);
 
+		//Returns a routine for a 2 part attack/move phase
+		static ScriptNodeSharedPointer makeDoubleBossAttackAndMoveNode(
+			const components::SpawnProgram& spawnProgram1,
+			int preTimer1,
+			int postTimer1,
+			const components::SpawnProgram& spawnProgram2,
+			int preTimer2,
+			int postTimer2,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
 		//Returns a routine for a move phase where attack is looping
 		static ScriptNodeSharedPointer makeBossMoveNode(
 			int preTimer,
@@ -327,6 +338,27 @@ namespace wasp::game::systems {
 		static ScriptNodeSharedPointer makeBossMoveNode(
 			int preTimer,
 			int postTimer,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a routine for a move phase where the given linear script is ran in 
+		//the middle, passed as start and end nodes.
+		static ScriptNodeSharedPointer makeBossActAndMoveNode(
+			int preTimer,
+			int postTimer,
+			float speed,
+			ScriptNodeSharedPointer scriptStartNodePointer,
+			ScriptNodeSharedPointer scriptEndNodePointer,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a routine for a move phase where the given linear script is ran in 
+		//the middle, passed as start and end nodes.
+		static ScriptNodeSharedPointer makeBossActAndMoveNode(
+			int preTimer,
+			int postTimer,
+			ScriptNodeSharedPointer scriptStartNodePointer,
+			ScriptNodeSharedPointer scriptEndNodePointer,
 			ScriptNodeSharedPointer next = nullptr
 		);
 

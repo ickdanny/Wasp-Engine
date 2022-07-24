@@ -730,6 +730,57 @@ namespace wasp::game::systems {
 		};
 	}
 
+	ScriptProgramUtil::ScriptNodeSharedPointer
+		ScriptProgramUtil::makeDoubleBossAttackAndMoveNode
+		(
+			const components::SpawnProgram& spawnProgram1,
+			int preTimer1,
+			int postTimer1,
+			const components::SpawnProgram& spawnProgram2,
+			int preTimer2,
+			int postTimer2,
+			ScriptNodeSharedPointer next
+		) {
+		ScriptNodeSharedPointer scriptBaseNodePointer{
+			makeSetSpawnNode(spawnProgram1)
+		};
+		scriptBaseNodePointer->link(
+			makeTimerNode(preTimer1,
+			makeBoundRadiusGotoDeceleratingNode(
+				config::bossBounds,
+				config::bossGotoRadiusMin,
+				config::bossGotoRadiusMax,
+				config::bossGotoSpeed,
+			makeStallingIfNode(
+				ScriptInstructions::isNotSpawning,
+				makeTimerNode(postTimer1,
+				makeSetVelocityNode(Velocity{},
+				//starting part 2
+				makeAddSpawnNode(spawnProgram2,
+				makeTimerNode(preTimer2,
+				makeBoundRadiusGotoDeceleratingNode(
+					config::bossBounds,
+					config::bossGotoRadiusMin,
+					config::bossGotoRadiusMax,
+					config::bossGotoSpeed,
+				makeStallingIfNode(
+					ScriptInstructions::isNotSpawning,
+					makeTimerNode(postTimer2,
+					makeSetVelocityNode(Velocity{},
+					scriptBaseNodePointer
+				)))
+			))))))
+			))
+		);
+		return{
+			makeRoutineNode(
+				scriptBaseNodePointer,
+				makeIsBossDeadNode(),		//routine breaks when boss dies
+				next
+			)
+		};
+	}
+
 	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBossMoveNode (
 		int preTimer,
 		int postTimer,
@@ -765,5 +816,59 @@ namespace wasp::game::systems {
 		ScriptNodeSharedPointer next
 	) {
 		return makeBossMoveNode(preTimer, postTimer, config::bossGotoSpeed, next);
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer 
+		ScriptProgramUtil::makeBossActAndMoveNode
+	(
+		int preTimer,
+		int postTimer,
+		float speed,
+		ScriptNodeSharedPointer scriptStartNodePointer,
+		ScriptNodeSharedPointer scriptEndNodePointer,
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNodeSharedPointer scriptBaseNodePointer{
+			makeTimerNode(preTimer)
+		};
+
+		scriptBaseNodePointer->link(scriptStartNodePointer);
+		scriptEndNodePointer->link(
+			makeTimerNode(postTimer,
+			makeSetVelocityNode(Velocity{},
+			makeBoundRadiusGotoDeceleratingNode(
+				config::bossBounds,
+				config::bossGotoRadiusMin,
+				config::bossGotoRadiusMax,
+				speed,
+			scriptBaseNodePointer
+		))));
+		
+		return{
+			makeRoutineNode(
+				scriptBaseNodePointer,
+				makeIsBossDeadNode(),		//routine breaks when boss dies
+				next
+			)
+		};
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer
+		ScriptProgramUtil::makeBossActAndMoveNode
+	(
+		int preTimer,
+		int postTimer,
+		ScriptNodeSharedPointer scriptStartNodePointer,
+		ScriptNodeSharedPointer scriptEndNodePointer,
+		ScriptNodeSharedPointer next
+	) {
+		return makeBossActAndMoveNode(
+			preTimer,
+			postTimer,
+			config::bossGotoSpeed,
+			scriptStartNodePointer,
+			scriptEndNodePointer,
+			next
+		);
 	}
 }

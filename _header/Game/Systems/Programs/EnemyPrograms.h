@@ -340,6 +340,39 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer s2e12Node;						//uninitialized!
 		SpawnProgram s2e12;										//uninitialized!
 
+		// BOSS 2 // BOSS 2 // BOSS 2 // BOSS 2 // BOSS 2 // BOSS 2 // BOSS 2 //
+		
+			//1 arrows / slow medium
+		ComponentTupleSharedPointer b2d1aPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b2d1aNode;						//uninitialized!
+		SpawnProgram b2d1a;										//uninitialized!
+
+		SpawnNodeSharedPointer b2d1bNode;						//uninitialized!
+		SpawnProgram b2d1b;										//uninitialized!
+
+			//2 bullets that spawn horizontal sharps
+		ComponentTupleSharedPointer b2d2aPrototype;	//spawned	//uninitialized!
+		SpawnNodeSharedPointer b2d2aNode;						//uninitialized!
+		SpawnProgram b2d2a;										//uninitialized!
+
+		ComponentTupleSharedPointer b2d2bPrototype;	//spawner 	//uninitialized!
+		SpawnNodeSharedPointer b2d2bNode;						//uninitialized!
+		SpawnProgram b2d2b;										//uninitialized!
+
+			//3 fast spiral, 2 directions
+		ComponentTupleSharedPointer b2d3aPrototype;				//uninitialized!
+		ComponentTupleSharedPointer b2d3bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b2d3aNode;						//uninitialized!
+		SpawnProgram b2d3a;										//uninitialized!
+		SpawnNodeSharedPointer b2d3bNode;						//uninitialized!
+		SpawnProgram b2d3b;										//uninitialized!
+
+		ScriptNodeSharedPointer b2d3ActScriptEnd;				//uninitialized!
+		ScriptNodeSharedPointer b2d3ActScriptStart;				//uninitialized!
+
+		ComponentTupleSharedPointer b2e1Prototype;	//the boss	//uninitialized!
+		SpawnNodeSharedPointer b2e1Node;						//uninitialized!
+		SpawnProgram b2e1;										//uninitialized!
 
 	public:
 
