@@ -61,7 +61,7 @@ namespace wasp::game::systems {
 		constexpr float speed{ 8.5f };
 		constexpr AABB hitbox{ 11.5f };
 		constexpr int damage{ 10 };
-		constexpr float outbound{ -20.0f };
+		constexpr float outbound{ -60.0f };		//reason this is high is for preview rofl
 		
 		constexpr int mod0{ 8 };
 		constexpr int mod1{ 5 };
@@ -618,6 +618,15 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeListNode(spawnClearNode, spawnPowerNode)
 		}
 		, deathSpawnProgram{ deathSpawnNode, 1, false }
+
+		//shot menu preview
+		, shotAPreviewProgram{
+			shotAPowerBucket6Node, config::playerShotMaxTick, true
+		}
+
+		, shotBPreviewProgram{
+			shotBPowerBucket6Node, config::playerShotMaxTick, true
+		}
 
 		{
 		}

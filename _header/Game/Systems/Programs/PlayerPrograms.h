@@ -69,6 +69,10 @@ namespace wasp::game::systems {
 		const SpawnProgram bombBSpawnProgram;				//uninitialized!
 		const SpawnProgram deathSpawnProgram;				//uninitialized!
 
+		//for the shot menu preview
+		const SpawnProgram shotAPreviewProgram;				//uninitialized!
+		const SpawnProgram shotBPreviewProgram;				//uninitialized!
+
 		//Constructors
 		PlayerPrograms(resources::BitmapStorage* bitmapStoragePointer);
 	};

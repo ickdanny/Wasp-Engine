@@ -233,10 +233,74 @@ namespace wasp::game::systems {
 
 	void InitSystem::initShotMenu(Scene& scene) const {
 		auto& dataStorage{ scene.getDataStorage() };
-		addBackground(dataStorage, L"background_menu_shot");
+		addBackground(
+			dataStorage, 
+			L"background_menu_shot",
+			config::playerBulletDrawOrder - config::backgroundDrawOrder + 10
+		);
 
-		constexpr float y{ 202.0f };
+		constexpr float buttonY{ 202.0f };
+		constexpr float backY{ 123.0f };
+		constexpr float playerY{ 130.0f };
 		constexpr float xOffset{ 64.0f };
+
+		addBackground(
+			dataStorage, 
+			L"background_menu_shot_back",
+			-1000,
+			math::Point2{ center.x + xOffset - 1, backY }
+		);
+		addBackground(
+			dataStorage,
+			L"background_menu_shot_back",
+			-1000,
+			math::Point2{ center.x - xOffset, backY }
+		);
+
+		//adding the player previews
+		dataStorage.addEntity(
+			EntityBuilder::makeVisible(
+				math::Point2{ center.x - xOffset, playerY },
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"p_idle_1")->d2dBitmap,
+					math::Vector2{ 0.0f, 4.0f }			//offset
+				},
+				DrawOrder{ config::playerDrawOrder },
+				SpawnProgramList{
+					components::SpawnProgram{ 
+						programsPointer->playerPrograms.shotAPreviewProgram
+					}
+				},
+				AnimationList{ 
+					components::Animation{ {
+						L"p_idle_1", L"p_idle_2", L"p_idle_3", L"p_idle_4"
+					} },
+					4	//ticks
+				}
+			).package()
+		);
+
+		dataStorage.addEntity(
+			EntityBuilder::makeVisible(
+				math::Point2{ center.x + xOffset, playerY },
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"p_idle_1")->d2dBitmap,
+					math::Vector2{ 0.0f, 4.0f }			//offset
+				},
+				DrawOrder{ config::playerDrawOrder },
+				SpawnProgramList{
+					components::SpawnProgram{ 
+						programsPointer->playerPrograms.shotBPreviewProgram
+					}
+				},
+				AnimationList{ 
+					components::Animation{ {
+						L"p_idle_1", L"p_idle_2", L"p_idle_3", L"p_idle_4"
+					} },
+					4	//ticks
+				}
+			).package()
+		);
 
 		SceneNames nextScene;
 
@@ -258,7 +322,7 @@ namespace wasp::game::systems {
 		auto buttonHandles{
 			dataStorage.addEntities(
 				makeButton(
-					{ center.x - xOffset, y },
+					{ center.x - xOffset, buttonY },
 					{ },	//selOffset
 					L"button_a",
 					{
@@ -269,7 +333,7 @@ namespace wasp::game::systems {
 					true
 				).package(),
 				makeButton(
-					{ center.x + xOffset, y },
+					{ center.x + xOffset, buttonY },
 					{ },	//selOffset
 					L"button_b",
 					{

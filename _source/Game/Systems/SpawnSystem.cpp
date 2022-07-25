@@ -97,7 +97,7 @@ namespace wasp::game::systems {
 				//run every node contained in the list
 				for (auto linkedNodeSharedPointer	//intentional copy
 					: currentSpawnNodePointer->linkedNodePointers
-					) {
+				) {
 					while (linkedNodeSharedPointer) {
 						runSpawnNode(
 							scene,
