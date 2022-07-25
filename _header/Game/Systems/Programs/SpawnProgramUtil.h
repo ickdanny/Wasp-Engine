@@ -721,6 +721,39 @@ namespace wasp::game::systems {
 			);
 		}
 
+		//Returns a spawn node that passes both a base pos/vel pair and one mirrored
+		//about the given axis to a position/velocity consumer node, having been
+		//passed a base velocity.
+		static SpawnNodeSharedPointer makeVelConsumerMirrorFormationNode(
+			const SpawnNodeSharedPointer& posNodePointer,
+			const SpawnNodeSharedPointer& axisNodePointer,
+			const SpawnNodeSharedPointer& posVelConsumerNodePointer
+		) {
+			SpawnNode* mirrorFormationNodePointer{
+				new SpawnNode{ SpawnInstructions::mirrorFormation }
+			};
+			mirrorFormationNodePointer->link(
+				posNodePointer,
+				axisNodePointer,
+				posVelConsumerNodePointer
+			);
+			return SpawnNodeSharedPointer{ mirrorFormationNodePointer };
+		}
+
+		//Returns a spawn node that passes both a base pos/vel pair and one mirrored
+		//about the spawning entity to a position/velocity consumer node, having been
+		//passed a base velocity.
+		static SpawnNodeSharedPointer makeVelConsumerMirrorFormationNode(
+			const SpawnNodeSharedPointer& posNodePointer,
+			const SpawnNodeSharedPointer& posVelConsumerNodePointer
+		) {
+			return makeVelConsumerMirrorFormationNode(
+				posNodePointer,
+				makeEntityXNode(),
+				posVelConsumerNodePointer
+			);
+		}
+
 		//Returns a spawn node that passes both a base position and one mirrored about
 		//the given axis to a position consumer node.
 		static SpawnNodeSharedPointer makeMirrorPosFormationNode(
@@ -821,6 +854,38 @@ namespace wasp::game::systems {
 			);
 		}
 
+		//Returns a spawn node that passes a velocity arc to a velocity consumer node
+		//based on the provided symmetry and angle offset nodes, with passed velocity.
+		static SpawnNodeSharedPointer makeArcFormationNode(
+			const SpawnNodeSharedPointer& symmetryNodePointer,
+			const SpawnNodeSharedPointer& angleIncrementNodePointer,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			SpawnNode* arcFormationNodePointer{
+				new SpawnNode{ SpawnInstructions::arcFormation }
+			};
+			arcFormationNodePointer->link(
+				symmetryNodePointer,
+				angleIncrementNodePointer,
+				velConsumerNodePointer
+			);
+			return SpawnNodeSharedPointer{ arcFormationNodePointer };
+		}
+
+		//Returns a spawn node that passes a velocity arc to a velocity consumer node
+		//based on the provided symmetry and angle offset values, with passed velocity.
+		static SpawnNodeSharedPointer makeArcFormationNode(
+			int symmetry,
+			float angleIncrement,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeArcFormationNode(
+				makeIntValueNode(symmetry),
+				makeFloatValueNode(angleIncrement),
+				velConsumerNodePointer
+			);
+		}
+
 		//Returns a spawn node that passes a velocity ring to a velocity consumer node
 		//based on the provided base velocity and symmetry nodes.
 		static SpawnNodeSharedPointer makeRingFormationNode(
@@ -898,6 +963,34 @@ namespace wasp::game::systems {
 		) {
 			return makeRingFormationNode(
 				makeVelocityValueNode(baseVel),
+				makeIntValueNode(symmetry),
+				velConsumerNodePointer
+			);
+		}
+
+		//Returns a spawn node that passes a velocity ring to a velocity consumer node
+		//based on the provided symmetry node, with velocity being passed in
+		static SpawnNodeSharedPointer makeRingFormationNode(
+			const SpawnNodeSharedPointer& symmetryNodePointer,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			SpawnNode* ringFormationNodePointer{
+				new SpawnNode{ SpawnInstructions::ringFormation }
+			};
+			ringFormationNodePointer->link(
+				symmetryNodePointer,
+				velConsumerNodePointer
+			);
+			return SpawnNodeSharedPointer{ ringFormationNodePointer };
+		}
+
+		//Returns a spawn node that passes a velocity ring to a velocity consumer node
+		//based on the provided symmetry value, with velocity being passed in
+		static SpawnNodeSharedPointer makeRingFormationNode(
+			int symmetry,
+			const SpawnNodeSharedPointer& velConsumerNodePointer
+		) {
+			return makeRingFormationNode(
 				makeIntValueNode(symmetry),
 				velConsumerNodePointer
 			);

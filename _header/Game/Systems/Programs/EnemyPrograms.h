@@ -370,6 +370,20 @@ namespace wasp::game::systems {
 		ScriptNodeSharedPointer b2d3ActScriptEnd;				//uninitialized!
 		ScriptNodeSharedPointer b2d3ActScriptStart;				//uninitialized!
 
+			//4 slow spiral + homing arrows
+		ComponentTupleSharedPointer b2d4bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b2d4Node;						//uninitialized!
+		SpawnProgram b2d4;										//uninitialized!
+
+			//5 mega arrow -> rings
+		ComponentTupleSharedPointer b2d5aPrototype;	//spawned	//uninitialized!
+		SpawnNodeSharedPointer b2d5aNode;						//uninitialized!
+		SpawnProgram b2d5a;										//uninitialized!
+
+		ComponentTupleSharedPointer b2d5bPrototype;	//spwaner	//uninitialized!
+		SpawnNodeSharedPointer b2d5bNode;						//uninitialized!
+		SpawnProgram b2d5b;										//uninitialized!
+
 		ComponentTupleSharedPointer b2e1Prototype;	//the boss	//uninitialized!
 		SpawnNodeSharedPointer b2e1Node;						//uninitialized!
 		SpawnProgram b2e1;										//uninitialized!

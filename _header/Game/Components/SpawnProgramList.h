@@ -80,8 +80,12 @@ namespace wasp::game::components {
                             //[posNode, axisNode, posConsumerNode]
         arcFormation,       //creates an arc with the given symmetry and increment
                             //[velNode, symmetryNode, incrementNode, velConsumerNode]
+                            //if passed a velocity from another formation,
+                            //[symmetryNode, incrementNode, velConsumerNode]
         ringFormation,      //creates a ring with the given symmetry
                             //[velNode, symmetryNode, velConsumerNode]
+                            //if passed a velocity from another formation,
+                            //[symmetryNode, velConsumerNode]
         columnFormation,    //creates a column with the given count and increment
                             //[velNode, countNode, incrementNode, velConsumerNode]
                             //if vel is being passed, no vel node

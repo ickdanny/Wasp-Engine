@@ -214,6 +214,12 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next = nullptr
 		);
 
+		//Returns a script node representing a set velocity to player instruction.
+		static ScriptNodeSharedPointer makeSetVelocityToPlayerNode(
+			float speed,
+			ScriptNodeSharedPointer next = nullptr
+		);
+
 		//Returns a script node that removes the entity.
 		static ScriptNodeSharedPointer makeRemoveEntityNode();
 

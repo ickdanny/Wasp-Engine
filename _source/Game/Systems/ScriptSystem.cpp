@@ -18,7 +18,7 @@ namespace wasp::game::systems {
 	namespace {
 
 		constexpr float angleEquivalenceEpsilon{ .05f };
-		constexpr float pointEquivalenceEpsilon{ .2f };
+		constexpr float pointEquivalenceEpsilon{ .4f };
 
 		constexpr float gotoDeceleratingExponentBase{ 2.0f };
 		constexpr float gotoDeceleratingHorizontalShift{ 0.1f };
@@ -502,6 +502,49 @@ namespace wasp::game::systems {
 						velocity
 					);
 					gotoNextNode(currentScriptNodePointer, 1);
+					return true;
+				}
+				case ScriptInstructions::setVelocityToPlayer: {
+					auto dataNodePointer{
+						dynamic_cast<ScriptNodeData<float, utility::Void>*>(
+							currentScriptNodePointer.get()
+						)
+					};
+					float speed{ dataNodePointer->internalData };
+					EntityHandle entityHandle{
+						scene.getDataStorage().makeHandle(entityID)
+					};
+					
+					math::Point2 pos{
+						scene.getDataStorage().getComponent<Position>(entityHandle)
+					};
+
+					//get the iterator for players
+					static const Topic<ecs::component::Group*>
+						playerGroupPointerStorageTopic{};
+
+					auto playerGroupPointer{
+						getGroupPointer<PlayerData, Position>(
+							scene,
+							playerGroupPointerStorageTopic
+						)
+					};
+					auto playerGroupIterator{
+						playerGroupPointer->groupIterator<Position>()
+					};
+
+					float angle{ 0.0f };
+					if (playerGroupIterator.isValid()) {
+						//just grab the first player
+						const auto [playerPos] = *playerGroupIterator;
+						angle = math::getAngleFromAToB(pos, playerPos);
+					}
+					Velocity velocity{ speed, angle };
+					componentOrderQueue.queueSetComponent<Velocity>(
+						entityHandle,
+						velocity
+					);
+					gotoNextNode(currentScriptNodePointer, 0);
 					return true;
 				}
 				case ScriptInstructions::setInbound: {

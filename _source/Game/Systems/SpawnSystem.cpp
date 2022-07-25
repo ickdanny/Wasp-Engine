@@ -867,6 +867,81 @@ namespace wasp::game::systems {
 				currentSpawnNodePointer = nullptr;
 				break;
 			}
+			case SpawnInstructions::arcFormation: {
+				int symmetry{ evaluateIntNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+				float angleIncrement{ evaluateFloatNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[1],
+					tick,
+					spawnList
+				) };
+				float speed{ vel.getMagnitude() };
+				math::Angle baseAngle{ vel.getAngle() };
+				math::Angle angle{
+					static_cast<float>(baseAngle) -
+					((symmetry - 1) * angleIncrement / 2.0f)
+				};
+				for (int i{ 0 }; i < symmetry; ++i) {
+					auto velConsumerSharedPointer{
+						currentSpawnNodePointer->linkedNodePointers[2]
+					};
+					while (velConsumerSharedPointer) {
+						runSpawnNodePassingVel(
+							scene,
+							entityID,
+							velConsumerSharedPointer,
+							tick,
+							spawnList,
+							Velocity{ speed, angle }
+						);
+					}
+					angle += angleIncrement;
+				}
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
+			case SpawnInstructions::ringFormation: {
+				int symmetry{ evaluateIntNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+
+				float speed{ vel.getMagnitude() };
+				math::Angle angle{ vel.getAngle() };
+
+				float angleIncrement{ math::fullAngleDivide(symmetry) };
+
+				for (int i{ 0 }; i < symmetry; ++i) {
+					auto velConsumerSharedPointer{
+						currentSpawnNodePointer->linkedNodePointers[1]
+					};
+					while (velConsumerSharedPointer) {
+						runSpawnNodePassingVel(
+							scene,
+							entityID,
+							velConsumerSharedPointer,
+							tick,
+							spawnList,
+							Velocity{ speed, angle }
+						);
+					}
+					angle += angleIncrement;
+				}
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
 
 			default:
 				throw std::runtime_error{ "cannot pass pos!" };

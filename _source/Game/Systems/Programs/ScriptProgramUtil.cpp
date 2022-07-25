@@ -475,7 +475,7 @@ namespace wasp::game::systems {
 	) {
 		ScriptNode* setVelocityNode{
 			new ScriptNode{
-				ScriptInstructions::setVelocity,
+				ScriptInstructions::setVelocity
 			}
 		};
 		setVelocityNode->link(velocityNode);
@@ -491,7 +491,7 @@ namespace wasp::game::systems {
 	) {
 		ScriptNode* setVelocityNodePointer{
 			new ScriptNode{
-				ScriptInstructions::setVelocity,
+				ScriptInstructions::setVelocity
 			}
 		};
 		setVelocityNodePointer->link(makeVelocityValueNode(velocity));
@@ -499,6 +499,24 @@ namespace wasp::game::systems {
 			setVelocityNodePointer->link(next);
 		}
 		return ScriptNodeSharedPointer{ setVelocityNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer 
+		ScriptProgramUtil::makeSetVelocityToPlayerNode
+	(
+		float speed,
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* setVelocityToPlayerNodePointer{
+			new ScriptNodeData<float, utility::Void>{
+				ScriptInstructions::setVelocityToPlayer,
+				speed
+			}
+		};
+		if (next) {
+			setVelocityToPlayerNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ setVelocityToPlayerNodePointer };
 	}
 
 	ScriptProgramUtil::ScriptNodeSharedPointer 
