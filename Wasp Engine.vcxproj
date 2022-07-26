@@ -171,6 +171,8 @@
     <ClCompile Include="_source\Game\Components\ButtonData.cpp" />
     <ClCompile Include="_source\Game\Components\MenuCommand.cpp" />
     <ClCompile Include="_source\Game\Game.cpp" />
+    <ClCompile Include="_source\Game\Resources\Dialogue.cpp" />
+    <ClCompile Include="_source\Game\Resources\DialogueStorage.cpp" />
     <ClCompile Include="_source\Game\SceneRenderer.cpp" />
     <ClCompile Include="_source\Game\SceneUpdater.cpp" />
     <ClCompile Include="_source\Game\Settings.cpp" />
@@ -181,6 +183,7 @@
     <ClCompile Include="_source\Game\Systems\ContinueSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\DeathHandlerSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\DebugRenderSystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\DialogueSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\GameBuilderSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\GameOverSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\GameState.cpp" />
@@ -211,6 +214,7 @@
     <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SpriteSpinSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SystemUtil.cpp" />
+    <ClCompile Include="_source\Game\Systems\TextRenderSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\VelocitySystem.cpp" />
     <ClCompile Include="_source\Game\Systems\WinSystem.cpp" />
     <ClCompile Include="_source\Game\Topics.cpp" />
@@ -272,11 +276,14 @@
     <ClInclude Include="_header\Game\Components\TwoFramePosition.h" />
     <ClInclude Include="_header\Game\Game.h" />
     <ClInclude Include="_header\Game\GameConfig.h" />
+    <ClInclude Include="_header\Game\Resources\Dialogue.h" />
+    <ClInclude Include="_header\Game\Resources\DialogueStorage.h" />
     <ClInclude Include="_header\Game\Systems\AnimationSystem.h" />
     <ClInclude Include="_header\Game\Systems\CollisionDetectorSystem.h" />
     <ClInclude Include="_header\Game\Systems\CollisionHandlerSystem.h" />
     <ClInclude Include="_header\Game\Systems\ContinueSystem.h" />
     <ClInclude Include="_header\Game\Systems\DeathHandlerSystem.h" />
+    <ClInclude Include="_header\Game\Systems\DialogueSystem.h" />
     <ClInclude Include="_header\Game\Systems\GameBuilderCommands.h" />
     <ClInclude Include="_header\Game\Components\PlayerData.h" />
     <ClInclude Include="_header\Game\Systems\GameBuilderSystem.h" />
@@ -320,6 +327,7 @@
     <ClInclude Include="_header\Game\Systems\SpriteSpinSystem.h" />
     <ClInclude Include="_header\Game\Systems\systemInclude.h" />
     <ClInclude Include="_header\Game\Systems\SystemUtil.h" />
+    <ClInclude Include="_header\Game\Systems\TextRenderSystem.h" />
     <ClInclude Include="_header\Game\Systems\VelocitySystem.h" />
     <ClInclude Include="_header\Game\Systems\WinSystem.h" />
     <ClInclude Include="_header\Game\Topics.h" />

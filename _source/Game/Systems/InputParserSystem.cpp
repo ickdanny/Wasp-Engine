@@ -10,13 +10,15 @@ namespace wasp::game::systems {
 			case SceneNames::stage:
 			case SceneNames::music:
 			case SceneNames::options:
-			case SceneNames::dialogue:
 			case SceneNames::pause:
 			case SceneNames::continues:
 				parseMenuInput(scene);
 				break;
 			case SceneNames::game:
 				parseGameInput(scene);
+				break;
+			case SceneNames::dialogue:
+				parseDialogueInput(scene);
 				break;
 			case SceneNames::load:
 			case SceneNames::credits:
@@ -86,6 +88,22 @@ namespace wasp::game::systems {
 		}
 
 		keyInputTablePointer->lockAll();	//game has no input transparency
+	}
+
+	void InputParserSystem::parseDialogueInput(Scene& scene) {
+		auto& readDialogueFlagChannel{
+			scene.getChannel(SceneTopics::readDialogueFlag)
+		};
+		readDialogueFlagChannel.clear();
+
+		if (isJustPressed(KeyValues::k_z) || isBeingPressed(KeyValues::k_control)) {
+			readDialogueFlagChannel.addMessage();
+		}
+
+		keyInputTablePointer->lock(KeyValues::k_z);
+		keyInputTablePointer->lock(KeyValues::k_x);
+		keyInputTablePointer->lock(KeyValues::k_control);
+		keyInputTablePointer->lock(KeyValues::k_escape);	//simplify things; no pause
 	}
 
 	bool InputParserSystem::isJustPressed(KeyValues key) {

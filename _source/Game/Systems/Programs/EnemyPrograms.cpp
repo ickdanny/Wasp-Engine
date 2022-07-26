@@ -1380,7 +1380,7 @@ namespace wasp::game::systems {
 					4	//ticks
 				},
 				ScriptProgramList{
-					ScriptProgramUtil::makeBossEntryNode(120, L"fake dialogue",
+					ScriptProgramUtil::makeBossEntryNode(120, L"1_1",
 					ScriptProgramUtil::makeSetHealthNode(2000,
 					ScriptProgramUtil::makeSetSpawnNode(b1d1,
 					ScriptProgramUtil::makeBossMoveNode(90, 90,
@@ -2564,8 +2564,8 @@ namespace wasp::game::systems {
 					4	//ticks
 				},
 				ScriptProgramList{
-					ScriptProgramUtil::makeBossEntryNode(120, L"fake dialogue",
-					ScriptProgramUtil::makeSetHealthNode(40,
+					ScriptProgramUtil::makeBossEntryNode(120, L"2_1",
+					ScriptProgramUtil::makeSetHealthNode(4000,
 					ScriptProgramUtil::makeDoubleBossAttackAndMoveNode(
 						b2d1a,
 						30, 
@@ -2574,25 +2574,25 @@ namespace wasp::game::systems {
 						10,
 						60,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(42,
+					ScriptProgramUtil::makeSetHealthNode(4200,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b2d2b,
 						40,
 						150,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(20,
+					ScriptProgramUtil::makeSetHealthNode(2000,
 					ScriptProgramUtil::makeBossActAndMoveNode(
 						10,
 						30,
 						b2d3ActScriptStart,
 						b2d3ActScriptEnd,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(23,
+					ScriptProgramUtil::makeSetHealthNode(5000,
 					ScriptProgramUtil::makeAddSpawnNode(b2d4,	//<---- 4 is here
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeIsBossDeadNode(),
 						ScriptProgramUtil::makeBossResetNode(90,
-						ScriptProgramUtil::makeSetHealthNode(4200,
+						ScriptProgramUtil::makeSetHealthNode(5000,
 						ScriptProgramUtil::makeBossAttackAndMoveNode(
 							b2d5b,
 							40,
@@ -2612,8 +2612,6 @@ namespace wasp::game::systems {
 
 
 		, stage2ScriptProgram{
-			ScriptProgramUtil::makeSetSpawnNode(b2e1)
-					/*
 			ScriptProgramUtil::makeTimerNode(290,
 			ScriptProgramUtil::makeSetSpawnNode(s2e1,
 			ScriptProgramUtil::makeTimerNode(220,
@@ -2644,14 +2642,181 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeAddSpawnNode(s2e11,
 			ScriptProgramUtil::makeTimerNode(400,
 			ScriptProgramUtil::makeAddSpawnNode(s2e12,
-
+			ScriptProgramUtil::makeTimerNode(570,
+			ScriptProgramUtil::makeAddSpawnNode(b2e1,
 			ScriptProgramUtil::makeTimerNode(1070,
 			ScriptProgramUtil::makeRemoveEntityNode(
-			))))))))))))))))))))))))))))))))
+			))))))))))))))))))))))))))))))))))
 
-			*/
+			
 		}
 
+		// STAGE 3 // STAGE 3 // STAGE 3 // STAGE 3 // STAGE 3 // STAGE 3 // STAGE 3 //
+
+		#define COUNT_E 30
+		#define COUNT_N 60
+		#define COUNT_H 90
+		#define COUNT_L 120
+		#define SPEED_MIN 0.2f
+		#define SPEED_MAX 1.8f
+
+		, s3d1aNode{
+			SpawnProgramUtil::makeRepeatNode(
+				SpawnProgramUtil::makeIntValueDiffNode(
+					{ COUNT_E, COUNT_N, COUNT_H, COUNT_L }
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					smallSpringPrototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeUniformRandomCircleVelocityNode(
+						SPEED_MIN, SPEED_MAX
+					)
+				)
+			)
+		}
+		, s3d1bNode{
+			SpawnProgramUtil::makeRepeatNode(
+				SpawnProgramUtil::makeIntValueDiffNode(
+					{ COUNT_E, COUNT_N, COUNT_H, COUNT_L }
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					smallGreenPrototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeUniformRandomCircleVelocityNode(
+						SPEED_MIN, SPEED_MAX
+					)
+				)
+			)
+		}
+		, s3d1cNode{
+			SpawnProgramUtil::makeRepeatNode(
+				SpawnProgramUtil::makeIntValueDiffNode(
+					{ COUNT_E, COUNT_N, COUNT_H, COUNT_L }
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					smallYellowPrototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeUniformRandomCircleVelocityNode(
+						SPEED_MIN, SPEED_MAX
+					)
+				)
+			)
+		}
+		, s3d1a{ s3d1aNode, 1, false }
+		, s3d1b{ s3d1bNode, 1, false }
+		, s3d1c{ s3d1cNode, 1, false }
+		#undef COUNT_E
+		#undef COUNT_N
+		#undef COUNT_H
+		#undef COUNT_L
+		#undef SPEED_MIN
+		#undef SPEED_MAX
+
+		#define HP 700
+		, s3e1aPrototype{
+			EntityBuilder::makePosPrototype(
+				{ 2.0f, -90.0f },
+				WISP_ARGS(HP, pickupProgramsPointer->smallPowerSpawnProgram),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
+						20,
+						30,
+						5,
+						s3d1a,
+						50,
+						{ 1.0f, 90.0f},
+						100
+					)
+				}
+			).heapClone()
+		}
+		, s3e1bPrototype{
+			EntityBuilder::makePosPrototype(
+				{ 1.7f, -90.0f },
+				WISP_ARGS(HP, pickupProgramsPointer->smallPowerSpawnProgram),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
+						20,
+						30,
+						5,
+						s3d1b,
+						50,
+						{ 1.0f, 90.0f},
+						100
+					)
+				}
+			).heapClone()
+		}
+		, s3e1cPrototype{
+			EntityBuilder::makePosPrototype(
+				{ 1.4f, -90.0f },
+				WISP_ARGS(HP, pickupProgramsPointer->smallPowerSpawnProgram),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
+						20,
+						30,
+						5,
+						s3d1c,
+						50,
+						{ 1.0f, 90.0f},
+						100
+					)
+				}
+			).heapClone()
+		}
+		#undef HP
+		, s3e1aNode{
+			SpawnProgramUtil::makeMirrorPosFormationNode(
+				SpawnProgramUtil::makePointValueNode({
+					20.0f + config::gameOffset.x,
+					config::topOut
+				}),
+				SpawnProgramUtil::makeFloatValueNode(
+					config::gameWidth / 2.0f + config::gameOffset.x
+				),
+				SpawnProgramUtil::makeSpawnPosNode(s3e1aPrototype)
+			)
+		}
+		, s3e1bNode{
+			SpawnProgramUtil::makeMirrorPosFormationNode(
+				SpawnProgramUtil::makePointValueNode({
+					35.0f + config::gameOffset.x,
+					config::topOut
+				}),
+				SpawnProgramUtil::makeFloatValueNode(
+					config::gameWidth / 2.0f + config::gameOffset.x
+				),
+				SpawnProgramUtil::makeSpawnPosNode(s3e1bPrototype)
+			)
+		}
+		, s3e1cNode{
+			SpawnProgramUtil::makeMirrorPosFormationNode(
+				SpawnProgramUtil::makePointValueNode({
+					50.0f + config::gameOffset.x,
+					config::topOut
+				}),
+				SpawnProgramUtil::makeFloatValueNode(
+					config::gameWidth / 2.0f + config::gameOffset.x
+				),
+				SpawnProgramUtil::makeSpawnPosNode(s3e1cPrototype)
+			)
+		}
+		, s3e1a{ s3e1aNode, 1, false }
+		, s3e1b{ s3e1bNode, 1, false }
+		, s3e1c{ s3e1cNode, 1, false }
+
+
+		, stage3ScriptProgram{
+			ScriptProgramUtil::makeTimerNode(690,
+			ScriptProgramUtil::makeSetSpawnNode(s3e1a,
+			ScriptProgramUtil::makeTimerNode(190,
+			ScriptProgramUtil::makeAddSpawnNode(s3e1b,
+			ScriptProgramUtil::makeTimerNode(80,
+			ScriptProgramUtil::makeAddSpawnNode(s3e1c,
+			ScriptProgramUtil::makeTimerNode(1070,
+			ScriptProgramUtil::makeRemoveEntityNode(
+			))))))))
+		}
 
 
 		{

@@ -14,6 +14,8 @@ namespace wasp::game {
 	const Topic<> GlobalTopics::toggleSoundFlag{};
 	const Topic<> GlobalTopics::toggleFullscreenFlag{};
 	const Topic<> GlobalTopics::exitFlag{};
+	const Topic<std::wstring> GlobalTopics::startDialogue{};
+	const Topic<> GlobalTopics::endDialogueFlag{};
 	const Topic<systems::GameState> GlobalTopics::gameState{};
 
 	//scene topics
@@ -24,6 +26,7 @@ namespace wasp::game {
 	const Topic<std::tuple<ecs::entity::EntityHandle, bool>>
 		SceneTopics::elementSelection{};
 	const Topic<systems::GameBuilderCommands> SceneTopics::gameBuilderCommands{};
+	const Topic<> SceneTopics::readDialogueFlag{};
 	const Topic<config::PrngType> SceneTopics::random{};
 	const Topic<systems::GameCommands> SceneTopics::gameCommands{};
 	const Topic<std::tuple<ecs::entity::EntityHandle, systems::PlayerStates>> 

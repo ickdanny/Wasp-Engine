@@ -4,6 +4,7 @@
 #include "ManifestStorage.h"
 #include "BitmapStorage.h"
 #include "MidiSequenceStorage.h"
+#include "DialogueStorage.h"
 
 namespace wasp::game::resources {
 	struct ResourceMasterStorage {
@@ -11,5 +12,6 @@ namespace wasp::game::resources {
 		ManifestStorage manifestStorage{};
 		BitmapStorage bitmapStorage{};
 		MidiSequenceStorage midiSequenceStorage{};
+		DialogueStorage dialogueStorage{};
 	};
 }

@@ -54,11 +54,12 @@ int WINAPI wWinMain(HINSTANCE instanceHandle, HINSTANCE, PWSTR, int windowShowMo
         resources::ResourceMasterStorage resourceMasterStorage{};
 
         resource::ResourceLoader resourceLoader{
-            std::array<resource::Loadable*, 4>{
+            std::array<resource::Loadable*, 5>{
                 &resourceMasterStorage.directoryStorage,
                 &resourceMasterStorage.manifestStorage,
                 &resourceMasterStorage.bitmapStorage,
-                &resourceMasterStorage.midiSequenceStorage
+                &resourceMasterStorage.midiSequenceStorage,
+                &resourceMasterStorage.dialogueStorage
             }
         };
         resourceLoader.loadFile({ config::mainManifestPath });

@@ -731,9 +731,7 @@ namespace wasp::sound::midi {
 		return compiledTrack;
 	}
 
-	MidiSequence parseMidiFile(
-		const std::wstring& fileName
-	) {
+	MidiSequence parseMidiFile(const std::wstring& fileName) {
 		std::ifstream inStream{ fileName, std::ios::binary };
 		MidiSequence midiSequence{};
 

@@ -2,6 +2,7 @@
 
 #include "Game/Scenes.h"
 #include "Game/Systems/RenderSystem.h"
+#include "Game/Systems/TextRenderSystem.h"
 #include "Game/Systems/DebugRenderSystem.h"
 
 namespace wasp::game {
@@ -10,6 +11,7 @@ namespace wasp::game {
 	private:
 		//fields
 		systems::RenderSystem renderSystem;				//not initialized!
+		systems::TextRenderSystem textRenderSystem;		//not initialized!
 
 		//debug fields
 		#ifdef _DEBUG

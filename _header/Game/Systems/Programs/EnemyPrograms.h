@@ -208,24 +208,25 @@ namespace wasp::game::systems {
 
 		// BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // BOSS 1 // 
 
-		//1 6-symmetry counter spiral
+			//1 6-symmetry counter spiral
 		SpawnNodeSharedPointer b1d1Node;						//uninitialized!
 		SpawnProgram b1d1;										//uninitialized!
 
-		//2 rain + large aimed
+			//2 rain + large aimed
 		SpawnNodeSharedPointer b1d2Node;						//uninitialized!
 		SpawnProgram b1d2;										//uninitialized!
 
-		//3 3-symmetry 2-symmetry spirals
+			//3 3-symmetry 2-symmetry spirals
 		SpawnNodeSharedPointer b1d3Node;						//uninitialized!
 		SpawnProgram b1d3;										//uninitialized!
 
-		//4 snowflakes
+			//4 snowflakes
 		ComponentTupleSharedPointer b1d4Prototype;				//uninitialized!
 		SpawnNodeSharedPointer b1d4Node;						//uninitialized!
 		SpawnProgram b1d4;
 
-		ComponentTupleSharedPointer b1e1Prototype;	//the boss	//uninitialized!
+			//the boss
+		ComponentTupleSharedPointer b1e1Prototype;				//uninitialized!
 		SpawnNodeSharedPointer b1e1Node;						//uninitialized!
 		SpawnProgram b1e1;										//uninitialized!
 
@@ -384,15 +385,36 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer b2d5bNode;						//uninitialized!
 		SpawnProgram b2d5b;										//uninitialized!
 
-		ComponentTupleSharedPointer b2e1Prototype;	//the boss	//uninitialized!
+			//the boss
+		ComponentTupleSharedPointer b2e1Prototype;				//uninitialized!
 		SpawnNodeSharedPointer b2e1Node;						//uninitialized!
 		SpawnProgram b2e1;										//uninitialized!
+
+		// STAGE 3 // STAGE 3 // STAGE 3 // STAGE 3 // STAGE 3 // STAGE 3 // STAGE 3 //
+
+			//wave 1: 3 pairs of wisps (?) random spray shot
+		SpawnNodeSharedPointer s3d1aNode;						//uninitialized!
+		SpawnNodeSharedPointer s3d1bNode;						//uninitialized!
+		SpawnNodeSharedPointer s3d1cNode;						//uninitialized!
+		SpawnProgram s3d1a;										//uninitialized!
+		SpawnProgram s3d1b;										//uninitialized!
+		SpawnProgram s3d1c;										//uninitialized!
+
+		ComponentTupleSharedPointer s3e1aPrototype;				//uninitialized!
+		ComponentTupleSharedPointer s3e1bPrototype;				//uninitialized!
+		ComponentTupleSharedPointer s3e1cPrototype;				//uninitialized!
+		SpawnNodeSharedPointer s3e1aNode;						//uninitialized!
+		SpawnNodeSharedPointer s3e1bNode;						//uninitialized!
+		SpawnNodeSharedPointer s3e1cNode;						//uninitialized!
+		SpawnProgram s3e1a;										//uninitialized!
+		SpawnProgram s3e1b;										//uninitialized!
+		SpawnProgram s3e1c;										//uninitialized!
 
 	public:
 
 		ScriptProgram stage1ScriptProgram;						//uninitialized!
 		ScriptProgram stage2ScriptProgram;						//uninitialized!
-		//ScriptProgram stage3ScriptProgram;						//uninitialized!
+		ScriptProgram stage3ScriptProgram;						//uninitialized!
 		//ScriptProgram stage4ScriptProgram;						//uninitialized!
 		//ScriptProgram stage5ScriptProgram;						//uninitialized!
 

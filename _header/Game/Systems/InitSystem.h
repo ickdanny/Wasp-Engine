@@ -50,6 +50,7 @@ namespace wasp::game::systems {
 		void initLoad(Scene& scene) const;
 
 		void initGame(Scene& scene) const;
+		void initDialogue(Scene& scene) const;
 		void initPauseMenu(Scene& scene) const;
 
 		void addBackground(

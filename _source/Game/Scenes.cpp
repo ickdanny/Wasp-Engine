@@ -17,6 +17,11 @@ namespace wasp::game {
 			{ SystemChainIDs::render, true}
 		};
 
+		std::vector<std::pair<SystemChainIDs, bool>> fullTransparency{
+			{ SystemChainIDs::update, true},
+			{ SystemChainIDs::render, true}
+		};
+
 		sceneStorage.makeScene(
 			SceneNames::main,		//name
 			20,						//initEntityCapacity
@@ -78,6 +83,14 @@ namespace wasp::game {
 			1000,					//initEntityCapacity
 			50,						//initComponentCapacity
 			noTransparency,			//transparency
+			true					//refresh
+		);
+
+		sceneStorage.makeScene(
+			SceneNames::dialogue,	//name
+			5,						//initEntityCapacity
+			50,						//initComponentCapacity
+			fullTransparency,		//transparency
 			true					//refresh
 		);
 

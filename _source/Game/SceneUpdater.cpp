@@ -20,6 +20,12 @@ namespace wasp::game {
 		, buttonSpriteSystem{ &(resourceMasterStoragePointer->bitmapStorage) }
 		, gameBuilderSystem { globalChannelSetPointer }
 		, loadSystem{ globalChannelSetPointer }
+		, dialogueSystem{ 
+			globalChannelSetPointer,
+			&(resourceMasterStoragePointer->bitmapStorage),
+			&(resourceMasterStoragePointer->dialogueStorage)
+		}
+		, scriptSystem{ globalChannelSetPointer }
 		, playerShotSystem{ &programs }
 		, collisionHandlerSystem{ &programs }
 		, playerBombSystem{ &programs }
@@ -41,6 +47,7 @@ namespace wasp::game {
 		buttonSpriteSystem(scene);
 		gameBuilderSystem(scene);
 		loadSystem(scene);
+		dialogueSystem(scene);
 		velocitySystem(scene);
 		scriptSystem(scene);
 		collisionDetectorSystem(scene);

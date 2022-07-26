@@ -36,6 +36,11 @@ namespace wasp::game {
 		//handled by Game::updateSceneList
 		static const Topic<> exitFlag;
 
+		//set by ScriptSystem, cleared by DialogueSystem
+		static const Topic<std::wstring> startDialogue;
+		//set by DialogueSystem, cleared by ScriptSystem
+		static const Topic<> endDialogueFlag;
+
 		//set by GameBuilderSystem; persistent
 		static const Topic<systems::GameState> gameState;	
 	};
@@ -62,6 +67,9 @@ namespace wasp::game {
 
 		//set by MenuNavigationSystem, cleared by GameBuilderSystem
 		static const Topic<systems::GameBuilderCommands> gameBuilderCommands;
+
+		//set and cleared by InputParserSystem
+		static const Topic<> readDialogueFlag;
 
 		//set by InitSystem (if needed); persistent
 		static const Topic<config::PrngType> random;

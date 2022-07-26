@@ -26,6 +26,7 @@ namespace wasp::game::systems {
 		//helper methods
 		void parseMenuInput(Scene& scene);
 		void parseGameInput(Scene& scene);
+		void parseDialogueInput(Scene& scene);
 
 		bool isJustPressed(KeyValues keyValue);
 		bool isBeingPressed(KeyValues keyValue);

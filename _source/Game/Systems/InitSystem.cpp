@@ -74,6 +74,9 @@ namespace wasp::game::systems {
 			case SceneNames::game:
 				initGame(scene);
 				break;
+			case SceneNames::dialogue:
+				initDialogue(scene);
+				break;
 			case SceneNames::pause:
 				initPauseMenu(scene);
 				break;
@@ -579,6 +582,10 @@ namespace wasp::game::systems {
 				scriptProgramPointer
 					= &programsPointer->enemyPrograms.stage2ScriptProgram;
 				break;
+			case 3:
+				scriptProgramPointer
+					= &programsPointer->enemyPrograms.stage3ScriptProgram;
+				break;
 			default:
 				throw std::runtime_error{ "no stage script!" };
 		}
@@ -615,6 +622,21 @@ namespace wasp::game::systems {
 		}
 		globalChannelSetPointer->getChannel(GlobalTopics::startMusic)
 			.addMessage(trackName);
+	}
+
+	void InitSystem::initDialogue(Scene& scene) const {
+		scene.getDataStorage().addEntity(
+			EntityBuilder::makeVisible(
+				{ config::graphicsWidth / 2.0f, config::graphicsHeight - 40.0f },
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"background_dialogue")->d2dBitmap,
+					{},		//offset
+					0.0f,	//rotation
+					0.8f	//opacity
+				},
+				DrawOrder{ config::backgroundDrawOrder }
+			).package()
+		);
 	}
 
 	void InitSystem::initPauseMenu(Scene& scene) const {
