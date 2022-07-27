@@ -41,6 +41,7 @@ namespace wasp::game::components {
         //float
         entityX,            //returns the x coordinate of the entity
         entityY,            //returns the y coordinate of the entity
+        entityAngle,        //returns the velocity angle of the entity
         pickupInitSpeed,    //special function for determining initial speed of pickup
         angleToPlayer,      //returns the angle from the entity to the player
         spiral,             //returns the angle to make a spiral in time

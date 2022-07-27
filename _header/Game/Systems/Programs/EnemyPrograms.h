@@ -410,6 +410,63 @@ namespace wasp::game::systems {
 		SpawnProgram s3e1b;										//uninitialized!
 		SpawnProgram s3e1c;										//uninitialized!
 
+			//wave 2: loop bats -> spine shot and drop shot
+		SpawnNodeSharedPointer s3d2Node;						//uninitialized!
+		SpawnProgram s3d2;										//uninitialized!
+		
+		ComponentTupleSharedPointer s3e2Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s3e2Node;						//uninitialized!
+		SpawnProgram s3e2;										//uninitialized!
+
+			//wave 3: clouds from the left, column rings
+		SpawnNodeSharedPointer s3d3Node;						//uninitialized!
+		SpawnProgram s3d3;										//uninitialized!
+
+		ComponentTupleSharedPointer s3e3Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s3e3Node;						//uninitialized!
+		SpawnProgram s3e3;										//uninitialized!
+
+			//wave 4: same thing but from right and red
+		SpawnNodeSharedPointer s3d4Node;						//uninitialized!
+		SpawnProgram s3d4;										//uninitialized!
+
+		ComponentTupleSharedPointer s3e4Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s3e4Node;						//uninitialized!
+		SpawnProgram s3e4;										//uninitialized!
+
+			//wave 5: some more bats but from the left
+		ComponentTupleSharedPointer s3e5Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s3e5Node;						//uninitialized!
+		SpawnProgram s3e5;										//uninitialized!
+
+			//wave 6: same thing as wave 1
+
+			//wave 7: clouds from right, blue rings this time
+		SpawnNodeSharedPointer s3e7Node;						//uninitialized!
+		SpawnProgram s3e7;										//uninitialized!
+
+			//wave 8: random spread from the left
+		ComponentTupleSharedPointer s3e8Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s3e8aNode;						//uninitialized!
+		SpawnNodeSharedPointer s3e8bNode;						//uninitialized!
+		SpawnNodeSharedPointer s3e8cNode;						//uninitialized!
+		SpawnProgram s3e8a;										//uninitialized!
+		SpawnProgram s3e8b;										//uninitialized!
+		SpawnProgram s3e8c;										//uninitialized!
+
+			//wave 9: midboss 5 clouds, random spray (middle drops life)
+				//side
+		SpawnNodeSharedPointer s3d9aNode;						//uninitialized!
+		SpawnProgram s3d9a;										//uninitialized!
+		ComponentTupleSharedPointer s3e9aPrototype;				//uninitialized!
+				//center
+		SpawnNodeSharedPointer s3d9bNode;						//uninitialized!
+		SpawnProgram s3d9b;										//uninitialized!
+		ComponentTupleSharedPointer s3e9bPrototype;				//uninitialized!
+
+		SpawnNodeSharedPointer s3e9Node;						//uninitialized!
+		SpawnProgram s3e9;										//uninitialized!
+
 	public:
 
 		ScriptProgram stage1ScriptProgram;						//uninitialized!

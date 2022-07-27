@@ -24,7 +24,7 @@ namespace wasp::game::systems {
 		//large bubble data
 		constexpr float largeSpeed{ smallSpeed * 0.8f };
 		constexpr float largeHitbox{ 14.0f };
-		constexpr int largeDamage{ 20 };
+		constexpr int largeDamage{ 25 };
 		constexpr float largeOutbound{ -30.0f };
 
 		constexpr Vector2 largeOffset{ 10.0f, 0.0f };
@@ -84,7 +84,7 @@ namespace wasp::game::systems {
 	namespace death {
 		constexpr int clearLifetime{ 60 };
 
-		constexpr int numSmallPickups{ 4 };
+		constexpr int numSmallPickups{ 2 };
 		constexpr float pickupInbound{ 15.0f };
 		constexpr float pickupYHigh{ 50.0f };
 		constexpr int pickupAirTime{ 50 };

@@ -121,6 +121,10 @@ namespace wasp::game {
 			settingsPointer->muted = !settingsPointer->muted;
 			midiHubPointer->toggleMute();
 			soundToggleFlagChannel.clear();
+
+			if (!midiHubPointer->isMuted()) {
+				globalChannelSet.getChannel(GlobalTopics::startMusic).addMessage(L"01");
+			}
 		}
 
 		//toggle fullscreen

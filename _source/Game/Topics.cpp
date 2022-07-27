@@ -17,6 +17,7 @@ namespace wasp::game {
 	const Topic<std::wstring> GlobalTopics::startDialogue{};
 	const Topic<> GlobalTopics::endDialogueFlag{};
 	const Topic<systems::GameState> GlobalTopics::gameState{};
+	const Topic<components::PlayerData> GlobalTopics::playerData{};
 
 	//scene topics
 	const Topic<systems::MenuNavigationCommands> 

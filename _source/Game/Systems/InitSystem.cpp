@@ -94,7 +94,7 @@ namespace wasp::game::systems {
 		auto& dataStorage{ scene.getDataStorage() };
 		addBackground(dataStorage, L"background_menu_main");
 
-		constexpr math::Point2 initPos{ 280.0f, 150.0f };
+		constexpr math::Point2 initPos{ 275.0f, 150.0f };
 		constexpr math::Vector2 offset{ -10.0f, 18.0f };
 		constexpr math::Vector2 selOffset{ 2.0f, -2.0f };
 
@@ -702,7 +702,7 @@ namespace wasp::game::systems {
 			0,
 			{ middleX, center.y });
 
-		constexpr math::Point2 initPos{ middleX, 100.0f };
+		constexpr math::Point2 initPos{ middleX, 115.0f };
 		constexpr math::Vector2 offset{ 0.0f, 30.0f };
 		constexpr math::Vector2 selOffset{ 0.0f, -2.0f };
 
@@ -732,8 +732,30 @@ namespace wasp::game::systems {
 		attachButtonsVertical(dataStorage, buttonHandles);
 		setInitSelectedElement(scene, buttonHandles[0]);
 
-		//todo: add graphical elements representing how many continues are left
-		//(similar to the life/bomb icons?)
+		auto& playerDataChannel{
+			globalChannelSetPointer->getChannel(GlobalTopics::playerData)
+		};
+		if (!playerDataChannel.hasMessages()) {
+			throw std::runtime_error{ "no player data for init continue scene!" };
+		}
+		constexpr float iconY{ 80.0f };
+		constexpr float xShift{ 15.0f };
+		switch (playerDataChannel.getMessages()[0].continues) {
+			case 2:
+				addBackground(
+					dataStorage,
+					L"ui_continue",
+					100,
+					{ middleX + xShift, iconY }
+				);
+			case 1:
+				addBackground(
+					dataStorage,
+					L"ui_continue",
+					100,
+					{ middleX - xShift, iconY }
+				);
+		}
 
 		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
 			{ components::MenuCommand::Commands::navFarDown }

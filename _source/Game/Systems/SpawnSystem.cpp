@@ -1162,6 +1162,12 @@ namespace wasp::game::systems {
 				};
 				return pos.y;
 			}
+			case SpawnInstructions::entityAngle: {
+				const Velocity& vel{
+					scene.getDataStorage().getComponent<Velocity>(entityID)
+				};
+				return vel.getAngle();
+			}
 			case SpawnInstructions::uniformRandom: {
 				float min{ evaluateFloatNode(
 					scene,

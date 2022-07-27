@@ -545,6 +545,11 @@ namespace wasp::game::systems {
 			return std::make_shared<SpawnNode>(SpawnInstructions::entityY);
 		}
 
+		//Returns a spawn node representing the current angle of the entity.
+		static SpawnNodeSharedPointer makeEntityAngleNode() {
+			return std::make_shared<SpawnNode>(SpawnInstructions::entityAngle);
+		}
+
 		//Returns a spawn node representing the pickup init speed function
 		static SpawnNodeSharedPointer makePickupInitSpeedNode() {
 			return std::make_shared<SpawnNode>(SpawnInstructions::pickupInitSpeed);

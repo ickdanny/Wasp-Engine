@@ -89,5 +89,16 @@ namespace wasp::game::systems {
 
 		//pause the game
 		scene.getChannel(SceneTopics::pauseFlag).addMessage();
+
+		//send player data to global
+		auto& dataStorage{ scene.getDataStorage() };
+		PlayerData& playerData{
+			dataStorage.getComponent<PlayerData>(playerHandle)
+		};
+		auto& playerDataChannel{
+			globalChannelSetPointer->getChannel(GlobalTopics::playerData)
+		};
+		playerDataChannel.clear();
+		playerDataChannel.addMessage(playerData);
 	}
 }

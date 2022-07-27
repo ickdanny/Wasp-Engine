@@ -21,5 +21,9 @@ namespace wasp::sound::midi {
 		void start(std::shared_ptr<MidiSequence> midiSequencePointer);
 		void stop();
 		void toggleMute();
+
+		bool isMuted() {
+			return muted;
+		}
 	};
 }

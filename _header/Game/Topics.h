@@ -8,6 +8,7 @@
 #include "Game/Systems/GameState.h"
 #include "Game/Systems/GameCommands.h"
 #include "Game/Systems/PlayerStates.h"
+#include "Game/Components/PlayerData.h"
 
 namespace wasp::game {
 
@@ -42,7 +43,10 @@ namespace wasp::game {
 		static const Topic<> endDialogueFlag;
 
 		//set by GameBuilderSystem; persistent
-		static const Topic<systems::GameState> gameState;	
+		static const Topic<systems::GameState> gameState;
+
+		//set and cleared by ContinueSystem
+		static const Topic<components::PlayerData> playerData;
 	};
 
 	//scene topics (1 channel per scene)
