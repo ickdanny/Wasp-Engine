@@ -2669,9 +2669,9 @@ namespace wasp::game::systems {
 
 		#define COUNT_E 25
 		#define COUNT_N 50
-		#define COUNT_H 75
-		#define COUNT_L 100
-		#define SPEED_MIN 0.3f
+		#define COUNT_H 70
+		#define COUNT_L 90
+		#define SPEED_MIN 0.4f
 		#define SPEED_MAX 1.8f
 
 		, s3d1aNode{
@@ -2825,9 +2825,9 @@ namespace wasp::game::systems {
 				SpawnProgramUtil::makeTickModNode(
 					SpawnProgramUtil::makeEntityUniformRandomIntNode(
 						SpawnProgramUtil::makeIntValueNode(0),
-						SpawnProgramUtil::makeIntValueDiffNode({ 41, 31, 26, 21 })
+						SpawnProgramUtil::makeIntValueDiffNode({ 45, 37, 31, 26 })
 					), 
-					{ 41, 31, 26, 21 }
+					{ 45, 37, 31, 26 }
 				),
 				SpawnProgramUtil::makeIfElseNode(
 					SpawnProgramUtil::makeTickModNode(0, 2),
@@ -3147,6 +3147,7 @@ namespace wasp::game::systems {
 		, s3e8c{ s3e8cNode, 1, false }
 
 			//wave 9 - midboss
+		#define SHOOT_TIME 520
 				//side
 		, s3d9aNode{
 			SpawnProgramUtil::makeIfNode(
@@ -3158,20 +3159,20 @@ namespace wasp::game::systems {
 				)
 			)
 		}
-		, s3d9a{ s3d9aNode, 540, false }
+		, s3d9a{ s3d9aNode, SHOOT_TIME, false }
 		, s3e9aPrototype{
 			EntityBuilder::makePosPrototype(
 				{ 1.1f, -90.0f },
-				CLOUD_ARGS(800, pickupProgramsPointer->largePowerSpawnProgram),
+				CLOUD_ARGS(500, pickupProgramsPointer->largePowerSpawnProgram),
 				ScriptProgramList{
 					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
 						20,
 						40,
 						60,
 						s3d9a,
-						50,
+						80,
 						{ 1.0f, 90.0f},
-						100
+						120
 					)
 				}
 			).heapClone()
@@ -3187,20 +3188,21 @@ namespace wasp::game::systems {
 				)
 			)
 		}
-		, s3d9b{ s3d9bNode, 500, false }
+		, s3d9b{ s3d9bNode, SHOOT_TIME, false }
+		#undef SHOOT_TIME
 		, s3e9bPrototype{
 			EntityBuilder::makePosPrototype(
 				{ 1.1f, -90.0f },
-				CLOUD_ARGS(3000, pickupProgramsPointer->lifeSpawnProgram),
+				CLOUD_ARGS(2800, pickupProgramsPointer->lifeSpawnProgram),
 				ScriptProgramList{
 					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
 						20,
 						40,
 						60,
 						s3d9b,
-						50,
+						80,
 						{ 1.0f, 90.0f},
-						100
+						120
 					)
 				}
 			).heapClone()
@@ -3246,7 +3248,682 @@ namespace wasp::game::systems {
 		#undef OFFSET
 		, s3e9{ s3e9Node, 1, false }
 
+			//wave 10
+		, s3d10Node{
+			#define SPEED 1.25f
+			#define AV -1.4423f
+			#define OFFSET 30.0f
+			#define ANGLE_INC 20.0f
+			#define PROTOTYPE sharpSpringPrototype
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, {22, 17, 13, 10}),
+				SpawnProgramUtil::makeListNode(
+					SpawnProgramUtil::makeArcFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(SPEED),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(2400),
+								SpawnProgramUtil::makeFloatValueNode(0.0f),
+								SpawnProgramUtil::makeFloatValueNode(AV)
+							)
+						),
+						3,		//symmetry
+						ANGLE_INC,
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							PROTOTYPE,
+							SpawnProgramUtil::makeEntityOffsetNode(
+								SpawnProgramUtil::makeVelocityFromPolarNode(
+									SpawnProgramUtil::makeFloatValueNode(OFFSET),
+									SpawnProgramUtil::makeSpiralNode(
+										SpawnProgramUtil::makeIntValueNode(2400),
+										SpawnProgramUtil::makeFloatValueNode(-90.0f),
+										SpawnProgramUtil::makeFloatValueNode(AV)
+									)
+								)
+							)
+						)
+					),
+					SpawnProgramUtil::makeArcFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(SPEED),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(2400),
+								SpawnProgramUtil::makeFloatValueNode(90.0f),
+								SpawnProgramUtil::makeFloatValueNode(AV)
+							)
+						),
+						3,		//symmetry
+						ANGLE_INC,
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							PROTOTYPE,
+							SpawnProgramUtil::makeEntityOffsetNode(
+								SpawnProgramUtil::makeVelocityFromPolarNode(
+									SpawnProgramUtil::makeFloatValueNode(OFFSET),
+									SpawnProgramUtil::makeSpiralNode(
+										SpawnProgramUtil::makeIntValueNode(2400),
+										SpawnProgramUtil::makeFloatValueNode(0.0f),
+										SpawnProgramUtil::makeFloatValueNode(AV)
+									)
+								)
+							)
+						)
+					),
+					SpawnProgramUtil::makeArcFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(SPEED),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(2400),
+								SpawnProgramUtil::makeFloatValueNode(180.0f),
+								SpawnProgramUtil::makeFloatValueNode(AV)
+							)
+						),
+						3,		//symmetry
+						ANGLE_INC,
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							PROTOTYPE,
+							SpawnProgramUtil::makeEntityOffsetNode(
+								SpawnProgramUtil::makeVelocityFromPolarNode(
+									SpawnProgramUtil::makeFloatValueNode(OFFSET),
+									SpawnProgramUtil::makeSpiralNode(
+										SpawnProgramUtil::makeIntValueNode(2400),
+										SpawnProgramUtil::makeFloatValueNode(90.0f),
+										SpawnProgramUtil::makeFloatValueNode(AV)
+									)
+								)
+							)
+						)
+					),
+					SpawnProgramUtil::makeArcFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(SPEED),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(2400),
+								SpawnProgramUtil::makeFloatValueNode(270.0f),
+								SpawnProgramUtil::makeFloatValueNode(AV)
+							)
+						),
+						3,		//symmetry
+						ANGLE_INC,
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							PROTOTYPE,
+							SpawnProgramUtil::makeEntityOffsetNode(
+								SpawnProgramUtil::makeVelocityFromPolarNode(
+									SpawnProgramUtil::makeFloatValueNode(OFFSET),
+									SpawnProgramUtil::makeSpiralNode(
+										SpawnProgramUtil::makeIntValueNode(2400),
+										SpawnProgramUtil::makeFloatValueNode(180.0f),
+										SpawnProgramUtil::makeFloatValueNode(AV)
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+			#undef SPEED
+			#undef AV
+			#undef OFFSET
+			#undef ANGLE_INC
+			#undef PROTOTYPE
+		}
+
+		, s3d10{ s3d10Node, 340, false }
+		, s3e10Prototype{
+			EntityBuilder::makeLinearCollidable(
+				{ config::leftOut, 60.0f },
+				{ 1.5f, -25.0f },
+				WISP_ARGS(2220, pickupProgramsPointer->largePowerSpawnProgram),
+				ScriptProgramList{
+					{
+						ScriptProgramUtil::makeTimerNode(40,
+						ScriptProgramUtil::makeSetSpawnNode(s3d10
+						))
+					},
+					{
+						ScriptProgramUtil::makeShiftVelocityTurnPeriodNode(
+							Velocity{ 0.0f, 0.0f },
+							-25.0f,
+							150,
+							ScriptProgramUtil::makeTimerNode(80,
+								ScriptProgramUtil::makeShiftVelocityTurnPeriodNode(
+									Velocity{ 1.5f, 25.0f },
+									0.0f,
+									150
+								)
+							)
+						)
+					}
+				}
+			).heapClone()
+		}
+		, s3e10Node{
+			SpawnProgramUtil::makeSpawnNode(s3e10Prototype)
+		}
+		, s3e10{ s3e10Node, 1, false }
+
+		, s3d11Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(
+					SpawnProgramUtil::makeEntityUniformRandomIntNode(
+						SpawnProgramUtil::makeIntValueNode(0),
+						SpawnProgramUtil::makeIntValueDiffNode({ 130, 100, 70, 40 })
+					),
+					{ 130, 100, 70, 40 }
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					sharpMagentaPrototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeFloatValueDiffNode(
+							{1.5f, 1.8f, 2.1f, 2.5f}
+						),
+						SpawnProgramUtil::makeAngleToPlayerNode()
+					)
+				)
+			)
+		}
+		, s3d11{ s3d11Node, 1000, true }
+		, s3e11Prototype{
+			EntityBuilder::makePosVelPrototype(
+				BAT_ARGS(60, pickupProgramsPointer->smallPowerThirdSpawnProgram),
+				SpawnProgramList{ s3d11 }
+			).heapClone()
+		}
+		, s3e11Node{
+			SpawnProgramUtil::makeListNode(
+				SpawnProgramUtil::makeIfNode(
+					SpawnProgramUtil::makeTickModNode(0, 14),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						s3e11Prototype,
+						SpawnProgramUtil::makePointValueNode({ config::leftOut, 25.0f }),
+						SpawnProgramUtil::makeVelocityValueNode(Velocity{ 2.0f, -15.0f })
+					)
+				),
+				SpawnProgramUtil::makeIfNode(
+					SpawnProgramUtil::makeTickModNode(7, 14),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						s3e11Prototype,
+						SpawnProgramUtil::makePointValueNode({ config::leftOut, 50.0f }),
+						SpawnProgramUtil::makeVelocityValueNode(Velocity{ 2.0f, -15.0f })
+					)
+				)
+			)
+		}
+		, s3e11{ s3e11Node, 290, false }
+
+			//wave 12
+
+		, s3e12Node{
+			SpawnProgramUtil::makeListNode(
+				SpawnProgramUtil::makeIfNode(
+					SpawnProgramUtil::makeTickModNode(0, 14),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						s3e11Prototype,
+						SpawnProgramUtil::makePointValueNode({ config::rightOut, 25.0f }),
+						SpawnProgramUtil::makeVelocityValueNode(
+							Velocity{ 2.0f, Angle{ -15.0f }.flipY() }
+						)
+					)
+				),
+				SpawnProgramUtil::makeIfNode(
+					SpawnProgramUtil::makeTickModNode(7, 14),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						s3e11Prototype,
+						SpawnProgramUtil::makePointValueNode({ config::rightOut, 50.0f }),
+						SpawnProgramUtil::makeVelocityValueNode(
+							Velocity{ 2.0f, Angle{ -15.0f }.flipY() }
+						)
+					)
+				)
+			)
+		}
+		, s3e12{ s3e12Node, 290, false }
+
+			//wave 13
+		, s3d13Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, { 14, 11, 8, 5 }),
+				SpawnProgramUtil::makeArcFormationNode(
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeWhipNode(45, 0.8f, 5.0f),
+						SpawnProgramUtil::makeAngleToPlayerNode()
+					),
+					SpawnProgramUtil::makeIntValueDiffNode({ 1, 1, 3, 3 }),
+					SpawnProgramUtil::makeFloatValueNode(29.4f),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						smallMagentaPrototype,
+						SpawnProgramUtil::makeEntityPositionNode()
+					)
+				)
+			)
+		}
+		, s3d13{ s3d13Node, 45, false }
+
+		, s3e13Prototype{
+			EntityBuilder::makePosVelPrototype(
+				FLAME_ARGS(350, pickupProgramsPointer->smallPowerThirdSpawnProgram),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
+						20,
+						30,
+						2,
+						s3d13,
+						30,
+						Velocity{ 1.2f, -90.0f },
+						70
+					)
+				}
+			).heapClone()
+		}
+
+		, s3e13Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, 20),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s3e13Prototype,
+					SpawnProgramUtil::makeUniformRandomRectanglePointNode(
+						10.0f + config::gameOffset.x, 
+						65.0f + config::gameOffset.x, 
+						config::topOut, 
+						config::topOut + 1.0f
+					),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeUniformRandomFloatNode(0.9f, 2.4f),
+						SpawnProgramUtil::makeFloatValueNode(-90.0f)
+					)
+				)
+			)
+		}
+
+		, s3e13{ s3e13Node, 250, false }
+
+			//wave 14
+
+		, s3e14Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, 20),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s3e13Prototype,
+					SpawnProgramUtil::makeUniformRandomRectanglePointNode(
+						config::gameWidth - 65.0f + config::gameOffset.x, 
+						config::gameWidth - 10.0f + config::gameOffset.x, 
+						config::topOut, 
+						config::topOut + 1.0f
+					),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeUniformRandomFloatNode(0.9f, 2.4f),
+						SpawnProgramUtil::makeFloatValueNode(-90.0f)
+					)
+				)
+			)
+		}
+
+		, s3e14{ s3e14Node, 250, false }
+
+			//wave 15
+		, s3e15Node{
+			#define SPEED 1.8f
+			SpawnProgramUtil::makeListNode(
+				SpawnProgramUtil::makeIfNode(
+					SpawnProgramUtil::makeTickModNode(0, 40),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						s3e3Prototype,
+						SpawnProgramUtil::makePointFromFloatsNode(
+							SpawnProgramUtil::makeFloatValueNode(config::leftOut),
+							SpawnProgramUtil::makeUniformRandomFloatNode(30.0f, 70.0f)
+						),
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeAddNode(
+								SpawnProgramUtil::makeFloatValueNode(SPEED),
+								SpawnProgramUtil::makeUniformRandomFloatNode(-0.3f, 0.3f)
+							),
+							SpawnProgramUtil::makeFloatValueNode(0.0f)
+						)
+					)
+				),
+
+				SpawnProgramUtil::makeIfNode(
+					SpawnProgramUtil::makeTickModNode(20, 40),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						s3e4Prototype,
+						SpawnProgramUtil::makePointFromFloatsNode(
+							SpawnProgramUtil::makeFloatValueNode(config::rightOut),
+							SpawnProgramUtil::makeUniformRandomFloatNode(30.0f, 70.0f)
+						),
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeAddNode(
+								SpawnProgramUtil::makeFloatValueNode(SPEED),
+								SpawnProgramUtil::makeUniformRandomFloatNode(-0.3f, 0.3f)
+							),
+							SpawnProgramUtil::makeFloatValueNode(180.0f)
+						)
+					)
+				)
+				#undef SPEED
+			)
+		}
+
+		, s3e15{ s3e15Node, 600, false }
+
+			//wave 16
+		, s3d16Node{
+			#define SPEED 1.25f
+			#define AV 1.2423f
+			#define OFFSET 30.0f
+			#define ANGLE_INC 25.0f
+			#define PROTOTYPE sharpVioletPrototype
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, {27, 22, 17, 13}),
+				SpawnProgramUtil::makeListNode(
+					SpawnProgramUtil::makeArcFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(SPEED),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(2400),
+								SpawnProgramUtil::makeFloatValueNode(0.0f),
+								SpawnProgramUtil::makeFloatValueNode(AV)
+							)
+						),
+						3,		//symmetry
+						ANGLE_INC,
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							PROTOTYPE,
+							SpawnProgramUtil::makeEntityOffsetNode(
+								SpawnProgramUtil::makeVelocityFromPolarNode(
+									SpawnProgramUtil::makeFloatValueNode(OFFSET),
+									SpawnProgramUtil::makeSpiralNode(
+										SpawnProgramUtil::makeIntValueNode(2400),
+										SpawnProgramUtil::makeFloatValueNode(-90.0f),
+										SpawnProgramUtil::makeFloatValueNode(AV)
+									)
+								)
+							)
+						)
+					),
+					SpawnProgramUtil::makeArcFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(SPEED),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(2400),
+								SpawnProgramUtil::makeFloatValueNode(90.0f),
+								SpawnProgramUtil::makeFloatValueNode(AV)
+							)
+						),
+						3,		//symmetry
+						ANGLE_INC,
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							PROTOTYPE,
+							SpawnProgramUtil::makeEntityOffsetNode(
+								SpawnProgramUtil::makeVelocityFromPolarNode(
+									SpawnProgramUtil::makeFloatValueNode(OFFSET),
+									SpawnProgramUtil::makeSpiralNode(
+										SpawnProgramUtil::makeIntValueNode(2400),
+										SpawnProgramUtil::makeFloatValueNode(0.0f),
+										SpawnProgramUtil::makeFloatValueNode(AV)
+									)
+								)
+							)
+						)
+					),
+					SpawnProgramUtil::makeArcFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(SPEED),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(2400),
+								SpawnProgramUtil::makeFloatValueNode(180.0f),
+								SpawnProgramUtil::makeFloatValueNode(AV)
+							)
+						),
+						3,		//symmetry
+						ANGLE_INC,
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							PROTOTYPE,
+							SpawnProgramUtil::makeEntityOffsetNode(
+								SpawnProgramUtil::makeVelocityFromPolarNode(
+									SpawnProgramUtil::makeFloatValueNode(OFFSET),
+									SpawnProgramUtil::makeSpiralNode(
+										SpawnProgramUtil::makeIntValueNode(2400),
+										SpawnProgramUtil::makeFloatValueNode(90.0f),
+										SpawnProgramUtil::makeFloatValueNode(AV)
+									)
+								)
+							)
+						)
+					),
+					SpawnProgramUtil::makeArcFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(SPEED),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(2400),
+								SpawnProgramUtil::makeFloatValueNode(270.0f),
+								SpawnProgramUtil::makeFloatValueNode(AV)
+							)
+						),
+						3,		//symmetry
+						ANGLE_INC,
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							PROTOTYPE,
+							SpawnProgramUtil::makeEntityOffsetNode(
+								SpawnProgramUtil::makeVelocityFromPolarNode(
+									SpawnProgramUtil::makeFloatValueNode(OFFSET),
+									SpawnProgramUtil::makeSpiralNode(
+										SpawnProgramUtil::makeIntValueNode(2400),
+										SpawnProgramUtil::makeFloatValueNode(180.0f),
+										SpawnProgramUtil::makeFloatValueNode(AV)
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+			#undef SPEED
+			#undef AV
+			#undef OFFSET
+			#undef ANGLE_INC
+			#undef PROTOTYPE
+		}
+
+		, s3d16{ s3d16Node, 540, false }
+		, s3e16Prototype{
+			EntityBuilder::makeLinearCollidable(
+				{ config::rightOut, 60.0f },
+				{ 1.5f, Angle{ -25.0f }.flipY() },
+				WISP_ARGS(2520, pickupProgramsPointer->bombSpawnProgram),
+				ScriptProgramList{
+					{
+						ScriptProgramUtil::makeTimerNode(40,
+						ScriptProgramUtil::makeSetSpawnNode(s3d16
+						))
+					},
+					{
+						ScriptProgramUtil::makeShiftVelocityTurnPeriodNode(
+							Velocity{ 0.0f, 180.0f },
+							Angle{ -25.0f }.flipY(),
+							150,
+						ScriptProgramUtil::makeTimerNode(280,
+						ScriptProgramUtil::makeShiftVelocityTurnPeriodNode(
+							Velocity{ 1.5f, Angle{ 25.0f }.flipY() },
+							180.0f,
+							150
+						)
+						)
+					)
+					}
+				}
+			).heapClone()
+		}
+		, s3e16Node{
+			SpawnProgramUtil::makeSpawnNode(s3e16Prototype)
+		}
+		, s3e16{ s3e16Node, 1, false }
+
+		
+
+
+		// BOSS 3 // BOSS 3 // BOSS 3 // BOSS 3 // BOSS 3 // BOSS 3 // BOSS 3 // BOSS 3 
+
+			//1 spiral with arc walls and medium
+		, b3d1Node{
+			SpawnProgramUtil::makeListNode(
+				SpawnProgramUtil::makeIfNode(
+					SpawnProgramUtil::makeTickModNode(0, 20),
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(0.85f),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(8000),
+								SpawnProgramUtil::entityRandomAngleNode,
+								SpawnProgramUtil::makeFloatValueNode(0.49827f)
+							)
+						),
+						SpawnProgramUtil::makeIntValueDiffNode({ 6, 7, 8, 9 }),
+						SpawnProgramUtil::makeArcFormationNode(
+							2,
+							12.0f,
+							SpawnProgramUtil::makeSpawnPosVelNode(
+								mediumRosePrototype,
+								SpawnProgramUtil::makeEntityPositionNode()
+							)
+						)
+					)
+				),
+				SpawnProgramUtil::makeIfNode(
+					SpawnProgramUtil::makeTickModNode(0, 45),
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(1.2f),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(8000),
+								SpawnProgramUtil::entityRandomAngleNode,
+								SpawnProgramUtil::makeFloatValueNode(-0.19827f)
+							)
+						),
+						SpawnProgramUtil::makeIntValueDiffNode({ 6, 7, 8, 9 }),
+						SpawnProgramUtil::makeArcFormationNode(
+							SpawnProgramUtil::makeIntValueDiffNode({ 4, 6, 8, 12 }),
+							SpawnProgramUtil::makeFloatValueNode(2.0f),
+							SpawnProgramUtil::makeSpawnPosVelNode(
+								smallRosePrototype,
+								SpawnProgramUtil::makeEntityPositionNode()
+							)
+						)
+					)
+				)
+			)
+		}
+
+		, b3d1{ b3d1Node, 8000, true }
+
+			//2 large rand and small spiral
+		, b3d2aNode{
+			SpawnProgramUtil::makeRingFormationNode(
+				SpawnProgramUtil::makeVelocityFromPolarNode(
+					SpawnProgramUtil::makeFloatValueNode(0.4f),
+					SpawnProgramUtil::makeAngleToPlayerNode()
+				),
+				SpawnProgramUtil::makeIntValueDiffNode({ 7, 9, 11, 14 }),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					largeBluePrototype,
+					SpawnProgramUtil::makeEntityPositionNode()
+				)
+			)
+		}
+		, b3d2a{ b3d2aNode, 1, false }
+
+		, b3d2bNode{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, { 8, 6, 5, 4 }),
+				SpawnProgramUtil::makeRingFormationNode(
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeFloatValueNode(0.5f),
+						SpawnProgramUtil::makeSpiralNode(48, 0.0, 0.7f)
+					),
+					SpawnProgramUtil::makeIntValueDiffNode({ 6, 8, 10, 12 }),
+					SpawnProgramUtil::makeColumnFormationNode(
+						3,
+						0.18f,
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							smallCyanPrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
+						)
+					)
+				)
+			)
+		}
+		, b3d2b{ b3d2bNode, 48, false }
+
+			//the boss
+		, b3e1Prototype{
+			EntityBuilder::makeLinearUncollidable(
+				BOSS_ARGS,
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"b3_idle_1")->d2dBitmap,
+					math::Vector2{ 0.0f, 4.0f }			//offset
+				},
+				DrawOrder{ config::playerDrawOrder },
+				AnimationList{ 
+					{
+						components::Animation{ {
+							L"b3_idle_1", L"b3_idle_2", L"b3_idle_3", L"b3_idle_4"
+						} }
+					},
+					0,	//idle index
+					4	//ticks
+				},
+				ScriptProgramList{
+					ScriptProgramUtil::makeBossEntryNode(120, L"3_1",
+					ScriptProgramUtil::makeTimerNode(120,
+					ScriptProgramUtil::makeSetHealthNode(40,
+					ScriptProgramUtil::makeSetSpawnNode(b3d1,
+					ScriptProgramUtil::makeStallingIfNode(
+					ScriptProgramUtil::makeIsBossDeadNode(),
+					ScriptProgramUtil::makeBossResetNode(90,
+					ScriptProgramUtil::makeSetHealthNode(4200,
+					ScriptProgramUtil::makeDoubleBossAttackAndMoveNode(
+						b3d2a, 
+						62, 
+						20, 
+						b3d2b, 
+						62, 
+						20,
+					ScriptProgramUtil::makeBossResetMidNode(90,
+					ScriptProgramUtil::makeSetHealthNode(2000,
+					ScriptProgramUtil::makeBossActAndMoveNode(
+						10,
+						30,
+						b2d3ActScriptStart,
+						b2d3ActScriptEnd,
+					ScriptProgramUtil::makeBossResetMidNode(90,
+					ScriptProgramUtil::makeSetHealthNode(5000,
+					ScriptProgramUtil::makeAddSpawnNode(b2d4,	//<---- 4 is here
+					ScriptProgramUtil::makeStallingIfNode(
+						ScriptProgramUtil::makeIsBossDeadNode(),
+						ScriptProgramUtil::makeBossResetNode(90,
+						ScriptProgramUtil::makeSetHealthNode(5000,
+						ScriptProgramUtil::makeBossAttackAndMoveNode(
+							b2d5b,
+							40,
+							150
+							
+							)
+					)))
+					
+					))))))))))))))
+				}
+			).heapClone()
+		}
+		, b3e1Node{
+			SpawnProgramUtil::makeSpawnNode(b3e1Prototype)
+		}
+		, b3e1{ b3e1Node, 1, false }
+
+
 		, stage3ScriptProgram{
+
+			ScriptProgramUtil::makeAddSpawnNode(b3e1)
+
+					/*
 			ScriptProgramUtil::makeTimerNode(690,
 			ScriptProgramUtil::makeSetSpawnNode(s3e1a,
 			ScriptProgramUtil::makeTimerNode(190,
@@ -3277,12 +3954,29 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeAddSpawnNode(s3e8c,
 			ScriptProgramUtil::makeTimerNode(140,
 			ScriptProgramUtil::makeAddSpawnNode(s3e9,
+			ScriptProgramUtil::makeTimerNode(950,
+			ScriptProgramUtil::makeAddSpawnNode(s3e10,
+			ScriptProgramUtil::makeTimerNode(360,
+			ScriptProgramUtil::makeAddSpawnNode(s3e11,
+			ScriptProgramUtil::makeTimerNode(360,
+			ScriptProgramUtil::makeAddSpawnNode(s3e12,
+			ScriptProgramUtil::makeTimerNode(300,
+			ScriptProgramUtil::makeAddSpawnNode(s3e13,
+			ScriptProgramUtil::makeTimerNode(330,
+			ScriptProgramUtil::makeAddSpawnNode(s3e14,
+			ScriptProgramUtil::makeTimerNode(360,
+			ScriptProgramUtil::makeAddSpawnNode(s3e15,
+			ScriptProgramUtil::makeTimerNode(700,
+			ScriptProgramUtil::makeAddSpawnNode(s3e16,
+			ScriptProgramUtil::makeTimerNode(500,
+			ScriptProgramUtil::makeAddSpawnNode(b3e1,
 
 			ScriptProgramUtil::makeTimerNode(1070,
 			ScriptProgramUtil::makeRemoveEntityNode(
-			))))))))))))))))))))))))))))))))
-		}
+			))))))))))))))))))))))))))))))))))))))))))))))))
 
+			*/
+		}
 
 		{
 		}

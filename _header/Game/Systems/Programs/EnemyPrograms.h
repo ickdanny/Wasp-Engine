@@ -410,7 +410,7 @@ namespace wasp::game::systems {
 		SpawnProgram s3e1b;										//uninitialized!
 		SpawnProgram s3e1c;										//uninitialized!
 
-			//wave 2: loop bats -> spine shot and drop shot
+			//wave 2: loop flames -> spine shot and drop shot
 		SpawnNodeSharedPointer s3d2Node;						//uninitialized!
 		SpawnProgram s3d2;										//uninitialized!
 		
@@ -466,6 +466,67 @@ namespace wasp::game::systems {
 
 		SpawnNodeSharedPointer s3e9Node;						//uninitialized!
 		SpawnProgram s3e9;										//uninitialized!
+
+			//wave 10: wisp from side, dropping bomb,
+		SpawnNodeSharedPointer s3d10Node;						//uninitialized!
+		SpawnProgram s3d10;										//uninitialized!
+
+		ComponentTupleSharedPointer s3e10Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s3e10Node;						//uninitialized!
+		SpawnProgram s3e10;										//uninitialized!
+
+			//wave 11: bats; streaming
+		SpawnNodeSharedPointer s3d11Node;						//uninitialized!
+		SpawnProgram s3d11;										//uninitialized!
+
+		ComponentTupleSharedPointer s3e11Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s3e11Node;						//uninitialized!
+		SpawnProgram s3e11;										//uninitialized!
+
+			//wave 12: bats from other side
+		SpawnNodeSharedPointer s3e12Node;						//uninitialized!
+		SpawnProgram s3e12;										//uninitialized!
+
+			//wave 13: flames on left, whip
+		SpawnNodeSharedPointer s3d13Node;						//uninitialized!
+		SpawnProgram s3d13;										//uninitialized!
+
+		ComponentTupleSharedPointer s3e13Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s3e13Node;						//uninitialized!
+		SpawnProgram s3e13;										//uninitialized!
+
+			//wave 14: flames on right
+		SpawnNodeSharedPointer s3e14Node;						//uninitialized!
+		SpawnProgram s3e14;										//uninitialized!
+
+			//wave 15: clouds from both sides
+		SpawnNodeSharedPointer s3e15Node;						//uninitialized!
+		SpawnProgram s3e15;										//uninitialized!
+
+			//wave 16: wave 10 but reversed (and slightly different spiral)
+		SpawnNodeSharedPointer s3d16Node;						//uninitialized!
+		SpawnProgram s3d16;										//uninitialized!
+
+		ComponentTupleSharedPointer s3e16Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s3e16Node;						//uninitialized!
+		SpawnProgram s3e16;										//uninitialized!
+
+		// BOSS 3 // BOSS 3 // BOSS 3 // BOSS 3 // BOSS 3 // BOSS 3 // BOSS 3 // BOSS 3 
+
+			//1 spiral with arc walls and medium
+		SpawnNodeSharedPointer b3d1Node;						//uninitialized!
+		SpawnProgram b3d1;										//uninitialized!
+
+			//2 random large + small spiral
+		SpawnNodeSharedPointer b3d2aNode;						//uninitialized!
+		SpawnProgram b3d2a;										//uninitialized!
+		SpawnNodeSharedPointer b3d2bNode;						//uninitialized!
+		SpawnProgram b3d2b;										//uninitialized!
+
+			//the boss
+		ComponentTupleSharedPointer b3e1Prototype;				//uninitialized!
+		SpawnNodeSharedPointer b3e1Node;						//uninitialized!
+		SpawnProgram b3e1;										//uninitialized!
 
 	public:
 
