@@ -351,7 +351,7 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer b2d1bNode;						//uninitialized!
 		SpawnProgram b2d1b;										//uninitialized!
 
-			//2 bullets that spawn horizontal sharps
+			//2 large bullets that spawn horizontal sharps
 		ComponentTupleSharedPointer b2d2aPrototype;	//spawned	//uninitialized!
 		SpawnNodeSharedPointer b2d2aNode;						//uninitialized!
 		SpawnProgram b2d2a;										//uninitialized!
@@ -517,11 +517,51 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer b3d1Node;						//uninitialized!
 		SpawnProgram b3d1;										//uninitialized!
 
-			//2 random large + small spiral
+			//2 column spirals
 		SpawnNodeSharedPointer b3d2aNode;						//uninitialized!
 		SpawnProgram b3d2a;										//uninitialized!
 		SpawnNodeSharedPointer b3d2bNode;						//uninitialized!
 		SpawnProgram b3d2b;										//uninitialized!
+
+			//3 large ring that shoot
+				//the secondary shot
+		SpawnNodeSharedPointer b3d3aNode;						//uninitialized!
+		SpawnProgram b3d3a;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b3d3bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b3d3bNode;						//uninitialized!
+		SpawnProgram b3d3b;										//uninitialized!
+
+			//4 5-ring that shoots randomly
+				//secondary shot
+		SpawnNodeSharedPointer b3d4aNode;						//uninitialized!
+		SpawnProgram b3d4a;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b3d4bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b3d4bNode;						//uninitialized!
+		SpawnProgram b3d4b;										//uninitialized!
+
+			//5 spiral of "splitters"
+				//tertiary shot
+		SpawnNodeSharedPointer b3d5aNode;						//uninitialized!
+		SpawnProgram b3d5a;										//uninitialized!
+
+				//secondary shot
+		ComponentTupleSharedPointer b3d5bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b3d5bNode;						//uninitialized!
+		SpawnProgram b3d5b;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b3d5cPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b3d5cNode;						//uninitialized!
+		SpawnProgram b3d5c;										//uninitialized!
+
+			//6 "random" dense arcs
+		SpawnNodeSharedPointer b3d6Node;						//uninitialized!
+		SpawnProgram b3d6;										//uninitialized!
+
 
 			//the boss
 		ComponentTupleSharedPointer b3e1Prototype;				//uninitialized!

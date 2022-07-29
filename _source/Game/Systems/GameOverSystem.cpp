@@ -19,8 +19,9 @@ namespace wasp::game::systems {
 
 	void GameOverSystem::gameOver() {
 		//handle music
-		//todo: maybe start menu track instead of stop music?
-		globalChannelSetPointer->getChannel(GlobalTopics::stopMusicFlag).addMessage();
+		globalChannelSetPointer->getChannel(GlobalTopics::startMusic).addMessage(
+			L"01"
+		);
 		
 		//send us back to the correct menu
 		auto& gameStateChannel{

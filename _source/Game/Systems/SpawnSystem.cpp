@@ -1262,20 +1262,20 @@ namespace wasp::game::systems {
 					tick,
 					spawnList
 				) };
-				float baseAngle{ evaluateFloatNode(
+				float baseAngle{ std::fmod(evaluateFloatNode(
 					scene,
 					entityID,
 					currentSpawnNodePointer->linkedNodePointers[1],
 					tick,
 					spawnList
-				) };
-				float angularVelocity{ evaluateFloatNode(
+				), 360.0f) };
+				float angularVelocity{ std::fmod(evaluateFloatNode(
 					scene,
 					entityID,
 					currentSpawnNodePointer->linkedNodePointers[2],
 					tick,
 					spawnList
-				) };
+				), 360.0f) };
 				int tickFromZero{ maxTick - tick };
 				return baseAngle + (static_cast<float>(tickFromZero) * angularVelocity);
 			}
