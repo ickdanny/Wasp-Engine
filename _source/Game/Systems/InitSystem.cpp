@@ -586,6 +586,10 @@ namespace wasp::game::systems {
 				scriptProgramPointer
 					= &programsPointer->enemyPrograms.stage3ScriptProgram;
 				break;
+			case 4:
+				scriptProgramPointer
+					= &programsPointer->enemyPrograms.stage4ScriptProgram;
+				break;
 			default:
 				throw std::runtime_error{ "no stage script!" };
 		}
@@ -618,7 +622,7 @@ namespace wasp::game::systems {
 				ticks = 60 * 90;
 				break;
 			case 4:
-				backgroundID = L"background_1";
+				backgroundID = L"background_4";
 				ticks = 60 * 90;
 				break;
 			case 5:

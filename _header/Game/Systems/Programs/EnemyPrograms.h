@@ -568,12 +568,53 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer b3e1Node;						//uninitialized!
 		SpawnProgram b3e1;										//uninitialized!
 
+		// STAGE 4 // STAGE 4 // STAGE 4 // STAGE 4 // STAGE 4 // STAGE 4 // STAGE 4 //
+
+			//wave 1: clouds across top -> "lightning"
+		SpawnNodeSharedPointer s4d1Node;						//uninitialized!
+		SpawnProgram s4d1;										//uninitialized!
+
+		ComponentTupleSharedPointer s4e1Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s4e1Node;						//uninitialized!
+		SpawnProgram s4e1;										//uninitialized!
+
+			//wave 2: shooting wisps
+		ComponentTupleSharedPointer s4d2Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s4d2Node;						//uninitialized!
+		SpawnProgram s4d2;										//uninitialized!
+
+		ComponentTupleSharedPointer s4e2Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s4e2aNode;						//uninitialized!
+		SpawnProgram s4e2a;										//uninitialized!
+		SpawnNodeSharedPointer s4e2bNode;						//uninitialized!
+		SpawnProgram s4e2b;										//uninitialized!
+
+			//wave 3: slow flames from left, random angle offset
+		SpawnNodeSharedPointer s4d3Node;						//uninitialized!
+		SpawnProgram s4d3;										//uninitialized!
+
+		ComponentTupleSharedPointer s4e3Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s4e3Node;						//uninitialized!
+		SpawnProgram s4e3;										//uninitialized!
+
+			//wave 4: flames from the right
+		SpawnNodeSharedPointer s4e4Node;						//uninitialized!
+		SpawnProgram s4e4;										//uninitialized!
+
+			//wave 5: blue crystal (life)
+		SpawnNodeSharedPointer s4d5Node;						//uninitialized!
+		SpawnProgram s4d5;										//uninitialized!
+
+		ComponentTupleSharedPointer s4e5Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s4e5Node;						//uninitialized!
+		SpawnProgram s4e5;										//uninitialized!
+
 	public:
 
 		ScriptProgram stage1ScriptProgram;						//uninitialized!
 		ScriptProgram stage2ScriptProgram;						//uninitialized!
 		ScriptProgram stage3ScriptProgram;						//uninitialized!
-		//ScriptProgram stage4ScriptProgram;						//uninitialized!
+		ScriptProgram stage4ScriptProgram;						//uninitialized!
 		//ScriptProgram stage5ScriptProgram;						//uninitialized!
 
 		//Constructors
