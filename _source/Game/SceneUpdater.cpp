@@ -67,13 +67,15 @@ namespace wasp::game {
 
         //gameDialogueScreenEntrySystem = new DialogueScreenEntrySystem();
         //gameNextStageEntrySystem = new NextStageEntrySystem();
-        //
+        
 		animationSystem(scene);
 		rotateSpriteForwardSystem(scene);
 		spriteSpinSystem(scene);
 
         //gameSinusoidalSpriteVerticalOffsetSystem = new SinusoidalSpriteVerticalOffsetSystem(GAME_COMPONENT_TYPES);
-        //gameScrollingSubImageSystem = new ScrollingSubImageSystem(GAME_COMPONENT_TYPES);
+
+		subImageScrollSystem(scene);
+
         //gameSpriteSubImageFlagUpdateSystem = new SpriteSubImageFlagUpdateSystem(GAME_COMPONENT_TYPES);
         //gameSpriteInstructionSystem = new SpriteInstructionSystem(imageManager, GAME_COMPONENT_TYPES);
         //gameSpriteRemovalSystem = new SpriteRemovalSystem(GAME_COMPONENT_TYPES);

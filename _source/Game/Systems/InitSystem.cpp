@@ -599,6 +599,57 @@ namespace wasp::game::systems {
 			).package()
 		);
 
+		//adding the background
+		constexpr int screenHeight{ 220 };
+		constexpr int screenWidth{ 170 };
+		std::wstring backgroundID{};
+		int ticks{};
+		switch (gameState.stage) {
+			case 1:
+				backgroundID = L"background_1";
+				ticks = 60 * 90;
+				break;
+			case 2:
+				backgroundID = L"background_1";
+				ticks = 60 * 90;
+				break;
+			case 3:
+				backgroundID = L"background_1";
+				ticks = 60 * 90;
+				break;
+			case 4:
+				backgroundID = L"background_1";
+				ticks = 60 * 90;
+				break;
+			case 5:
+				backgroundID = L"background_1";
+				ticks = 60 * 90;
+				break;
+			default:
+				throw std::runtime_error{ "unexpected default case " };
+		}
+		SpriteInstruction backgroundSprite{
+			bitmapStoragePointer->get(backgroundID)->d2dBitmap
+		};
+		std::size_t totalHeight{ backgroundSprite.getBitmap()->GetPixelSize().height };
+		int startingY{ static_cast<int>(totalHeight) - screenHeight };
+		float yVelocity{ -startingY / static_cast<float>(ticks) };
+
+		dataStorage.addEntity(
+			EntityBuilder::makeVisible(
+				math::Point2{ middleX, center.y }, 
+				backgroundSprite,
+				SubImage{ 
+					0.0f, 
+					static_cast<float>(startingY), 
+					static_cast<float>(screenWidth), 
+					static_cast<float>(screenHeight)
+				},
+				SubImageScroll{ 0.0f, yVelocity, 0.0f, 0.0f },
+				DrawOrder{ config::backgroundDrawOrder }
+			).package()
+		);
+
 		//starting stage track
 		std::wstring trackName;
 		switch (gameState.stage) {

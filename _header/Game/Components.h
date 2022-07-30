@@ -49,6 +49,9 @@ namespace wasp::game {
     struct SubImage : math::Rectangle {
         using math::Rectangle::Rectangle;
     };
+    struct SubImageScroll : math::Rectangle {
+        using math::Rectangle::Rectangle;
+    };
     struct TextInstruction {
         std::wstring text{};
         std::pair<float, float> bounds{};

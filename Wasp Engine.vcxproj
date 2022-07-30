@@ -213,6 +213,7 @@
     <ClCompile Include="_source\Game\Systems\Programs\SpawnProgramUtil.cpp" />
     <ClCompile Include="_source\Game\Systems\SpawnSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SpriteSpinSystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\SubImageScrollSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\SystemUtil.cpp" />
     <ClCompile Include="_source\Game\Systems\TextRenderSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\VelocitySystem.cpp" />
@@ -325,6 +326,7 @@
     <ClInclude Include="_header\Game\Systems\SpawnSystem.h" />
     <ClInclude Include="_header\Game\Systems\Programs\PlayerPrograms.h" />
     <ClInclude Include="_header\Game\Systems\SpriteSpinSystem.h" />
+    <ClInclude Include="_header\Game\Systems\SubImageScrollSystem.h" />
     <ClInclude Include="_header\Game\Systems\systemInclude.h" />
     <ClInclude Include="_header\Game\Systems\SystemUtil.h" />
     <ClInclude Include="_header\Game\Systems\TextRenderSystem.h" />

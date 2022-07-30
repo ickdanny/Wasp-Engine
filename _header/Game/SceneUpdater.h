@@ -34,6 +34,7 @@
 #include "Game/Systems/AnimationSystem.h"
 #include "Game/Systems/RotateSpriteForwardSystem.h"
 #include "Game/Systems/SpriteSpinSystem.h"
+#include "Game/Systems/SubImageScrollSystem.h"
 
 #include "Game/Systems/InboundSystem.h"
 #include "Game/Systems/OutboundSystem.h"
@@ -76,6 +77,7 @@ namespace wasp::game {
 		systems::AnimationSystem animationSystem;				//not initialized!
 		systems::RotateSpriteForwardSystem rotateSpriteForwardSystem{};
 		systems::SpriteSpinSystem spriteSpinSystem{};
+		systems::SubImageScrollSystem subImageScrollSystem{};
 
 		systems::InboundSystem inboundSystem{};
 		systems::OutboundSystem outboundSystem{};
