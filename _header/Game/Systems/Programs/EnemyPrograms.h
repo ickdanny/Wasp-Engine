@@ -609,6 +609,43 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer s4e5Node;						//uninitialized!
 		SpawnProgram s4e5;										//uninitialized!
 
+			//wave 6: double green crystals, different size rings
+		SpawnNodeSharedPointer s4d6Node;						//uninitialized!
+		SpawnProgram s4d6;										//uninitialized!
+
+		ComponentTupleSharedPointer s4e6Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s4e6Node;						//uninitialized!
+		SpawnProgram s4e6;										//uninitialized!
+
+			//wave 7: red crystal (bomb)
+		SpawnNodeSharedPointer s4d7Node;						//uninitialized!
+		SpawnProgram s4d7;										//uninitialized!
+
+		ComponentTupleSharedPointer s4e7Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s4e7Node;						//uninitialized!
+		SpawnProgram s4e7;										//uninitialized!
+
+			//wave 8: repeat wave 6
+
+			//wave 9: purple flames down right side
+		SpawnNodeSharedPointer s4e9Node;						//uninitialized!
+		SpawnProgram s4e9;										//uninitialized!
+
+			//wave 10: flames down left side
+		SpawnNodeSharedPointer s4e10Node;						//uninitialized!
+		SpawnProgram s4e10;										//uninitialized!
+
+			//wave 11: quad wisps; variation wave 2
+		ComponentTupleSharedPointer s4d11Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s4d11Node;						//uninitialized!
+		SpawnProgram s4d11;										//uninitialized!
+
+		ComponentTupleSharedPointer s4e11Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s4e11Node;						//uninitialized!
+		SpawnProgram s4e11;										//uninitialized!
+
+			//todo: boss 4
+
 	public:
 
 		ScriptProgram stage1ScriptProgram;						//uninitialized!

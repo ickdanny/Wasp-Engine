@@ -4451,7 +4451,13 @@ namespace wasp::game::systems {
 					ScriptProgramUtil::makeTimerNode(30,
 					ScriptProgramUtil::makeShiftSpeedPeriodNode(0.0f, 50,
 					ScriptProgramUtil::makeSetSpawnNode(s4d3,
-					ScriptProgramUtil::makeShiftSpeedPeriodNode(1.0f, 100
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(1.0f, 100,
+					ScriptProgramUtil::makeStallingIfNode(	//for later waves
+						ScriptProgramUtil::makeBoundaryYHighNode(
+							config::gameWidth + config::gameOffset.y
+						),
+						ScriptProgramUtil::makeClearSpawnNode()
+					)
 					))))
 				}
 			).heapClone()
@@ -4506,31 +4512,48 @@ namespace wasp::game::systems {
 		, s4d5Node{
 			SpawnProgramUtil::makeIfNode(
 				SpawnProgramUtil::makeTickModNode(0, { 27, 22, 18, 15 }),
-				SpawnProgramUtil::makeRingFormationNode(
-					SpawnProgramUtil::makeVelocityFromPolarNode(
-						SpawnProgramUtil::makeFloatValueNode(1.14f),
-						SpawnProgramUtil::makeSpiralNode(
-							SpawnProgramUtil::makeIntValueNode(0),
-							SpawnProgramUtil::entityRandomAngleNode,
-							SpawnProgramUtil::makeFloatValueNode(0.3f)
+				SpawnProgramUtil::makeListNode(
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(1.14f),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(0),
+								SpawnProgramUtil::entityRandomAngleNode,
+								SpawnProgramUtil::makeFloatValueNode(0.3f)
+							)
+						),
+						SpawnProgramUtil::makeIntValueDiffNode({ 10, 14, 18, 22 }),
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							smallAzurePrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
 						)
 					),
-					SpawnProgramUtil::makeIntValueDiffNode({ 10, 12, 14, 16 }),
-					SpawnProgramUtil::makeSpawnPosVelNode(
-						smallAzurePrototype,
-						SpawnProgramUtil::makeEntityPositionNode()
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(1.64f),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(0),
+								SpawnProgramUtil::makeFloatValueNode(0.0f),
+								SpawnProgramUtil::makeFloatValueNode(-0.5f)
+							)
+						),
+						SpawnProgramUtil::makeIntValueDiffNode({ 5, 6, 7, 8 }),
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							mediumBluePrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
+						)
 					)
 				)
 			)
 		}
 
-		, s4d5{ s4d5Node, 400, false }
+		, s4d5{ s4d5Node, 370, false }
 
 		, s4e5Prototype{
 			EntityBuilder::makeLinearCollidable(
 				{ config::gameWidth / 2.0f + config::gameOffset.x, config::topOut },
 				Velocity{ 1.4f, -90.0f },
-				CRYSTAL_BLUE_ARGS(2500, pickupProgramsPointer->lifeSpawnProgram),
+				CRYSTAL_BLUE_ARGS(2100, pickupProgramsPointer->lifeSpawnProgram),
 				ScriptProgramList{
 					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
 						20,
@@ -4548,24 +4571,320 @@ namespace wasp::game::systems {
 		, s4e5Node{ SpawnProgramUtil::makeSpawnNode(s4e5Prototype) }
 		, s4e5{ s4e5Node, 1, false }
 
+			//wave 6
+
+		, s4d6Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, 45),
+				SpawnProgramUtil::makeListNode(
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(1.4f),
+							SpawnProgramUtil::makeAngleToPlayerNode()
+						),
+						SpawnProgramUtil::makeIntValueDiffNode({ 12, 14, 16, 18 }),
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							mediumGreenPrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
+						)
+					),
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(1.2f),
+							SpawnProgramUtil::makeAngleToPlayerNode()
+						),
+						SpawnProgramUtil::makeIntValueDiffNode({ 16, 20, 24, 28 }),
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							smallGreenPrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
+						)
+					),
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(1.0f),
+							SpawnProgramUtil::makeAngleToPlayerNode()
+						),
+						SpawnProgramUtil::makeIntValueDiffNode({ 9, 11, 13, 15 }),
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							mediumGreenPrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
+						)
+					)
+				)
+			)
+		}
+
+		, s4d6{ s4d6Node, 370, false }
+
+		, s4e6Prototype{
+			EntityBuilder::makePosPrototype(
+				Velocity{ 1.4f, -90.0f },
+				CRYSTAL_GREEN_ARGS(800, pickupProgramsPointer->largePowerSpawnProgram),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
+						20,
+						35,
+						20,
+						s4d6,
+						20,
+						Velocity{ 1.0f, 90.0f },
+						30
+					)
+				}
+			).heapClone()
+		}
+
+		, s4e6Node{ 
+			SpawnProgramUtil::makeListNode(
+				SpawnProgramUtil::makeSpawnPosNode(
+					s4e6Prototype,
+					SpawnProgramUtil::makePointValueNode(
+						{ 35.0f + config::gameOffset.x, config::topOut }
+					)
+				),
+				SpawnProgramUtil::makeSpawnPosNode(
+					s4e6Prototype,
+					SpawnProgramUtil::makePointValueNode(
+						{ config::gameWidth - 35.0f + config::gameOffset.x, 
+						config::topOut }
+					)
+				)
+			)
+		}
+		, s4e6{ s4e6Node, 1, false }
+
+			//wave 7
+
+		, s4d7Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, { 27, 22, 18, 15 }),
+				SpawnProgramUtil::makeListNode(
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(1.14f),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(0),
+								SpawnProgramUtil::entityRandomAngleNode,
+								SpawnProgramUtil::makeFloatValueNode(-0.3f)
+							)
+						),
+						SpawnProgramUtil::makeIntValueDiffNode({ 10, 14, 18, 22 }),
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							smallOrangePrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
+						)
+					),
+					SpawnProgramUtil::makeRingFormationNode(
+						SpawnProgramUtil::makeVelocityFromPolarNode(
+							SpawnProgramUtil::makeFloatValueNode(1.64f),
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(0),
+								SpawnProgramUtil::makeFloatValueNode(0.0f),
+								SpawnProgramUtil::makeFloatValueNode(0.5f)
+							)
+						),
+						SpawnProgramUtil::makeIntValueDiffNode({ 5, 6, 7, 8 }),
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							mediumRedPrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
+						)
+					)
+				)
+			)
+		}
+
+		, s4d7{ s4d7Node, 370, false }
+
+		, s4e7Prototype{
+			EntityBuilder::makeLinearCollidable(
+				{ config::gameWidth / 2.0f + config::gameOffset.x, config::topOut },
+				Velocity{ 1.4f, -90.0f },
+				CRYSTAL_RED_ARGS(2100, pickupProgramsPointer->bombSpawnProgram),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
+						20,
+						35,
+						20,
+						s4d7,
+						20,
+						Velocity{ 1.0f, 90.0f },
+						30
+					)
+				}
+			).heapClone()
+		}
+
+		, s4e7Node{ SpawnProgramUtil::makeSpawnNode(s4e7Prototype) }
+		, s4e7{ s4e7Node, 1, false }
+
+			//wave 8: repeat wave 6
+
+			//wave 9
+		, s4e9Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, 14),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s4e3Prototype,
+					SpawnProgramUtil::makePointFromFloatsNode(
+						SpawnProgramUtil::makeUniformRandomFloatNode(
+							config::gameWidth - 50.0f + config::gameOffset.x,
+							config::gameWidth - 10.0f + config::gameOffset.x
+						),
+						SpawnProgramUtil::makeFloatValueNode(config::topOut)
+					),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeUniformRandomFloatNode(0.8f, 1.0f),
+						SpawnProgramUtil::makeUniformRandomFloatNode(-100.0f, -80.0f)
+					)
+				)
+			)
+		}
+
+		, s4e9{ s4e9Node, 200, false }
+
+			//wave 10
+
+		, s4e10Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, 14),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s4e3Prototype,
+					SpawnProgramUtil::makePointFromFloatsNode(
+						SpawnProgramUtil::makeUniformRandomFloatNode(
+							10.0f + config::gameOffset.x,
+							50.0f + config::gameOffset.x
+						),
+						SpawnProgramUtil::makeFloatValueNode(config::topOut)
+					),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeUniformRandomFloatNode(0.8f, 1.0f),
+						SpawnProgramUtil::makeUniformRandomFloatNode(-100.0f, -80.0f)
+					)
+				)
+			)
+		}
+
+		, s4e10{ s4e10Node, 170, false }
+
+				//wave 11
+
+		, s4d11Prototype{
+			EntityBuilder::makePosVelPrototype(
+				BASIC_BULLET_ARGS(smallHitbox, outbound, L"small_red", 100),
+				ScriptProgramList{
+					ScriptProgramUtil::makeTimerNode(
+						55,
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(3.1f, 100
+					))
+				}
+			).heapClone()
+		}
+
+		, s4d11Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, { 50, 34, 26, 18 }),
+				SpawnProgramUtil::makeRingFormationNode(
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeFloatValueNode(0.4f),
+						SpawnProgramUtil::makeAngleToPlayerNode()
+					),
+					SpawnProgramUtil::makeIntValueDiffNode({ 14, 20, 25, 30}),
+					SpawnProgramUtil::makeSpawnPosVelNode(
+						s4d11Prototype,
+						SpawnProgramUtil::makeEntityPositionNode()
+					)
+				)
+			)
+		}
+
+		, s4d11{ s4d11Node, 620, false }
+
+		, s4e11Prototype{
+			EntityBuilder::makePosVelPrototype(
+				WISP_ARGS(1000, pickupProgramsPointer->largePowerSpawnProgram),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
+						20,
+						40,
+						5,
+						s4d11,
+						80,
+						{ 1.0f, 90.0f},
+						100
+					)
+				}
+			).heapClone()
+		}
+
+		, s4e11Node{
+			SpawnProgramUtil::makeListNode(
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s4e11Prototype,
+					SpawnProgramUtil::makePointValueNode({
+						28.0f + config::gameOffset.x,
+						config::topOut
+					}),
+					SpawnProgramUtil::makeVelocityValueNode(Vector2{ 0.0f, 1.0f })
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s4e11Prototype,
+					SpawnProgramUtil::makePointValueNode({
+						config::gameWidth - 28.0f + config::gameOffset.x,
+						config::topOut
+					}),
+					SpawnProgramUtil::makeVelocityValueNode(Vector2{ 0.0f, 1.0f })
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s4e11Prototype,
+					SpawnProgramUtil::makePointValueNode({
+						48.0f + config::gameOffset.x,
+						config::topOut
+					}),
+					SpawnProgramUtil::makeVelocityValueNode(Vector2{ 0.0f, 1.5f })
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s4e11Prototype,
+					SpawnProgramUtil::makePointValueNode({
+						config::gameWidth - 48.0f + config::gameOffset.x,
+						config::topOut
+					}),
+					SpawnProgramUtil::makeVelocityValueNode(Vector2{ 0.0f, 1.5f })
+				)
+			)
+			
+		}
+		, s4e11{ s4e11Node, 1, false }
+
 		
 		, stage4ScriptProgram{
 			ScriptProgramUtil::makeTimerNode(160,
 			ScriptProgramUtil::makeSetSpawnNode(s4e1,
 			ScriptProgramUtil::makeTimerNode(730,
 			ScriptProgramUtil::makeAddSpawnNode(s4e2a,
-			ScriptProgramUtil::makeTimerNode(470,
+			ScriptProgramUtil::makeTimerNode(480,
 			ScriptProgramUtil::makeAddSpawnNode(s4e2b,
-			ScriptProgramUtil::makeTimerNode(490,
+			ScriptProgramUtil::makeTimerNode(500,
 			ScriptProgramUtil::makeAddSpawnNode(s4e3,
 			ScriptProgramUtil::makeTimerNode(430,
 			ScriptProgramUtil::makeAddSpawnNode(s4e4,
 			ScriptProgramUtil::makeTimerNode(500,
 			ScriptProgramUtil::makeAddSpawnNode(s4e5,
+			ScriptProgramUtil::makeTimerNode(440,
+			ScriptProgramUtil::makeAddSpawnNode(s4e6,
+			ScriptProgramUtil::makeTimerNode(440,
+			ScriptProgramUtil::makeAddSpawnNode(s4e7,
+			ScriptProgramUtil::makeTimerNode(440,
+			ScriptProgramUtil::makeAddSpawnNode(s4e6,	//wave 8
+			ScriptProgramUtil::makeTimerNode(440,
+			ScriptProgramUtil::makeAddSpawnNode(s4e9,
+			ScriptProgramUtil::makeTimerNode(440,
+			ScriptProgramUtil::makeAddSpawnNode(s4e10,
+			ScriptProgramUtil::makeTimerNode(440,
+			ScriptProgramUtil::makeAddSpawnNode(s4e11,
 
 			ScriptProgramUtil::makeTimerNode(1070,
 			ScriptProgramUtil::makeRemoveEntityNode(
-			))))))))))))))
+			))))))))))))))))))))))))))
 		}
 
 		{
