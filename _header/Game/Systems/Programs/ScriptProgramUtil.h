@@ -220,6 +220,9 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next = nullptr
 		);
 
+		//Returns a script node that sends a death message for the entity.
+		static ScriptNodeSharedPointer makeDieNode();
+
 		//Returns a script node that removes the entity.
 		static ScriptNodeSharedPointer makeRemoveEntityNode();
 

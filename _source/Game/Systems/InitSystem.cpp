@@ -614,7 +614,7 @@ namespace wasp::game::systems {
 				ticks = 60 * 90;
 				break;
 			case 2:
-				backgroundID = L"background_1";
+				backgroundID = L"background_2";
 				ticks = 60 * 90;
 				break;
 			case 3:

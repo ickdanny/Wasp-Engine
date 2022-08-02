@@ -644,7 +644,50 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer s4e11Node;						//uninitialized!
 		SpawnProgram s4e11;										//uninitialized!
 
-			//todo: boss 4
+		// BOSS 4 // BOSS 4 // BOSS 4 // BOSS 4 // BOSS 4 // BOSS 4 // BOSS 4 //
+
+			//1 hexagon spawners -> sharps at 90 degrees
+				//the secondary shot
+		SpawnNodeSharedPointer b4d1aNode;						//uninitialized!
+		SpawnProgram b4d1a;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b4d1bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b4d1bNode;						//uninitialized!
+		SpawnProgram b4d1b;										//uninitialized!
+
+			//2 medium ring -> explode small columns
+				//secondary shot
+		SpawnNodeSharedPointer b4d2aNode;						//uninitialized!
+		SpawnProgram b4d2a;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b4d2bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b4d2bNode;						//uninitialized!
+		SpawnProgram b4d2b;										//uninitialized!
+
+			//3 hexagon spawners -> small aimed arc
+				//the secondary shot
+		SpawnNodeSharedPointer b4d3aNode;						//uninitialized!
+		SpawnProgram b4d3a;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b4d3bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b4d3bNode;						//uninitialized!
+		SpawnProgram b4d3b;										//uninitialized!
+
+			//4 spiral w/ rand speed
+		SpawnNodeSharedPointer b4d4aNode;						//uninitialized!
+		SpawnProgram b4d4a;										//uninitialized!
+
+		SpawnNodeSharedPointer b4d4bNode;						//uninitialized!
+		SpawnProgram b4d4b;										//uninitialized!
+
+			//the boss
+		ComponentTupleSharedPointer b4e1Prototype;				//uninitialized!
+		SpawnNodeSharedPointer b4e1Node;						//uninitialized!
+		SpawnProgram b4e1;										//uninitialized!
+
 
 	public:
 

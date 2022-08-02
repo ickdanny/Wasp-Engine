@@ -519,6 +519,15 @@ namespace wasp::game::systems {
 		return ScriptNodeSharedPointer{ setVelocityToPlayerNodePointer };
 	}
 
+	ScriptProgramUtil::ScriptNodeSharedPointer
+		ScriptProgramUtil::makeDieNode()
+	{
+		ScriptNode* dieNodePointer{
+			new ScriptNode{ ScriptInstructions::die }
+		};
+		return ScriptNodeSharedPointer{ dieNodePointer };
+	}
+
 	ScriptProgramUtil::ScriptNodeSharedPointer 
 		ScriptProgramUtil::makeRemoveEntityNode() 
 	{
@@ -527,7 +536,6 @@ namespace wasp::game::systems {
 		};
 		return ScriptNodeSharedPointer{ removeEntityNodePointer };
 	}
-
 
 	ScriptProgramUtil::ScriptProgram ScriptProgramUtil::makeShootOnceAndLeaveProgram(
 		int preSlowTimer,

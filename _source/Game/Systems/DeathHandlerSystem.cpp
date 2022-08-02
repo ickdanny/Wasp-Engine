@@ -46,16 +46,18 @@ namespace wasp::game::systems {
 			auto& dataStorage{ scene.getDataStorage() };
 
 			for (const auto& entityHandle : deathChannel.getMessages()) {
-				//if the entity has a special deathCommand, defer to that
-				if (dataStorage.containsComponent<DeathCommand>(entityHandle)) {
-					const DeathCommand deathCommand{
-						dataStorage.getComponent<DeathCommand>(entityHandle)
-					};
-					handleDeath(scene, entityHandle, deathCommand.command);
-				}
-				//otherwise, remove the entity
-				else {
-					dataStorage.removeEntity({ entityHandle });
+				if (dataStorage.isAlive(entityHandle)) {
+					//if the entity has a special deathCommand, defer to that
+					if (dataStorage.containsComponent<DeathCommand>(entityHandle)) {
+						const DeathCommand deathCommand{
+							dataStorage.getComponent<DeathCommand>(entityHandle)
+						};
+						handleDeath(scene, entityHandle, deathCommand.command);
+					}
+					//otherwise, remove the entity
+					else {
+						dataStorage.removeEntity({ entityHandle });
+					}
 				}
 			}
 		}

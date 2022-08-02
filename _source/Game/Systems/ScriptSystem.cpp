@@ -1313,6 +1313,12 @@ namespace wasp::game::systems {
 					return false;
 				}
 			}
+			case ScriptInstructions::die: {
+				EntityHandle entityHandle{ scene.getDataStorage().makeHandle(entityID) };
+				scene.getChannel(SceneTopics::deaths).addMessage(entityHandle);
+				gotoNextNode(currentScriptNodePointer, 0);
+				return true;
+			}
 			case ScriptInstructions::removeEntity: {
 				componentOrderQueue.queueRemoveEntity(
 					scene.getDataStorage().makeHandle(entityID)
