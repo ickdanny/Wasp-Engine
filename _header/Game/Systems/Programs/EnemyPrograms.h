@@ -647,7 +647,7 @@ namespace wasp::game::systems {
 		// BOSS 4 // BOSS 4 // BOSS 4 // BOSS 4 // BOSS 4 // BOSS 4 // BOSS 4 //
 
 			//1 hexagon spawners -> sharps at 90 degrees
-				//the secondary shot
+				//secondary shot
 		SpawnNodeSharedPointer b4d1aNode;						//uninitialized!
 		SpawnProgram b4d1a;										//uninitialized!
 
@@ -666,8 +666,8 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer b4d2bNode;						//uninitialized!
 		SpawnProgram b4d2b;										//uninitialized!
 
-			//3 hexagon spawners -> small aimed arc
-				//the secondary shot
+			//3 hexagon spawners -> small ring
+				//secondary shot
 		SpawnNodeSharedPointer b4d3aNode;						//uninitialized!
 		SpawnProgram b4d3a;										//uninitialized!
 
@@ -682,6 +682,61 @@ namespace wasp::game::systems {
 
 		SpawnNodeSharedPointer b4d4bNode;						//uninitialized!
 		SpawnProgram b4d4b;										//uninitialized!
+
+			//5 hexagon spawners -> medium ring
+				//secondary shot
+		SpawnNodeSharedPointer b4d5aNode;						//uninitialized!
+		SpawnProgram b4d5a;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b4d5bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b4d5bNode;						//uninitialized!
+		SpawnProgram b4d5b;										//uninitialized!
+
+			//6 star column thing + aimed arcs
+				//secondary shot
+		SpawnNodeSharedPointer b4d6aNode;						//uninitialized!
+		SpawnProgram b4d6a;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b4d6bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b4d6bNode;						//uninitialized!
+		SpawnProgram b4d6b;										//uninitialized!
+
+				//aimed arcs
+		SpawnNodeSharedPointer b4d6cNode;						//uninitialized!
+		SpawnProgram b4d6c;										//uninitialized!
+
+			//7 fast burst -> geyser
+				//secondary shot
+		SpawnNodeSharedPointer b4d7aNode;						//uninitialized!
+		SpawnProgram b4d7a;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b4d7bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b4d7bNode;						//uninitialized!
+		SpawnProgram b4d7b;										//uninitialized!
+
+			//8 hexagon -> hit wall -> ghosts -> hexagons from wall
+
+				//wall hexagons
+		SpawnNodeSharedPointer b4d8aNode;						//uninitialized!
+		SpawnProgram b4d8a;										//uninitialized!
+
+				//vertical ghosts
+		ComponentTupleSharedPointer b4d8bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b4d8bNode;						//uninitialized!
+		SpawnProgram b4d8b;										//uninitialized!
+
+				//horizontal ghosts
+		SpawnNodeSharedPointer b4d8cNode;						//uninitialized!
+		SpawnProgram b4d8c;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b4d8dPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b4d8dNode;						//uninitialized!
+		SpawnProgram b4d8d;										//uninitialized!
+
 
 			//the boss
 		ComponentTupleSharedPointer b4e1Prototype;				//uninitialized!

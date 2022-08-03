@@ -35,7 +35,7 @@ namespace wasp::game::systems {
 			float speedMulti{
 				1.0f - (1.0f / std::powf(gotoDeceleratingExponentBase, exponent))
 			};
-			return maxSpeed * speedMulti;
+			return std::fminf(maxSpeed * speedMulti, currentDistance);
 		}
 
 		void clearExternalDataForNode(
