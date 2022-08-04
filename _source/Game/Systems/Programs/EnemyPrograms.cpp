@@ -3167,6 +3167,7 @@ namespace wasp::game::systems {
 			).heapClone()
 		}
 
+
 		, s3e8aNode{
 			SpawnProgramUtil::makeSpawnPosVelNode(
 				s3e8Prototype,
@@ -3188,6 +3189,7 @@ namespace wasp::game::systems {
 				SpawnProgramUtil::makeVelocityValueNode(Velocity{ 1.4f, INIT_ANGLE})
 			)
 		}
+		#undef INIT_ANGLE
 		, s3e8a{ s3e8aNode, 1, false }
 		, s3e8b{ s3e8bNode, 1, false }
 		, s3e8c{ s3e8cNode, 1, false }
@@ -5573,6 +5575,401 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeRemoveEntityNode(
 			))))))))))))))))))))))))))))
 			
+		}
+
+		// STAGE 5 // STAGE 5 // STAGE 5 // STAGE 5 // STAGE 5 // STAGE 5 // STAGE 5 //
+
+		#define DANMAKU_TICK_MOD { 170, 130, 100, 75 }
+		#define ROSE_TICK_MOD { 170/2, 130/2, 100/2, 75/2 }
+		#define HEALTH 80
+		#define SPAWN_SPEED 2.7f
+		#define SPAWN_TICK_MOD 8
+		#define WAIT_TIME 55
+		#define TURN_TIME 50
+
+			//wave 1
+		#define INIT_ANGLE 190.0f	
+		#define SPAWN_Y 50.0f
+
+		, s5d1Prototype{
+			EntityBuilder::makePosVelPrototype(
+				BASIC_BULLET_ARGS(smallHitbox, outbound, L"small_spring", 200),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(
+						0.85f,
+						80
+					)
+				}
+			).heapClone()
+		}
+		, s5d1Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(
+					SpawnProgramUtil::makeEntityUniformRandomIntNode(
+						SpawnProgramUtil::makeIntValueNode(0),
+						SpawnProgramUtil::makeIntValueDiffNode(DANMAKU_TICK_MOD)
+					),
+					DANMAKU_TICK_MOD
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s5d1Prototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeUniformRandomFloatNode(-2.3f, -1.3f),
+						SpawnProgramUtil::makeUniformRandomFloatNode(268.0f, 272.0f)
+					)
+				)
+			)
+		}
+
+		, s5d1{ s5d1Node, 10000, false }
+
+		, s5e1Prototype{
+			EntityBuilder::makePosVelPrototype(
+				FLAME_ARGS(HEALTH, pickupProgramsPointer->smallPowerHalfSpawnProgram),
+				SpawnProgramList{ s5d1 },
+				ScriptProgramList{
+					ScriptProgramUtil::makeTimerNode(WAIT_TIME,
+					ScriptProgramUtil::makeShiftVelocityTurnLongPeriodNode(
+						Velocity{ SPAWN_SPEED, -120.0f },
+						INIT_ANGLE,
+						TURN_TIME
+					))
+				}
+			).heapClone()
+		}
+
+		, s5e1Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, SPAWN_TICK_MOD),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s5e1Prototype,
+					SpawnProgramUtil::makePointValueNode({
+						config::rightOut,
+						SPAWN_Y
+					}),
+					SpawnProgramUtil::makeVelocityValueNode(
+						Velocity{ SPAWN_SPEED, INIT_ANGLE }
+					)
+				)
+			)
+		}
+		, s5e1{ s5e1Node, 90 + 320 + 320 + 320, false }
+		#undef INIT_ANGLE
+		#undef SPAWN_Y
+
+			//wave 2
+		#define INIT_ANGLE -10.0f	
+		#define SPAWN_Y 70.0f
+
+		, s5d2Prototype{
+			EntityBuilder::makePosVelPrototype(
+				BASIC_BULLET_ARGS(smallHitbox, outbound, L"small_azure", 200),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(
+						1.05f,
+						80
+					)
+				}
+			).heapClone()
+		}
+		, s5d2Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(
+					SpawnProgramUtil::makeEntityUniformRandomIntNode(
+						SpawnProgramUtil::makeIntValueNode(0),
+						SpawnProgramUtil::makeIntValueDiffNode(DANMAKU_TICK_MOD)
+					),
+					DANMAKU_TICK_MOD
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s5d2Prototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeUniformRandomFloatNode(-2.3f, -1.3f),
+						SpawnProgramUtil::makeUniformRandomFloatNode(268.0f, 272.0f)
+					)
+				)
+			)
+		}
+
+		, s5d2{ s5d2Node, 10000, false }
+
+		, s5e2Prototype{
+			EntityBuilder::makePosVelPrototype(
+				FLAME_ARGS(HEALTH, pickupProgramsPointer->smallPowerHalfSpawnProgram),
+				SpawnProgramList{ s5d2 },
+				ScriptProgramList{
+					ScriptProgramUtil::makeTimerNode(WAIT_TIME,
+					ScriptProgramUtil::makeShiftVelocityTurnLongPeriodNode(
+						Velocity{ SPAWN_SPEED, Angle{ -120.0f }.flipY() },
+						INIT_ANGLE,
+						TURN_TIME
+					))
+				}
+			).heapClone()
+		}
+
+		, s5e2Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, SPAWN_TICK_MOD),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s5e2Prototype,
+					SpawnProgramUtil::makePointValueNode({
+						config::leftOut,
+						SPAWN_Y
+					}),
+					SpawnProgramUtil::makeVelocityValueNode(
+						Velocity{ SPAWN_SPEED, INIT_ANGLE }
+					)
+				)
+			)
+		}
+		, s5e2{ s5e2Node, 90 + 320 + 320, false }
+		#undef INIT_ANGLE
+		#undef SPAWN_Y
+
+			//wave 3
+		#define INIT_ANGLE 190.0f	
+		#define SPAWN_Y 90.0f
+
+		, s5d3Prototype{
+			EntityBuilder::makePosVelPrototype(
+				BASIC_BULLET_ARGS(smallHitbox, outbound, L"small_violet", 200),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(
+						1.25f,
+						80
+					)
+				}
+			).heapClone()
+		}
+		, s5d3Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(
+					SpawnProgramUtil::makeEntityUniformRandomIntNode(
+						SpawnProgramUtil::makeIntValueNode(0),
+						SpawnProgramUtil::makeIntValueDiffNode(DANMAKU_TICK_MOD)
+					),
+					DANMAKU_TICK_MOD
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s5d3Prototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeUniformRandomFloatNode(-2.3f, -1.3f),
+						SpawnProgramUtil::makeUniformRandomFloatNode(268.0f, 272.0f)
+					)
+				)
+			)
+		}
+
+		, s5d3{ s5d3Node, 10000, false }
+
+		, s5e3Prototype{
+			EntityBuilder::makePosVelPrototype(
+				FLAME_ARGS(HEALTH, pickupProgramsPointer->smallPowerHalfSpawnProgram),
+				SpawnProgramList{ s5d3 },
+				ScriptProgramList{
+					ScriptProgramUtil::makeTimerNode(WAIT_TIME,
+					ScriptProgramUtil::makeShiftVelocityTurnLongPeriodNode(
+						Velocity{ SPAWN_SPEED, -120.0f },
+						INIT_ANGLE,
+						TURN_TIME
+					))
+				}
+			).heapClone()
+		}
+
+		, s5e3Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, SPAWN_TICK_MOD),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s5e3Prototype,
+					SpawnProgramUtil::makePointValueNode({
+						config::rightOut,
+						SPAWN_Y
+					}),
+					SpawnProgramUtil::makeVelocityValueNode(
+						Velocity{ SPAWN_SPEED, INIT_ANGLE }
+					)
+				)
+			)
+		}
+		, s5e3{ s5e3Node, 90 + 320, false }
+		#undef INIT_ANGLE
+		#undef SPAWN_Y
+
+			//wave 4
+		#define INIT_ANGLE -10.0f	
+		#define SPAWN_Y 110.0f
+
+		, s5d4Prototype{
+			EntityBuilder::makePosVelPrototype(
+				BASIC_BULLET_ARGS(smallHitbox, outbound, L"small_rose", 200),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(
+						1.45f,
+						80
+					)
+				}
+			).heapClone()
+		}
+		, s5d4Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(
+					SpawnProgramUtil::makeEntityUniformRandomIntNode(
+						SpawnProgramUtil::makeIntValueNode(0),
+						SpawnProgramUtil::makeIntValueDiffNode(ROSE_TICK_MOD)
+					),
+					ROSE_TICK_MOD
+				),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s5d4Prototype,
+					SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeVelocityFromPolarNode(
+						SpawnProgramUtil::makeUniformRandomFloatNode(-2.3f, -1.3f),
+						SpawnProgramUtil::makeUniformRandomFloatNode(268.0f, 272.0f)
+					)
+				)
+			)
+		}
+
+		, s5d4{ s5d4Node, 10000, false }
+
+		, s5e4Prototype{
+			EntityBuilder::makePosVelPrototype(
+				FLAME_ARGS(HEALTH, pickupProgramsPointer->smallPowerHalfSpawnProgram),
+				SpawnProgramList{ s5d4 },
+				ScriptProgramList{
+					ScriptProgramUtil::makeTimerNode(WAIT_TIME,
+					ScriptProgramUtil::makeShiftVelocityTurnLongPeriodNode(
+						Velocity{ SPAWN_SPEED, Angle{ -120.0f }.flipY() },
+						INIT_ANGLE,
+						TURN_TIME
+					))
+				}
+			).heapClone()
+		}
+
+		, s5e4Node{
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, SPAWN_TICK_MOD),
+				SpawnProgramUtil::makeSpawnPosVelNode(
+					s5e4Prototype,
+					SpawnProgramUtil::makePointValueNode({
+						config::leftOut,
+						SPAWN_Y
+					}),
+					SpawnProgramUtil::makeVelocityValueNode(
+						Velocity{ SPAWN_SPEED, INIT_ANGLE }
+					)
+				)
+			)
+		}
+		, s5e4{ s5e4Node, 90, false }
+		#undef INIT_ANGLE
+		#undef SPAWN_Y
+
+
+		#undef DANMAKU_TICK_MOD
+		#undef ROSE_TICK_MOD
+		#undef HEALTH
+		#undef SPAWN_SPEED
+		#undef SPAWN_TICK_MOD
+		#undef WAIT_TIME
+		#undef TURN_TIME
+
+			//wave 5
+		, s5d5Prototype{
+			EntityBuilder::makePosVelPrototype(
+				SHARP_BULLET_ARGS(sharpHitbox, outbound, L"sharp_chartreuse", 100),
+				ScriptProgramList{
+					ScriptProgramUtil::makeTimerNode(32,
+					ScriptProgramUtil::makeShiftSpeedPeriodNode(
+						0.25f,
+						30
+					))
+				}
+			).heapClone()
+		}
+		, s5d5Node{
+			#define SPAWN_IN_DIRECTION(angle) \
+				SpawnProgramUtil::makeSpawnPosVelNode( \
+					s5d5Prototype, \
+					SpawnProgramUtil::makeEntityPositionNode(), \
+					SpawnProgramUtil::makeVelocityFromPolarNode( \
+						SpawnProgramUtil::makeUniformRandomFloatNode(3.0f, 2.6f), \
+						SpawnProgramUtil::makeAddNode( \
+							SpawnProgramUtil::makeFloatValueNode(angle), \
+							SpawnProgramUtil::makeUniformRandomFloatNode( \
+								-30.0f, \
+								30.0f \
+							) \
+						) \
+					) \
+				) 
+			SpawnProgramUtil::makeIfNode(
+				SpawnProgramUtil::makeTickModNode(0, { 14, 10, 7, 5 }
+				),
+				SpawnProgramUtil::makeListNode(
+					SPAWN_IN_DIRECTION(0.0f),
+					SPAWN_IN_DIRECTION(60.0f),
+					SPAWN_IN_DIRECTION(120.0f),
+					SPAWN_IN_DIRECTION(180.0f),
+					SPAWN_IN_DIRECTION(240.0f),
+					SPAWN_IN_DIRECTION(300.0f)
+				)
+			)
+		}
+
+		, s5d5{ s5d5Node, 600, false }
+
+		, s5e5Prototype{
+			EntityBuilder::makePosVelPrototype(
+				WISP_ARGS(4500, pickupProgramsPointer->lifeSpawnProgram),
+				ScriptProgramList{
+					ScriptProgramUtil::makeShootOnceAndLeaveProgram(
+						30,
+						45,
+						40,
+						s5d5,
+						60,
+						{ 1.3f, -90.0f},
+						100
+					)
+				}
+			).heapClone()
+		}
+
+		, s5e5Node{
+			SpawnProgramUtil::makeSpawnPosVelNode(
+				s5e5Prototype,
+				SpawnProgramUtil::makePointValueNode({
+					config::gameWidth / 2.0f + config::gameOffset.x,
+					config::topOut
+				}),
+				SpawnProgramUtil::makeVelocityValueNode(
+					Velocity{ 1.3f, -90.0f }
+				)
+			)
+		}
+		, s5e5{ s5e5Node, 1, false }
+
+		, stage5ScriptProgram{
+			ScriptProgramUtil::makeTimerNode(190,
+			ScriptProgramUtil::makeSetSpawnNode(s5e1,
+			ScriptProgramUtil::makeTimerNode(340,
+			ScriptProgramUtil::makeAddSpawnNode(s5e2,
+			ScriptProgramUtil::makeTimerNode(340,
+			ScriptProgramUtil::makeAddSpawnNode(s5e3,
+			ScriptProgramUtil::makeTimerNode(340,
+			ScriptProgramUtil::makeAddSpawnNode(s5e4,
+			ScriptProgramUtil::makeTimerNode(240,
+			ScriptProgramUtil::makeAddSpawnNode(s5e5,
+			ScriptProgramUtil::makeTimerNode(1070,
+			ScriptProgramUtil::makeRemoveEntityNode(
+			))))))))))))
 		}
 
 		{
