@@ -743,6 +743,52 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer b4e1Node;						//uninitialized!
 		SpawnProgram b4e1;										//uninitialized!
 
+		// STAGE 5 // STAGE 5 // STAGE 5 // STAGE 5 // STAGE 5 // STAGE 5 // STAGE 5 //
+
+			//wave 1: long turning flames; "gravity" shot; first part from right
+		ComponentTupleSharedPointer s5d1Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s5d1Node;						//uninitialized!
+		SpawnProgram s5d1;										//uninitialized!
+
+		ComponentTupleSharedPointer s5e1Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s5e1Node;						//uninitialized!
+		SpawnProgram s5e1;										//uninitialized!
+
+			//wave 2: same thing from left
+		ComponentTupleSharedPointer s5d2Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s5d2Node;						//uninitialized!
+		SpawnProgram s5d2;										//uninitialized!
+
+		ComponentTupleSharedPointer s5e2Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s5e2Node;						//uninitialized!
+		SpawnProgram s5e2;										//uninitialized!
+
+			//wave 3: same thing right lower
+		ComponentTupleSharedPointer s5d3Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s5d3Node;						//uninitialized!
+		SpawnProgram s5d3;										//uninitialized!
+
+		ComponentTupleSharedPointer s5e3Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s5e3Node;						//uninitialized!
+		SpawnProgram s5e3;										//uninitialized!
+
+			//wave 4: same thing left lower
+		ComponentTupleSharedPointer s5d4Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s5d4Node;						//uninitialized!
+		SpawnProgram s5d4;										//uninitialized!
+
+		ComponentTupleSharedPointer s5e4Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s5e4Node;						//uninitialized!
+		SpawnProgram s5e4;										//uninitialized!
+
+			//wave 5: eternal meek but slowing down near bottom
+		ComponentTupleSharedPointer s5d5Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s5d5Node;						//uninitialized!
+		SpawnProgram s5d5;										//uninitialized!
+
+		ComponentTupleSharedPointer s5e5Prototype;				//uninitialized!
+		SpawnNodeSharedPointer s5e5Node;						//uninitialized!
+		SpawnProgram s5e5;										//uninitialized!
 
 	public:
 
@@ -750,7 +796,7 @@ namespace wasp::game::systems {
 		ScriptProgram stage2ScriptProgram;						//uninitialized!
 		ScriptProgram stage3ScriptProgram;						//uninitialized!
 		ScriptProgram stage4ScriptProgram;						//uninitialized!
-		//ScriptProgram stage5ScriptProgram;						//uninitialized!
+		ScriptProgram stage5ScriptProgram;						//uninitialized!
 
 		//Constructors
 		EnemyPrograms(
