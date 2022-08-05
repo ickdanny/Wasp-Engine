@@ -23,6 +23,7 @@ namespace wasp::game::components {
         valueDifficulty,    //returns a stored value based on the difficulty
 
         add,                //adds the result of evaluating two nodes [node1, node2]
+                            //when passed vel, [addNode, velConsumerNode]
         multiply,           //multiplies the result of evaluating two nodes
                             //Velocity: [velocityNode, scalarNode]
         max,                //returns the max of evaluating two nodes [node1, node2]

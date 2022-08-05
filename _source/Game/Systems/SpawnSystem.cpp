@@ -748,6 +748,33 @@ namespace wasp::game::systems {
 				currentSpawnNodePointer = nullptr;
 				break;
 			}
+			case SpawnInstructions::add: {
+				Velocity toAdd{ evaluateVelocityNode(
+					scene,
+					entityID,
+					currentSpawnNodePointer->linkedNodePointers[0],
+					tick,
+					spawnList
+				) };
+				Velocity toPass{ toAdd + vel };
+
+				auto posConsumerSharedPointer{
+					currentSpawnNodePointer->linkedNodePointers[1]
+				};
+				while (posConsumerSharedPointer) {
+					runSpawnNodePassingVel(
+						scene,
+						entityID,
+						posConsumerSharedPointer,
+						tick,
+						spawnList,
+						toPass
+					);
+				}
+
+				currentSpawnNodePointer = nullptr;
+				break;
+			}
 			case SpawnInstructions::entityOffset: {
 				math::Point2 basePos{
 					scene.getDataStorage().getComponent<Position>(entityID)

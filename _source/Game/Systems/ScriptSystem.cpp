@@ -16,7 +16,7 @@ namespace wasp::game::systems {
 	namespace {
 
 		constexpr float angleEquivalenceEpsilon{ .05f };
-		constexpr float pointEquivalenceEpsilon{ .4f };
+		constexpr float pointEquivalenceEpsilon{ .5f };
 
 		constexpr float gotoDeceleratingExponentBase{ 2.0f };
 		constexpr float gotoDeceleratingHorizontalShift{ 0.1f };

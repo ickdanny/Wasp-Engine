@@ -613,26 +613,25 @@ namespace wasp::game::systems {
 		std::wstring backgroundID{};
 		int ticks{};
 		switch (gameState.stage) {
-			//todo: background timing
 			case 1:
 				backgroundID = L"background_1";
-				ticks = 60 * 90;
+				ticks = 4060 + 120;
 				break;
 			case 2:
 				backgroundID = L"background_2";
-				ticks = 60 * 90;
+				ticks = 5380 + 120;
 				break;
 			case 3:
 				backgroundID = L"background_3";
-				ticks = 60 * 90;
+				ticks = 6660 + 120;
 				break;
 			case 4:
 				backgroundID = L"background_4";
-				ticks = 60 * 90;
+				ticks = 6390 + 120;
 				break;
 			case 5:
 				backgroundID = L"background_5";
-				ticks = 60 * 90;
+				ticks = 2670 + 120;
 				break;
 			default:
 				throw std::runtime_error{ "unexpected default case " };

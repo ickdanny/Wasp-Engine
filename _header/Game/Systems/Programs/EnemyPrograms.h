@@ -75,12 +75,11 @@ namespace wasp::game::systems {
 		SpawnProgram fieldClearProgram;							//uninitialized!
 
 		//naming convention:
-		//s		- stage 
-		//1-5	- stage number
-		//x		- type (d-danmaku, e-enemy)
+		//s/d	- stage or boss
+		//1-5	- stage or boss number
+		//d/e	- danmaku or enemy
 		//n		- id number
 		//a-z	- sub id
-		
 
 		// STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 //
 
@@ -789,6 +788,66 @@ namespace wasp::game::systems {
 		ComponentTupleSharedPointer s5e5Prototype;				//uninitialized!
 		SpawnNodeSharedPointer s5e5Node;						//uninitialized!
 		SpawnProgram s5e5;										//uninitialized!
+
+		// BOSS 5 // BOSS 5 // BOSS 5 // BOSS 5 // BOSS 5 // BOSS 5 // BOSS 5 //
+
+			//1 pog spiral
+		SpawnNodeSharedPointer b5d1Node;						//uninitialized!
+		SpawnProgram b5d1;										//uninitialized!
+
+			//2 helix sharps
+				//secondary shot
+		ComponentTupleSharedPointer b5d2aPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d2aNode;						//uninitialized!
+		SpawnProgram b5d2a;										//uninitialized!
+
+				//primary shot
+		ComponentTupleSharedPointer b5d2bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d2bNode;						//uninitialized!
+		SpawnProgram b5d2b;										//uninitialized!
+
+			//3 large -> medium -> small
+				//small
+		SpawnNodeSharedPointer b5d3aNode;						//uninitialized!
+		SpawnProgram b5d3a;										//uninitialized!
+				//medium
+		ComponentTupleSharedPointer b5d3bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d3bNode;						//uninitialized!
+		SpawnProgram b5d3b;										//uninitialized!
+				//large
+		ComponentTupleSharedPointer b5d3cPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d3cNode;						//uninitialized!
+		SpawnProgram b5d3c;										//uninitialized!
+
+			//4 colloseum of doom
+				//secondary shot
+		SpawnNodeSharedPointer b5d4aNode;						//uninitialized!
+		SpawnProgram b5d4a;										//uninitialized!
+				//"death"
+		SpawnNodeSharedPointer b5d4bNode;						//uninitialized!
+		SpawnProgram b5d4b;										//uninitialized!		
+				//primary shot
+		ComponentTupleSharedPointer b5d4cPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d4cNode;						//uninitialized!
+		SpawnProgram b5d4c;										//uninitialized!
+
+			//5 double spiral -> double spirals
+				//spiral 1
+		SpawnNodeSharedPointer b5d5aNode;						//uninitialized!
+		SpawnProgram b5d5a;										//uninitialized!
+				//spiral 2
+		SpawnNodeSharedPointer b5d5bNode;						//uninitialized!
+		SpawnProgram b5d5b;										//uninitialized!
+				//primary shot
+		ComponentTupleSharedPointer b5d5cPrototype;				//uninitialized!
+		ComponentTupleSharedPointer b5d5dPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d5dNode;						//uninitialized!
+		SpawnProgram b5d5d;										//uninitialized!
+
+			//the boss
+		ComponentTupleSharedPointer b5e1Prototype;				//uninitialized!
+		SpawnNodeSharedPointer b5e1Node;						//uninitialized!
+		SpawnProgram b5e1;										//uninitialized!
 
 	public:
 
