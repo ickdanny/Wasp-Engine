@@ -8,7 +8,7 @@ namespace wasp::game::systems {
 	using ScriptProgramList = game::ScriptProgramList;
 
 	namespace {
-		constexpr float deceleration{ -0.07f };
+		constexpr float deceleration{ -0.05f };
 		constexpr int clearLifetime{ 5 };
 	}
 

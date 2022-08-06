@@ -35,7 +35,7 @@ namespace wasp::game::config {
     constexpr int deathBombPeriod{ 15 };
     constexpr int bombInvulnerabilityPeriod{ 4 * 60 };
     constexpr int deathPeriod{ 30 };
-    constexpr int respawnPeriod{ 30 };
+    constexpr int respawnPeriod{ 20 };
     constexpr int respawnInvulnerabilityPeriod{ 3 * 60 };
 
     constexpr int initLives{ 2 };
@@ -53,7 +53,7 @@ namespace wasp::game::config {
     constexpr int playerShotMaxTick{ 40 };
 
     //pickups
-    constexpr float pickupInitSpeedBase{ 3.5f };
+    constexpr float pickupInitSpeedBase{ 1.5f };
     constexpr float pickupInitSpeedMulti{ .7f };
 
     constexpr float pickupFinalSpeed{ -1.7f };
@@ -65,13 +65,6 @@ namespace wasp::game::config {
 
     constexpr int smallPowerGain{ 1 };
     constexpr int largePowerGain{ 5 };
-
-    /*
-
-//PROJECTILES
-    public static final double NORMAL_OUTBOUND = -20;
-    public static final double LARGE_OUTBOUND = -50;
-    */
 
     //enemies
     constexpr float spawnOut{ 20.0f };
@@ -99,11 +92,6 @@ namespace wasp::game::config {
     constexpr float bossGotoSpeed{ 1.0f };
 
     constexpr float bossHitbox{ 13.0f };
-
-//ENEMY PROJECTILES
-    /*
-    public static final int ENEMY_BULLET_COLLIDABLE_TIME = 2;
-    */
 
 	//graphics
 	constexpr int backgroundDrawOrder{ -10000 };

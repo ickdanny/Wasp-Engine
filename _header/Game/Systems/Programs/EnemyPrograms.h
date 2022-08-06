@@ -557,7 +557,7 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer b3d5cNode;						//uninitialized!
 		SpawnProgram b3d5c;										//uninitialized!
 
-			//6 "random" dense arcs
+			//6 "random" dense arcs + mediums
 		SpawnNodeSharedPointer b3d6Node;						//uninitialized!
 		SpawnProgram b3d6;										//uninitialized!
 
