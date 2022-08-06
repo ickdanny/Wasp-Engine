@@ -531,7 +531,7 @@ namespace wasp::game::systems {
 					config::gameWidth / 2, 
 					config::gameHeight / 2 
 				} + config::gameOffset,
-				AABB{ config::gameWidth / 2, config::gameHeight / 2},
+				AABB{ (config::gameWidth / 2) + 20.0f, (config::gameHeight / 2) + 20.0f },
 				PlayerCollisions::Target{ components::CollisionCommands::player },
 				ScriptProgramList{ clearScriptNode }
 			).heapClone()

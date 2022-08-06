@@ -851,7 +851,7 @@ namespace wasp::game::systems {
 							)
 						)
 					),
-					SpawnProgramUtil::makeIntValueDiffNode({ 1, 2, 3, 4 }),
+					SpawnProgramUtil::makeIntValueDiffNode({ 1, 2, 2, 3 }),
 					SpawnProgramUtil::makeFloatValueNode(8.5f),
 					SpawnProgramUtil::makeColumnFormationNode(
 						2, 
@@ -869,7 +869,7 @@ namespace wasp::game::systems {
 			EntityBuilder::makeLinearCollidable(
 				{ config::rightOut, config::topOut },
 				{ 1.5f, -135.0f },
-				WISP_ARGS(10000, pickupProgramsPointer->largePowerSpawnProgram),
+				WISP_ARGS(10000, pickupProgramsPointer->bombSpawnProgram),
 				ScriptProgramList{
 					ScriptProgramUtil::makeTurnEntryAndShootProgram(
 						20,
@@ -878,7 +878,7 @@ namespace wasp::game::systems {
 						-135.0f,
 						s1d8,
 						ScriptProgramUtil::makeSetHealthNode(
-							400,
+							380,
 							ScriptProgramUtil::makeStallingIfNode(
 								ScriptProgramUtil::makeBoundaryXLowNode(
 									config::gameOffset.x

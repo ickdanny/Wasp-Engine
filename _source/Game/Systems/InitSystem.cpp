@@ -63,7 +63,7 @@ namespace wasp::game::systems {
 				initStageMenu(scene);
 				break;
 			case SceneNames::music:
-				throw "no music menu yet";
+				initMusicMenu(scene);
 				break;
 			case SceneNames::options:
 				initOptionsMenu(scene);
@@ -136,7 +136,7 @@ namespace wasp::game::systems {
 					selOffset,
 					2,
 					L"button_music",
-					{ MenuCommandSelect::Commands::enter, SceneNames::music }
+					{ MenuCommandSelect::Commands::enterAndStopMusic, SceneNames::music }
 				).package(),
 				makeButton(
 					initPos,
@@ -439,6 +439,133 @@ namespace wasp::game::systems {
 				components::MenuCommand::Commands::backTo,
 				SceneNames::shot
 			}
+		);
+	}
+
+	void InitSystem::initMusicMenu(Scene& scene) const {
+		auto& dataStorage{ scene.getDataStorage() };
+		addBackground(dataStorage, L"background_menu_music");
+
+		constexpr math::Point2 initPos{ center.x, 50.0f };
+		constexpr math::Vector2 offset{ 0.0f, 14.0f };
+		constexpr math::Vector2 selOffset{ 0.0f, 0.0f };
+
+		auto buttonHandles{
+			dataStorage.addEntities(
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					0,
+					L"button_01",
+					{ MenuCommandSelect::Commands::startTrack, L"01" },
+					{ },	//draw order
+					true
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					1,
+					L"button_02",
+					{ MenuCommandSelect::Commands::startTrack, L"02" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					2,
+					L"button_03",
+					{ MenuCommandSelect::Commands::startTrack, L"03" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					3,
+					L"button_04",
+					{ MenuCommandSelect::Commands::startTrack, L"04" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					4,
+					L"button_05",
+					{ MenuCommandSelect::Commands::startTrack, L"05" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					5,
+					L"button_06",
+					{ MenuCommandSelect::Commands::startTrack, L"06" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					6,
+					L"button_07",
+					{ MenuCommandSelect::Commands::startTrack, L"07" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					7,
+					L"button_08",
+					{ MenuCommandSelect::Commands::startTrack, L"08" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					8,
+					L"button_09",
+					{ MenuCommandSelect::Commands::startTrack, L"09" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					9,
+					L"button_10",
+					{ MenuCommandSelect::Commands::startTrack, L"10" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					10,
+					L"button_11",
+					{ MenuCommandSelect::Commands::startTrack, L"11" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					11,
+					L"button_12",
+					{ MenuCommandSelect::Commands::startTrack, L"12" }
+				).package(),
+				makeButton(
+					initPos,
+					offset,
+					selOffset,
+					12,
+					L"button_music_exit",
+					{ MenuCommandSelect::Commands::backAndSetTrackToMenu }
+				).package()
+			)
+		};
+
+		attachButtonsVertical(dataStorage, buttonHandles);
+		setInitSelectedElement(scene, buttonHandles[0]);
+
+		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
+			{ components::MenuCommand::Commands::navFarDown }
 		);
 	}
 

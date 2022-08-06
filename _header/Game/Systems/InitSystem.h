@@ -45,6 +45,7 @@ namespace wasp::game::systems {
 		void initDifficultyMenu(Scene& scene) const;
 		void initShotMenu(Scene& scene) const;
 		void initStageMenu(Scene& scene) const;
+		void initMusicMenu(Scene& scene) const;
 		void initOptionsMenu(Scene& scene) const;
 		void initContinueMenu(Scene& scene) const;
 		void initLoad(Scene& scene) const;
