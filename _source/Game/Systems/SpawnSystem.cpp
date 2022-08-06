@@ -1131,7 +1131,7 @@ namespace wasp::game::systems {
 				const auto [value] =
 					dynamic_cast<const SpawnNodeData<float>*>(
 						currentSpawnNodePointer.get()
-						)->data;
+					)->data;
 				return value;
 			}
 			case SpawnInstructions::valueDifficulty: {

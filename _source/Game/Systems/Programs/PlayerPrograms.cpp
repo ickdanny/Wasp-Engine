@@ -71,7 +71,7 @@ namespace wasp::game::systems {
 
 		//bomb data
 		constexpr float bombHitbox{ 17.0f };
-		constexpr int bombDamage{ 1 };
+		constexpr int bombDamage{ 2 };
 		constexpr float bombOutbound{ -50.0f };
 
 		constexpr float bombSpeed{ 1.0f };

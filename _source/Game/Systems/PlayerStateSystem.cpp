@@ -117,6 +117,11 @@ namespace wasp::game::systems {
                     }
                     return PlayerStates::respawning;
                 case PlayerStates::respawnInvulnerable:
+                    //first, check to see if we need to go to the bombing state
+                    if (isPlayerBomb(scene, playerData)) {
+                        return PlayerStates::bombing;
+                    }
+
                     //check to see if respawn invulnerable state is over
                     if (playerData.stateMachine.timer > 0) {
                         --playerData.stateMachine.timer;

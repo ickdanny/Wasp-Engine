@@ -844,6 +844,64 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer b5d5dNode;						//uninitialized!
 		SpawnProgram b5d5d;										//uninitialized!
 
+			//6 dense simple spiral ring
+		SpawnNodeSharedPointer b5d6Node;						//uninitialized!
+		SpawnProgram b5d6;										//uninitialized!
+
+			//7 hurricane
+				//secondary shot
+		ComponentTupleSharedPointer b5d7aPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d7aNode;						//uninitialized!
+		SpawnProgram b5d7a;										//uninitialized!
+				//left side
+		ComponentTupleSharedPointer b5d7bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d7bNode;						//uninitialized!
+		SpawnProgram b5d7b;										//uninitialized!
+				//right side
+		SpawnNodeSharedPointer b5d7cNode;						//uninitialized!
+		SpawnProgram b5d7c;										//uninitialized!
+
+		ScriptNodeSharedPointer b5d7ScriptEnd;					//uninitialized!
+		ScriptNodeSharedPointer b5d7ScriptStart;				//uninitialized!
+
+			//8 machine gun
+				//"death" spawn
+					//temp large
+		ComponentTupleSharedPointer b5d8aPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d8aNode;						//uninitialized!
+		SpawnProgram b5d8a;										//uninitialized!
+				//primary shot
+		ComponentTupleSharedPointer b5d8bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d8bNode;						//uninitialized!
+		SpawnProgram b5d8b;										//uninitialized!
+
+			//9 storm
+				//lightning fall secondary
+		SpawnNodeSharedPointer b5d9aNode;						//uninitialized!
+		SpawnProgram b5d9a;										//uninitialized!
+				//lightning fall primary
+		ComponentTupleSharedPointer b5d9bPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d9bNode;						//uninitialized!
+		SpawnProgram b5d9b;										//uninitialized!
+				//secondary spiral storm
+		SpawnNodeSharedPointer b5d9cNode;						//uninitialized!
+		SpawnProgram b5d9c;										//uninitialized!
+				//primary spiral storm
+		ComponentTupleSharedPointer b5d9dPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d9dNode;						//uninitialized!
+		SpawnProgram b5d9d;										//uninitialized!
+				//secondary split storm
+		SpawnNodeSharedPointer b5d9eNode;						//uninitialized!
+		SpawnProgram b5d9e;										//uninitialized!
+				//primary split storm
+		ComponentTupleSharedPointer b5d9fPrototype;				//uninitialized!
+		SpawnNodeSharedPointer b5d9fNode;						//uninitialized!
+		SpawnProgram b5d9f;										//uninitialized!
+
+
+		ScriptNodeSharedPointer b5d9ActScriptEnd;				//uninitialized!
+		ScriptNodeSharedPointer b5d9ActScriptStart;				//uninitialized!
+
 			//the boss
 		ComponentTupleSharedPointer b5e1Prototype;				//uninitialized!
 		SpawnNodeSharedPointer b5e1Node;						//uninitialized!

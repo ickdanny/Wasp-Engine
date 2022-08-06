@@ -371,47 +371,11 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next = nullptr
 		);
 
-		/*
-		//post timer must be long enough
-    public static InstructionList makeStrictBossMoveProgram(int preTimer, int postTimer, double speed) {
-        return ProgramBuilder.linearLink(
-                new InstructionNode<>(TIMER, preTimer)
-        ).linkAppend(
-                ProgramBuilder.linearLink(
-                        new InstructionNode<>(BOUND_RADIUS_GOTO_DECELERATING, new Tuple4<>(
-                                BOSS_BOUNDS,
-                                BOSS_GOTO_RADIUS_MIN,
-                                BOSS_GOTO_RADIUS_MAX,
-                                speed
-                        ))
-                ).linkInject(
-                        ProgramBuilder.linearLink(
-                                new InstructionNode<>(TIMER, postTimer),
-                                new InstructionNode<>(SET_VELOCITY, new PolarVector(0, 0))
-                        )
-                )
-        ).linkBackToFront();
-    }
-
-    public static InstructionList makeStrictBossMoveProgramNoLoop(int preTimer, int postTimer, double speed) {
-        return ProgramBuilder.linearLink(
-                new InstructionNode<>(TIMER, preTimer)
-        ).linkAppend(
-                ProgramBuilder.linearLink(
-                        new InstructionNode<>(BOUND_RADIUS_GOTO_DECELERATING, new Tuple4<>(
-                                BOSS_BOUNDS,
-                                BOSS_GOTO_RADIUS_MIN,
-                                BOSS_GOTO_RADIUS_MAX,
-                                speed
-                        ))
-                ).linkInject(
-                        ProgramBuilder.linearLink(
-                                new InstructionNode<>(TIMER, postTimer),
-                                new InstructionNode<>(SET_VELOCITY, new PolarVector(0, 0))
-                        )
-                )
-        );
-    }
-	*/
+		//Returns a routine for a circular boss phase passed as start and end nodes.
+		static ScriptNodeSharedPointer makeBossCircular(
+			ScriptNodeSharedPointer scriptStartNodePointer,
+			ScriptNodeSharedPointer scriptEndNodePointer,
+			ScriptNodeSharedPointer next = nullptr
+		);
 	};
 }

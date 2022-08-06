@@ -730,7 +730,7 @@ namespace wasp::game::systems {
 		ScriptNodeSharedPointer next
 	) {
 		ScriptNodeSharedPointer scriptBaseNodePointer{
-			makeSetSpawnNode(spawnProgram)
+			makeAddSpawnNode(spawnProgram)
 		};
 		scriptBaseNodePointer->link(
 			makeTimerNode(preTimer,
@@ -768,7 +768,7 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer next
 		) {
 		ScriptNodeSharedPointer scriptBaseNodePointer{
-			makeSetSpawnNode(spawnProgram1)
+			makeAddSpawnNode(spawnProgram1)
 		};
 		scriptBaseNodePointer->link(
 			makeTimerNode(preTimer1,
@@ -896,5 +896,20 @@ namespace wasp::game::systems {
 			scriptEndNodePointer,
 			next
 		);
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBossCircular(
+		ScriptNodeSharedPointer scriptStartNodePointer,
+		ScriptNodeSharedPointer scriptEndNodePointer,
+		ScriptNodeSharedPointer next
+	) {
+		scriptEndNodePointer->link(scriptStartNodePointer);
+		return{
+			makeRoutineNode(
+				scriptStartNodePointer,
+				makeIsBossDeadNode(),
+				next
+			)
+		};
 	}
 }
