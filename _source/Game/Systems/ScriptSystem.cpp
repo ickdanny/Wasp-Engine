@@ -1343,6 +1343,101 @@ namespace wasp::game::systems {
 				gotoNextNode(currentScriptNodePointer, 0);
 				return true;
 			}
+			case ScriptInstructions::win: {
+				scene.getChannel(SceneTopics::winFlag).addMessage();
+				gotoNextNode(currentScriptNodePointer, 0);
+				return true;
+			}
+			case ScriptInstructions::endStage: {
+				globalChannelSetPointer->getChannel(GlobalTopics::stopMusicFlag)
+					.addMessage();
+				auto& gameStateChannel{
+					globalChannelSetPointer->getChannel(GlobalTopics::gameState)
+				};
+				GameState& gameState{ gameStateChannel.getMessages()[0] };
+				//send us back to the correct menu
+				SceneNames backTo{};
+				switch (gameState.gameMode) {
+					case GameMode::campaign:
+						backTo = SceneNames::main;
+						break;
+					case GameMode::practice:
+						backTo = SceneNames::stage;
+						break;
+					default:
+						throw std::runtime_error{
+							"default case reached in GameOverSystem.gameOver()!"
+						};
+				}
+
+				globalChannelSetPointer->getChannel(GlobalTopics::sceneExitTo)
+					.addMessage(backTo);
+				if(gameState.gameMode == GameMode::campaign) {
+					auto& sceneEntryChannel{
+						globalChannelSetPointer->getChannel(GlobalTopics::sceneEntry)
+					};
+					switch (gameState.stage) {
+						case 1:
+						case 2:
+						case 3:
+						case 4:
+						{
+							++gameState.stage;
+							//immediately pop up a new game and loading screen
+							sceneEntryChannel.addMessage(SceneNames::game);
+							sceneEntryChannel.addMessage(SceneNames::load);
+
+							//send player data to global
+							static const Topic<ecs::component::Group*>
+								playerGroupPointerStorageTopic{};
+
+							auto playerGroupPointer{
+								getGroupPointer<PlayerData>(
+									scene,
+									playerGroupPointerStorageTopic
+								)
+							};
+
+							auto playerGroupIterator{
+								playerGroupPointer->groupIterator<PlayerData>()
+							};
+
+							PlayerData playerData{
+								ShotType::shotA,
+								-1,
+								-1,
+								-1,
+								-1
+							};
+							while (playerGroupIterator.isValid()) {
+								playerData = std::get<0>(*playerGroupIterator);
+								break;
+							}
+							auto& playerDataChannel{
+								globalChannelSetPointer->getChannel(
+									GlobalTopics::playerData
+								)
+							};
+							playerDataChannel.clear();
+							playerDataChannel.addMessage(playerData);
+							break;
+						}
+						case 5:
+							//go to credits screen
+							sceneEntryChannel.addMessage(SceneNames::credits);
+							globalChannelSetPointer->getChannel(
+								GlobalTopics::startMusic
+							).addMessage(L"12");
+							break;
+					}
+				}
+				else {
+					//if we are in practice, then we go back to menu, thus menu track
+					globalChannelSetPointer->getChannel(GlobalTopics::startMusic)
+						.addMessage(L"01");
+				}
+				return false;
+			}
 			default:
 				throw std::runtime_error{ "unhandled script instruction!" };
 		}
@@ -1401,6 +1496,9 @@ namespace wasp::game::systems {
 					return true;
 				}
 				return false;
+			}
+			case ScriptInstructions::isWin: {
+				return scene.getChannel(SceneTopics::winFlag).hasMessages();
 			}
 			case ScriptInstructions::boundaryYLow: {
 				const auto& dataStorage{ scene.getDataStorage() };

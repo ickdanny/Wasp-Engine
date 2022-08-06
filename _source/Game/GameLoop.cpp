@@ -34,7 +34,6 @@ namespace wasp::game {
 			}
 			//draw frames if possible
 			if (getCurrentTime() < nextUpdate) {
-				//todo: max fps (min time between updates?)
 				while (getCurrentTime() < nextUpdate && running) {
 					renderFunction(
 						calcDeltaTime(timeOfLastUpdate, timeBetweenUpdates)

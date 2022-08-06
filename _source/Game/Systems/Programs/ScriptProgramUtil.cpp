@@ -912,4 +912,34 @@ namespace wasp::game::systems {
 			)
 		};
 	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeBossEndNode() {
+		return makeWinNode(makeRemoveEntityNode());
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeWinNode(
+		ScriptNodeSharedPointer next
+	) {
+		ScriptNode* winNodePointer{
+			new ScriptNode { ScriptInstructions::win }
+		};
+		if (next) {
+			winNodePointer->link(next);
+		}
+		return ScriptNodeSharedPointer{ winNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeIsWinNode() {
+		ScriptNode* isWinNodePointer{
+			new ScriptNode{	ScriptInstructions::isWin }
+		};
+		return ScriptNodeSharedPointer{ isWinNodePointer };
+	}
+
+	ScriptProgramUtil::ScriptNodeSharedPointer ScriptProgramUtil::makeEndStageNode() {
+		ScriptNode* endStageNodePointer{
+			new ScriptNode { ScriptInstructions::endStage }
+		};
+		return ScriptNodeSharedPointer{ endStageNodePointer };
+	}
 }

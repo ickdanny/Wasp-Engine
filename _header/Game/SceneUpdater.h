@@ -30,16 +30,14 @@
 #include "Game/Systems/SpawnSystem.h"
 #include "Game/Systems/OverlaySystem.h"
 #include "Game/Systems/PauseSystem.h"
-
 #include "Game/Systems/AnimationSystem.h"
 #include "Game/Systems/RotateSpriteForwardSystem.h"
 #include "Game/Systems/SpriteSpinSystem.h"
 #include "Game/Systems/SubImageScrollSystem.h"
-
 #include "Game/Systems/InboundSystem.h"
 #include "Game/Systems/OutboundSystem.h"
 #include "Game/Systems/GameOverSystem.h"
-#include "Game/Systems/WinSystem.h"
+#include "Game/Systems/CreditsSystem.h"
 
 namespace wasp::game {
 
@@ -73,16 +71,14 @@ namespace wasp::game {
 		systems::SpawnSystem spawnSystem;						//not initialized!
 		systems::OverlaySystem overlaySystem;					//not initialized!
 		systems::PauseSystem pauseSystem;						//not initialized!
-
 		systems::AnimationSystem animationSystem;				//not initialized!
 		systems::RotateSpriteForwardSystem rotateSpriteForwardSystem{};
 		systems::SpriteSpinSystem spriteSpinSystem{};
 		systems::SubImageScrollSystem subImageScrollSystem{};
-
 		systems::InboundSystem inboundSystem{};
 		systems::OutboundSystem outboundSystem{};
 		systems::GameOverSystem gameOverSystem;					//not initialized!
-		systems::WinSystem winSystem;							//not initialized!
+		systems::CreditsSystem creditsSystem;					//not initialized!
 
 	public:
 		SceneUpdater(

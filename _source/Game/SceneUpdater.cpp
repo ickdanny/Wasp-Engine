@@ -34,9 +34,8 @@ namespace wasp::game {
 		, overlaySystem{ &(resourceMasterStoragePointer->bitmapStorage) }
 		, pauseSystem{ globalChannelSetPointer }
 		, animationSystem{ &(resourceMasterStoragePointer->bitmapStorage) }
-
 		, gameOverSystem{ globalChannelSetPointer }
-		, winSystem{ globalChannelSetPointer } {
+		, creditsSystem{ globalChannelSetPointer } {
 	}
 
 	void SceneUpdater::operator()(Scene& scene) {
@@ -64,25 +63,13 @@ namespace wasp::game {
 		spawnSystem(scene);
 		overlaySystem(scene);
 		pauseSystem(scene);
-
-        //gameDialogueScreenEntrySystem = new DialogueScreenEntrySystem();
-        //gameNextStageEntrySystem = new NextStageEntrySystem();
-        
 		animationSystem(scene);
 		rotateSpriteForwardSystem(scene);
 		spriteSpinSystem(scene);
-
-        //gameSinusoidalSpriteVerticalOffsetSystem = new SinusoidalSpriteVerticalOffsetSystem(GAME_COMPONENT_TYPES);
-
 		subImageScrollSystem(scene);
-
-        //gameSpriteSubImageFlagUpdateSystem = new SpriteSubImageFlagUpdateSystem(GAME_COMPONENT_TYPES);
-        //gameSpriteInstructionSystem = new SpriteInstructionSystem(imageManager, GAME_COMPONENT_TYPES);
-        //gameSpriteRemovalSystem = new SpriteRemovalSystem(GAME_COMPONENT_TYPES);
-
         inboundSystem(scene);
         outboundSystem(scene);
 		gameOverSystem(scene);
-		winSystem(scene);//todo: should win handle next stage and credits?
+		creditsSystem(scene);
 	}
 }

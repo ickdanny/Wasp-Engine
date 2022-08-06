@@ -45,7 +45,8 @@ namespace wasp::game {
 		//set by GameBuilderSystem; persistent
 		static const Topic<systems::GameState> gameState;
 
-		//set and cleared by ContinueSystem
+		//set and cleared by ContinueSystem and ScriptSystem (for moving stages)
+		//cleared by InitSystem if moving stages
 		static const Topic<components::PlayerData> playerData;
 	};
 

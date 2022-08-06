@@ -172,5 +172,11 @@ namespace wasp::game {
 
     struct PlayerData : components::PlayerData {
         using components::PlayerData::PlayerData;
+
+        //Explicitly define assignment operator
+        PlayerData& operator=(const components::PlayerData& right) {
+            components::PlayerData::operator=(right);
+            return *this;
+        }
     };
 }

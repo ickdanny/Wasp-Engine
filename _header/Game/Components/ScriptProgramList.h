@@ -40,17 +40,9 @@ namespace wasp::game::components {
 
         isBossDead,                 //returns true if the boss died
         
-        /*
-        public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_FOCUSED = new Instructions<>();
-    public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_UNFOCUSED = new Instructions<>();
-    public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_NORMAL = new Instructions<>();
-    public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_BOMBING = new Instructions<>();
-    public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_DEAD = new Instructions<>();
-    public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_RESPAWNING = new Instructions<>();
-    public static final Instructions<Void, Void> WAIT_UNTIL_PLAYER_RESPAWN_INVULNERABLE = new Instructions<>();
-    public static final Instructions<Void, Void> WAIT_UNTIL_DIALOGUE_OVER = new Instructions<>();
-    */
         isDialogueOver,             //returns true if a dialogue ended this tick
+
+        isWin,                      //returns true if win
 
         boundaryYLow,               //returns true if the entity's y coordinate is below
                                     //a stored value.
@@ -87,8 +79,6 @@ namespace wasp::game::components {
                                     //random velocity
                                     //<std::tuple<float, float, float, float>, Void>
                                     //(speedLow, speedHigh, angleLow, angleHigh)
-        
-        //public static final Instructions<Void, Void> REMOVE_VELOCITY
 
         setInbound,                 //sets the entity's inbound <Inbound, Void>
                                     //<float, Void> (inbound)
@@ -144,9 +134,8 @@ namespace wasp::game::components {
                                     //<std::wstring, Void> (track id)
         showDialogue,               //shows a dialogue screen
                                     //<std::wstring, Void> (dialogue id)
-        nextStage,                  //moves onto the next stage
-        gameOver,                   //ends the game (?)
-        gameWin,                    //sends to credits screen
+        endStage,                   //ends the stage
+        win,                        //broadcasts that the stage has been won
         
         numInstructions
     };

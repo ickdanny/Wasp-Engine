@@ -13,6 +13,8 @@ namespace wasp::game::systems {
 
 		constexpr int fieldClearLifetime{ 30 };
 
+		constexpr int waitEndTime{ 60 };
+
 	#define BASIC_BULLET_ARGS(hitbox, outbound, spriteName, drawOrderOffset) \
 		hitbox, \
 		PlayerCollisions::Source{ components::CollisionCommands::death }, \
@@ -1449,15 +1451,21 @@ namespace wasp::game::systems {
 					ScriptProgramUtil::makeSetHealthNode(2200,
 					ScriptProgramUtil::makeAddSpawnNode(b1d2,
 					ScriptProgramUtil::makeBossMoveNode(110, 110,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetNode(90,
 					ScriptProgramUtil::makeSetHealthNode(2000,
 					ScriptProgramUtil::makeAddSpawnNode(b1d3,
 					ScriptProgramUtil::makeBossMoveNode(90, 90,
 					ScriptProgramUtil::makeBossResetMidNode(90,
 					ScriptProgramUtil::makeSetHealthNode(2300,
-					ScriptProgramUtil::makeAddSpawnNode(b1d4))
-)
-					))))))))))))
+					ScriptProgramUtil::makeAddSpawnNode(b1d4,
+					ScriptProgramUtil::makeStallingIfNode(
+						ScriptProgramUtil::makeIsBossDeadNode(),
+						ScriptProgramUtil::makeBossEndNode()
+					)
+					)))))))))))))))))
 				}
 			).heapClone()
 		}
@@ -1508,9 +1516,17 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeAddSpawnNode(s1e16,
 			ScriptProgramUtil::makeTimerNode(200,
 			ScriptProgramUtil::makeAddSpawnNode(b1e1,
-			ScriptProgramUtil::makeTimerNode(1000,
-			ScriptProgramUtil::makeRemoveEntityNode(
-			))))))))))))))))))))))))))))))))))))))))))
+			ScriptProgramUtil::makeStallingIfNode(
+				ScriptProgramUtil::makeIsWinNode(),
+				ScriptProgramUtil::makeTimerNode(waitEndTime,
+				ScriptProgramUtil::makeShowDialogueNode(L"1_2",
+				ScriptProgramUtil::makeStallingIfNode(
+					ScriptProgramUtil::makeIsDialogueOverNode(),
+					ScriptProgramUtil::makeTimerNode(1,
+					ScriptProgramUtil::makeEndStageNode()
+				)))))
+			)
+			)))))))))))))))))))))))))))))))))))))))
 		}
 
 		// STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 // STAGE 2 //
@@ -2642,6 +2658,9 @@ namespace wasp::game::systems {
 						b2d2b,
 						40,
 						150,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
 					ScriptProgramUtil::makeSetHealthNode(2000,
 					ScriptProgramUtil::makeBossActAndMoveNode(
@@ -2654,17 +2673,21 @@ namespace wasp::game::systems {
 					ScriptProgramUtil::makeAddSpawnNode(b2d4,	//<---- 4 is here
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeIsBossDeadNode(),
+						ScriptProgramUtil::makeAddSpawnNode(
+							pickupProgramsPointer->largePowerSpawnProgram,
+						ScriptProgramUtil::makeTimerNode(1,
 						ScriptProgramUtil::makeBossResetNode(90,
 						ScriptProgramUtil::makeSetHealthNode(5000,
 						ScriptProgramUtil::makeBossAttackAndMoveNode(
 							b2d5b,
 							40,
-							150
+							150,
+						ScriptProgramUtil::makeBossEndNode()
 							
 							)
 					)))
 					
-					))))))))))))
+					))))))))))))))))
 				}
 			).heapClone()
 		}
@@ -2707,9 +2730,17 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeAddSpawnNode(s2e12,
 			ScriptProgramUtil::makeTimerNode(570,
 			ScriptProgramUtil::makeAddSpawnNode(b2e1,
-			ScriptProgramUtil::makeTimerNode(1070,
-			ScriptProgramUtil::makeRemoveEntityNode(
-			))))))))))))))))))))))))))))))))))
+			ScriptProgramUtil::makeStallingIfNode(
+				ScriptProgramUtil::makeIsWinNode(),
+				ScriptProgramUtil::makeTimerNode(waitEndTime,
+				ScriptProgramUtil::makeShowDialogueNode(L"2_2",
+				ScriptProgramUtil::makeStallingIfNode(
+					ScriptProgramUtil::makeIsDialogueOverNode(),
+					ScriptProgramUtil::makeTimerNode(1,
+					ScriptProgramUtil::makeEndStageNode()
+				)))
+			)
+			)))))))))))))))))))))))))))))))))
 
 			
 		}
@@ -4200,6 +4231,9 @@ namespace wasp::game::systems {
 						b3d2b, 
 						62, 
 						20,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
 					ScriptProgramUtil::makeSetHealthNode(4000,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
@@ -4212,6 +4246,9 @@ namespace wasp::game::systems {
 						b3d4b,
 						90,
 						90,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
 					ScriptProgramUtil::makeSetHealthNode(6000,
 					ScriptProgramUtil::makeAddSpawnNode(b3d5c,	//<---- 5 is here
@@ -4220,9 +4257,10 @@ namespace wasp::game::systems {
 						ScriptProgramUtil::makeBossResetNode(90,
 						ScriptProgramUtil::makeSetHealthNode(6000,
 						ScriptProgramUtil::makeAddSpawnNode(b3d6,
-						ScriptProgramUtil::makeBossMoveNode(120, 60
+						ScriptProgramUtil::makeBossMoveNode(120, 60,
+						ScriptProgramUtil::makeBossEndNode()
 					
-					))))))))))))))))))))))
+					))))))))))))))))))))))))))
 				}
 			).heapClone()
 		}
@@ -4280,9 +4318,17 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeAddSpawnNode(s3e16,
 			ScriptProgramUtil::makeTimerNode(600,
 			ScriptProgramUtil::makeAddSpawnNode(b3e1,
-			ScriptProgramUtil::makeTimerNode(1070,
-			ScriptProgramUtil::makeRemoveEntityNode(
-			))))))))))))))))))))))))))))))))))))))))))))))))
+			ScriptProgramUtil::makeStallingIfNode(
+				ScriptProgramUtil::makeIsWinNode(),
+				ScriptProgramUtil::makeTimerNode(waitEndTime,
+				ScriptProgramUtil::makeShowDialogueNode(L"1_2",
+				ScriptProgramUtil::makeStallingIfNode(
+					ScriptProgramUtil::makeIsDialogueOverNode(),
+					ScriptProgramUtil::makeTimerNode(1,
+					ScriptProgramUtil::makeEndStageNode()
+				)))
+			)
+			)))))))))))))))))))))))))))))))))))))))))))))))
 		}
 
 
@@ -5495,6 +5541,9 @@ namespace wasp::game::systems {
 						b4d2b,
 						140,
 						20,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
 					ScriptProgramUtil::makeSetHealthNode(6000,
 					ScriptProgramUtil::makeSetSpawnNode(b4d3b,		//3
@@ -5510,6 +5559,9 @@ namespace wasp::game::systems {
 						b4d4b,
 						400,
 						70,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
 					ScriptProgramUtil::makeSetHealthNode(6000,
 					ScriptProgramUtil::makeSetSpawnNode(b4d5b,		//5
@@ -5525,6 +5577,9 @@ namespace wasp::game::systems {
 						b4d6c,
 						40,
 						20,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetNode(90,
 					ScriptProgramUtil::makeSetHealthNode(6000,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
@@ -5536,8 +5591,9 @@ namespace wasp::game::systems {
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b4d8d,
 						140,
-						20
-					))))))))))))))))))))))))))))
+						20,
+					ScriptProgramUtil::makeBossEndNode()
+					))))))))))))))))))))))))))))))))))
 				}
 			).heapClone()
 		}
@@ -5574,8 +5630,16 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeAddSpawnNode(s4e11,
 			ScriptProgramUtil::makeTimerNode(950,
 			ScriptProgramUtil::makeAddSpawnNode(b4e1,
-			ScriptProgramUtil::makeTimerNode(1070,
-			ScriptProgramUtil::makeRemoveEntityNode(
+			ScriptProgramUtil::makeStallingIfNode(
+				ScriptProgramUtil::makeIsWinNode(),
+				ScriptProgramUtil::makeTimerNode(waitEndTime,
+				ScriptProgramUtil::makeShowDialogueNode(L"1_2",
+				ScriptProgramUtil::makeStallingIfNode(
+					ScriptProgramUtil::makeIsDialogueOverNode(),
+					ScriptProgramUtil::makeTimerNode(1,
+					ScriptProgramUtil::makeEndStageNode()
+				))
+			)
 			))))))))))))))))))))))))))))
 			
 		}
@@ -5902,7 +5966,7 @@ namespace wasp::game::systems {
 					s5d5Prototype, \
 					SpawnProgramUtil::makeEntityPositionNode(), \
 					SpawnProgramUtil::makeVelocityFromPolarNode( \
-						SpawnProgramUtil::makeUniformRandomFloatNode(3.0f, 2.6f), \
+						SpawnProgramUtil::makeUniformRandomFloatNode(2.6f, 3.0f), \
 						SpawnProgramUtil::makeAddNode( \
 							SpawnProgramUtil::makeFloatValueNode(angle), \
 							SpawnProgramUtil::makeUniformRandomFloatNode( \
@@ -6978,52 +7042,64 @@ namespace wasp::game::systems {
 				ScriptProgramList{
 					ScriptProgramUtil::makeBossEntryNode(120, L"5_1",
 					ScriptProgramUtil::makeTimerNode(120,
-					ScriptProgramUtil::makeSetHealthNode(800,
+					ScriptProgramUtil::makeSetHealthNode(8000,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d1,
 						410,
 						30,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(720,
+					ScriptProgramUtil::makeSetHealthNode(7200,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d2b,
 						140,
 						20,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(600,
+					ScriptProgramUtil::makeSetHealthNode(6000,
 					ScriptProgramUtil::makeSetSpawnNode(b5d3c,		//3
 					ScriptProgramUtil::makeBossMoveNode(
 						90,
 						90,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(600,
+					ScriptProgramUtil::makeSetHealthNode(6000,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d4c,
 						170,
 						30,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(600,
+					ScriptProgramUtil::makeSetHealthNode(7000,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d5d,
 						530,
 						30,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(530,
+					ScriptProgramUtil::makeSetHealthNode(3000,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d6,
 						580,
 						30,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(600,
+					ScriptProgramUtil::makeSetHealthNode(5000,
 					ScriptProgramUtil::makeBossCircular(
 						b5d7ScriptStart,
 						b5d7ScriptEnd,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(700,
+					ScriptProgramUtil::makeSetHealthNode(5000,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d8b,
 						130,
 						20,
+					ScriptProgramUtil::makeAddSpawnNode(
+						pickupProgramsPointer->largePowerSpawnProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
 					ScriptProgramUtil::makeSetHealthNode(16000,
 					ScriptProgramUtil::makeAddSpawnNode(b5d9b,
@@ -7031,8 +7107,9 @@ namespace wasp::game::systems {
 						55,
 						20,
 						b5d9ActScriptStart,
-						b5d9ActScriptEnd
-					))))))))))))))))))))))))))))))
+						b5d9ActScriptEnd,
+					ScriptProgramUtil::makeBossEndNode()
+					))))))))))))))))))))))))))))))))))))))
 				}
 			).heapClone()
 		}
@@ -7042,9 +7119,6 @@ namespace wasp::game::systems {
 		, b5e1{ b5e1Node, 1, false }
 
 		, stage5ScriptProgram{
-			ScriptProgramUtil::makeTimerNode(19,
-			ScriptProgramUtil::makeSetSpawnNode(b5e1))
-					/*
 			ScriptProgramUtil::makeTimerNode(190,
 			ScriptProgramUtil::makeSetSpawnNode(s5e1,
 			ScriptProgramUtil::makeTimerNode(340,
@@ -7057,10 +7131,13 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeAddSpawnNode(s5e5,
 			ScriptProgramUtil::makeTimerNode(1220,
 			ScriptProgramUtil::makeAddSpawnNode(b5e1,
-			ScriptProgramUtil::makeTimerNode(1070,
-			ScriptProgramUtil::makeRemoveEntityNode(
-			))))))))))))))
-			*/
+			ScriptProgramUtil::makeStallingIfNode(
+				ScriptProgramUtil::makeIsWinNode(),
+				ScriptProgramUtil::makeTimerNode(waitEndTime,
+				ScriptProgramUtil::makeEndStageNode()
+			))
+			))))))))))))
+			
 		}
 
 		{

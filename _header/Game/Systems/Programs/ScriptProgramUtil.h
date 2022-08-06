@@ -377,5 +377,19 @@ namespace wasp::game::systems {
 			ScriptNodeSharedPointer scriptEndNodePointer,
 			ScriptNodeSharedPointer next = nullptr
 		);
+
+		//Returns a node that ends a boss.
+		static ScriptNodeSharedPointer makeBossEndNode();
+
+		//Returns a script node that broadcasts a win.
+		static ScriptNodeSharedPointer makeWinNode(
+			ScriptNodeSharedPointer next = nullptr
+		);
+
+		//Returns a script node that returns true only when a win has been broadcast.
+		static ScriptNodeSharedPointer makeIsWinNode();
+
+		//Returns a script node that ends the stage.
+		static ScriptNodeSharedPointer makeEndStageNode();
 	};
 }

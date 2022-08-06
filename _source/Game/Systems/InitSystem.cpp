@@ -83,6 +83,9 @@ namespace wasp::game::systems {
 			case SceneNames::continues:
 				initContinueMenu(scene);
 				break;
+			case SceneNames::credits:
+				initCredits(scene);
+				break;
 			default:
 				int nameID{ static_cast<int>(scene.getName()) };
 				debug::log("No init function for: " + std::to_string(nameID));
@@ -512,6 +515,21 @@ namespace wasp::game::systems {
 		addForeground(dataStorage, L"overlay_frame");
 
 		//adding the player
+		auto& playerDataChannel{ 
+			globalChannelSetPointer->getChannel(GlobalTopics::playerData)
+		};
+		PlayerData playerData{
+			gameState.shotType,
+			config::initLives,
+			config::initBombs,
+			config::initContinues,
+			getInitPower(gameState) 
+		};
+		if (playerDataChannel.hasMessages()) {
+			playerData = playerDataChannel.getMessages().back();
+			playerDataChannel.clear();
+		}
+
 		dataStorage.addEntity(
 			EntityBuilder::makeStationaryCollidable(
 				config::playerSpawn,
@@ -522,13 +540,7 @@ namespace wasp::game::systems {
 					math::Vector2{ 0.0f, 4.0f }			//offset
 				},
 				DrawOrder{ config::playerDrawOrder },
-				PlayerData{
-					gameState.shotType,
-					config::initLives,
-					config::initBombs,
-					config::initContinues,
-					getInitPower(gameState)
-				},
+				playerData,
 				Inbound{ config::playerInbound },
 				PlayerCollisions::Target{ components::CollisionCommands::player },
 				PickupCollisions::Target{},
@@ -819,6 +831,11 @@ namespace wasp::game::systems {
 		scene.getChannel(SceneTopics::keyboardBackMenuCommand).addMessage(
 			{ components::MenuCommand::Commands::navFarDown }
 		);
+	}
+
+	void InitSystem::initCredits(Scene& scene) const {
+		auto& dataStorage{ scene.getDataStorage() };
+		addBackground(dataStorage, L"background_credits");
 	}
 
 	void InitSystem::addBackground(

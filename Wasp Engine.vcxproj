@@ -183,6 +183,7 @@
     <ClCompile Include="_source\Game\Systems\CollisionDetectorSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\CollisionHandlerSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\ContinueSystem.cpp" />
+    <ClCompile Include="_source\Game\Systems\CreditsSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\DeathHandlerSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\DebugRenderSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\DialogueSystem.cpp" />
@@ -219,7 +220,6 @@
     <ClCompile Include="_source\Game\Systems\SystemUtil.cpp" />
     <ClCompile Include="_source\Game\Systems\TextRenderSystem.cpp" />
     <ClCompile Include="_source\Game\Systems\VelocitySystem.cpp" />
-    <ClCompile Include="_source\Game\Systems\WinSystem.cpp" />
     <ClCompile Include="_source\Game\Topics.cpp" />
     <ClCompile Include="_source\Game\Resources\MidiSequenceStorage.cpp" />
     <ClCompile Include="_source\Game\Scenes.cpp" />
@@ -285,6 +285,7 @@
     <ClInclude Include="_header\Game\Systems\CollisionDetectorSystem.h" />
     <ClInclude Include="_header\Game\Systems\CollisionHandlerSystem.h" />
     <ClInclude Include="_header\Game\Systems\ContinueSystem.h" />
+    <ClInclude Include="_header\Game\Systems\CreditsSystem.h" />
     <ClInclude Include="_header\Game\Systems\DeathHandlerSystem.h" />
     <ClInclude Include="_header\Game\Systems\DialogueSystem.h" />
     <ClInclude Include="_header\Game\Systems\GameBuilderCommands.h" />
@@ -333,7 +334,6 @@
     <ClInclude Include="_header\Game\Systems\SystemUtil.h" />
     <ClInclude Include="_header\Game\Systems\TextRenderSystem.h" />
     <ClInclude Include="_header\Game\Systems\VelocitySystem.h" />
-    <ClInclude Include="_header\Game\Systems\WinSystem.h" />
     <ClInclude Include="_header\Game\Topics.h" />
     <ClInclude Include="_header\Game\SceneRenderer.h" />
     <ClInclude Include="_header\Game\Resources\MidiSequenceStorage.h" />

@@ -1,17 +1,17 @@
-#include "Game/Systems/LoadSystem.h"
+#include "Game/Systems/CreditsSystem.h"
 
 namespace wasp::game::systems {
 
 	namespace {
-		constexpr int waitTime{ 55 };
+		constexpr int waitTime{ 60 * 40 };
 	}
 
-	LoadSystem::LoadSystem(channel::ChannelSet* globalChannelSetPointer)
+	CreditsSystem::CreditsSystem(channel::ChannelSet* globalChannelSetPointer)
 		: globalChannelSetPointer{ globalChannelSetPointer } {
 	}
 
-	void LoadSystem::operator()(Scene& scene) {
-		if (scene.getName() == SceneNames::load) {
+	void CreditsSystem::operator()(Scene& scene) {
+		if (scene.getName() == SceneNames::credits) {
 			auto& dataStorage{ scene.getDataStorage() };
 
 			static const Topic<int> timerTopic{};
@@ -23,7 +23,7 @@ namespace wasp::game::systems {
 
 				if (timer <= 0) {
 					globalChannelSetPointer->getChannel(GlobalTopics::sceneExitTo)
-						.addMessage(SceneNames::game);
+						.addMessage(SceneNames::main);
 					timerChannel.clear();
 				}
 				--timer;
