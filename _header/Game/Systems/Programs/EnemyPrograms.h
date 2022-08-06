@@ -14,6 +14,15 @@ namespace wasp::game::systems {
 		resources::BitmapStorage* bitmapStoragePointer{};
 		PickupPrograms const* pickupProgramsPointer{};
 
+		//death animations
+		ComponentTupleSharedPointer enemyDeathPrototype;		//uninitialized!
+		SpawnNodeSharedPointer enemyDeathNode;					//uninitialized!
+		SpawnProgram enemyDeathProgram;							//uninitialized!
+
+		ComponentTupleSharedPointer explodePrototype;			//uninitialized!
+		SpawnNodeSharedPointer explodeNode;						//uninitialized!
+		SpawnProgram explodeProgram;							//uninitialized!
+
 		//prototypes
 		ComponentTupleSharedPointer smallRedPrototype;			//uninitialized!
 		ComponentTupleSharedPointer smallOrangePrototype;		//uninitialized!

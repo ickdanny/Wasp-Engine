@@ -97,6 +97,40 @@ namespace wasp::game::systems {
 	)
 		: bitmapStoragePointer{ bitmapStoragePointer }
 
+		, explodePrototype{
+			EntityBuilder::makeEntity(
+				VisibleMarker{},
+				DrawOrder{ config::effectDrawOrder },
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"explode_1")->d2dBitmap,
+					{},		//offset
+					0.0f,	//rotation
+					0.5f,	//opacity
+				},
+				game::AnimationList{
+					components::Animation {
+						{
+							L"explode_1",
+							L"explode_2",
+							L"explode_3"
+						},
+						false
+					},
+					6
+				},
+				ScriptProgramList{
+					ScriptProgramUtil::makeTimerNode(22,
+					ScriptProgramUtil::makeRemoveEntityNode(
+					))
+				}
+			).heapClone()
+		}
+
+		, explodeNode{
+			SpawnProgramUtil::makeSpawnAtPosNode(explodePrototype)
+		}
+		, explodeProgram{ explodeNode, 1, false }
+
 		//A shot
 		, smallBubblePrototype{
 			EntityBuilder::makePosPrototype(
@@ -111,7 +145,9 @@ namespace wasp::game::systems {
 					{0.0f},		//rotation
 					a::opacity
 				},
-				DrawOrder{ config::playerBulletDrawOrder }
+				DrawOrder{ config::playerBulletDrawOrder },
+				game::DeathCommand{ game::DeathCommand::Commands::deathSpawn },
+				DeathSpawn{ { explodeProgram } }
 			).heapClone()
 		}
 		, largeBubblePrototype{
@@ -126,7 +162,9 @@ namespace wasp::game::systems {
 					{0.0f},		//rotation
 					a::opacity
 				},
-				DrawOrder{ config::playerBulletDrawOrder + 1 }
+				DrawOrder{ config::playerBulletDrawOrder + 1 },
+				game::DeathCommand{ game::DeathCommand::Commands::deathSpawn },
+				DeathSpawn{ { explodeProgram } }
 			).heapClone()
 		}
 		, spawnSingleSmallBubbleNode{
@@ -274,7 +312,9 @@ namespace wasp::game::systems {
 				ScriptProgramList{ 
 					ScriptProgram{ bombBubbleScriptNode} 
 				},
-				DrawOrder{ config::playerBulletDrawOrder - 10 }
+				DrawOrder{ config::playerBulletDrawOrder - 10 },
+				game::DeathCommand{ game::DeathCommand::Commands::deathSpawn },
+				DeathSpawn{ { explodeProgram } }
 			).heapClone()
 		}
 		, spawnSingleBombBubbleNode{
@@ -340,7 +380,9 @@ namespace wasp::game::systems {
 					b::opacity
 				},
 				DrawOrder{ config::playerBulletDrawOrder },
-				RotateSpriteForwardMarker{}
+				RotateSpriteForwardMarker{},
+				game::DeathCommand{ game::DeathCommand::Commands::deathSpawn },
+				DeathSpawn{ { explodeProgram } }
 			).heapClone()
 		}
 		, spawnSingleIceShardNode{

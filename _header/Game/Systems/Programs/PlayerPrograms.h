@@ -9,6 +9,11 @@ namespace wasp::game::systems {
 		//typedefs
 		SPAWN_PROGRAM_TYPEDEFS
 
+		//death animations
+		ComponentTupleSharedPointer explodePrototype;			//uninitialized!
+		SpawnNodeSharedPointer explodeNode;						//uninitialized!
+		SpawnProgram explodeProgram;							//uninitialized!
+
 		//fields
 		resources::BitmapStorage* bitmapStoragePointer{};
 

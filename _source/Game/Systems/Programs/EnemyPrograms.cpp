@@ -24,7 +24,9 @@ namespace wasp::game::systems {
 		SpriteInstruction{ \
 			bitmapStoragePointer->get(spriteName)->d2dBitmap \
 		}, \
-		DrawOrder{ config::enemyBulletDrawOrder + drawOrderOffset } 
+		DrawOrder{ config::enemyBulletDrawOrder + drawOrderOffset }, \
+		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
+		DeathSpawn{ { explodeProgram } } \
 
 	#define SHARP_BULLET_ARGS(hitbox, outbound, spriteName, drawOrderOffset) \
 		hitbox, \
@@ -36,7 +38,9 @@ namespace wasp::game::systems {
 			bitmapStoragePointer->get(spriteName)->d2dBitmap \
 		}, \
 		DrawOrder{ config::enemyBulletDrawOrder + drawOrderOffset }, \
-		RotateSpriteForwardMarker{}
+		RotateSpriteForwardMarker{}, \
+		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
+		DeathSpawn{ { explodeProgram } } \
 
 	#define WISP_ARGS(health, deathSpawnNode) \
 		Hitbox{ 12.0f }, \
@@ -49,7 +53,7 @@ namespace wasp::game::systems {
 		Health{ health }, \
 		Outbound{ enemyOut }, \
 		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
-		DeathSpawn{ {deathSpawnNode} }, \
+		DeathSpawn{ { deathSpawnNode, enemyDeathProgram } }, \
 		DrawOrder{ config::enemyDrawOrder }
 
 	#define BAT_ARGS(health, deathSpawnNode) \
@@ -64,7 +68,7 @@ namespace wasp::game::systems {
 		Health{ health }, \
 		Outbound{ enemyOut }, \
 		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
-		DeathSpawn{ {deathSpawnNode} }, \
+		DeathSpawn{ { deathSpawnNode, enemyDeathProgram } }, \
 		DrawOrder{ config::enemyDrawOrder + 1 }
 
 	#define FLAME_ARGS(health, deathSpawnNode) \
@@ -78,7 +82,7 @@ namespace wasp::game::systems {
 		Health{ health }, \
 		Outbound{ enemyOut }, \
 		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
-		DeathSpawn{ {deathSpawnNode} }, \
+		DeathSpawn{ { deathSpawnNode, enemyDeathProgram } }, \
 		DrawOrder{ config::enemyDrawOrder + 2 }
 
 	#define SHELL_ARGS(health, deathSpawnNode) \
@@ -92,7 +96,7 @@ namespace wasp::game::systems {
 		Health{ health }, \
 		Outbound{ enemyOut }, \
 		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
-		DeathSpawn{ {deathSpawnNode} }, \
+		DeathSpawn{ { deathSpawnNode, enemyDeathProgram } }, \
 		DrawOrder{ config::enemyDrawOrder + 1 }
 
 	#define CLOUD_ARGS(health, deathSpawnNode) \
@@ -106,7 +110,7 @@ namespace wasp::game::systems {
 		Health{ health }, \
 		Outbound{ enemyOut }, \
 		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
-		DeathSpawn{ {deathSpawnNode} }, \
+		DeathSpawn{ { deathSpawnNode, enemyDeathProgram } }, \
 		DrawOrder{ config::enemyDrawOrder + 3 }
 
 	#define CRYSTAL_RED_ARGS(health, deathSpawnNode) \
@@ -120,7 +124,7 @@ namespace wasp::game::systems {
 		Health{ health }, \
 		Outbound{ enemyOut }, \
 		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
-		DeathSpawn{ {deathSpawnNode} }, \
+		DeathSpawn{ { deathSpawnNode, enemyDeathProgram } }, \
 		DrawOrder{ config::enemyDrawOrder + 4 }
 
 	#define CRYSTAL_GREEN_ARGS(health, deathSpawnNode) \
@@ -135,7 +139,7 @@ namespace wasp::game::systems {
 		Health{ health }, \
 		Outbound{ enemyOut }, \
 		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
-		DeathSpawn{ {deathSpawnNode} }, \
+		DeathSpawn{ { deathSpawnNode, enemyDeathProgram } }, \
 		DrawOrder{ config::enemyDrawOrder + 4 }
 
 	#define CRYSTAL_BLUE_ARGS(health, deathSpawnNode) \
@@ -150,7 +154,7 @@ namespace wasp::game::systems {
 		Health{ health }, \
 		Outbound{ enemyOut }, \
 		DeathCommand{ DeathCommand::Commands::deathSpawn }, \
-		DeathSpawn{ {deathSpawnNode} }, \
+		DeathSpawn{ { deathSpawnNode, enemyDeathProgram } }, \
 		DrawOrder{ config::enemyDrawOrder + 4 }
 
 	//remember to use makeLinearUncollidable()
@@ -442,6 +446,80 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeSpawnNode(fieldClearPrototype)
 		}
 		, fieldClearProgram{ fieldClearNode, 1, false }
+
+		//death animations
+		, enemyDeathPrototype{
+			EntityBuilder::makeEntity(
+				VisibleMarker{},
+				DrawOrder{ config::effectDrawOrder },
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"death_animation_1")->d2dBitmap,
+					{},		//offset
+					0.0f,	//rotation
+					0.7f,	//opacity
+					0.7f,	//scale
+				},
+				AnimationList{
+					components::Animation {
+						{
+							L"death_animation_1",
+							L"death_animation_2",
+							L"death_animation_3",
+							L"death_animation_4",
+							L"death_animation_5",
+							L"death_animation_6",
+							L"death_animation_7"
+						},
+						false
+					},
+					3
+				},
+				ScriptProgramList{
+					ScriptProgramUtil::makeTimerNode(22,
+					ScriptProgramUtil::makeRemoveEntityNode(
+					))
+				}
+			).heapClone()
+		}
+
+		, enemyDeathNode{
+			SpawnProgramUtil::makeSpawnAtPosNode(enemyDeathPrototype)
+		}
+		, enemyDeathProgram{ enemyDeathNode, 1, false }
+
+		, explodePrototype{
+			EntityBuilder::makeEntity(
+				VisibleMarker{},
+				DrawOrder{ config::effectDrawOrder },
+				SpriteInstruction{
+					bitmapStoragePointer->get(L"explode_1")->d2dBitmap,
+					{},		//offset
+					0.0f,	//rotation
+					0.7f,	//opacity
+				},
+				AnimationList{
+					components::Animation {
+						{
+							L"explode_1",
+							L"explode_2",
+							L"explode_3"
+						},
+						false
+					},
+					6
+				},
+				ScriptProgramList{
+					ScriptProgramUtil::makeTimerNode(22,
+					ScriptProgramUtil::makeRemoveEntityNode(
+					))
+				}
+			).heapClone()
+		}
+
+		, explodeNode{
+			SpawnProgramUtil::makeSpawnAtPosNode(explodePrototype)
+		}
+		, explodeProgram{ explodeNode, 1, false }
 
 		// STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 // STAGE 1 //
 
@@ -1467,8 +1545,10 @@ namespace wasp::game::systems {
 					ScriptProgramUtil::makeAddSpawnNode(b1d4,
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeIsBossDeadNode(),
+						ScriptProgramUtil::makeAddSpawnNode(enemyDeathProgram,
+						ScriptProgramUtil::makeTimerNode(1,
 						ScriptProgramUtil::makeBossEndNode()
-					)
+					)))
 					)))))))))))))))))
 				}
 			).heapClone()
@@ -2338,7 +2418,7 @@ namespace wasp::game::systems {
 		}
 		, b2d1aNode{
 			SpawnProgramUtil::makeIfNode(
-				SpawnProgramUtil::makeTickModNode(0, { 5, 3, 2, 1 }),
+				SpawnProgramUtil::makeTickModNode(0, { 4, 3, 2, 1 }),
 				SpawnProgramUtil::makeSpawnPosVelNode(
 					b2d1aPrototype,
 					SpawnProgramUtil::makeEntityPositionNode(),
@@ -2690,7 +2770,9 @@ namespace wasp::game::systems {
 							b2d5b,
 							40,
 							150,
-						ScriptProgramUtil::makeBossEndNode()
+						ScriptProgramUtil::makeAddSpawnNode(enemyDeathProgram,
+						ScriptProgramUtil::makeTimerNode(1,
+						ScriptProgramUtil::makeBossEndNode()))
 							
 							)
 					)))
@@ -4271,9 +4353,11 @@ namespace wasp::game::systems {
 						ScriptProgramUtil::makeSetHealthNode(6500,
 						ScriptProgramUtil::makeAddSpawnNode(b3d6,	//<------6 is here
 						ScriptProgramUtil::makeBossMoveNode(120, 60,
+						ScriptProgramUtil::makeAddSpawnNode(enemyDeathProgram,
+						ScriptProgramUtil::makeTimerNode(1,
 						ScriptProgramUtil::makeBossEndNode()
 					
-					))))))))))))))))))))))))))
+					))))))))))))))))))))))))))))
 				}
 			).heapClone()
 		}
@@ -5624,8 +5708,10 @@ namespace wasp::game::systems {
 						b4d8d,
 						140,
 						20,
+					ScriptProgramUtil::makeAddSpawnNode(enemyDeathProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossEndNode()
-					))))))))))))))))))))))))))))))))))
+					))))))))))))))))))))))))))))))))))))
 				}
 			).heapClone()
 		}
@@ -7074,13 +7160,13 @@ namespace wasp::game::systems {
 				ScriptProgramList{
 					ScriptProgramUtil::makeBossEntryNode(120, L"5_1",
 					ScriptProgramUtil::makeTimerNode(120,
-					ScriptProgramUtil::makeSetHealthNode(8500,
+					ScriptProgramUtil::makeSetHealthNode(8200,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d1,
 						410,
 						30,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(7600,
+					ScriptProgramUtil::makeSetHealthNode(6700,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d2b,
 						140,
@@ -7140,8 +7226,10 @@ namespace wasp::game::systems {
 						20,
 						b5d9ActScriptStart,
 						b5d9ActScriptEnd,
+					ScriptProgramUtil::makeAddSpawnNode(enemyDeathProgram,
+					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossEndNode()
-					))))))))))))))))))))))))))))))))))))))
+					))))))))))))))))))))))))))))))))))))))))
 				}
 			).heapClone()
 		}
