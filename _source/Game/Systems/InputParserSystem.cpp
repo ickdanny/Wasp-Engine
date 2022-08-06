@@ -34,22 +34,24 @@ namespace wasp::game::systems {
 		};
 		menuNavigationCommandChannel.clear();
 
-		if (isJustPressed(KeyValues::k_escape) || isJustPressed(KeyValues::k_x)) {
+		if (isJustPressed(KeyValues::k_escape) 
+			|| isJustPressed(KeyValues::k_x)
+			|| isJustPressed(KeyValues::k_period)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::back);
 		}
-		if (isJustPressed(KeyValues::k_z)) {
+		if (isJustPressed(KeyValues::k_z) || isJustPressed(KeyValues::k_slash)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::select);
 		}
-		if (isJustPressed(KeyValues::k_up)) {
+		if (isJustPressed(KeyValues::k_up) || isJustPressed(KeyValues::k_w)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::up);
 		}
-		if (isJustPressed(KeyValues::k_down)) {
+		if (isJustPressed(KeyValues::k_down) || isJustPressed(KeyValues::k_s)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::down);
 		}
-		if (isJustPressed(KeyValues::k_left)) {
+		if (isJustPressed(KeyValues::k_left) || isJustPressed(KeyValues::k_a)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::left);
 		}
-		if (isJustPressed(KeyValues::k_right)) {
+		if (isJustPressed(KeyValues::k_right) || isJustPressed(KeyValues::k_d)) {
 			menuNavigationCommandChannel.addMessage(MenuNavigationCommands::right);
 		}
 
@@ -68,22 +70,22 @@ namespace wasp::game::systems {
 		if (isBeingPressed(KeyValues::k_shift)) {
 			gameCommandChannel.addMessage(GameCommands::focus);
 		}
-		if (isBeingPressed(KeyValues::k_z)) {
+		if (isBeingPressed(KeyValues::k_z) || isBeingPressed(KeyValues::k_slash)) {
 			gameCommandChannel.addMessage(GameCommands::shoot);
 		}
-		if (isJustPressed(KeyValues::k_x)) {
+		if (isJustPressed(KeyValues::k_x) || isJustPressed(KeyValues::k_period)) {
 			gameCommandChannel.addMessage(GameCommands::bomb);
 		}
-		if (isBeingPressed(KeyValues::k_up)) {
+		if (isBeingPressed(KeyValues::k_up) || isBeingPressed(KeyValues::k_w)) {
 			gameCommandChannel.addMessage(GameCommands::up);
 		}
-		if (isBeingPressed(KeyValues::k_down)) {
+		if (isBeingPressed(KeyValues::k_down) || isBeingPressed(KeyValues::k_s)) {
 			gameCommandChannel.addMessage(GameCommands::down);
 		}
-		if (isBeingPressed(KeyValues::k_left)) {
+		if (isBeingPressed(KeyValues::k_left) || isBeingPressed(KeyValues::k_a)) {
 			gameCommandChannel.addMessage(GameCommands::left);
 		}
-		if (isBeingPressed(KeyValues::k_right)) {
+		if (isBeingPressed(KeyValues::k_right) || isBeingPressed(KeyValues::k_d)) {
 			gameCommandChannel.addMessage(GameCommands::right);
 		}
 
@@ -96,12 +98,16 @@ namespace wasp::game::systems {
 		};
 		readDialogueFlagChannel.clear();
 
-		if (isJustPressed(KeyValues::k_z) || isBeingPressed(KeyValues::k_control)) {
+		if (isJustPressed(KeyValues::k_z) 
+			|| isJustPressed(KeyValues::k_slash)
+			|| isBeingPressed(KeyValues::k_control)) {
 			readDialogueFlagChannel.addMessage();
 		}
 
 		keyInputTablePointer->lock(KeyValues::k_z);
+		keyInputTablePointer->lock(KeyValues::k_slash);
 		keyInputTablePointer->lock(KeyValues::k_x);
+		keyInputTablePointer->lock(KeyValues::k_period);
 		keyInputTablePointer->lock(KeyValues::k_control);
 		keyInputTablePointer->lock(KeyValues::k_escape);	//simplify things; no pause
 	}

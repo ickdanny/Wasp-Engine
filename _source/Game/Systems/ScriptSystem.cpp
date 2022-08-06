@@ -1498,7 +1498,14 @@ namespace wasp::game::systems {
 				return false;
 			}
 			case ScriptInstructions::isWin: {
-				return scene.getChannel(SceneTopics::winFlag).hasMessages();
+				auto& winFlagChannel{
+					scene.getChannel(SceneTopics::winFlag)
+				};
+				if (winFlagChannel.hasMessages()) {
+					winFlagChannel.clear();
+					return true;
+				}
+				return false;
 			}
 			case ScriptInstructions::boundaryYLow: {
 				const auto& dataStorage{ scene.getDataStorage() };

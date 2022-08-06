@@ -24,6 +24,8 @@ namespace wasp::game::systems {
 				if (timer <= 0) {
 					globalChannelSetPointer->getChannel(GlobalTopics::sceneExitTo)
 						.addMessage(SceneNames::main);
+					globalChannelSetPointer->getChannel(GlobalTopics::startMusic)
+						.addMessage(L"01");
 					timerChannel.clear();
 				}
 				--timer;

@@ -1272,14 +1272,18 @@ namespace wasp::game::systems {
 				),
 				SpawnProgramUtil::makeIfNode(
 					SpawnProgramUtil::makeIsLastTickNode(),
-					SpawnProgramUtil::makeSpawnPosVelNode(
-						largeAzurePrototype,
-						SpawnProgramUtil::makeEntityPositionNode(),
+					SpawnProgramUtil::makeRingFormationNode(
 						SpawnProgramUtil::makeVelocityFromPolarNode(
 							SpawnProgramUtil::makeFloatValueNode(0.8f),
 							SpawnProgramUtil::makeAngleToPlayerNode()
+						),
+						3,
+						SpawnProgramUtil::makeSpawnPosVelNode(
+							largeAzurePrototype,
+							SpawnProgramUtil::makeEntityPositionNode()
 						)
 					)
+					
 				)
 			)
 		}
@@ -1444,22 +1448,22 @@ namespace wasp::game::systems {
 				},
 				ScriptProgramList{
 					ScriptProgramUtil::makeBossEntryNode(120, L"1_1",
-					ScriptProgramUtil::makeSetHealthNode(2000,
+					ScriptProgramUtil::makeSetHealthNode(2500,
 					ScriptProgramUtil::makeSetSpawnNode(b1d1,
 					ScriptProgramUtil::makeBossMoveNode(90, 90,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(2200,
+					ScriptProgramUtil::makeSetHealthNode(2700,
 					ScriptProgramUtil::makeAddSpawnNode(b1d2,
 					ScriptProgramUtil::makeBossMoveNode(110, 110,
 					ScriptProgramUtil::makeAddSpawnNode(
 						pickupProgramsPointer->largePowerSpawnProgram,
 					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(2000,
+					ScriptProgramUtil::makeSetHealthNode(2500,
 					ScriptProgramUtil::makeAddSpawnNode(b1d3,
 					ScriptProgramUtil::makeBossMoveNode(90, 90,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(2300,
+					ScriptProgramUtil::makeSetHealthNode(3000,
 					ScriptProgramUtil::makeAddSpawnNode(b1d4,
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeIsBossDeadNode(),
@@ -2321,7 +2325,7 @@ namespace wasp::game::systems {
 						0.0f,
 						50,
 						ScriptProgramUtil::makeShiftSpeedPeriodNode(
-							7.0f,
+							5.0f,
 							5
 						)
 					)
@@ -2644,7 +2648,7 @@ namespace wasp::game::systems {
 				},
 				ScriptProgramList{
 					ScriptProgramUtil::makeBossEntryNode(120, L"2_1",
-					ScriptProgramUtil::makeSetHealthNode(4000,
+					ScriptProgramUtil::makeSetHealthNode(4500,
 					ScriptProgramUtil::makeDoubleBossAttackAndMoveNode(
 						b2d1a,
 						30, 
@@ -2653,7 +2657,7 @@ namespace wasp::game::systems {
 						10,
 						60,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(4200,
+					ScriptProgramUtil::makeSetHealthNode(4800,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b2d2b,
 						40,
@@ -2669,7 +2673,7 @@ namespace wasp::game::systems {
 						b2d3ActScriptStart,
 						b2d3ActScriptEnd,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(5000,
+					ScriptProgramUtil::makeSetHealthNode(6000,
 					ScriptProgramUtil::makeAddSpawnNode(b2d4,	//<---- 4 is here
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeIsBossDeadNode(),
@@ -2677,7 +2681,7 @@ namespace wasp::game::systems {
 							pickupProgramsPointer->largePowerSpawnProgram,
 						ScriptProgramUtil::makeTimerNode(1,
 						ScriptProgramUtil::makeBossResetNode(90,
-						ScriptProgramUtil::makeSetHealthNode(5000,
+						ScriptProgramUtil::makeSetHealthNode(5500,
 						ScriptProgramUtil::makeBossAttackAndMoveNode(
 							b2d5b,
 							40,
@@ -2905,9 +2909,9 @@ namespace wasp::game::systems {
 				SpawnProgramUtil::makeTickModNode(
 					SpawnProgramUtil::makeEntityUniformRandomIntNode(
 						SpawnProgramUtil::makeIntValueNode(0),
-						SpawnProgramUtil::makeIntValueDiffNode({ 45, 37, 31, 26 })
+						SpawnProgramUtil::makeIntValueDiffNode({ 50, 40, 32, 26 })
 					), 
-					{ 45, 37, 31, 26 }
+					{ 50, 40, 32, 26 }
 				),
 				SpawnProgramUtil::makeIfElseNode(
 					SpawnProgramUtil::makeTickModNode(0, 2),
@@ -4218,12 +4222,12 @@ namespace wasp::game::systems {
 				ScriptProgramList{
 					ScriptProgramUtil::makeBossEntryNode(120, L"3_1",
 					ScriptProgramUtil::makeTimerNode(120,
-					ScriptProgramUtil::makeSetHealthNode(4000,
+					ScriptProgramUtil::makeSetHealthNode(5000,
 					ScriptProgramUtil::makeSetSpawnNode(b3d1,
 					ScriptProgramUtil::makeStallingIfNode(
 					ScriptProgramUtil::makeIsBossDeadNode(),
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(4200,
+					ScriptProgramUtil::makeSetHealthNode(5200,
 					ScriptProgramUtil::makeDoubleBossAttackAndMoveNode(
 						b3d2a, 
 						62, 
@@ -4235,13 +4239,13 @@ namespace wasp::game::systems {
 						pickupProgramsPointer->largePowerSpawnProgram,
 					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(4000,
+					ScriptProgramUtil::makeSetHealthNode(5000,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b3d3b, 
 						140, 
 						20,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(5000,
+					ScriptProgramUtil::makeSetHealthNode(6000,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b3d4b,
 						90,
@@ -4250,12 +4254,12 @@ namespace wasp::game::systems {
 						pickupProgramsPointer->largePowerSpawnProgram,
 					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(6000,
+					ScriptProgramUtil::makeSetHealthNode(6500,
 					ScriptProgramUtil::makeAddSpawnNode(b3d5c,	//<---- 5 is here
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeIsBossDeadNode(),
 						ScriptProgramUtil::makeBossResetNode(90,
-						ScriptProgramUtil::makeSetHealthNode(6000,
+						ScriptProgramUtil::makeSetHealthNode(6500,
 						ScriptProgramUtil::makeAddSpawnNode(b3d6,
 						ScriptProgramUtil::makeBossMoveNode(120, 60,
 						ScriptProgramUtil::makeBossEndNode()
@@ -4321,7 +4325,7 @@ namespace wasp::game::systems {
 			ScriptProgramUtil::makeStallingIfNode(
 				ScriptProgramUtil::makeIsWinNode(),
 				ScriptProgramUtil::makeTimerNode(waitEndTime,
-				ScriptProgramUtil::makeShowDialogueNode(L"1_2",
+				ScriptProgramUtil::makeShowDialogueNode(L"3_2",
 				ScriptProgramUtil::makeStallingIfNode(
 					ScriptProgramUtil::makeIsDialogueOverNode(),
 					ScriptProgramUtil::makeTimerNode(1,
@@ -4340,9 +4344,9 @@ namespace wasp::game::systems {
 				SpawnProgramUtil::makeTickModNode(
 					SpawnProgramUtil::makeEntityUniformRandomIntNode(
 						SpawnProgramUtil::makeIntValueNode(0),
-						SpawnProgramUtil::makeIntValueDiffNode({ 110, 90, 70, 50 })
+						SpawnProgramUtil::makeIntValueDiffNode({ 95, 80, 65, 50 })
 					),
-					{ 110, 90, 70, 50 }
+					{ 95, 80, 65, 50 }
 				),
 				SpawnProgramUtil::makeRingFormationNode(
 					SpawnProgramUtil::makeUniformRandomCircleVelocityNode(0.7f, 1.3f),
@@ -4412,13 +4416,13 @@ namespace wasp::game::systems {
 
 		, s4d2Node{
 			SpawnProgramUtil::makeIfNode(
-				SpawnProgramUtil::makeTickModNode(0, { 50, 34, 26, 18 }),
+				SpawnProgramUtil::makeTickModNode(0, { 40, 30, 24, 18 }),
 				SpawnProgramUtil::makeRingFormationNode(
 					SpawnProgramUtil::makeVelocityFromPolarNode(
 						SpawnProgramUtil::makeFloatValueNode(0.4f),
 						SpawnProgramUtil::makeAngleToPlayerNode()
 					),
-					SpawnProgramUtil::makeIntValueDiffNode({ 14, 20, 25, 30}),
+					SpawnProgramUtil::makeIntValueDiffNode({ 15, 20, 25, 30}),
 					SpawnProgramUtil::makeSpawnPosVelNode(
 						s4d2Prototype,
 						SpawnProgramUtil::makeEntityPositionNode()
@@ -4835,7 +4839,7 @@ namespace wasp::game::systems {
 
 		, s4d11Node{
 			SpawnProgramUtil::makeIfNode(
-				SpawnProgramUtil::makeTickModNode(0, { 50, 34, 26, 18 }),
+				SpawnProgramUtil::makeTickModNode(0, { 40, 30, 24, 18 }),
 				SpawnProgramUtil::makeRingFormationNode(
 					SpawnProgramUtil::makeVelocityFromPolarNode(
 						SpawnProgramUtil::makeFloatValueNode(0.4f),
@@ -4998,9 +5002,9 @@ namespace wasp::game::systems {
 					}),
 					SpawnProgramUtil::randomAngleNode
 				),
-				SpawnProgramUtil::makeIntValueDiffNode({ 4, 5, 6, 7 }),
+				SpawnProgramUtil::makeIntValueDiffNode({ 6, 6, 7, 7 }),
 				SpawnProgramUtil::makeColumnFormationNode(
-					{ 3, 4, 5, 6 },
+					{ 4, 5, 5, 6 },
 					-0.15f,
 					SpawnProgramUtil::makeSpawnPosVelNode(
 						smallYellowPrototype,
@@ -5139,7 +5143,16 @@ namespace wasp::game::systems {
 					SpawnProgramUtil::makeRingFormationNode(
 						SpawnProgramUtil::makeVelocityFromPolarNode(
 							SpawnProgramUtil::makeUniformRandomFloatNode(0.25f, 1.9f),
-							SpawnProgramUtil::makeSpiralNode(0, 0.0f, -1.18362f)
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(0), 
+								SpawnProgramUtil::makeFloatValueNode(0.0f), 
+								SpawnProgramUtil::makeFloatValueDiffNode({
+									-1.08362f,
+									-1.18362f,
+									-1.18362f,
+									-1.18362f
+								} )
+							)
 						),
 						4,
 						SpawnProgramUtil::makeSpawnPosVelNode(
@@ -5150,7 +5163,7 @@ namespace wasp::game::systems {
 				)
 			)
 		}
-		, b4d4a{ b4d4aNode, 375, false }
+		, b4d4a{ b4d4aNode, 275, false }
 
 		, b4d4bNode{
 			SpawnProgramUtil::makeIfNode(
@@ -5160,7 +5173,16 @@ namespace wasp::game::systems {
 					SpawnProgramUtil::makeRingFormationNode(
 						SpawnProgramUtil::makeVelocityFromPolarNode(
 							SpawnProgramUtil::makeUniformRandomFloatNode(0.25f, 1.9f),
-							SpawnProgramUtil::makeSpiralNode(0, 0.0f, 1.18362f)
+							SpawnProgramUtil::makeSpiralNode(
+								SpawnProgramUtil::makeIntValueNode(0),
+								SpawnProgramUtil::makeFloatValueNode(0.0f),
+								SpawnProgramUtil::makeFloatValueDiffNode({
+									1.08362f,
+									1.18362f,
+									1.18362f,
+									1.18362f
+								})
+							)
 						),
 						4,
 						SpawnProgramUtil::makeSpawnPosVelNode(
@@ -5171,7 +5193,7 @@ namespace wasp::game::systems {
 				)
 			)
 		}
-		, b4d4b{ b4d4bNode, 375, false }
+		, b4d4b{ b4d4bNode, 275, false }
 
 			//5
 		, b4d5aNode{
@@ -5179,9 +5201,9 @@ namespace wasp::game::systems {
 				SpawnProgramUtil::makeTickModNode(
 					SpawnProgramUtil::makeEntityUniformRandomIntNode(
 						SpawnProgramUtil::makeIntValueNode(0),
-						SpawnProgramUtil::makeIntValueDiffNode({ 380, 330, 280, 240 })
+						SpawnProgramUtil::makeIntValueDiffNode({ 420, 350, 290, 240 })
 					),
-					{ 380, 330, 280, 240 }
+					{ 420, 350, 290, 240 }
 				),
 				SpawnProgramUtil::makeRingFormationNode(
 					SpawnProgramUtil::makeVelocityFromPolarNode(
@@ -5313,7 +5335,7 @@ namespace wasp::game::systems {
 			//7
 		, b4d7aNode{
 			SpawnProgramUtil::makeRepeatNode(
-				SpawnProgramUtil::makeIntValueDiffNode({ 7, 9, 11, 14 }),
+				SpawnProgramUtil::makeIntValueDiffNode({ 6, 8, 10, 13 }),
 				SpawnProgramUtil::makeSpawnPosVelNode(
 					smallCyanPrototype,
 					SpawnProgramUtil::makeEntityPositionNode(),
@@ -5332,7 +5354,7 @@ namespace wasp::game::systems {
 
 		, b4d7bPrototype {
 			EntityBuilder::makePosVelPrototype(
-				BASIC_BULLET_ARGS(mediumHitbox, outbound, L"medium_red", 0),
+				BASIC_BULLET_ARGS(mediumHitbox, outbound, L"medium_blue", 0),
 				ScriptProgramList{
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeBoundaryXHighNode(
@@ -5381,7 +5403,7 @@ namespace wasp::game::systems {
 					b4d7bPrototype,
 					SpawnProgramUtil::makeEntityPositionNode(),
 					SpawnProgramUtil::makeVelocityFromPolarNode(
-						SpawnProgramUtil::makeFloatValueNode(1.6f),
+						SpawnProgramUtil::makeFloatValueNode(2.1f),
 						SpawnProgramUtil::makeAngleToPlayerNode()
 					)
 				)
@@ -5395,7 +5417,7 @@ namespace wasp::game::systems {
 			SpawnProgramUtil::makeIfNode(
 				SpawnProgramUtil::makeTickModNode(
 					20,
-					{ 40, 50, 60, 70 }
+					{ 150, 125, 100, 75 }
 				),
 				SpawnProgramUtil::makeRingFormationNode(
 					SpawnProgramUtil::makeVelocityFromPolarNode(
@@ -5413,8 +5435,9 @@ namespace wasp::game::systems {
 		, b4d8a{ b4d8aNode, 10000, false }
 
 		, b4d8bPrototype{
-			EntityBuilder::makeEntity(
-				Outbound{-15.0f},
+			EntityBuilder::makePosVelPrototype(
+				//for this danmaku, medium drawn above
+				BASIC_BULLET_ARGS(mediumHitbox, outbound, L"medium_red", 202),
 				SpawnProgramList{ b4d8a }
 			).heapClone()
 		}
@@ -5466,29 +5489,29 @@ namespace wasp::game::systems {
 		, b4d8dPrototype{
 			EntityBuilder::makePosVelPrototype(
 				//for this danmaku, sharp over small
-				SHARP_BULLET_ARGS(sharpHitbox, outbound, L"sharp_orange", 200),
+				SHARP_BULLET_ARGS(sharpHitbox, outbound, L"sharp_azure", 200),
 				ScriptProgramList{
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeBoundaryXHighNode(
-							config::gameWidth + config::gameOffset.x + 8.0f
+							config::gameWidth + config::gameOffset.x
 						),
 						ScriptProgramUtil::makeSetSpawnNode(b4d8b)
 					),
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeBoundaryXLowNode(
-							config::gameOffset.x - 8.0f
+							config::gameOffset.x
 						),
 						ScriptProgramUtil::makeSetSpawnNode(b4d8b)
 					),
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeBoundaryYHighNode(
-							config::gameHeight + config::gameOffset.y + 8.0f
+							config::gameHeight + config::gameOffset.y
 						),
 						ScriptProgramUtil::makeSetSpawnNode(b4d8c)
 					),
 					ScriptProgramUtil::makeStallingIfNode(
 						ScriptProgramUtil::makeBoundaryYLowNode(
-							config::gameOffset.y - 8.0f
+							config::gameOffset.y
 						),
 						ScriptProgramUtil::makeSetSpawnNode(b4d8c)
 					)
@@ -5530,13 +5553,13 @@ namespace wasp::game::systems {
 				ScriptProgramList{
 					ScriptProgramUtil::makeBossEntryNode(120, L"4_1",
 					ScriptProgramUtil::makeTimerNode(120,
-					ScriptProgramUtil::makeSetHealthNode(6000,
+					ScriptProgramUtil::makeSetHealthNode(6500,
 					ScriptProgramUtil::makeSetSpawnNode(b4d1b,		//1
 					ScriptProgramUtil::makeBossMoveNode(
 						90,
 						90,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(5200,
+					ScriptProgramUtil::makeSetHealthNode(5700,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b4d2b,
 						140,
@@ -5545,31 +5568,31 @@ namespace wasp::game::systems {
 						pickupProgramsPointer->largePowerSpawnProgram,
 					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(6000,
+					ScriptProgramUtil::makeSetHealthNode(6500,
 					ScriptProgramUtil::makeSetSpawnNode(b4d3b,		//3
 					ScriptProgramUtil::makeBossMoveNode(
 						90,
 						90,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(5000,
+					ScriptProgramUtil::makeSetHealthNode(7000,
 					ScriptProgramUtil::makeDoubleBossAttackAndMoveNode(
 						b4d4a,
-						400,
+						300,
 						70,
 						b4d4b,
-						400,
+						300,
 						70,
 					ScriptProgramUtil::makeAddSpawnNode(
 						pickupProgramsPointer->largePowerSpawnProgram,
 					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(6000,
+					ScriptProgramUtil::makeSetHealthNode(6500,
 					ScriptProgramUtil::makeSetSpawnNode(b4d5b,		//5
 					ScriptProgramUtil::makeBossMoveNode(
 						90,
 						90,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(5300,
+					ScriptProgramUtil::makeSetHealthNode(6000,
 					ScriptProgramUtil::makeDoubleBossAttackAndMoveNode(
 						b4d6b,
 						70,
@@ -5581,13 +5604,13 @@ namespace wasp::game::systems {
 						pickupProgramsPointer->largePowerSpawnProgram,
 					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(6000,
+					ScriptProgramUtil::makeSetHealthNode(5500,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b4d7b,
 						140,
 						20,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(7000,
+					ScriptProgramUtil::makeSetHealthNode(6500,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b4d8d,
 						140,
@@ -7042,13 +7065,13 @@ namespace wasp::game::systems {
 				ScriptProgramList{
 					ScriptProgramUtil::makeBossEntryNode(120, L"5_1",
 					ScriptProgramUtil::makeTimerNode(120,
-					ScriptProgramUtil::makeSetHealthNode(8000,
+					ScriptProgramUtil::makeSetHealthNode(8500,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d1,
 						410,
 						30,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(7200,
+					ScriptProgramUtil::makeSetHealthNode(7600,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d2b,
 						140,
@@ -7057,13 +7080,13 @@ namespace wasp::game::systems {
 						pickupProgramsPointer->largePowerSpawnProgram,
 					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(6000,
+					ScriptProgramUtil::makeSetHealthNode(6500,
 					ScriptProgramUtil::makeSetSpawnNode(b5d3c,		//3
 					ScriptProgramUtil::makeBossMoveNode(
 						90,
 						90,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(6000,
+					ScriptProgramUtil::makeSetHealthNode(6500,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d4c,
 						170,
@@ -7072,7 +7095,7 @@ namespace wasp::game::systems {
 						pickupProgramsPointer->largePowerSpawnProgram,
 					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(7000,
+					ScriptProgramUtil::makeSetHealthNode(7500,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d5d,
 						530,
@@ -7087,12 +7110,12 @@ namespace wasp::game::systems {
 						pickupProgramsPointer->largePowerSpawnProgram,
 					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(5000,
+					ScriptProgramUtil::makeSetHealthNode(5500,
 					ScriptProgramUtil::makeBossCircular(
 						b5d7ScriptStart,
 						b5d7ScriptEnd,
 					ScriptProgramUtil::makeBossResetNode(90,
-					ScriptProgramUtil::makeSetHealthNode(5000,
+					ScriptProgramUtil::makeSetHealthNode(5500,
 					ScriptProgramUtil::makeBossAttackAndMoveNode(
 						b5d8b,
 						130,
@@ -7101,7 +7124,7 @@ namespace wasp::game::systems {
 						pickupProgramsPointer->largePowerSpawnProgram,
 					ScriptProgramUtil::makeTimerNode(1,
 					ScriptProgramUtil::makeBossResetMidNode(90,
-					ScriptProgramUtil::makeSetHealthNode(16000,
+					ScriptProgramUtil::makeSetHealthNode(17000,
 					ScriptProgramUtil::makeAddSpawnNode(b5d9b,
 					ScriptProgramUtil::makeBossActAndMoveNode(
 						55,

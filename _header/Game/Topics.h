@@ -102,7 +102,7 @@ namespace wasp::game {
 		//set and cleared by RenderSystem and MiscellaneousSystem
 		static const Topic<float> lastDeltaTime;
 
-		//todo: not handled!
+		//set and cleared by ScriptSystem (stage program)
 		static const Topic<> winFlag;
 	};
 }

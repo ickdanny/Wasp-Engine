@@ -722,7 +722,7 @@ namespace wasp::game::systems {
 		SpawnNodeSharedPointer b4d8aNode;						//uninitialized!
 		SpawnProgram b4d8a;										//uninitialized!
 
-				//vertical ghosts
+				//vertical not-ghosts anymore
 		ComponentTupleSharedPointer b4d8bPrototype;				//uninitialized!
 		SpawnNodeSharedPointer b4d8bNode;						//uninitialized!
 		SpawnProgram b4d8b;										//uninitialized!
