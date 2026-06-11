@@ -21,8 +21,8 @@ To build the game, the following are used:
 Install WSWP as follows using Developer Powershell:
 
 ```
-git clone https://www.github.com/ickdanny/todo
-cd todo
+git clone https://www.github.com/ickdanny/Winter-Storm-Winter-Petal
+cd Winter-Storm-Winter-Petal
 powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
