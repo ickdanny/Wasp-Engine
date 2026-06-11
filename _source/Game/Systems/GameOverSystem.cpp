@@ -46,5 +46,13 @@ namespace wasp::game::systems {
 		globalChannelSetPointer->getChannel(GlobalTopics::sceneExitTo).addMessage(
 			backTo
 		);
+
+		// also clear leftover player data (fixes wrong player start bug)
+		auto& playerDataChannel{
+			globalChannelSetPointer->getChannel(
+				GlobalTopics::playerData
+			)
+		};
+		playerDataChannel.clear();
 	}
 }
