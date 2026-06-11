@@ -13,7 +13,7 @@ To run the game, the following minimum requirements are stated:
 To build the game, the following are used:
 - Developer Powershell VS 2022
 - msbuild 17.10.4.21802
-- cl 19.40.33813
+- MSVC 19.40.33813
 - Windows SDK 10.x
 
 ## Installation
