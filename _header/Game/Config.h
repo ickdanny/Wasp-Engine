@@ -8,7 +8,7 @@
 namespace wasp::game::config {
 	//window
 	constexpr wchar_t className[]{ L"WSWP" };
-	constexpr wchar_t windowName[]{ L"WSWP" };
+	constexpr wchar_t windowName[]{ L"WSWP v1.1" };
 	constexpr int windowWidth{ 640 };
 	constexpr int windowHeight{ 480 };
 

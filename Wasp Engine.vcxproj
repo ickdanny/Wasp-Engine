@@ -410,6 +410,7 @@
     <ClInclude Include="_header\Window\WindowMode.h" />
     <ClInclude Include="_header\Window\WindowUtil.h" />
     <ClInclude Include="_header\Game\Systems\OverlaySystem.h" />
+    <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_header\Adaptor\ComLibraryGuard.h" />
