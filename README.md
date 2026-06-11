@@ -23,21 +23,9 @@ Install WSWP as follows using Developer Powershell:
 ```
 git clone https://www.github.com/ickdanny/todo
 cd todo
-.\build.ps1
+powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
 ## Usage
 
 The build script should create the directory `EU04_WSWP` and the archive `EU04_WSWP.zip`. To launch the game, navigate to `EU04_WSWP` and run `EU04_WSWP.exe`.
-
-
-
-
-
-
-Wasp Engine
-
-Cpp-based archetype ECS shmup engine built for Windows using Win32 and Direct2D
-
-
-todo requirements
