@@ -8,7 +8,7 @@ namespace wasp::ecs::entity {
 
     //Constructs an EntityMetadataStorage with the specified number of
     //default initialized entity metadatas
-    EntityMetadataStorage::EntityMetadataStorage(std::size_t initCapacity)
+    EntityMetadataStorage::EntityMetadataStorage(uint32_t initCapacity)
         : freeEntityIDStorage{ initCapacity }
     {
         entityMetadataList.resize(initCapacity);

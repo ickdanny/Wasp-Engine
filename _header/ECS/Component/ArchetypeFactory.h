@@ -8,8 +8,8 @@ namespace wasp::ecs::component {
     class ArchetypeFactory {
 
     private:
-        std::size_t initEntityCapacity{};
-        std::size_t initComponentCapacity{};
+        uint32_t initEntityCapacity{};
+        uint32_t initComponentCapacity{};
 
         //throwing around raw pointers to elements in a vector is a HORRIBLE idea,
         //therefore we use shared_ptr
@@ -19,8 +19,8 @@ namespace wasp::ecs::component {
 
     public:
         ArchetypeFactory(
-            std::size_t initEntityCapacity,
-            std::size_t initComponentCapacity,
+            uint32_t initEntityCapacity,
+            uint32_t initComponentCapacity,
             ComponentSetFactory& componentSetFactory
         );
 

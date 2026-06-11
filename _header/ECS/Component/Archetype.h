@@ -32,8 +32,8 @@ namespace wasp::ecs::component {
 
         //fields
         const ComponentSet* const componentKeyPointer{};
-        const std::size_t initEntityCapacity{};
-        const std::size_t initComponentCapacity{};
+        const uint32_t initEntityCapacity{};
+        const uint32_t initComponentCapacity{};
         //using unique_ptr to point to base class
         std::vector<std::unique_ptr<IntLookupTableBase>> componentStorages;
 
@@ -41,8 +41,8 @@ namespace wasp::ecs::component {
 
         Archetype(
             const ComponentSet* const componentKeyPointer,
-            std::size_t initEntityCapacity,
-            std::size_t initComponentCapacity
+            uint32_t initEntityCapacity,
+            uint32_t initComponentCapacity
         ) 
             : componentKeyPointer{ componentKeyPointer }
             , initEntityCapacity{ initEntityCapacity }
@@ -104,7 +104,7 @@ namespace wasp::ecs::component {
 
         template <typename T>
         IntLookupTable<T>& getComponentStorage() {
-            std::size_t typeIndex{ ComponentIndexer::getIndex<T>() };
+            uint32_t typeIndex{ ComponentIndexer::getIndex<T>() };
             //initialize if necessary
             if (typeIndex >= componentStorages.size()) {
                 throw std::runtime_error{

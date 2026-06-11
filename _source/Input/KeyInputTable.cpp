@@ -27,7 +27,7 @@ namespace wasp::input {
 	}
 
 	void KeyInputTable::lock(KeyValues key) {
-		locks.set(static_cast<std::size_t>(key));
+		locks.set(static_cast<uint32_t>(key));
 	}
 
 	void KeyInputTable::lockAll() {

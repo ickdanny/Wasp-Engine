@@ -3,7 +3,7 @@
 namespace wasp::ecs::component {
 
 	void Archetype::moveEntity(const EntityID entityID, Archetype& newArchetype) {
-        for (std::size_t typeIndex : componentKeyPointer->getPresentTypeIndices()) {
+        for (uint32_t typeIndex : componentKeyPointer->getPresentTypeIndices()) {
             if (typeIndex < componentStorages.size()) {
                 std::unique_ptr<IntLookupTableBase>& storagePointer =
                     componentStorages[typeIndex];
@@ -20,7 +20,7 @@ namespace wasp::ecs::component {
 
     bool Archetype::removeEntity(const EntityID entityID) {
         bool wasAnyComponentRemoved{ false };
-        for (std::size_t typeIndex : componentKeyPointer->getPresentTypeIndices()) {
+        for (uint32_t typeIndex : componentKeyPointer->getPresentTypeIndices()) {
             if (typeIndex < componentStorages.size()) {
                 std::unique_ptr<IntLookupTableBase>& storagePointer =
                     componentStorages[typeIndex];

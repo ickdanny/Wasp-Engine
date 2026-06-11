@@ -3,8 +3,8 @@
 namespace wasp::ecs::component {
 
     ArchetypeFactory::ArchetypeFactory(
-        std::size_t initEntityCapacity,
-        std::size_t initComponentCapacity,
+        uint32_t initEntityCapacity,
+        uint32_t initComponentCapacity,
         ComponentSetFactory& componentSetFactory
     )
         : initEntityCapacity{ initEntityCapacity }

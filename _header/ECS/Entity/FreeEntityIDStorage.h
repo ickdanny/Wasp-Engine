@@ -20,13 +20,13 @@ namespace wasp::ecs::entity {
         std::vector<bool>::size_type currentPos{};
 
     public:
-        FreeEntityIDStorage(std::size_t initCapacity);
+        FreeEntityIDStorage(uint32_t initCapacity);
 
         void clear();
 
         bool isIDUsed(EntityID entityID) const;
 
-        std::size_t retrieveID();
+        uint32_t retrieveID();
 
         void reclaimID(EntityID entityID);
 

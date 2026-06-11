@@ -622,7 +622,7 @@ namespace wasp::sound::midi {
 		//where we are along each individual track
 		std::vector<size_t> indices(individualTracks.size());
 		//where we are on our compiled track
-		size_t compiledIndex{ 0 };
+		uint32_t compiledIndex{ 0 };
 
 		//find and insert events by chronological order
 		bool placedLoopStart{ false };

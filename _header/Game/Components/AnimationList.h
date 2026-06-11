@@ -10,7 +10,7 @@ namespace wasp::game::components {
 		//fields
 		std::vector<std::wstring> frames{};
 		bool looping{};
-		std::size_t currentIndex{};
+		uint32_t currentIndex{};
 
 		Animation(const std::vector<std::wstring>& frames, bool looping = true)
 			: frames{ frames }
@@ -34,33 +34,33 @@ namespace wasp::game::components {
 	public:
 		//fields
 		std::vector<Animation> animations{};
-		std::size_t idleIndex{};
-		std::size_t currentIndex{};
+		uint32_t idleIndex{};
+		uint32_t currentIndex{};
 		Ticker ticker;			//uninitialized!
 
 		AnimationList(
 			const std::vector<Animation>& animations, 
-			std::size_t idleIndex, 
-			std::size_t ticks
+			uint32_t idleIndex, 
+			uint32_t ticks
 		)
 			: animations{ animations }
 			, idleIndex{ idleIndex }
 			, currentIndex{ idleIndex }
-			, ticker{ ticks, true } {
+			, ticker{ static_cast<int>(ticks), true } {
 		}
 
-		AnimationList(const Animation& animation, std::size_t ticks)
+		AnimationList(const Animation& animation, uint32_t ticks)
 			: animations{ { animation } }
 			, idleIndex{ 0 }
 			, currentIndex{ idleIndex }
-			, ticker{ ticks, true } {
+			, ticker{ static_cast<int>(ticks), true } {
 		}
 
-		AnimationList(const std::vector<std::wstring>& frames, std::size_t ticks)
+		AnimationList(const std::vector<std::wstring>& frames, uint32_t ticks)
 			: animations{ {frames} }
 			, idleIndex{ 0 }
 			, currentIndex{ idleIndex }
-			, ticker{ ticks, true } {
+			, ticker{ static_cast<int>(ticks), true } {
 		}
 
 		Animation& getCurrentAnimation() {

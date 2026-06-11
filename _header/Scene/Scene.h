@@ -11,8 +11,8 @@ namespace wasp::scene {
 	class Scene {
 	private:
 		SceneNameEnumClass name{};
-		std::size_t initEntityCapacity{};
-		std::size_t initComponentCapacity{};
+		uint32_t initEntityCapacity{};
+		uint32_t initComponentCapacity{};
 		ecs::DataStorage dataStorage;	//not initialized!
 		channel::ChannelSet channelSet{};
 		std::vector<bool> systemChainTransparency{};
@@ -21,8 +21,8 @@ namespace wasp::scene {
 	public:
 		Scene(
 			SceneNameEnumClass name,
-			std::size_t initEntityCapacity, 
-			std::size_t initComponentCapacity,
+			uint32_t initEntityCapacity, 
+			uint32_t initComponentCapacity,
 			const std::vector<std::pair<SystemChainIDEnumClass, bool>>&
 				systemChainTransparency,
 			bool refresh
@@ -66,7 +66,7 @@ namespace wasp::scene {
 		}
 
 		bool isTransparent(SystemChainIDEnumClass systemChainID) const {
-			std::size_t index{ static_cast<std::size_t>(systemChainID) };
+			uint32_t index{ static_cast<uint32_t>(systemChainID) };
 			if (index >= systemChainTransparency.size()) {
 				throw std::runtime_error{ "system chain index out of bounds!" };
 			}
@@ -88,7 +88,7 @@ namespace wasp::scene {
 			SystemChainIDEnumClass systemChainID,
 			bool transparency
 		) {
-			std::size_t index{ static_cast<std::size_t>(systemChainID) };
+			uint32_t index{ static_cast<uint32_t>(systemChainID) };
 			if (index >= systemChainTransparency.size()) {
 				systemChainTransparency.resize(index + 1, false);
 			}

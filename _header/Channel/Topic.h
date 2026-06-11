@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 
 #include "Utility/Void.h"
 
@@ -8,10 +9,10 @@ namespace wasp::channel {
 
 	struct TopicBase {
 	protected:
-		static std::size_t indexer;
+		static uint32_t indexer;
 
 	public:
-		const std::size_t index{};
+		const uint32_t index{};
 
 		TopicBase()
 			: index{ indexer++ } {

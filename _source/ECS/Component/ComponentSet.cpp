@@ -3,7 +3,7 @@
 namespace wasp::ecs::component {
 
     //constructs a component set based on the provided type index
-    ComponentSet::ComponentSet(std::size_t typeIndex)
+    ComponentSet::ComponentSet(uint32_t typeIndex)
         : numComponents{ 1 }
     {
         #pragma warning(suppress : 4834) //suppress discarding return; it throws
@@ -13,10 +13,10 @@ namespace wasp::ecs::component {
     }
 
     //constructs a component set based on the provided type indices
-    ComponentSet::ComponentSet(const std::vector<std::size_t>& typeIndices)
-        : numComponents{ typeIndices.size() }
+    ComponentSet::ComponentSet(const std::vector<uint32_t>& typeIndices)
+        : numComponents{ static_cast<uint32_t>(typeIndices.size()) }
     {
-        for (std::size_t typeIndex : typeIndices) {
+        for (uint32_t typeIndex : typeIndices) {
             #pragma warning(suppress : 4834) //suppress discarding return
             bitset.test(typeIndex);
             bitset[typeIndex] = true;
@@ -30,7 +30,7 @@ namespace wasp::ecs::component {
         return bitset == temp;
     }
 
-    const std::vector<std::size_t>& ComponentSet::getPresentTypeIndices() const {
+    const std::vector<uint32_t>& ComponentSet::getPresentTypeIndices() const {
         //assuming the empty ComponentSet will not get called very much
         if (presentTypeIndices.empty()) {
             makePresentTypeIndices();
@@ -45,7 +45,7 @@ namespace wasp::ecs::component {
 
     //helper functions
     void ComponentSet::makePresentTypeIndices() const {
-        presentTypeIndices = std::vector<std::size_t>{};
+        presentTypeIndices = std::vector<uint32_t>{};
         for (int i = 0; i < maxComponents; ++i) {
             if (bitset[i]) {
                 presentTypeIndices.push_back(i);

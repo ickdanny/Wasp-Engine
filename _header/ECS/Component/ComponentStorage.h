@@ -17,8 +17,8 @@ namespace wasp::ecs::component {
 
     public:
         ComponentStorage(
-            std::size_t initEntityCapacity,
-            std::size_t initComponentCapacity
+            uint32_t initEntityCapacity,
+            uint32_t initComponentCapacity
         );
 
         void recreate();

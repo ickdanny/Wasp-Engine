@@ -18,7 +18,7 @@ namespace wasp::ecs::component {
 
 	private:
 		//fields
-		std::size_t currentIteratorPairIndex{};
+		uint32_t currentIteratorPairIndex{};
 		//held in pairs of current/end iterators
 		InnerIteratorVectorType innerIterators;
 
@@ -36,7 +36,7 @@ namespace wasp::ecs::component {
 			}
 		}
 
-		std::size_t getEntityID() {
+		uint32_t getEntityID() {
 			return getCurrentIterator().getEntityID();
 		}
 

@@ -37,7 +37,7 @@ namespace wasp::ecs::component {
         }
 
         //returns a component set with the specified type index
-        const ComponentSet& makeSet(std::size_t typeIndex) {
+        const ComponentSet& makeSet(uint32_t typeIndex) {
             return getCanonicalSetAndBroadcastIfNew(ComponentSet{ typeIndex });
         }
 

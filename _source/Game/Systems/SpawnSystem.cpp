@@ -1110,7 +1110,7 @@ namespace wasp::game::systems {
 				) };
 
 				//make a prng based on entityID
-				config::PrngType prng{ entityID };
+				config::PrngType prng{ static_cast<unsigned int>(entityID) };
 				std::uniform_int_distribution<int> distribution{ min, max };
 
 				//roll it a couple times to make it more random
@@ -1231,7 +1231,7 @@ namespace wasp::game::systems {
 				) };
 
 				//make a prng based on entityID
-				config::PrngType prng{ entityID };
+				config::PrngType prng{ static_cast<unsigned int>(entityID) };
 				std::uniform_real_distribution<float> distribution{ min, max };
 
 				//roll it a couple times to make it more random

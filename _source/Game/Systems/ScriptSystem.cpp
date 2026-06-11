@@ -55,7 +55,7 @@ namespace wasp::game::systems {
 		//goes to the node specified by nextIndex if it exists
 		void gotoNextNode(
 			std::shared_ptr<ScriptNode>& currentScriptNodePointer,
-			std::size_t nextIndex
+			uint32_t nextIndex
 		) {
 			if (currentScriptNodePointer->linkedNodePointers.size() > nextIndex) {
 				currentScriptNodePointer

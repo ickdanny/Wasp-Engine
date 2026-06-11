@@ -28,11 +28,11 @@ namespace wasp::game::systems {
         };
 
         //constants
-        constexpr static std::size_t defaultMaxElements{ 8 };
+        constexpr static uint32_t defaultMaxElements{ 8 };
         constexpr static int defaultLevel{ 4 };
 
         //fields
-        const std::size_t maxElements{};
+        const uint32_t maxElements{};
         const int level{};
         const AABB bounds{};
         std::array<std::shared_ptr<QuadTree<IdType>>, 4> subTreePointers{};
@@ -49,7 +49,7 @@ namespace wasp::game::systems {
         }
 
         //Constructs a quad tree with the specified max elements, level, and bounds
-        QuadTree(std::size_t maxElements, int level, const AABB& bounds)
+        QuadTree(uint32_t maxElements, int level, const AABB& bounds)
             : maxElements{ maxElements }
             , level{ level }
             , bounds{ bounds } {

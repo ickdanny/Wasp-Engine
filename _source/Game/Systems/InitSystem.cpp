@@ -778,7 +778,7 @@ namespace wasp::game::systems {
 		SpriteInstruction backgroundSprite{
 			bitmapStoragePointer->get(backgroundID)->d2dBitmap
 		};
-		std::size_t totalHeight{ backgroundSprite.getBitmap()->GetPixelSize().height };
+		uint32_t totalHeight{ backgroundSprite.getBitmap()->GetPixelSize().height };
 		int startingY{ static_cast<int>(totalHeight) - screenHeight };
 		float yVelocity{ -startingY / static_cast<float>(ticks) };
 

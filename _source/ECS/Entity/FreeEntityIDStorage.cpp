@@ -7,7 +7,7 @@ namespace wasp::ecs::entity {
         constexpr float resizeRatio{ 2.0f };
     }
 
-    FreeEntityIDStorage::FreeEntityIDStorage(std::size_t initCapacity)
+    FreeEntityIDStorage::FreeEntityIDStorage(uint32_t initCapacity)
         : entityIDSet(initCapacity, false)
         , currentLiveEntities{ 0 }
         , currentPos{ 0 }
@@ -30,7 +30,7 @@ namespace wasp::ecs::entity {
         return entityIDSet[entityID];
     }
 
-    std::size_t FreeEntityIDStorage::retrieveID() {
+    uint32_t FreeEntityIDStorage::retrieveID() {
         if (currentPos >= entityIDSet.size()) {
             currentPos = 0;
         }
@@ -51,7 +51,7 @@ namespace wasp::ecs::entity {
         resizeIfNecessary();
 
         //return our entity ID, and step currentPos for efficiency
-        return currentPos++;
+        return static_cast<uint32_t>(currentPos++);
     }
 
     void FreeEntityIDStorage::reclaimID(EntityID entityID) {

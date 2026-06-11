@@ -53,7 +53,7 @@ namespace wasp::channel {
 	template<>
 	class Channel<utility::Void> : public ChannelBase {
 	private:
-		std::size_t messages{};
+		uint32_t messages{};
 
 	public:
 		Channel()
@@ -69,7 +69,7 @@ namespace wasp::channel {
 			return !static_cast<bool>(messages);
 		}
 
-		std::size_t getMessages() const {
+		uint32_t getMessages() const {
 			return messages;
 		}
 

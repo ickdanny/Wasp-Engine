@@ -19,7 +19,7 @@ namespace wasp::game::systems {
 			//spriteHandles are 0 - left image, 1 - right image, 2 - text
 		using SceneData = std::tuple<
 			Dialogue, 
-			std::size_t, 
+			uint32_t, 
 			std::array<EntityHandle, 3>
 		>;
 

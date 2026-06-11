@@ -101,7 +101,7 @@ namespace wasp::game::systems {
 
 	bool AnimationSystem::tryToTurnLeft(AnimationList& animationList) {
 		if (animationList.currentIndex > 0) {
-			std::size_t nextIndex{ animationList.currentIndex - 1 };
+			uint32_t nextIndex{ animationList.currentIndex - 1 };
 
 			//reset the indices of the animations
 			animationList.animations[animationList.currentIndex].currentIndex = 0;
@@ -116,7 +116,7 @@ namespace wasp::game::systems {
 
 	bool AnimationSystem::tryToTurnRight(AnimationList& animationList) {
 		if (animationList.currentIndex + 1 < animationList.animations.size()) {
-			std::size_t nextIndex{ animationList.currentIndex + 1 };
+			uint32_t nextIndex{ animationList.currentIndex + 1 };
 
 			//reset the indices of the animations
 			animationList.animations[animationList.currentIndex].currentIndex = 0;
@@ -143,7 +143,7 @@ namespace wasp::game::systems {
 
 	bool AnimationSystem::stepAnimation(AnimationList& animationList) {
 		Animation& currentAnimation{ animationList.getCurrentAnimation() };
-		std::size_t nextIndex{ currentAnimation.currentIndex + 1 };
+		uint32_t nextIndex{ currentAnimation.currentIndex + 1 };
 		if (nextIndex >= currentAnimation.frames.size()) {
 			if (!currentAnimation.looping) {
 				return true;

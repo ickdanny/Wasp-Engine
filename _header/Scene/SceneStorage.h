@@ -22,7 +22,7 @@ namespace wasp::scene {
 		SceneStorage() = default;
 
 		ScenePointer& getScenePointer(SceneNameEnumClass sceneName) {
-			std::size_t index{ static_cast<std::size_t>(sceneName) };
+			uint32_t index{ static_cast<uint32_t>(sceneName) };
 			if (index < scenePointers.size()) {
 				ScenePointer& scenePointer{ scenePointers[index] };
 				if (scenePointer) {
@@ -34,13 +34,13 @@ namespace wasp::scene {
 
 		void makeScene(
 			SceneNameEnumClass name,
-			std::size_t initEntityCapacity,
-			std::size_t initComponentCapacity,
+			uint32_t initEntityCapacity,
+			uint32_t initComponentCapacity,
 			const std::vector<std::pair<SystemChainIDEnumClass, bool>>&
 				systemChainTransparency,
 			bool refresh
 		) {
-			std::size_t index{ static_cast<std::size_t>(name) };
+			uint32_t index{ static_cast<uint32_t>(name) };
 			if (index >= scenePointers.size()) {
 				scenePointers.resize(index + 1);
 			}

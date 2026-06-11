@@ -449,7 +449,7 @@ namespace wasp::window {
 	) {
 		bufferRenderTargetPointer->DrawText(
 			text.c_str(),
-			text.size(),
+			static_cast<UINT32>(text.size()),
 			textFormatPointer,
 			D2D1::RectF(pos.x, pos.y, pos.x + bounds.first, pos.y + bounds.second),
 			textBrushPointer

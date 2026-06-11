@@ -2,8 +2,8 @@
 
 namespace wasp::ecs::component {
     ComponentStorage::ComponentStorage(
-        std::size_t initEntityCapacity,
-        std::size_t initComponentCapacity
+        uint32_t initEntityCapacity,
+        uint32_t initComponentCapacity
     )
         : componentSetFactory{}
         , archetypeFactory{

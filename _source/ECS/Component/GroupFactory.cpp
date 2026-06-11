@@ -49,7 +49,7 @@ namespace wasp::ecs::component {
         ComponentSetFactory& componentSetFactory
     ) {
         for (
-            std::size_t typeIndex = 0;
+            uint32_t typeIndex = 0;
             typeIndex < maxComponents;
             ++typeIndex
             ) {

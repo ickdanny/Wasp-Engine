@@ -10,7 +10,7 @@
 
 namespace wasp::ecs::component {
 
-    constexpr std::size_t maxComponents{ 96 };
+    constexpr uint32_t maxComponents{ 96 };
 
     //forward declaration of Archetype to handle circular dependency
     class Archetype;
@@ -26,8 +26,8 @@ namespace wasp::ecs::component {
 
         //fields
         Bitset bitset{};
-        std::size_t numComponents{};
-        mutable std::vector<std::size_t> presentTypeIndices{};
+        uint32_t numComponents{};
+        mutable std::vector<uint32_t> presentTypeIndices{};
 
         mutable std::weak_ptr<Archetype> archetypeWeakPointer{};
 
@@ -49,18 +49,18 @@ namespace wasp::ecs::component {
     private:
 
         //constructs a component set based on the provided type index
-        ComponentSet(std::size_t typeIndex);
+        ComponentSet(uint32_t typeIndex);
 
         //constructs a component set based on the provided type indices
-        ComponentSet(const std::vector<std::size_t>& typeIndices);
+        ComponentSet(const std::vector<uint32_t>& typeIndices);
 
         //factory method for constructing a component set based on the 
         //provided template component types
         template <typename... Ts>
         static ComponentSet makeComponentSetFromVariadicTemplate() {
-            std::size_t numComponents{ sizeof... (Ts) };
+            uint32_t numComponents{ sizeof... (Ts) };
             Bitset bitset{};
-            std::vector<std::size_t> presentTypeIndices{};
+            std::vector<uint32_t> presentTypeIndices{};
             (bitset.set(ComponentIndexer::getIndex<Ts>()), ...);
             (presentTypeIndices.push_back(ComponentIndexer::getIndex<Ts>()), ...);
 
@@ -70,8 +70,8 @@ namespace wasp::ecs::component {
         //helper constructor for the factory method
         ComponentSet(
             const Bitset& bitset,
-            std::size_t numComponents,
-            const std::vector<std::size_t>& presentTypeIndices
+            uint32_t numComponents,
+            const std::vector<uint32_t>& presentTypeIndices
         )
             : bitset{ bitset }
             , numComponents{ numComponents }
@@ -109,10 +109,10 @@ namespace wasp::ecs::component {
         bool isContainedIn(const ComponentSet& other) const;
 
         int getNumComponents() const {
-            return numComponents;
+            return static_cast<int>(numComponents);
         }
 
-        const std::vector<std::size_t>& getPresentTypeIndices() const;
+        const std::vector<uint32_t>& getPresentTypeIndices() const;
 
         //archetype stuff
         void associateArchetype(
@@ -133,7 +133,7 @@ namespace wasp::ecs::component {
         template <typename T>
         ComponentSet addComponent() const {
             makePresentTypeIndices();   //make sure our state is good for cloning
-            const std::size_t index{ ComponentIndexer::getIndex<T>() };
+            const uint32_t index{ ComponentIndexer::getIndex<T>() };
             //if we need to add a component
             if (!bitset[index]) {
                 ComponentSet toRet{ *this };
@@ -148,7 +148,7 @@ namespace wasp::ecs::component {
 
         template <typename T>
         ComponentSet removeComponent() const {
-            const std::size_t index{ ComponentIndexer::getIndex<T>() };
+            const uint32_t index{ ComponentIndexer::getIndex<T>() };
             //if we need to remove a component
             if (bitset[index]) {
                 ComponentSet toRet{};
@@ -167,10 +167,10 @@ namespace wasp::ecs::component {
                 throw std::runtime_error{ "zero type parameters!" };
             }
             makePresentTypeIndices();   //make sure our state is good for cloning
-            std::vector<std::size_t> indicesToAdd{};
+            std::vector<uint32_t> indicesToAdd{};
             (indicesToAdd.push_back(ComponentIndexer.getIndex<Ts>), ...);
             ComponentSet toRet{ *this };
-            for (std::size_t index : indicesToAdd) {
+            for (uint32_t index : indicesToAdd) {
                 if (!bitset[index]) {
                     toRet.bitset.set(index);
                     ++(toRet.numComponents);
@@ -185,11 +185,11 @@ namespace wasp::ecs::component {
             if (sizeof...(Ts) <= 0) {
                 throw std::runtime_error{ "zero type parameters!" };
             }
-            std::vector<std::size_t> indicesToRemove{};
+            std::vector<uint32_t> indicesToRemove{};
             (indicesToRemove.push_back(ComponentIndexer.getIndex<Ts>), ...);
             ComponentSet toRet{};
             toRet.bitset = bitset;
-            for (std::size_t index : indicesToRemove) {
+            for (uint32_t index : indicesToRemove) {
                 if (bitset[index]) {
                     toRet.bitset.reset(index);
                 }
