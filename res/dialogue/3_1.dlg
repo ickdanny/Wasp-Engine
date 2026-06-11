@@ -1,0 +1,28 @@
+left_image]p_
+right_image]b3
+text]Halt!
+stop
+text]No one is allowed to be here. Please leave immediately.
+stop
+left_image]p
+right_image]b3_]
+text]That makes it sound like you have something to hide.
+stop
+left_image]p_
+right_image]b3
+text]Even if we were hiding something, that's none of your concern.
+stop
+left_image]p
+right_image]b3_
+text]I don't care about this forest, but the storm forming here will destroy everything.
+stop
+left_image]p_
+right_image]b3
+track]07
+text]So what? My job is to stop you here and now. What happens after is your problem.
+stop
+left_image]p
+right_image]b3_
+text]Don't try to talk big! You're just a small fry!
+stop
+end

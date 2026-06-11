@@ -1,0 +1,32 @@
+left_image]p_
+right_image]b1
+text]Do you have any idea what season it is?
+stop
+left_image]p
+right_image]b1_
+text]Winter?
+stop
+left_image]p_
+right_image]b1
+text]Exactly. And do you know what I do in the winter?
+stop
+text]One word. Hibernation.
+stop
+left_image]p
+right_image]b1_
+text]Well it's a good thing that I woke you up.
+stop
+text]You need to leave this area. There's going to be a huge storm.
+stop
+left_image]p_
+right_image]b1
+text]Why would I care about some stupid rain?
+stop
+track]03
+text]All I know is that you've disturbed my sleep!
+stop
+left_image]p
+right_image]b1_
+text]I feel like there's something more important happening here...
+stop
+end

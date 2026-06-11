@@ -1,0 +1,48 @@
+left_image]p_
+right_image]b2
+text]Hello! You're the first person I've seen in days!
+stop
+left_image]p
+right_image]b2_
+text]Have you heard about the storm forming around here?
+stop
+left_image]p_
+right_image]b2
+text]... You know about the storm? That's unlucky for you.
+stop
+left_image]p
+right_image]b2_
+text]What do you mean?
+stop
+left_image]p_
+right_image]b2
+text]Actually, I've been hired to shoot down anyone trying to get close to the storm.
+stop
+left_image]p
+right_image]b2_
+text]Hired by whom?
+stop
+left_image]p_
+right_image]b2
+text]Sorry! I would tell you if I knew, but I've never seen their face. 
+stop
+left_image]p
+right_image]b2_
+text]Well you don't seem very close then. How much are they paying you?
+stop
+left_image]p_
+right_image]b2
+text]I'm not getting paid in money! They just gave me permission to hunt around here.
+stop
+left_image]p
+right_image]b2_
+text]That storm is not something that should exist.
+stop]
+text]I'll be forcing my way through.
+track]05
+stop
+left_image]p_
+right_image]b2
+text]Give me your best shot!
+stop
+end
